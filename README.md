@@ -1,5 +1,31 @@
 # G1 Jev Swarm Lab
 
+
+**Phase 1.3 - closed-loop locomotion correction (complete).** Under the frozen
+Phase 1.2 warehouse envelope, an outer heading/lateral feedback loop at the
+policy-command layer (`motion.pt` unchanged; open-loop runs bit-identical to
+the historical baseline):
+
+- Open loop: 4 m PASS (-0.281 m drift / -6.72 deg), 6/8/10 m FAIL
+(`EXCESSIVE_DRIFT`), reliable boundary ~4.6 m.
+- `heading_only` (k=1.5) and `heading_lateral` (k=1.5/1.0) convert 6/8/10 m
+to PASS with drift reduced 87-100% and heading error 93-98%, zero saturation,
+zero control oscillation and no completion-time regression.
+- Corrected reliable distance is at least 20 m (frozen 12/15/20 m extension
+budget exhausted -> `boundary_not_reached_within_budget`); +16 m on the tested
+grid versus open loop.
+- Disturbance spot-check: at friction 0.175 the open loop diverges
+(-4.43 m / -71.4 deg) while both corrected modes stay inside the envelope; the
+60 N push spot-check passes for all three treatments.
+- All 30 final runs were physical successes; 24/30 task successes (the six
+failures are open-loop 6/8/10 m).
+- Artifacts: `correction_comparison.json`, `boundary_comparison.json`,
+`risk_map_v1_3.json`, `capability_map_v1_3.json`, `report.md` under
+`experiments/baselines/g1_closed_loop_correction_001/`.
+
+All Phase 1.3 statements are conditional on the frozen nominal envelope and
+the two frozen disturbance points; no broader safety or reliability claim is
+made.
 **Research testbed for long-horizon Unitree G1 tasks with decision models, multi-swarm orchestration, and reinforcement-learning skills.**
 
 > This repository is an experimental research testbed. No performance claim is considered valid without reproducible experimental evidence.
