@@ -183,7 +183,11 @@ class LiveMissionSession:
         view = self.simulation_wrapper(monitor) if self.simulation_wrapper else monitor
         tracker: CorrectionTracker | None = None
         task_controller = self.controller
-        if execution_mode in {"heading_only", "heading_lateral"}:
+        # The Phase 1.3 correction layer is a walking path-correction: it holds
+        # the node-start heading, so wrapping an in-place turn or stand in it
+        # fights the skill (pilot evidence: a 45 deg turn stalled at ~38 deg
+        # until timeout). Only walking nodes are corrected.
+        if skill == "walk_forward" and execution_mode in {"heading_only", "heading_lateral"}:
             grounding = self.protocol["grounding"]
             gains = grounding["correction_gains"][execution_mode]
             limits = grounding["correction_limits"]

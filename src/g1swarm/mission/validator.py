@@ -11,7 +11,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .ir import MAX_MISSION_STEPS, MISSION_ID_PATTERN, MISSION_SCHEMA_VERSION, Mission, SkillName
+from .ir import (
+    MAX_MISSION_STEPS,
+    MISSION_SCHEMA_VERSION,
+    Mission,
+    SkillName,
+    is_path_safe_mission_id,
+)
 
 # Schema-level sanity limits (NOT robot capability limits).
 DEFAULT_TURN_ANGLE_LIMIT_DEG = 180.0
@@ -62,7 +68,7 @@ class MissionValidator:
                     f"schema_version must be {MISSION_SCHEMA_VERSION!r}",
                 )
             )
-        if not MISSION_ID_PATTERN.match(mission.mission_id):
+        if not is_path_safe_mission_id(mission.mission_id):
             issues.append(
                 ValidationIssue("INVALID_MISSION_ID", "mission_id must be path-safe")
             )

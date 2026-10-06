@@ -270,6 +270,20 @@ def test_experimental_override_is_forwarded_and_logged(
     assert grounded["risk"] == "HIGH"
 
 
+def test_unserializable_unknown_input_is_rejected_without_logging_crash(
+    phase13_grounder: CapabilityGrounder, tmp_path
+) -> None:
+    executor, _ = _executor(phase13_grounder, recorder_root=str(tmp_path))
+    result = executor.run(
+        _mission([{"id": "s1", "skill": "stop", "parameters": {}}])
+        | {"unexpected_payload": object()},
+        write_evidence=True,
+    )
+    assert result.state == "REJECTED"
+    assert result.failure_type == MissionFailureType.VALIDATION_FAILURE.value
+    assert (tmp_path / "runtime-mission" / "mission_manifest.json").is_file()
+
+
 def test_evidence_bundle_is_written(
     phase13_grounder: CapabilityGrounder, tmp_path
 ) -> None:

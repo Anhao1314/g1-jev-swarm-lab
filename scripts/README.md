@@ -11,6 +11,7 @@ the project virtual environment active (see the README quick start).
 | `run_skill_pilot.py` | Pilot runs for individual skills (turn); writes `artifacts/skill-pilot/`. |
 | `run_characterization.py` | Phase 1.1 skill characterization campaigns (`--campaign pilot|final`); writes per-run evidence plus the committed summary and competence map. |
 | `view_g1_skills.py` | Interactive MuJoCo viewer: reset -> stand -> walk 2 m -> stop -> turn +/-45 deg -> walk 5 m, real time, observation only. |
+| `view_mission.py` | Interactive MuJoCo viewer for Phase 2.0 missions: validate -> capability-ground -> task graph -> deterministic executor, real time, with a live HUD. Observation only (`--list`, `--plan-only`, `--no-viewer` available). |
 | `enter.ps1` | Activate `.venv` and keep pip cache and temp files inside the repository. |
 
 All evidence-producing scripts are headless by default. A viewer is optional

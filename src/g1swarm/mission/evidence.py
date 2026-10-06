@@ -19,6 +19,9 @@ class MissionRecorder:
         self.task_graph_path = self.dir / "task_graph.json"
         self.events_path = self.dir / "events.jsonl"
         self.summary_path = self.dir / "mission_summary.json"
+        # Each mission run owns a fresh event log: re-running a template must
+        # not append to (and mix with) the previous run's events.
+        self.events_path.write_text("", encoding="utf-8")
 
     def log_event(self, event_type: str, payload: dict[str, Any] | None = None) -> None:
         event = {"time": utc_timestamp(), "event": event_type}

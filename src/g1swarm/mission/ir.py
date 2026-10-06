@@ -21,8 +21,21 @@ from typing import Any, Mapping
 MISSION_SCHEMA_VERSION = "2.0.0"
 MAX_MISSION_STEPS = 32
 MISSION_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+WINDOWS_RESERVED_NAMES = frozenset(
+    {"CON", "PRN", "AUX", "NUL"}
+    | {f"COM{index}" for index in range(1, 10)}
+    | {f"LPT{index}" for index in range(1, 10)}
+)
 
 TOP_LEVEL_KEYS = frozenset({"schema_version", "mission_id", "steps"})
+
+
+def is_path_safe_mission_id(value: str) -> bool:
+    """Reject traversal and Win32 aliases that could mix evidence bundles."""
+
+    if not MISSION_ID_PATTERN.match(value) or value.endswith("."):
+        return False
+    return value.split(".", 1)[0].upper() not in WINDOWS_RESERVED_NAMES
 STEP_KEYS = frozenset({"id", "skill", "parameters", "depends_on", "execution_mode_override"})
 
 
@@ -120,9 +133,10 @@ class Mission:
                 f"{MISSION_SCHEMA_VERSION!r}"
             )
         mission_id = _require_str(document.get("mission_id"), "mission_id")
-        if not MISSION_ID_PATTERN.match(mission_id):
+        if not is_path_safe_mission_id(mission_id):
             raise MissionIRError(
-                "mission_id must match [A-Za-z0-9][A-Za-z0-9._-]{0,63} (path-safe)"
+                "mission_id must be a non-reserved, non-trailing-dot name matching "
+                "[A-Za-z0-9][A-Za-z0-9._-]{0,63} (path-safe)"
             )
         raw_steps = document.get("steps")
         if not isinstance(raw_steps, (list, tuple)):

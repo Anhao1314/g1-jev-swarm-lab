@@ -1,5 +1,15 @@
 """Mission IR, validator, capability grounding and the deterministic runtime."""
 
+from .benchmark import (
+    CorpusError,
+    MissionRun,
+    build_benchmark_summary,
+    build_transition_map,
+    load_corpus,
+    mission_document,
+    validate_benchmark_summary,
+    validate_corpus,
+)
 from .evidence import MissionRecorder
 from .grounding import (
     CAPABILITY_REJECTED,
@@ -18,6 +28,7 @@ from .ir import (
     MissionIRError,
     MissionStep,
     SkillName,
+    is_path_safe_mission_id,
 )
 from .live_session import SKILL_REGISTRY, LiveMissionSession, NodeExecution, NodeMonitor
 from .runtime import MissionExecutor, MissionFailureType, MissionResult, MissionSessionProtocol
@@ -49,6 +60,7 @@ __all__ = [
     "MISSION_SCHEMA_VERSION",
     "SKILL_REGISTRY",
     "CapabilityGrounder",
+    "CorpusError",
     "ExecutionModeOverride",
     "GroundedPlan",
     "GroundingResult",
@@ -60,6 +72,7 @@ __all__ = [
     "MissionIRError",
     "MissionRecorder",
     "MissionResult",
+    "MissionRun",
     "MissionSessionProtocol",
     "MissionState",
     "MissionStep",
@@ -72,4 +85,11 @@ __all__ = [
     "TaskNode",
     "ValidationIssue",
     "ValidationReport",
+    "is_path_safe_mission_id",
+    "build_benchmark_summary",
+    "build_transition_map",
+    "load_corpus",
+    "mission_document",
+    "validate_benchmark_summary",
+    "validate_corpus",
 ]

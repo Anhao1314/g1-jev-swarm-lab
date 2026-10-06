@@ -84,7 +84,17 @@ def test_missing_and_extra_parameters_are_rejected() -> None:
 
 
 def test_unsafe_mission_ids_are_rejected() -> None:
-    for bad in ("../escape", "a/b", "", " mission", "mission id", "x" * 65):
+    for bad in (
+        "../escape",
+        "a/b",
+        "",
+        " mission",
+        "mission id",
+        "x" * 65,
+        "trailing.",
+        "CON",
+        "nul.txt",
+    ):
         with pytest.raises(MissionIRError):
             Mission.from_dict(_document(mission_id=bad))
 

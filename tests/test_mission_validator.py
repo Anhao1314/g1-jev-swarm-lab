@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from g1swarm.mission import MISSION_SCHEMA_VERSION, Mission, MissionValidator
+from g1swarm.mission import (
+    MISSION_SCHEMA_VERSION,
+    Mission,
+    MissionStep,
+    MissionValidator,
+    SkillName,
+)
 
 VALIDATOR = MissionValidator()
 
@@ -33,6 +39,15 @@ def test_valid_chained_mission_passes() -> None:
     report = VALIDATOR.validate(mission)
     assert report.valid, report.to_dict()
     assert report.failure_type is None
+
+
+def test_win32_alias_mission_id_is_rejected_by_validator() -> None:
+    mission = Mission(
+        mission_id="trailing.",
+        steps=(MissionStep(step_id="s1", skill=SkillName.STOP, parameters={}),),
+    )
+    report = VALIDATOR.validate(mission)
+    assert not report.valid and "INVALID_MISSION_ID" in _codes(report)
 
 
 def test_empty_mission_is_rejected() -> None:

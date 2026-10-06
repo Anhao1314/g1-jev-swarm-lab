@@ -269,10 +269,13 @@ class CapabilityGrounder:
                 skill=step.skill.value,
                 supported=True,
                 status=GROUNDED,
-                execution_mode="heading_lateral",
+                execution_mode="open_loop",
                 risk="LOW",
                 evidence_ref=reference,
-                reason=f"within validated range (+/-{limit:g} deg, {source_phase})",
+                reason=(
+                    f"within validated range (+/-{limit:g} deg, {source_phase}); no Phase 1.3 "
+                    "path correction is applied to an in-place turn"
+                ),
                 source_phase=source_phase,
             )
         if step.skill is SkillName.STAND:
@@ -300,10 +303,13 @@ class CapabilityGrounder:
                 skill=step.skill.value,
                 supported=True,
                 status=GROUNDED,
-                execution_mode="heading_lateral",
+                execution_mode="open_loop",
                 risk="LOW",
                 evidence_ref=reference,
-                reason=f"within validated range (<= {limit:g} s, {source_phase})",
+                reason=(
+                    f"within validated range (<= {limit:g} s, {source_phase}); no Phase 1.3 "
+                    "path correction is applied to a stationary stand"
+                ),
                 source_phase=source_phase,
             )
         # stop: no parameters, validated stop criterion from Phase 1.1/1.2

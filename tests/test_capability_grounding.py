@@ -154,3 +154,21 @@ def test_high_risk_only_point_is_rejected() -> None:
     assert result.status == CAPABILITY_REJECTED
     assert result.risk == "HIGH"
     assert "segmentation is not an allowed strategy" in result.reason
+
+
+def test_in_place_skills_never_get_the_walking_correction_mode(
+    phase13_grounder: CapabilityGrounder,
+) -> None:
+    """Pilot regression: the walking path-correction layer fights an in-place turn.
+
+    A turn held against the node-start heading stalls below the target until timeout,
+    so the walking closed-loop modes are reserved for walk_forward nodes.
+    """
+    turn = phase13_grounder.ground_step(_step("s1", SkillName.TURN, angle_deg=45.0))
+    stand = phase13_grounder.ground_step(_step("s2", SkillName.STAND, duration_s=2.0))
+    stop = phase13_grounder.ground_step(_step("s3", SkillName.STOP))
+    assert (turn.execution_mode, stand.execution_mode, stop.execution_mode) == (
+        "open_loop",
+        "open_loop",
+        "open_loop",
+    )

@@ -19,7 +19,12 @@ from ..simulation.errors import G1SimulationError, InvalidControlError, Simulati
 from ..skills import SkillStatus
 from .evidence import MissionRecorder
 from .grounding import CapabilityGrounder, GroundedPlan
-from .ir import MISSION_ID_PATTERN, MISSION_SCHEMA_VERSION, Mission, MissionIRError
+from .ir import (
+    MISSION_SCHEMA_VERSION,
+    Mission,
+    MissionIRError,
+    is_path_safe_mission_id,
+)
 from .live_session import NodeExecution
 from .task_graph import MissionState, NodeState, TaskGraph
 from .validator import MissionValidator
@@ -132,7 +137,7 @@ class MissionExecutor:
             mission_id = mission_input.mission_id
         elif isinstance(mission_input, Mapping):
             candidate = mission_input.get("mission_id")
-            if isinstance(candidate, str) and MISSION_ID_PATTERN.match(candidate):
+            if isinstance(candidate, str) and is_path_safe_mission_id(candidate):
                 mission_id = candidate
         recorder: MissionRecorder | None = None
         if write_evidence and self.recorder_root:
@@ -515,4 +520,10 @@ class MissionExecutor:
     def _plain(value: Any) -> Any:
         if isinstance(value, Mission):
             return value.to_dict()
-        return value
+        if isinstance(value, Mapping):
+            return {str(key): MissionExecutor._plain(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [MissionExecutor._plain(item) for item in value]
+        if value is None or isinstance(value, (str, int, float, bool)):
+            return value
+        return repr(value)
