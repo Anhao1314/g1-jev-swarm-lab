@@ -1,0 +1,95 @@
+# Phase 1.1 PILOT protocol (harness gate only; results are not used for the
+# official summary). Subset of the frozen protocol with 3 seeds.
+experiment_id: g1_skill_characterization_001
+protocol_version: "1.0.0-pilot"
+frozen: false
+robot_config: configs/robot/g1_locomotion_12dof.yaml
+provenance:
+  model_source: https://github.com/unitreerobotics/unitree_rl_gym
+  model_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  model_xml: resources/robots/g1_description/scene.xml
+  controller_source: https://github.com/unitreerobotics/unitree_rl_gym/deploy/deploy_mujoco/deploy_mujoco.py
+  controller_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  controller_kind: official_pretrained_policy
+  policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  dof: 12
+  actuators: 12
+thresholds:
+  walk_tolerance_min_m: 0.2
+  walk_tolerance_relative: 0.10
+  walk_timeout_s_per_m: 6.0
+  walk_timeout_min_s: 15.0
+  turn_heading_tolerance_deg: 15.0
+  turn_timeout_s: 10.0
+  stop_window_s: 1.0
+  stop_speed_threshold_mps: 0.10
+  stop_measurement_window_s: 4.0
+  stop_max_duration_s: 4.0
+preconditions:
+  walk_forward: [controller_available, state_finite, standing, not_fallen]
+  turn: [controller_available, state_finite, standing, not_fallen]
+  stop: [controller_available, state_finite]
+  stand: [controller_available, state_finite]
+success_criteria:
+  walk_forward:
+    distance_error_m: max(0.2, 0.10 * target_distance_m)
+    timeout_s: max(15.0, 6.0 * target_distance_m)
+    no_fall: true
+    lateral_drift_m: report_only
+    heading_error_deg: report_only
+  turn:
+    heading_error_deg: "<= 15.0"
+    no_fall: true
+    translation_drift_m: report_only
+  stop:
+    criterion: trailing_window_mean_speed
+    window_s: 1.0
+    threshold_mps: 0.10
+    timeout_s: 4.0
+    no_fall: true
+  stand:
+    no_fall: true
+    state_finite: true
+    other_metrics: report_only
+nominal:
+  stand:
+    stand_phase_s: 2.0
+    durations_s: [5.0]
+    repetitions: 1
+  walk_forward:
+    distances_m: [0.5, 2.0, 5.0]
+    repetitions: 1
+    speed_mps: 0.5
+  turn:
+    angles_deg: [-45, 45]
+    repetitions: 1
+    yaw_rate_radps: 0.5
+  stop:
+    command_speeds_mps: [0.5]
+    repetitions: 1
+    warmup_s: 3.0
+robustness:
+  tasks:
+    walk_forward_2m: {skill: walk_forward, target_distance_m: 2.0}
+    turn_45: {skill: turn, target_angle_deg: 45.0}
+    walk_stop_2m: {skill: walk_forward+stop, target_distance_m: 2.0}
+  conditions: [yaw, friction, push]
+  seeds: [0, 1, 2]
+  push_trigger_s_range_by_task:
+    walk_forward_2m: [1.0, 2.0]
+    turn_45: [0.4, 0.8]
+    walk_stop_2m: [1.0, 2.0]
+perturbations:
+  yaw_offset_deg_limit: 10.0
+  xy_offset_m_limit: 0.05
+  joint_position_std_rad: 0.02
+  joint_velocity_std_radps: 0.05
+  friction_slide_range: [0.4, 1.2]
+  push_force_fraction_range: [0.06, 0.10]
+  push_direction: [0.0, 1.0, 0.0]
+  push_duration_s: 0.2
+  push_trigger_s_range: [1.0, 2.0]
+notes: >
+  Pilot gate: verifies simulator stability, evidence writing, seed-dependent
+  perturbation sampling and metric correctness before the frozen final
+  campaign. Pilot runs are stored under campaign=pilot and never aggregated.

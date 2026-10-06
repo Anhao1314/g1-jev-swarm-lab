@@ -19,6 +19,7 @@ from ..paths import repo_root
 
 MANIFEST_FIELDS = (
     "experiment_id",
+    "campaign",
     "run_id",
     "git_commit",
     "seed",
@@ -33,8 +34,12 @@ MANIFEST_FIELDS = (
     "g1_model_commit",
     "controller_source",
     "controller_version",
+    "controller_hash",
     "task",
     "config",
+    "perturbation_type",
+    "perturbation_parameters",
+    "thresholds",
     "result",
 )
 
@@ -129,12 +134,18 @@ class RunManifest:
     g1_model_commit: str | None = None
     controller_source: str | None = None
     controller_version: str | None = None
+    controller_hash: str | None = None
     result: dict[str, Any] | None = None
+    campaign: str | None = None
+    perturbation_type: str | None = None
+    perturbation_parameters: dict[str, Any] | None = None
+    thresholds: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         env = self.environment
         return {
             "experiment_id": self.experiment_id,
+            "campaign": self.campaign,
             "run_id": self.run_id,
             "git_commit": env.git_commit,
             "seed": self.seed,
@@ -149,8 +160,12 @@ class RunManifest:
             "g1_model_commit": self.g1_model_commit,
             "controller_source": self.controller_source,
             "controller_version": self.controller_version,
+            "controller_hash": self.controller_hash,
             "task": self.task,
             "config": self.config,
+            "perturbation_type": self.perturbation_type,
+            "perturbation_parameters": self.perturbation_parameters,
+            "thresholds": self.thresholds,
             "result": self.result,
         }
 

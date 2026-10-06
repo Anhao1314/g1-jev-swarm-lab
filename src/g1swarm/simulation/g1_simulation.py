@@ -219,6 +219,117 @@ class G1Simulation:
     def base_angular_velocity(self) -> np.ndarray:
         return np.array(self._data.qvel[3:6], dtype=np.float64, copy=True)
 
+    # -- characterization harness surface ------------------------------
+    # These helpers exist for experiment harnesses (initial-condition
+    # injection, friction variation, external pushes). Skills never call them;
+    # locomotion skills only issue actuator commands through ``step``.
+
+    def total_mass(self) -> float:
+        return float(np.sum(self._model.body_mass))
+
+    def base_body_mass(self) -> float:
+        return float(self._model.body_mass[self._base_body_id])
+
+    def set_base_state(
+        self, *, xy: tuple[float, float] | None = None, yaw_rad: float | None = None
+    ) -> None:
+        """Set the initial base XY position and/or yaw (episode initialization only)."""
+
+        if xy is not None:
+            self._data.qpos[0] = float(xy[0])
+            self._data.qpos[1] = float(xy[1])
+        if yaw_rad is not None:
+            half = float(yaw_rad) / 2.0
+            self._data.qpos[3] = math.cos(half)
+            self._data.qpos[4] = 0.0
+            self._data.qpos[5] = 0.0
+            self._data.qpos[6] = math.sin(half)
+        self._mujoco.mj_forward(self._model, self._data)
+
+    def offset_joint_state(
+        self,
+        *,
+        position_offsets: np.ndarray | None = None,
+        velocity_offsets: np.ndarray | None = None,
+    ) -> None:
+        """Add a bounded offset to hinge-joint positions/velocities (initialization only)."""
+
+        if position_offsets is not None:
+            offsets = np.asarray(position_offsets, dtype=np.float64)
+            if offsets.shape != self._data.qpos[7:].shape:
+                raise ValueError(f"position_offsets must have shape {self._data.qpos[7:].shape}")
+            if not np.all(np.isfinite(offsets)):
+                raise ValueError("position_offsets contains non-finite values")
+            self._data.qpos[7:] = self._data.qpos[7:] + offsets
+        if velocity_offsets is not None:
+            offsets = np.asarray(velocity_offsets, dtype=np.float64)
+            if offsets.shape != self._data.qvel[6:].shape:
+                raise ValueError(f"velocity_offsets must have shape {self._data.qvel[6:].shape}")
+            if not np.all(np.isfinite(offsets)):
+                raise ValueError("velocity_offsets contains non-finite values")
+            self._data.qvel[6:] = self._data.qvel[6:] + offsets
+        self._mujoco.mj_forward(self._model, self._data)
+
+    def set_all_geom_friction(
+        self, slide: float, *, spin: float | None = None, roll: float | None = None
+    ) -> None:
+        """Set the sliding (and optionally spin/roll) friction of every geom.
+
+        MuJoCo derives contact friction from both geoms, so varying only the
+        floor would be masked by robot geom friction; setting all geoms makes
+        the sampled value the effective contact friction.
+        """
+
+        slide_value = float(slide)
+        if not math.isfinite(slide_value) or slide_value <= 0.0:
+            raise ValueError("slide friction must be a positive finite value")
+        self._model.geom_friction[:, 0] = slide_value
+        if spin is not None:
+            self._model.geom_friction[:, 1] = float(spin)
+        if roll is not None:
+            self._model.geom_friction[:, 2] = float(roll)
+
+    def geom_friction_summary(self) -> dict:
+        friction = np.asarray(self._model.geom_friction)
+        return {
+            "geom_count": int(friction.shape[0]),
+            "slide_values": sorted({round(float(value), 6) for value in friction[:, 0]}),
+            "spin_values": sorted({round(float(value), 6) for value in friction[:, 1]}),
+        }
+
+    def apply_base_force(self, force: np.ndarray, torque: np.ndarray | None = None) -> None:
+        """Apply a world-frame force (and optional torque) to the base body.
+
+        The force stays applied until ``clear_applied_forces``; harnesses set it
+        only for the scheduled push window.
+        """
+
+        force_array = np.asarray(force, dtype=np.float64)
+        if force_array.shape != (3,):
+            raise ValueError(f"force must have shape (3,), got {force_array.shape}")
+        if torque is None:
+            torque_array = np.zeros(3, dtype=np.float64)
+        else:
+            torque_array = np.asarray(torque, dtype=np.float64)
+            if torque_array.shape != (3,):
+                raise ValueError(f"torque must have shape (3,), got {torque_array.shape}")
+        self._data.xfrc_applied[self._base_body_id, 0:3] = force_array
+        self._data.xfrc_applied[self._base_body_id, 3:6] = torque_array
+
+    def clear_applied_forces(self) -> None:
+        self._data.xfrc_applied[:] = 0.0
+
+    def euler_deg(self) -> dict[str, float]:
+        """Base roll/pitch/yaw in degrees from the MuJoCo (w, x, y, z) quaternion."""
+
+        w, x, y, z = (float(value) for value in self._data.qpos[3:7])
+        norm = math.sqrt(w * w + x * x + y * y + z * z) or 1.0
+        w, x, y, z = w / norm, x / norm, y / norm, z / norm
+        roll = math.atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y))
+        pitch = math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x))))
+        yaw = math.atan2(2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z))
+        return {"roll_deg": math.degrees(roll), "pitch_deg": math.degrees(pitch), "yaw_deg": math.degrees(yaw)}
+
     # -- optional viewer ----------------------------------------------
     def open_viewer(self) -> None:
         """Open the interactive MuJoCo viewer (desktop sessions only)."""
