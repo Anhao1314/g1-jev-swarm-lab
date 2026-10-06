@@ -24,7 +24,8 @@ from g1swarm.evidence import EnvironmentInfo, utc_timestamp
 from g1swarm.language.llm import OpenAICompatibleBackend
 from g1swarm.llm.backend import LLMBackend, LLMBackendResponse
 from g1swarm.llm.compiler import LLMMissionCompiler
-from g1swarm.llm.datasets import LLMSample, load_dataset
+from g1swarm.llm.datasets import LLMDatasetError, LLMSample, load_dataset
+from g1swarm.language.corpus import load_corpus
 from g1swarm.simplex.canonicalizer import LLMMissionCanonicalizer
 from g1swarm.simplex.metrics import (
     comparison_row,
@@ -139,6 +140,32 @@ def _load_protocol(path: str | Path) -> tuple[dict[str, Any], Path]:
     return protocol, resolved
 
 
+def _load_dataset_any(path: str | Path):
+    try:
+        return load_dataset(path)
+    except LLMDatasetError:
+        corpus = load_corpus(path)
+        samples = tuple(
+            LLMSample(
+                sample_id=sample.sample_id,
+                split="blind",
+                category=sample.category,
+                benchmark_set="B" if sample.expected_compiler_status == "SUCCESS" else "C",
+                source=sample.source,
+                utterance=sample.utterance,
+                expected_compiler_status=sample.expected_compiler_status,
+                expected_error_code=sample.expected_error_code,
+                expected_mission=sample.expected_mission,
+                expected_runtime_status=sample.expected_runtime_status,
+                expected_failure_type=sample.expected_failure_type,
+                e2e=bool(sample.e2e),
+                notes=sample.notes,
+            )
+            for sample in corpus.samples
+        )
+        return type("CorpusDataset", (), {"dataset_id": corpus.corpus_id, "samples": samples})()
+
+
 def _make_backend(protocol: Mapping[str, Any]) -> OpenAICompatibleBackend:
     provider = protocol["provider"]
     base_url = os.environ.get(str(provider["base_url_env"])) or os.environ.get("OPENAI_BASE_URL")
@@ -249,7 +276,7 @@ def run(
     if require_frozen and not bool(protocol.get("frozen", False)):
         raise SystemExit("protocol is not frozen")
     dataset_file = resolve_repo_path(dataset_path)
-    dataset = load_dataset(dataset_file)
+    dataset = _load_dataset_any(dataset_file)
     base_backend = _make_backend(protocol)
     cache = CachingBackend(base_backend, direct_prompt_sha256=str(protocol["prompt"]["direct_sha256"]))
     _seed_direct(cache, protocol, seed_direct_path)
