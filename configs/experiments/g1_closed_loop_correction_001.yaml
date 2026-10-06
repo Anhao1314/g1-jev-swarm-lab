@@ -6,7 +6,7 @@
 # robot model or the Phase 1.2 task envelope.
 experiment_id: g1_closed_loop_correction_001
 protocol_version: "1.0.0"
-frozen: false
+frozen: true
 robot_config: configs/robot/g1_locomotion_12dof.yaml
 provenance:
   model_source: https://github.com/unitreerobotics/unitree_rl_gym
@@ -58,9 +58,14 @@ correction_limits:
   oscillation_threshold_radps: 0.05
 gains:
   none: {k_heading: 0.0, k_lateral: 0.0}
-  # PROVISIONAL - replaced by the pilot-selected gains before freeze.
-  heading_only: {k_heading: 0.5}
-  heading_lateral: {k_heading: 0.5, k_lateral: 0.5}
+  # Frozen pilot selection (engineering pilot, protocol_freeze commit follows).
+  # heading gain sweep {0.5, 1.0, 1.5} x {4 m, 8 m}: all three turned the 8 m
+  # open-loop FAIL into PASS with zero saturation/oscillation; 1.5 gave the
+  # smallest residual (8 m: drift -0.047 m, heading -0.81 deg) and was selected.
+  # lateral sweep {0.5, 1.0, 2.0} with k_heading=1.5: 1.0 gave near-zero drift
+  # (-0.002 m at 8 m) with the smallest RMS among the balanced candidates.
+  heading_only: {k_heading: 1.5}
+  heading_lateral: {k_heading: 1.5, k_lateral: 1.0}
 pilot:
   distances_m: [4.0, 8.0]
   heading_gains: [0.5, 1.0, 1.5]
@@ -71,7 +76,8 @@ boundary_extension:
   distances_m: [12.0, 15.0, 20.0]
   max_m: 20.0
 disturbance_spot_check:
-  enabled: false
+  # Enabled after the pilot showed nominal correction value (FAIL->PASS at 8 m).
+  enabled: true
   distance_m: 8.0
   conditions:
     - {type: push, force_n: 60.0, direction: [0.0, 1.0, 0.0], duration_s: 0.2, trigger_s: 1.0}
@@ -87,3 +93,9 @@ notes: >
   bypass the correction layer entirely so Treatment A is bit-identical to the
   historical path. Disturbance spot-checks are enabled only if the nominal
   campaign shows correction value.
+  Pilot evidence (engineering pilot, not final): open-loop reproduced the audit
+  baseline exactly (4 m drift -0.2814 m / heading -6.720 deg PASS; 8 m
+  -0.9471 m / -13.310 deg FAIL). Heading-only 8 m: -0.047 m / -0.81 deg PASS.
+  Heading+lateral 8 m: -0.002 m / -0.43 deg PASS. No saturation, no oscillation,
+  viewer sanity checks matched the evidence. Gains are frozen here and were not
+  tuned against final results.
