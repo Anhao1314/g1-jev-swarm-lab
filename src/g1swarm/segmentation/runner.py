@@ -290,6 +290,11 @@ class SegmentationRunner:
             "final_forward_progress_m": forward,
             "final_lateral_drift_m": lateral,
             "final_heading_error_deg": heading,
+            # Canonical envelope keys: the shared walk evaluator reads these names.
+            # The final_* aliases above are kept for schema continuity.
+            "forward_displacement_m": forward,
+            "lateral_drift_m": lateral,
+            "heading_error_deg": heading,
             "absolute_distance_error_m": abs(forward - float(total_distance)),
             "completion_sim_time_s": elapsed,
             "total_simulation_time_s": elapsed,
@@ -430,9 +435,15 @@ def build_segmentation_comparison(
                 "treatment": record["treatment"],
                 "physical_success": metrics["physical_success"],
                 "task_success": metrics["task_success"],
-                "final_forward_progress_m": metrics["final_forward_progress_m"],
-                "lateral_drift_m": metrics["final_lateral_drift_m"],
-                "heading_error_deg": metrics["final_heading_error_deg"],
+                "final_forward_progress_m": metrics.get(
+                    "forward_displacement_m", metrics.get("final_forward_progress_m")
+                ),
+                "lateral_drift_m": metrics.get(
+                    "lateral_drift_m", metrics.get("final_lateral_drift_m")
+                ),
+                "heading_error_deg": metrics.get(
+                    "heading_error_deg", metrics.get("final_heading_error_deg")
+                ),
                 "total_simulation_time_s": metrics["total_simulation_time_s"],
                 "total_stopping_time_s": metrics["total_stopping_time_s"],
                 "path_length_m": metrics["path_length_m"],
