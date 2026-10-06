@@ -14,15 +14,16 @@ flowchart LR
     AUDIT --> P13["Phase 1.3<br/>Closed-loop correction"]
     P13 --> P20["Phase 2.0<br/>Mission runtime"]
     P20 --> P21["Phase 2.1<br/>Controlled language"]
-    P21 --> P22["Phase 2.2<br/>LLM compiler"]
+    P21 --> P22["Phase 2.2<br/>LLM compiler PARTIAL"]
+    P22 --> P22B["Phase 2.2b<br/>Hardening"]
 
     classDef done fill:#dafbe1,stroke:#1a7f37,color:#1f2328;
     classDef audit fill:#fff8c5,stroke:#9a6700,color:#1f2328;
     classDef current fill:#ddf4ff,stroke:#0969da,color:#1f2328;
 
     class P0,P1,P11,P12,P12B,P13,P20,P21 done;
-    class AUDIT audit;
-    class P22 current;
+    class AUDIT,P22 audit;
+    class P22B current;
 ```
 
 The key methodological transition was:
@@ -61,6 +62,12 @@ flowchart TD
 ![Phase 2.1 language corpus](visuals/phase2-language-corpus.svg)
 
 **Takeaway:** Phase 2.1 tested 189 frozen samples across valid, compositional, ambiguous, unsupported, malformed and capability-unknown language. Every expected compiler result and canonical Mission IR matched.
+
+## LLM coverage gain versus safety cost
+
+![Lark versus DeepSeek compiler](visuals/phase2-llm-vs-rule.svg)
+
+**Takeaway:** DeepSeek nearly doubled open-language coverage and reached 1.0 blind exact IR, but two malformed controlled-regression inputs were accepted as valid Missions. The capability gain is real; the compiler is not yet safe enough to replace the deterministic baseline.
 
 ## Integrity correction chain
 

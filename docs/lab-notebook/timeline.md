@@ -14,14 +14,16 @@ flowchart LR
     A --> P13["1.3<br/>Closed-loop"]
     P13 --> P20["2.0<br/>Mission runtime"]
     P20 --> P21["2.1<br/>Controlled language"]
-    P21 --> P22["2.2<br/>LLM compiler"]
+    P21 --> P22["2.2<br/>LLM compiler PARTIAL"]
+    P22 --> P22B["2.2b<br/>Compiler hardening"]
 
     classDef done fill:#dafbe1,stroke:#1a7f37,color:#1f2328;
     classDef audit fill:#fff8c5,stroke:#9a6700,color:#1f2328;
     classDef current fill:#ddf4ff,stroke:#0969da,color:#1f2328;
     class P0,P1,P11,P12,P12B,P13,P20,P21 done;
     class A audit;
-    class P22 current;
+    class P22 audit;
+    class P22B current;
 ```
 
 For the compact chart-based view, see the [Visual Research Summary](visual-summary.md).
@@ -286,12 +288,34 @@ Local HEAD: `e825d11b3a1e1c05c36f2e70ac9de79173b6cc6b`
 
 ---
 
-## Current frontier — Phase 2.2
+## Phase 2.2 — LLM Mission Compiler
 
-The next research question is no longer “can language control G1?”
+Local branch: `phase2.2/llm-compiler`  
+Local HEAD: `be621e882488e4ef85af23434c7c958f235a7b87`
 
-It is:
+**Question:** how much open-language coverage does an LLM add over the deterministic grammar baseline, and what does that gain cost?
 
-> How much additional natural-language coverage does an LLM compiler provide over a deterministic grammar baseline, and what does that coverage cost in semantic errors, unsafe acceptance, latency, and token/API cost?
+**Result:** PARTIAL.
 
-No Phase 2.2 result is recorded here yet.
+- blind valid exact IR: 0.53 → 1.0;
+- open-language coverage: 0.5106 → 1.0;
+- composition accuracy: 0.25 → 1.0;
+- blind unsafe acceptance: 0;
+- controlled malformed unsafe acceptance: 2;
+- median latency: 91.9 µs → 2.227 s.
+
+**Difficulty:** the LLM interpreted two malformed connector inputs as recoverable intent instead of rejecting malformed language.
+
+**Breakthrough:** generative compilation provided a real coverage gain while preserving capability grounding.
+
+**Failure:** global fail-closed language safety was not met.
+
+**Decision:** do not advance to long-horizon language. Enter Phase 2.2b hardening.
+
+See [Phase 2.2 LLM Mission Compiler](phase2.2-llm-compiler.md).
+
+---
+
+## Current frontier — Phase 2.2b
+
+> Can the LLM compiler retain its open-language coverage gain while restoring `invalid_language_reaching_robot = 0` across both blind and controlled regression sets?

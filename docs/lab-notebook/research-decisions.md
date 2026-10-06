@@ -116,3 +116,20 @@ rather than merely showing that an LLM can produce JSON.
 The lab notebook explains why experiments were performed and how decisions were made, but it does not override machine evidence.
 
 If the notebook and raw evidence disagree, the evidence must be audited and the notebook corrected.
+
+
+---
+
+## D009 — Do not promote the LLM compiler after Phase 2.2
+
+**Context:** DeepSeek-v4.1flash improved blind open-language coverage from 0.5106 to 1.0 and valid exact IR from 0.53 to 1.0.
+
+**Blocking evidence:** two malformed connector inputs in the frozen controlled regression were accepted as valid Missions.
+
+**Choice:** keep Phase 2.2 verdict PARTIAL and enter Phase 2.2b Compiler Hardening.
+
+**Rejected direction:** move directly to long-horizon language tasks based on the strong blind benchmark.
+
+**Reasoning:** the language compiler is upstream of robot execution. A narrow but reproducible fail-open case is sufficient to block promotion even when aggregate accuracy is excellent.
+
+**Revisit condition:** all required language safety gates return to zero on frozen regression and new held-out hardening tests without sacrificing the demonstrated coverage gain.

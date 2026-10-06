@@ -215,10 +215,18 @@ LLM
 
 ---
 
-## Current Phase 2.2 question
+## Phase 2.2 — LLM Mission Compiler
 
-The next experiment should measure a trade-off, not celebrate LLM usage:
+Phase 2.2 has now completed with verdict **PARTIAL**.
 
-> How much open-language coverage does an LLM add over the frozen grammar baseline, and what does that gain cost in wrong IRs, unsafe acceptance, over-refusal, latency, variability, and API/token usage?
+The LLM improved open valid coverage from 0.5106 to 1.0 and blind valid exact IR from 0.53 to 1.0, but two malformed controlled-regression connector inputs were accepted as valid Missions. That violated the global `invalid_language_reaching_robot = 0` hard gate.
 
-The runtime safety boundary remains frozen.
+See the full [Phase 2.2 LLM Mission Compiler record](phase2.2-llm-compiler.md).
+
+The Runtime safety boundary remained frozen.
+
+## Current frontier — Phase 2.2b
+
+The next question is narrower:
+
+> Can we harden the LLM compiler against malformed connector repair and refusal-boundary inconsistency without sacrificing the open-language coverage gain?

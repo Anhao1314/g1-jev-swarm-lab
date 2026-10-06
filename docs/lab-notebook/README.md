@@ -45,6 +45,7 @@ Once those experiment branches are pushed, this notebook should link directly to
 - [Research timeline](timeline.md)
 - [Phase 1 — Embodied execution layer](phase1-embodied-execution.md)
 - [Phase 2 — Mission runtime and language](phase2-mission-language.md)
+- [Phase 2.2 — LLM Mission Compiler](phase2.2-llm-compiler.md)
 - [Negative results and failed hypotheses](negative-results.md)
 - [Integrity incidents and corrections](integrity-incidents.md)
 - [Research decisions](research-decisions.md)
