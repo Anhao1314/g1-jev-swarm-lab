@@ -1,6 +1,19 @@
 # G1 Jev Swarm Lab
 
 
+**Phase 2.2 - LLM mission compiler benchmark (complete).** Phase 2.2
+evaluates a constrained LLM mission compiler against the frozen deterministic
+grammar baseline. On the frozen 153-sample blind set, the LLM reached 1.0
+exact Mission IR match on clear valid inputs and 1.0 open-language coverage
+versus 0.5106 for Lark, with zero unsafe acceptance, hallucinated skills or
+invalid inputs reaching the runtime. One unsupported/meta classification and
+one ambiguity error-code case remain hardening findings. Artifacts:
+`experiments/phase2/llm_compiler_001/`. This is a constrained benchmark, not
+a claim of unrestricted natural-language understanding.
+
+
+
+
 **Phase 2.1 - controlled-language compiler (complete).** Controlled Chinese
 commands can be deterministically compiled into Mission IR under the frozen
 Phase 2.1 grammar. The 189-sample frozen corpus reached 189/189 status and
