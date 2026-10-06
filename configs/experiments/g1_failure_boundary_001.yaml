@@ -1,0 +1,145 @@
+# Phase 1.2 FROZEN protocol: failure boundary & skill risk mapping.
+#
+# One-factor-at-a-time boundary searches over five parameters. The task
+# envelopes are warehouse-corridor task constraints (experiment definitions),
+# NOT official Unitree G1 capability standards. The protocol is committed and
+# frozen before the final campaign; only the labels/scales below change between
+# pilot and final -- never after final data is seen.
+experiment_id: g1_failure_boundary_001
+protocol_version: "1.0.0"
+frozen: true
+robot_config: configs/robot/g1_locomotion_12dof.yaml
+provenance:
+  model_source: https://github.com/unitreerobotics/unitree_rl_gym
+  model_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  model_xml: resources/robots/g1_description/scene.xml
+  controller_source: https://github.com/unitreerobotics/unitree_rl_gym/deploy/deploy_mujoco/deploy_mujoco.py
+  controller_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  controller_kind: official_pretrained_policy
+  policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  dof: 12
+  actuators: 12
+thresholds:
+  walk:
+    target_distance_m: 2.0
+    tolerance_min_m: 0.2
+    speed_mps: 0.5
+    timeout_min_s: 15.0
+    timeout_s_per_m: 6.0
+  envelopes:
+    nominal:
+      distance_error_floor_m: 0.30
+      distance_error_relative: 0.10
+      lateral_floor_m: 0.35
+      lateral_relative: 0.07
+      heading_max_deg: 15.0
+      timeout_floor_s: 15.0
+      timeout_s_per_m: 6.0
+    strict:
+      distance_error_floor_m: 0.15
+      distance_error_relative: 0.05
+      lateral_floor_m: 0.20
+      lateral_relative: 0.035
+      heading_max_deg: 8.0
+      timeout_floor_s: 12.0
+      timeout_s_per_m: 5.0
+  push:
+    direction: [0.0, 1.0, 0.0]
+    duration_s: 0.2
+    trigger_s_range: [0.8, 1.2]
+  joint:
+    velocity_std_radps: 0.05
+  zones:
+    reliable_min_rate: 0.90
+    failure_max_rate: 0.30
+  risk:
+    min_runs_for_label: 3
+    min_runs_for_low: 5
+sampling:
+  exploration_seeds_deterministic: 1
+  exploration_seeds_stochastic: 2
+  final_runs_per_point:
+    reliable: 5
+    transition: 10
+    failure: 5
+    deterministic: 3
+  final_seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+experiments:
+  A_distance:
+    parameter: target_distance_m
+    unit: m
+    direction: increase
+    deterministic: true
+    safe_start: 5.0
+    candidates: [7.5, 10.0, 15.0, 20.0, 30.0, 40.0]
+    max_evaluations: 12
+    refinement_rounds: 2
+    resolution: 2.5
+    task:
+      target_distance_m: 2.0
+  B_push:
+    parameter: push_force_n
+    unit: N
+    direction: increase
+    deterministic: false
+    safe_start: 20.0
+    candidates: [30.0, 60.0, 100.0, 150.0, 200.0, 250.0]
+    max_evaluations: 12
+    refinement_rounds: 3
+    resolution: 10.0
+    task:
+      target_distance_m: 2.0
+  C_friction:
+    parameter: friction_slide
+    unit: ""
+    direction: decrease
+    deterministic: true
+    safe_start: 0.5
+    candidates: [0.40, 0.25, 0.15, 0.08, 0.05]
+    max_evaluations: 10
+    refinement_rounds: 2
+    resolution: 0.02
+    task:
+      target_distance_m: 2.0
+  D_joint:
+    parameter: joint_position_sigma_rad
+    unit: rad
+    direction: increase
+    deterministic: false
+    safe_start: 0.02
+    candidates: [0.05, 0.10, 0.20, 0.30]
+    max_evaluations: 10
+    refinement_rounds: 2
+    resolution: 0.01
+    task:
+      target_distance_m: 2.0
+  E_yaw:
+    parameter: initial_yaw_offset_deg
+    unit: deg
+    direction: increase
+    deterministic: true
+    safe_start: 5.0
+    candidates: [10.0, 20.0, 30.0, 45.0, 60.0]
+    max_evaluations: 10
+    refinement_rounds: 2
+    resolution: 5.0
+    task:
+      target_distance_m: 2.0
+pilot_points:
+  A_distance: 10.0
+  B_push: 100.0
+  C_friction: 0.30
+  D_joint: 0.10
+  E_yaw: 20.0
+stop_rules:
+  max_wall_time_minutes_per_experiment: 15
+  max_parameter_note: >
+    Search stops at the frozen candidate ceilings (40 m walk, 250 N lateral
+    push, 0.05 friction, 0.30 rad joint sigma, 60 deg initial yaw) or at the
+    evaluation budget; a search that never leaves the reliable zone is reported
+    as boundary_not_reached rather than extended indefinitely.
+notes: >
+  Boundary discovery only: no controller parameter, action scale, gain,
+  threshold or policy weight is tuned. Every run starts from reset and invokes
+  the existing WalkForward skill; the E_yaw condition evaluates a fixed
+  world-frame 2 m goal, which is a task definition, not a skill change.

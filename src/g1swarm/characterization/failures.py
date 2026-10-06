@@ -11,6 +11,8 @@ from enum import Enum
 
 from ..skills.contract import SkillStatus
 
+TAXONOMY_VERSION = "1.2.0"
+
 
 class FailureType(str, Enum):
     SUCCESS = "SUCCESS"
@@ -27,6 +29,8 @@ class FailureType(str, Enum):
     PRECONDITION_FAILED = "PRECONDITION_FAILED"
     INTERRUPTED = "INTERRUPTED"
     UNKNOWN_FAILURE = "UNKNOWN_FAILURE"
+    SLIP = "SLIP"
+    TASK_ENVELOPE_VIOLATION = "TASK_ENVELOPE_VIOLATION"
 
 
 @dataclass(frozen=True)

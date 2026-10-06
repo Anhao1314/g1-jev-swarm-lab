@@ -319,6 +319,26 @@ class G1Simulation:
     def clear_applied_forces(self) -> None:
         self._data.xfrc_applied[:] = 0.0
 
+    def joint_limits(self) -> tuple[np.ndarray, np.ndarray]:
+        """Return (low, high) position limits for the hinge joints (qpos[7:]).
+
+        Unlimited joints are reported as +/-infinity. Used by the Phase 1.2
+        perturbation harness so sampled joint offsets can never leave the model's
+        legal range.
+        """
+
+        mujoco = self._mujoco
+        count = self.num_qpos - 7
+        low = np.full(count, -np.inf, dtype=np.float64)
+        high = np.full(count, np.inf, dtype=np.float64)
+        for joint_id in range(self._model.njnt):
+            if self._model.jnt_type[joint_id] == mujoco.mjtJoint.mjJNT_FREE:
+                continue
+            address = int(self._model.jnt_qposadr[joint_id]) - 7
+            if 0 <= address < count and self._model.jnt_limited[joint_id]:
+                low[address], high[address] = (float(v) for v in self._model.jnt_range[joint_id])
+        return low, high
+
     def euler_deg(self) -> dict[str, float]:
         """Base roll/pitch/yaw in degrees from the MuJoCo (w, x, y, z) quaternion."""
 

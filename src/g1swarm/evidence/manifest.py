@@ -40,6 +40,13 @@ MANIFEST_FIELDS = (
     "perturbation_type",
     "perturbation_parameters",
     "thresholds",
+    "search_campaign",
+    "search_parameter",
+    "search_iteration",
+    "bracket_state",
+    "physical_success",
+    "task_success",
+    "risk_label",
     "result",
 )
 
@@ -140,6 +147,13 @@ class RunManifest:
     perturbation_type: str | None = None
     perturbation_parameters: dict[str, Any] | None = None
     thresholds: dict[str, Any] | None = None
+    search_campaign: str | None = None
+    search_parameter: str | None = None
+    search_iteration: int | None = None
+    bracket_state: dict[str, Any] | None = None
+    physical_success: bool | None = None
+    task_success: bool | None = None
+    risk_label: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         env = self.environment
@@ -166,6 +180,13 @@ class RunManifest:
             "perturbation_type": self.perturbation_type,
             "perturbation_parameters": self.perturbation_parameters,
             "thresholds": self.thresholds,
+            "search_campaign": self.search_campaign,
+            "search_parameter": self.search_parameter,
+            "search_iteration": self.search_iteration,
+            "bracket_state": self.bracket_state,
+            "physical_success": self.physical_success,
+            "task_success": self.task_success,
+            "risk_label": self.risk_label,
             "result": self.result,
         }
 
