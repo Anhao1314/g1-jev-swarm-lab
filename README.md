@@ -1,13 +1,14 @@
 # G1 Jev Swarm Lab
 
 
-**Phase 2.2 - LLM mission compiler benchmark (complete).** Phase 2.2
-evaluates a constrained LLM mission compiler against the frozen deterministic
-grammar baseline. On the frozen 153-sample blind set, the LLM reached 1.0
-exact Mission IR match on clear valid inputs and 1.0 open-language coverage
-versus 0.5106 for Lark, with zero unsafe acceptance, hallucinated skills or
-invalid inputs reaching the runtime. One unsupported/meta classification and
-one ambiguity error-code case remain hardening findings. Artifacts:
+**Phase 2.2 - LLM mission compiler benchmark (PARTIAL).** Phase 2.2 evaluates
+a constrained LLM mission compiler against the frozen deterministic grammar
+baseline. On the 153-sample blind set, the LLM reached 1.0 exact Mission IR
+match on clear valid inputs and 1.0 open-language coverage versus 0.5106 for
+Lark, with zero blind unsafe acceptance, hallucinated skills or invalid inputs
+reaching the runtime. The required 189-sample controlled regression found two
+malformed connector inputs accepted as missions, so the overall verdict is
+PARTIAL and the next gate is compiler hardening. Artifacts:
 `experiments/phase2/llm_compiler_001/`. This is a constrained benchmark, not
 a claim of unrestricted natural-language understanding.
 
