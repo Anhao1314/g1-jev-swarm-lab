@@ -16,6 +16,32 @@ The project will specifically investigate **Jev as a high-level decision model**
 
 ## Current status
 
+**Phase 1.2 - failure boundary & skill risk mapping (complete).** Frozen protocol
+`configs/experiments/g1_failure_boundary_001.yaml` (hash `9145d03a...`) ran 91
+final runs at commit `ea3bfb8`: **91/91 physical successes, 54/91 task
+successes** - all failures are task-envelope violations with the robot still
+upright.
+
+- Lateral push (0.2 s, +Y): 20 N is LOW risk and 30 N remained reliable in
+2-seed exploration; the task boundary appears at 60 N (40% task success in the
+5-seed final sample) and 70 N failed for every run. No falls were observed up
+to 100 N, so the fall boundary is not covered by this campaign.
+- Friction: reliable down to 0.175; 0.15 fails (drift -2.04 m, heading -49.9 deg)
+without falling.
+- Initial yaw with a fixed world-frame 2 m goal: 5 deg LOW, 10 deg task pass but
+strict-envelope degradation (MEDIUM), 15-20 deg fail.
+- Long-distance walk: under the frozen nominal envelope the walk is already
+degraded at 5 m, so the frozen ladder's safe start was wrong and the search
+reports `boundary_not_reached`; Phase 1.1 evidence brackets the distance
+boundary between 2 m (pass) and 5 m (drift limit exceeded).
+- Joint perturbation 0.02-0.30 rad never degraded the task (offsets clipped to
+joint limits): UNKNOWN beyond that ladder, not "safe".
+- Deliverables: `capability_boundary_map.json`, `risk_map.json` (schema 1.2.0)
+and `report.md` under `experiments/baselines/g1_failure_boundary_001/`.
+
+All statements above are conditional on the frozen experiment envelopes; they
+are not general safety or reliability claims.
+
 **Phase 1.1 - G1 skill competence characterization (complete).** The frozen protocol
 (`experiments/baselines/g1_skill_characterization_001/protocol.yaml`, SHA-256
 `007b316f2334021c02865858988e758adb6f5d0b99bf6c9d09618c7dc80a45fb`) was executed

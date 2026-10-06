@@ -22,6 +22,7 @@ Examples::
 from __future__ import annotations
 
 import argparse
+import math
 import time
 
 from g1swarm.characterization.kinematics import (
@@ -43,6 +44,15 @@ from g1swarm.skills import (
 )
 
 ROBOT_CONFIG = "configs/robot/g1_locomotion_12dof.yaml"
+
+# Phase 1.2 observation-only scenarios (viewer is never a metric source).
+SCENARIOS = {
+    "reliable-walk2m": {"distance_m": 2.0},
+    "transition-yaw10deg": {"distance_m": 2.0, "yaw_offset_deg": 10.0},
+    "failure-yaw20deg": {"distance_m": 2.0, "yaw_offset_deg": 20.0},
+    "failure-walk10m": {"distance_m": 10.0},
+    "low-friction-0p15": {"distance_m": 2.0, "friction_slide": 0.15},
+}
 
 # Frozen Phase 1 / Phase 1.1 values, reused unchanged.
 STOP_WINDOW_S = 1.0
@@ -153,6 +163,12 @@ def main() -> int:
     )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
+        "--scenario",
+        choices=sorted(SCENARIOS),
+        default=None,
+        help="run one Phase 1.2 observation scenario instead of the default sequence",
+    )
+    parser.add_argument(
         "--sync-every",
         type=int,
         default=8,
@@ -212,6 +228,33 @@ def main() -> int:
 
     started = time.perf_counter()
     try:
+        if args.scenario is not None:
+            scenario = SCENARIOS[args.scenario]
+            simulation.reset(seed=args.seed)
+            details: list[str] = []
+            if "friction_slide" in scenario:
+                simulation.set_all_geom_friction(float(scenario["friction_slide"]))
+                details.append(f"friction_slide={scenario['friction_slide']}")
+            if "yaw_offset_deg" in scenario:
+                simulation.set_base_state(
+                    yaw_rad=math.radians(float(scenario["yaw_offset_deg"]))
+                )
+                details.append(f"initial_yaw={scenario['yaw_offset_deg']}deg")
+            distance = float(scenario["distance_m"])
+            print(f"Scenario: {args.scenario} ({', '.join(details) or 'nominal'})\n")
+            execute(
+                "walk_forward",
+                {"target_distance_m": distance, "tolerance_m": _walk_tolerance(distance),
+                 "speed_mps": WALK_SPEED_MPS, "max_duration_s": _walk_timeout(distance)},
+                f"{distance:g} m",
+                "walk",
+            )
+            if args.hold_open_seconds is not None and args.hold_open_seconds > 0:
+                router.execute(
+                    SkillRequest("stand", {"duration_s": float(args.hold_open_seconds)}),
+                    context,
+                )
+            return 0
         print("Opening MuJoCo viewer. Close the window or press Ctrl+C to stop.")
         print()
         simulation.reset(seed=args.seed)
