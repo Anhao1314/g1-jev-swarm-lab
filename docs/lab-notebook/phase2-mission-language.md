@@ -172,6 +172,8 @@ Breakdown included:
 
 ### Result
 
+![Controlled-language corpus](visuals/phase2-language-corpus.svg)
+
 - 189/189 compiler status and canonical Mission IR matched expectation;
 - exact valid IR match: 100%;
 - paraphrase consistency: 100%;
