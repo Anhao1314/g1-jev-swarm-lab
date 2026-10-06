@@ -1,0 +1,128 @@
+# Phase 2.0 protocol: Oracle Mission IR + deterministic task runtime.
+#
+# Structured missions only - no natural language, no LLM, no Jev, no swarms.
+# The runtime validates, capability-grounds, plans a task graph and executes it
+# through the existing skills. No recovery, no replanning, no segmentation.
+experiment_id: oracle_mission_runtime_001
+protocol_version: "1.0.0"
+frozen: true
+mission_schema_version: "2.0.0"
+mission_corpus: configs/missions/oracle_phase2_001.yaml
+robot_config: configs/robot/g1_locomotion_12dof.yaml
+provenance:
+  model_source: https://github.com/unitreerobotics/unitree_rl_gym
+  model_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  controller_source: https://github.com/unitreerobotics/unitree_rl_gym/deploy/deploy_mujoco/deploy_mujoco.py
+  controller_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  baseline_phase: phase1.3
+  baseline_commit: bea645f13b6af9ee27f902c310148d72fa69a204
+supported_skills: [stand, walk_forward, turn, stop]
+grounding:
+  evidence:
+    risk_map: experiments/baselines/g1_closed_loop_correction_001/risk_map_v1_3.json
+    boundary_comparison: experiments/baselines/g1_closed_loop_correction_001/boundary_comparison.json
+    capability_map: experiments/baselines/g1_closed_loop_correction_001/capability_map_v1_3.json
+  mode_preference: [heading_lateral, heading_only, open_loop]
+  rule: >
+    Deterministic selection. Consider only execution modes with recorded
+    evidence at the requested distance. Discard HIGH and UNKNOWN. Prefer LOW
+    over MEDIUM. Within the same risk level, use the frozen preference order
+    heading_lateral > heading_only > open_loop (chosen from Phase 1.3 evidence:
+    heading_lateral reached the lowest drift with zero saturation and zero
+    oscillation). A distance with no recorded evidence is CAPABILITY_UNKNOWN -
+    no interpolation and no extrapolation. A distance whose only evidence is
+    HIGH is CAPABILITY_REJECTED. Automatic segmentation into shorter walks is
+    never an allowed strategy (Phase 1.2b negative result).
+    The Phase 1.3 path-correction modes are walk-specific: turn, stand and stop
+    use open_loop, because wrapping an in-place skill in the walking frame
+    correction changes its intended behaviour (pilot regression).
+  historical:
+    turn:
+      max_abs_angle_deg: 90.0
+      source_phase: phase1.1
+      evidence_ref: experiments/baselines/g1_skill_characterization_001/summary.json
+    stand:
+      max_duration_s: 20.0
+      default_duration_s: 2.0
+      source_phase: phase1.1
+      evidence_ref: experiments/baselines/g1_skill_characterization_001/summary.json
+    stop:
+      source_phase: phase1.1
+      evidence_ref: experiments/baselines/g1_skill_characterization_001/summary.json
+  correction_gains:
+    heading_only: {k_heading: 1.5}
+    heading_lateral: {k_heading: 1.5, k_lateral: 1.0}
+  correction_limits:
+    max_yaw_rate_radps: 0.6
+    deadband_radps: 0.01
+    oscillation_threshold_radps: 0.05
+skill_parameters:
+  walk_forward:
+    tolerance_m: 0.2
+    speed_mps: 0.5
+    timeout_min_s: 15.0
+    timeout_s_per_m: 6.0
+  turn:
+    tolerance_deg: 15.0
+    yaw_rate_radps: 0.5
+    max_duration_s: 10.0
+    settle_s: 0.5
+  stand:
+    default_duration_s: 2.0
+  stop:
+    window_s: 1.0
+    speed_threshold_mps: 0.10
+    max_duration_s: 4.0
+horizons:
+  H1: 1
+  H3: 3
+  H5: 5
+  H8: 8
+benchmark:
+  min_missions_per_horizon: 5
+  metrics:
+    - mission_horizon
+    - validation_success
+    - grounding_success
+    - mission_success
+    - completed_nodes
+    - failed_node
+    - failure_type
+    - total_simulation_time_s
+    - total_wall_time_s
+    - skill_invocations
+    - physical_success
+    - task_success
+    - cumulative_path_length_m
+    - transition_count
+    - controller_memory_resets
+  success_rule: >
+    Mission SUCCESS requires every required node to succeed. Any node failure
+    fails the mission and blocks its descendants. Validation or capability
+    rejection produces REJECTED (distinct from FAILED) and must execute zero
+    simulation steps.
+  no_recovery: true
+  no_replanning: true
+  automatic_segmentation: false
+  determinism: >
+    The simulator and controller are deterministic, so success is reported per
+    distinct mission template (multiple templates per horizon) instead of
+    repeated identical runs. Boundary/critical conditions are repeated for a
+    determinism check in the pilot only.
+failure_taxonomy:
+  - VALIDATION_FAILURE
+  - UNSUPPORTED_SKILL
+  - CAPABILITY_REJECTED
+  - CAPABILITY_UNKNOWN
+  - PRECONDITION_FAILURE
+  - SKILL_FAILURE
+  - TRANSITION_FAILURE
+  - MISSION_TIMEOUT
+  - INVALID_STATE
+  - INTERNAL_ERROR
+notes: >
+  Phase 2.0 is the oracle baseline: mission intent is given as structured IR, so
+  language understanding contributes zero error. Open-loop execution modes are
+  never the default for long walks; they remain available only through an
+  explicit, logged experimental override.

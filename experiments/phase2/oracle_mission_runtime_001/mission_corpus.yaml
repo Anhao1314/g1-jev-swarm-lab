@@ -1,0 +1,251 @@
+# Oracle mission corpus (Phase 2.0): structured missions only, frozen before the
+# formal benchmark. Every walk distance is inside the Phase 1.3 evidence range
+# (4/6/8/10 m tabulated; 12/15/20 m extension evidence); turns are within the
+# Phase 1.1 validated range; stands are within the validated 20 s range.
+schema_version: "2.0.0"
+corpus_id: oracle_phase2_001
+missions:
+  # ---------------- H1 ----------------
+  - mission_id: h1-walk4
+    horizon: H1
+    purpose: single short walk, tabulated evidence point
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 4.0}}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h1-walk8
+    horizon: H1
+    purpose: single long walk beyond the open-loop boundary
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 8.0}}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h1-turn45
+    horizon: H1
+    purpose: single positive turn
+    steps:
+      - {id: s1, skill: turn, parameters: {angle_deg: 45.0}}
+    expected: {validation: VALID, grounding: GROUNDED}
+  - mission_id: h1-turn60
+    horizon: H1
+    purpose: single larger turn
+    steps:
+      - {id: s1, skill: turn, parameters: {angle_deg: 60.0}}
+    expected: {validation: VALID, grounding: GROUNDED}
+  - mission_id: h1-stop
+    horizon: H1
+    purpose: single stop invocation
+    steps:
+      - {id: s1, skill: stop, parameters: {}}
+    expected: {validation: VALID, grounding: GROUNDED}
+  # ---------------- H3 ----------------
+  - mission_id: h3-walk4-turn45-stop
+    horizon: H3
+    purpose: classic three-node composition
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {id: s2, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s1]}
+      - {id: s3, skill: stop, parameters: {}, depends_on: [s2]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h3-walk6-turn-45-stop
+    horizon: H3
+    purpose: negative turn after a mid-range walk
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {id: s2, skill: turn, parameters: {angle_deg: -45.0}, depends_on: [s1]}
+      - {id: s3, skill: stop, parameters: {}, depends_on: [s2]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h3-stand-walk4-stop
+    horizon: H3
+    purpose: stand-then-walk transition
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 1.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s1]}
+      - {id: s3, skill: stop, parameters: {}, depends_on: [s2]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h3-walk8-turn90-stop
+    horizon: H3
+    purpose: long walk then a right-angle turn
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 8.0}}
+      - {id: s2, skill: turn, parameters: {angle_deg: 90.0}, depends_on: [s1]}
+      - {id: s3, skill: stop, parameters: {}, depends_on: [s2]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h3-turn30-walk4-stop
+    horizon: H3
+    purpose: turn before walking (heading propagation)
+    steps:
+      - {id: s1, skill: turn, parameters: {angle_deg: 30.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s1]}
+      - {id: s3, skill: stop, parameters: {}, depends_on: [s2]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  # ---------------- H5 ----------------
+  - mission_id: h5-stand-walk4-turn45-walk4-stop
+    horizon: H5
+    purpose: the pilot composition, extended to four skills
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 1.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s1]}
+      - {id: s3, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s2]}
+      - {id: s4, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s3]}
+      - {id: s5, skill: stop, parameters: {}, depends_on: [s4]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h5-walk6-turn-45-walk6-turn45-stop
+    horizon: H5
+    purpose: two walks with opposite turns
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {id: s2, skill: turn, parameters: {angle_deg: -45.0}, depends_on: [s1]}
+      - {id: s3, skill: walk_forward, parameters: {distance_m: 6.0}, depends_on: [s2]}
+      - {id: s4, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s3]}
+      - {id: s5, skill: stop, parameters: {}, depends_on: [s4]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h5-stand-walk8-turn90-walk4-stop
+    horizon: H5
+    purpose: long first leg and a right-angle composition
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 2.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 8.0}, depends_on: [s1]}
+      - {id: s3, skill: turn, parameters: {angle_deg: 90.0}, depends_on: [s2]}
+      - {id: s4, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s3]}
+      - {id: s5, skill: stop, parameters: {}, depends_on: [s4]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h5-walk4-turn45-walk4-turn-45-stop
+    horizon: H5
+    purpose: symmetric zig-zag composition without path planning
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {id: s2, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s1]}
+      - {id: s3, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s2]}
+      - {id: s4, skill: turn, parameters: {angle_deg: -45.0}, depends_on: [s3]}
+      - {id: s5, skill: stop, parameters: {}, depends_on: [s4]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h5-stand5-walk10-turn-30-walk4-stop
+    horizon: H5
+    purpose: longest tabulated walk inside one mission
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 5.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 10.0}, depends_on: [s1]}
+      - {id: s3, skill: turn, parameters: {angle_deg: -30.0}, depends_on: [s2]}
+      - {id: s4, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s3]}
+      - {id: s5, skill: stop, parameters: {}, depends_on: [s4]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  # ---------------- H8 ----------------
+  - mission_id: h8-mix1
+    horizon: H8
+    purpose: full skill mix with three walking legs
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 1.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s1]}
+      - {id: s3, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s2]}
+      - {id: s4, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s3]}
+      - {id: s5, skill: turn, parameters: {angle_deg: -45.0}, depends_on: [s4]}
+      - {id: s6, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s5]}
+      - {id: s7, skill: turn, parameters: {angle_deg: 90.0}, depends_on: [s6]}
+      - {id: s8, skill: stop, parameters: {}, depends_on: [s7]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h8-mix2
+    horizon: H8
+    purpose: stop and stand interleaved with walking legs
+    steps:
+      - {id: s1, skill: stop, parameters: {}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 6.0}, depends_on: [s1]}
+      - {id: s3, skill: turn, parameters: {angle_deg: -45.0}, depends_on: [s2]}
+      - {id: s4, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s3]}
+      - {id: s5, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s4]}
+      - {id: s6, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s5]}
+      - {id: s7, skill: stand, parameters: {duration_s: 2.0}, depends_on: [s6]}
+      - {id: s8, skill: stop, parameters: {}, depends_on: [s7]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h8-mix3
+    horizon: H8
+    purpose: alternating moderate turns around a long first leg
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 1.0}}
+      - {id: s2, skill: walk_forward, parameters: {distance_m: 8.0}, depends_on: [s1]}
+      - {id: s3, skill: turn, parameters: {angle_deg: 30.0}, depends_on: [s2]}
+      - {id: s4, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s3]}
+      - {id: s5, skill: turn, parameters: {angle_deg: -30.0}, depends_on: [s4]}
+      - {id: s6, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s5]}
+      - {id: s7, skill: turn, parameters: {angle_deg: 60.0}, depends_on: [s6]}
+      - {id: s8, skill: stop, parameters: {}, depends_on: [s7]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h8-mix4
+    horizon: H8
+    purpose: four walking legs with near-right-angle turns
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {id: s2, skill: turn, parameters: {angle_deg: 90.0}, depends_on: [s1]}
+      - {id: s3, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s2]}
+      - {id: s4, skill: turn, parameters: {angle_deg: -90.0}, depends_on: [s3]}
+      - {id: s5, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s4]}
+      - {id: s6, skill: turn, parameters: {angle_deg: 45.0}, depends_on: [s5]}
+      - {id: s7, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s6]}
+      - {id: s8, skill: stop, parameters: {}, depends_on: [s7]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+  - mission_id: h8-mix5
+    horizon: H8
+    purpose: extension-distance walk inside a long composition
+    steps:
+      - {id: s1, skill: stand, parameters: {duration_s: 1.0}}
+      - {id: s2, skill: stop, parameters: {}, depends_on: [s1]}
+      - {id: s3, skill: walk_forward, parameters: {distance_m: 12.0}, depends_on: [s2]}
+      - {id: s4, skill: turn, parameters: {angle_deg: -60.0}, depends_on: [s3]}
+      - {id: s5, skill: walk_forward, parameters: {distance_m: 4.0}, depends_on: [s4]}
+      - {id: s6, skill: turn, parameters: {angle_deg: 60.0}, depends_on: [s5]}
+      - {id: s7, skill: walk_forward, parameters: {distance_m: 6.0}, depends_on: [s6]}
+      - {id: s8, skill: stop, parameters: {}, depends_on: [s7]}
+    expected: {validation: VALID, grounding: GROUNDED, default_mode: heading_lateral}
+negatives:
+  - mission_id: n-grab-object
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    purpose: unsupported skill that must never reach the robot layer
+    steps: [{id: s1, skill: grab_object, parameters: {}}]
+  - mission_id: n-negative-distance
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: walk_forward, parameters: {distance_m: -2.0}}]
+  - mission_id: n-zero-turn
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: turn, parameters: {angle_deg: 0.0}}]
+  - mission_id: n-absurd-turn
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    purpose: schema sanity limit, not a capability claim
+    steps: [{id: s1, skill: turn, parameters: {angle_deg: 400.0}}]
+  - mission_id: n-nan-distance
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: walk_forward, parameters: {distance_m: .nan}}]
+  - mission_id: n-inf-turn
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: turn, parameters: {angle_deg: .inf}}]
+  - mission_id: n-unknown-field
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: stop, parameters: {}, waypoints: [[0, 0]]}]
+  - mission_id: n-unknown-parameter
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: stop, parameters: {speed_mps: 0.5}}]
+  - mission_id: n-unsupported-override
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    steps:
+      - {id: s1, skill: walk_forward, parameters: {distance_m: 8.0}, execution_mode_override: warp_drive}
+  - mission_id: n-duplicate-ids
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    steps:
+      - {id: s1, skill: stop, parameters: {}}
+      - {id: s1, skill: stop, parameters: {}}
+  - mission_id: n-unknown-dependency
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    steps: [{id: s1, skill: stop, parameters: {}, depends_on: [ghost]}]
+  - mission_id: n-cycle
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    steps:
+      - {id: s1, skill: stop, parameters: {}, depends_on: [s2]}
+      - {id: s2, skill: stop, parameters: {}, depends_on: [s1]}
+  - mission_id: n-empty
+    expected: {stage: validation, failure_type: VALIDATION_FAILURE}
+    steps: []
+  - mission_id: n-schema-version
+    expected: {stage: parse, failure_type: VALIDATION_FAILURE}
+    schema_version: "1.0.0"
+    steps: [{id: s1, skill: stop, parameters: {}}]
+  - mission_id: n-capability-unknown
+    expected: {stage: grounding, failure_type: CAPABILITY_UNKNOWN}
+    purpose: 25 m is beyond every recorded walk evidence point
+    steps: [{id: s1, skill: walk_forward, parameters: {distance_m: 25.0}}]

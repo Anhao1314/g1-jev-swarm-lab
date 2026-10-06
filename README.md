@@ -1,6 +1,20 @@
 # G1 Jev Swarm Lab
 
 
+**Phase 2.0 - Oracle mission runtime (complete).** Structured Mission IR
+(no natural language, LLM, Jev or swarm component) is now validated,
+capability-grounded against the frozen Phase 1.3 evidence, compiled into a
+deterministic task graph and executed through the existing G1 skills. The
+frozen 20-mission corpus (H1/H3/H5/H8) completed **20/20**, and the 15 negative
+missions were rejected with **0 simulation steps**. Walk nodes use the
+evidence-selected `heading_lateral` mode; in-place turn/stand/stop nodes stay
+`open_loop` because the Phase 1.3 correction is a walking path-correction.
+Artifacts: `experiments/phase2/oracle_mission_runtime_001/`; interactive
+viewer: `python scripts/view_mission.py --mission <id>`.
+
+
+
+
 **Phase 1.3 - closed-loop locomotion correction (complete).** Under the frozen
 Phase 1.2 warehouse envelope, an outer heading/lateral feedback loop at the
 policy-command layer (`motion.pt` unchanged; open-loop runs bit-identical to
@@ -129,6 +143,7 @@ Safety-critical low-level control is never delegated to a language or decision m
 
 | Module | Responsibility |
 | --- | --- |
+| `src/g1swarm/mission/` | Typed Mission IR, static validator, capability/risk grounding, task graph, deterministic executor and per-mission evidence |
 | `src/g1swarm/simulation/` | `G1Simulation` adapter (`reset`, `step`, `get_robot_state`); MuJoCo `mjModel`/`mjData` stay private, viewer is optional |
 | `src/g1swarm/state/` | `RobotState` protocol shared by skills, router, evaluation and future decision layers |
 | `src/g1swarm/skills/` | `Skill`, `SkillContext`, `SkillResult`, `SkillStatus`, `SkillRouter`; concrete stand / stop / walk_forward / turn skills |
@@ -152,6 +167,8 @@ python -m pytest -q
 python .\scripts\run_compat_spike.py
 python .\scripts\run_baseline_001.py
 python .\scripts\run_skill_pilot.py
+python .\scripts\run_oracle_missions.py --pilot --repeat 2
+python .\scripts\view_mission.py --mission h5-stand-walk4-turn45-walk4-stop
 ```
 
 If Windows PowerShell 5.1 blocks the activation script, allow local scripts for the current user once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
