@@ -45,7 +45,14 @@ EXPERIMENT_ID = "g1_failure_boundary_001"
 
 
 class BoundaryRunner:
-    def __init__(self, protocol_path: str | Path, *, campaign: str) -> None:
+    def __init__(
+        self,
+        protocol_path: str | Path,
+        *,
+        campaign: str,
+        experiment_id: str = EXPERIMENT_ID,
+    ) -> None:
+        self.experiment_id = experiment_id
         if campaign not in {"pilot", "final"}:
             raise ValueError("campaign must be 'pilot' or 'final'")
         self.protocol_path = str(protocol_path)
@@ -76,7 +83,7 @@ class BoundaryRunner:
     ) -> RunRecorder:
         provenance = self.protocol["provenance"]
         manifest = RunManifest(
-            experiment_id=EXPERIMENT_ID,
+            experiment_id=self.experiment_id,
             run_id=run_id,
             task=f"{spec_key} = {value:g}",
             config={
@@ -109,7 +116,7 @@ class BoundaryRunner:
             bracket_state=bracket_state,
         )
         return RunRecorder(
-            EXPERIMENT_ID,
+            self.experiment_id,
             f"{self.campaign}/{run_id}",
             root=artifacts_dir(),
             manifest=manifest,
@@ -279,6 +286,8 @@ class BoundaryRunner:
             "absolute_distance_error_m": abs(forward - walk_target),
             "lateral_drift_m": lateral,
             "heading_error_deg": heading_error,
+            "drift_per_meter": (lateral / forward) if abs(forward) > 1e-9 else None,
+            "heading_error_per_meter": (heading_error / forward) if abs(forward) > 1e-9 else None,
             "completion_sim_time_s": completion_time,
             "completion_wall_time_s": result.duration_s,
             "mean_speed_mps": (forward / completion_time) if completion_time > 0 else None,

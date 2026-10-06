@@ -241,7 +241,12 @@ class WalkForwardSkill(Skill):
         max_steps = min(int(round(max_duration_s / context.simulation.timestep)), context.max_steps)
         command = np.array([speed_mps, 0.0, 0.0], dtype=np.float64)
         context.simulation.set_active_skill(self.name)
-        context.controller.reset()
+        # Phase 1.2b: ``reset_memory=False`` keeps the recurrent policy state
+        # continuous across consecutive WalkForward invocations (segmentation
+        # study). The default preserves the Phase 1/1.1/1.2 lifecycle.
+        reset_memory = bool(context.parameters.get("reset_memory", True))
+        if reset_memory:
+            context.controller.reset()
         started = time.perf_counter()
         start_state = context.state()
         yaw0 = _yaw_rad(start_state.base_orientation)
@@ -286,6 +291,7 @@ class WalkForwardSkill(Skill):
             "elapsed_wall_time_s": time.perf_counter() - started,
             "mean_speed_mps": (progress / elapsed_sim_time) if elapsed_sim_time > 0 else 0.0,
             "residual_speed_mps": final_state.speed(),
+            "controller_memory_reset": reset_memory,
             "threshold_crossing_sim_time": threshold_crossing_sim_time,
             "final_position": list(final_state.base_position),
             "fallen": fallen,
