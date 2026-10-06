@@ -51,9 +51,21 @@ All compared systems must use the same task definitions, seeds, skill interfaces
 
 ## Current status
 
-**Phase 0 — repository and research protocol initialization.**
+The **GitHub remote implementation on `main` is still the original Phase 0 baseline** because the locally completed experiment branches have not yet been pushed from the Windows experiment machine.
 
-No G1 training result, Jev benefit, swarm benefit, sim-to-real result, or performance improvement is claimed yet.
+The reconstructed research record now documents local progress through:
+
+- Phase 1 — G1 embodied execution;
+- Phase 1.1 — skill competence characterization;
+- Phase 1.2 — failure boundary and risk mapping;
+- Phase 1.2b — segmentation study and integrity audit;
+- Phase 1.3 — closed-loop locomotion correction;
+- Phase 2.0 — deterministic Oracle mission runtime;
+- Phase 2.1 — controlled Chinese language compiler.
+
+These entries preserve the reported branch names, commit SHAs, protocol hashes, failures, corrections, negative results, and measured breakthroughs. They do **not** imply that the corresponding raw experiment branches are already present on the remote.
+
+See the [Research Lab Notebook](docs/lab-notebook/README.md).
 
 ## Repository map
 
@@ -84,6 +96,16 @@ experiment
 ```
 
 Failed and negative runs are retained when they are relevant to the conclusion.
+
+## Research record
+
+- [Lab notebook index](docs/lab-notebook/README.md)
+- [Research timeline](docs/lab-notebook/timeline.md)
+- [Phase 1 — embodied execution](docs/lab-notebook/phase1-embodied-execution.md)
+- [Phase 2 — mission runtime and language](docs/lab-notebook/phase2-mission-language.md)
+- [Negative results](docs/lab-notebook/negative-results.md)
+- [Integrity incidents](docs/lab-notebook/integrity-incidents.md)
+- [Research decisions](docs/lab-notebook/research-decisions.md)
 
 ## Environment policy
 
