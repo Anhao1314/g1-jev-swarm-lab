@@ -1,5 +1,15 @@
 # Scripts
 
-This directory will contain reproducible entry points for environment checks, training, evaluation, and report generation.
+Reproducible entry points for Phase 1. Run them from the repository root with
+the project virtual environment active (see the README quick start).
 
-Phase 0 intentionally provides no training script.
+| Script | Purpose |
+| --- | --- |
+| `fetch_g1_models.ps1` | Fetch the pinned official Unitree G1 MJCF/asset repositories into `third_party/` (never committed). |
+| `run_compat_spike.py` | Load -> reset -> step >= 1000 steps -> read state for the official G1 models; writes `artifacts/compat-spike/`. |
+| `run_baseline_001.py` | Stand -> WalkForward 2.0 m -> Stop over the configured seeds; writes `artifacts/baseline-001/` and the committed summary. |
+| `run_skill_pilot.py` | Pilot runs for individual skills (turn); writes `artifacts/skill-pilot/`. |
+| `enter.ps1` | Activate `.venv` and keep pip cache and temp files inside the repository. |
+
+All evidence-producing scripts are headless by default. A viewer is optional
+and never required (`G1Simulation.open_viewer()`).

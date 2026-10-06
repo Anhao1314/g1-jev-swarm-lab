@@ -1,0 +1,27 @@
+# Baseline-001: Stand -> WalkForward 2.0 m -> Stop
+# Distance tolerance was frozen before the first run.
+experiment_id: g1_baseline_001
+task: Stand -> WalkForward 2.0m -> Stop -> Evaluate
+robot: configs/robot/g1_locomotion_12dof.yaml
+seeds: [0, 1, 2, 3, 4]
+target_distance_m: 2.0
+tolerance_m: 0.2
+success_window_m: [1.8, 2.2]
+protocol:
+  stand_duration_s: 2.0
+  stand_settle_s: 1.0
+  walk_speed_mps: 0.5
+  walk_max_duration_s: 15.0
+  walk_stop_at_m: 2.0
+  stop_max_duration_s: 4.0
+  stop_window_s: 1.0
+  # Calibrated in the single-seed pilot (artifacts/baseline-pilot/run-000): the
+  # official policy holds ~0.066 m/s residual balancing motion at zero command,
+  # so 0.05 m/s could never be reached. Frozen before the five official runs.
+  # The criterion is the trailing-window mean speed (balancing oscillation makes
+  # the instantaneous speed unusable); the 2.0 m distance window is unchanged.
+  stop_speed_threshold_mps: 0.10
+notes: >
+  Baseline-001 only counts a run as successful when the real MuJoCo base
+  position ends inside the frozen success window after the stop skill, with no
+  fall detected.
