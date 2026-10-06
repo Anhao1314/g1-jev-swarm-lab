@@ -61,7 +61,8 @@ The reconstructed research record now documents local progress through:
 - Phase 1.2b — segmentation study and integrity audit;
 - Phase 1.3 — closed-loop locomotion correction;
 - Phase 2.0 — deterministic Oracle mission runtime;
-- Phase 2.1 — controlled Chinese language compiler.
+- Phase 2.1 — controlled Chinese language compiler;
+- Phase 2.2 — LLM Mission Compiler benchmark (PARTIAL; hardening required).
 
 These entries preserve the reported branch names, commit SHAs, protocol hashes, failures, corrections, negative results, and measured breakthroughs. They do **not** imply that the corresponding raw experiment branches are already present on the remote.
 
@@ -104,6 +105,7 @@ Failed and negative runs are retained when they are relevant to the conclusion.
 - [Research timeline](docs/lab-notebook/timeline.md)
 - [Phase 1 — embodied execution](docs/lab-notebook/phase1-embodied-execution.md)
 - [Phase 2 — mission runtime and language](docs/lab-notebook/phase2-mission-language.md)
+- [Phase 2.2 — LLM Mission Compiler](docs/lab-notebook/phase2.2-llm-compiler.md)
 - [Negative results](docs/lab-notebook/negative-results.md)
 - [Integrity incidents](docs/lab-notebook/integrity-incidents.md)
 - [Research decisions](docs/lab-notebook/research-decisions.md)
