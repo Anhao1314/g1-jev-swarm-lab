@@ -847,7 +847,15 @@ class CharacterizationRunner:
     def summarize(self) -> dict[str, Any]:
         environment = EnvironmentInfo.collect()
         nominal_map: dict[str, Any] = {}
-        walk_records = [r for r in self.results if r["skill"] == "walk_forward" and r["condition"] == "nominal"]
+        # Only the numeric-task nominal experiments; robustness records use task
+        # keys such as "walk_forward_2m" and are aggregated separately.
+        walk_records = [
+            r
+            for r in self.results
+            if r["skill"] == "walk_forward"
+            and r["condition"] == "nominal"
+            and isinstance(r["task"], (int, float))
+        ]
         nominal_map["walk_forward"] = {
             f"{float(target):g}": self._group(
                 [r for r in walk_records if abs(float(r["task"]) - float(target)) < 1e-9],
@@ -863,7 +871,13 @@ class CharacterizationRunner:
             )
             for target in (self.protocol["nominal"]["walk_forward"]["distances_m"] if self.campaign == "final" else sorted({float(r["task"]) for r in walk_records}))
         }
-        turn_records = [r for r in self.results if r["skill"] == "turn" and r["condition"] == "nominal"]
+        turn_records = [
+            r
+            for r in self.results
+            if r["skill"] == "turn"
+            and r["condition"] == "nominal"
+            and isinstance(r["task"], (int, float))
+        ]
         nominal_map["turn"] = {
             f"{float(angle):g}": self._group(
                 [r for r in turn_records if abs(float(r["task"]) - float(angle)) < 1e-9],
@@ -877,7 +891,13 @@ class CharacterizationRunner:
             )
             for angle in (self.protocol["nominal"]["turn"]["angles_deg"] if self.campaign == "final" else sorted({float(r["task"]) for r in turn_records}))
         }
-        stand_records = [r for r in self.results if r["skill"] == "stand" and r["condition"] == "nominal"]
+        stand_records = [
+            r
+            for r in self.results
+            if r["skill"] == "stand"
+            and r["condition"] == "nominal"
+            and isinstance(r["task"], (int, float))
+        ]
         nominal_map["stand"] = {
             f"{float(duration):g}": self._group(
                 [r for r in stand_records if abs(float(r["task"]) - float(duration)) < 1e-9],

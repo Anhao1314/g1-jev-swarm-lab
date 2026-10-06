@@ -65,3 +65,54 @@ def test_group_counts_failure_types() -> None:
     grouped = CharacterizationRunner._group(records, ("forward_displacement_m",))
     assert grouped["failure_counts"] == {"FALL": 2, "TIMEOUT": 1}
     assert grouped["success_rate"] == 0.0
+
+
+def test_summarize_ignores_string_task_robustness_records(tmp_path, monkeypatch) -> None:
+    """Regression: robustness task keys must not break nominal aggregation."""
+
+    monkeypatch.setenv("G1SWARM_ARTIFACTS_DIR", str(tmp_path))
+    runner = CharacterizationRunner(
+        "configs/experiments/g1_skill_characterization_001.yaml", campaign="final"
+    )
+    runner.results = [
+        {
+            "run_id": "a1-walk-2m-rep0-seed000",
+            "skill": "walk_forward",
+            "task": 2.0,
+            "condition": "nominal",
+            "seed": 0,
+            "success": True,
+            "failure_type": "SUCCESS",
+            "failure_reason": None,
+            "metrics": {
+                "forward_displacement_m": 2.0,
+                "absolute_distance_error_m": 0.0,
+                "lateral_drift_m": -0.3,
+                "heading_error_deg": -1.0,
+                "completion_sim_time_s": 4.0,
+                "mean_speed_mps": 0.5,
+                "residual_speed_mps": 0.4,
+            },
+        },
+        {
+            "run_id": "c-walk_forward_2m-nominal-seed001",
+            "skill": "walk_forward",
+            "task": "walk_forward_2m",
+            "condition": "nominal",
+            "seed": 1,
+            "success": True,
+            "failure_type": "SUCCESS",
+            "failure_reason": None,
+            "metrics": {
+                "task_key": "walk_forward_2m",
+                "forward_displacement_m": 2.1,
+                "absolute_distance_error_m": 0.1,
+                "lateral_drift_m": -0.2,
+                "heading_error_deg": -1.1,
+                "completion_sim_time_s": 4.1,
+            },
+        },
+    ]
+    summary = runner.summarize()
+    assert summary["nominal"]["walk_forward"]["2"]["n"] == 1
+    assert summary["robustness"]["walk_forward_2m"]["nominal"]["n"] == 1
