@@ -18,7 +18,7 @@ run.
 
 from __future__ import annotations
 
-import math
+from ..metrics.schema import envelope_input
 from dataclasses import dataclass, field
 from typing import Any, Mapping
 
@@ -63,10 +63,13 @@ class WalkEnvelope:
 
     def evaluate(self, metrics: Mapping[str, Any], target_m: float) -> "EnvelopeEvaluation":
         limits = self.limits(target_m)
-        distance_error = float(metrics.get("absolute_distance_error_m", math.inf))
-        lateral = abs(float(metrics.get("lateral_drift_m", math.inf)))
-        heading = abs(float(metrics.get("heading_error_deg", math.inf)))
-        completion = float(metrics.get("completion_sim_time_s", math.inf))
+        # Canonical, audit-hardened input: missing metrics raise instead of
+        # silently defaulting to +infinity (Phase 1.2b audit finding).
+        canonical = envelope_input(metrics)
+        distance_error = canonical["absolute_distance_error_m"]
+        lateral = abs(canonical["lateral_drift_m"])
+        heading = abs(canonical["heading_error_deg"])
+        completion = canonical["completion_sim_time_s"]
         violations: list[str] = []
         if distance_error > limits.distance_error_max_m:
             violations.append("DISTANCE_ERROR")

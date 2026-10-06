@@ -14,7 +14,7 @@ from typing import Iterable
 
 import numpy as np
 
-from ..characterization.kinematics import wrap_angle_deg, yaw_rad
+from ..characterization.kinematics import wrap_angle_deg, wrap_angle_rad, yaw_rad
 from ..state.robot_state import RobotState
 
 DEFAULT_SEGMENT_M = 2.0
@@ -44,6 +44,11 @@ class MissionFrame:
         forward = float(offset @ self.forward_axis)
         lateral = float(self.forward_axis[0] * offset[1] - self.forward_axis[1] * offset[0])
         return forward, lateral
+
+    def heading_error_rad(self, state: RobotState) -> float:
+        """Signed heading error in radians, wrapped to [-pi, pi]."""
+
+        return wrap_angle_rad(yaw_rad(state.base_orientation) - self.initial_yaw_rad)
 
     def heading_error_deg(self, state: RobotState) -> float:
         return wrap_angle_deg(

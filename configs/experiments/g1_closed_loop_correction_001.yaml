@@ -1,0 +1,89 @@
+# Phase 1.3 protocol: closed-loop locomotion correction (outer command layer).
+#
+# PROVISIONAL until the gains selected by the engineering pilot are written in
+# and this file is committed as the freeze commit (before the final campaign).
+# Nothing here modifies motion.pt, policy weights, gains, action scale, the
+# robot model or the Phase 1.2 task envelope.
+experiment_id: g1_closed_loop_correction_001
+protocol_version: "1.0.0"
+frozen: false
+robot_config: configs/robot/g1_locomotion_12dof.yaml
+provenance:
+  model_source: https://github.com/unitreerobotics/unitree_rl_gym
+  model_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  model_xml: resources/robots/g1_description/scene.xml
+  controller_source: https://github.com/unitreerobotics/unitree_rl_gym/deploy/deploy_mujoco/deploy_mujoco.py
+  controller_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  controller_kind: official_pretrained_policy
+  policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  dof: 12
+  actuators: 12
+thresholds:
+  walk:
+    target_distance_m: 2.0
+    tolerance_min_m: 0.2
+    speed_mps: 0.5
+    timeout_min_s: 15.0
+    timeout_s_per_m: 6.0
+  envelopes:
+    nominal:
+      distance_error_floor_m: 0.30
+      distance_error_relative: 0.10
+      lateral_floor_m: 0.35
+      lateral_relative: 0.07
+      heading_max_deg: 15.0
+      timeout_floor_s: 15.0
+      timeout_s_per_m: 6.0
+    strict:
+      distance_error_floor_m: 0.15
+      distance_error_relative: 0.05
+      lateral_floor_m: 0.20
+      lateral_relative: 0.035
+      heading_max_deg: 8.0
+      timeout_floor_s: 12.0
+      timeout_s_per_m: 5.0
+baseline:
+  open_loop:
+    last_reliable_m: 4.53125
+    first_failure_m: 4.625
+    reference: "g1_distance_segmentation_001 distance_boundary.json @ a519b62 (audit-corrected)"
+mission_frame: >
+  Frozen at mission start: origin at the initial base position, +X along the
+  initial heading. Forward progress, lateral error and heading error for every
+  treatment and every control sample are projected onto this frame; the correct
+  direction is never redefined during a run.
+correction_limits:
+  max_yaw_rate_radps: 0.6
+  deadband_radps: 0.01
+  oscillation_threshold_radps: 0.05
+gains:
+  none: {k_heading: 0.0, k_lateral: 0.0}
+  # PROVISIONAL - replaced by the pilot-selected gains before freeze.
+  heading_only: {k_heading: 0.5}
+  heading_lateral: {k_heading: 0.5, k_lateral: 0.5}
+pilot:
+  distances_m: [4.0, 8.0]
+  heading_gains: [0.5, 1.0, 1.5]
+  lateral_gains: [0.5, 1.0, 2.0]
+final:
+  distances_m: [4.0, 6.0, 8.0, 10.0]
+boundary_extension:
+  distances_m: [12.0, 15.0, 20.0]
+  max_m: 20.0
+disturbance_spot_check:
+  enabled: false
+  distance_m: 8.0
+  conditions:
+    - {type: push, force_n: 60.0, direction: [0.0, 1.0, 0.0], duration_s: 0.2, trigger_s: 1.0}
+    - {type: friction, friction_slide: 0.175}
+improvement:
+  min_reduction_fraction: 0.30
+  max_oscillation_count: 5
+  max_time_factor: 1.5
+  max_saturation_fraction: 0.25
+notes: >
+  Only the outer (vx, vy, yaw-rate) command is corrected; joint torques, PD
+  gains, action scale, the model and motion.pt are untouched. Open-loop runs
+  bypass the correction layer entirely so Treatment A is bit-identical to the
+  historical path. Disturbance spot-checks are enabled only if the nominal
+  campaign shows correction value.

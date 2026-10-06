@@ -11,6 +11,8 @@ These tests pin (a) the historical bug shape, (b) the corrected behaviour and
 
 from __future__ import annotations
 
+import pytest
+
 from g1swarm.boundary.envelope import evaluate_walk_task, failure_type_from_violations
 from g1swarm.segmentation.runner import SegmentationRunner, build_segmentation_comparison
 
@@ -38,19 +40,31 @@ def test_four_meter_case_satisfies_nominal_envelope() -> None:
     assert evaluation["strict_violation"] is True  # drift exceeds the strict limit
 
 
-def test_final_star_keys_alone_reproduce_the_original_bug() -> None:
-    broken = {
+def test_final_star_aliases_are_canonicalized_and_do_not_inflate() -> None:
+    """Historical bug shape: Phase 1.3 hardening canonicalizes these aliases,
+    so the dict that previously produced Infinity now evaluates correctly."""
+    aliased = {
         "final_forward_progress_m": CASE1_TARGET_M,
         "final_lateral_drift_m": CASE1_DRIFT_M,
         "final_heading_error_deg": CASE1_HEADING_DEG,
         "absolute_distance_error_m": CASE1_DISTANCE_ERROR_M,
         "completion_sim_time_s": CASE1_TIME_S,
     }
-    evaluation = evaluate_walk_task(broken, CASE1_TARGET_M, physical=True)
-    assert evaluation["task_success"] is False
-    assert "EXCESSIVE_DRIFT" in evaluation["task_violations"]
-    assert "HEADING_ERROR" in evaluation["task_violations"]
-    assert evaluation["nominal_envelope"]["lateral_drift_m"] == float("inf")
+    evaluation = evaluate_walk_task(aliased, CASE1_TARGET_M, physical=True)
+    assert evaluation["task_success"] is True
+    assert evaluation["task_violations"] == []
+    assert evaluation["nominal_envelope"]["lateral_drift_m"] == abs(CASE1_DRIFT_M)
+
+
+def test_truly_missing_metric_raises_instead_of_infinity() -> None:
+    from g1swarm.metrics import MissingMetricError
+
+    with pytest.raises(MissingMetricError):
+        evaluate_walk_task(
+            {"absolute_distance_error_m": 0.0, "completion_sim_time_s": 1.0},
+            CASE1_TARGET_M,
+            physical=True,
+        )
 
 
 def test_task_success_uses_the_nominal_envelope() -> None:
