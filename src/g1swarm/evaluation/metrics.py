@@ -31,7 +31,9 @@ def summarize_baseline_runs(runs: Iterable[dict[str, Any]]) -> dict[str, Any]:
         for record in records
         if record.get("heading_error_deg") is not None
     ]
-    fall_count = sum(1 for record in records if record.get("fallen"))
+    fall_count = sum(
+        1 for record in records if record.get("fallen") or record.get("fall_detected")
+    )
     failures = [
         {
             "run_id": record.get("run_id"),

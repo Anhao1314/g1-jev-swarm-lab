@@ -11,6 +11,7 @@ Layout (all under ``artifacts/``, which is excluded from git)::
 from __future__ import annotations
 
 import json
+from uuid import uuid4
 from pathlib import Path
 from typing import Any
 
@@ -33,11 +34,19 @@ class RunRecorder:
         self.manifest_path = self.run_dir / "manifest.json"
         self.metrics_path = self.run_dir / "metrics.json"
         self.events_path = self.run_dir / "events.jsonl"
+        self.run_instance = uuid4().hex
+        # A run bundle must describe exactly one run instance: drop stale files
+        # so that a re-run cannot append its events to an earlier campaign.
+        for stale in (self.manifest_path, self.metrics_path, self.events_path):
+            if stale.exists():
+                stale.unlink()
         if manifest is not None:
             self.write_manifest(manifest)
 
     def write_manifest(self, manifest: RunManifest | dict[str, Any]) -> Path:
         payload = manifest.to_dict() if isinstance(manifest, RunManifest) else dict(manifest)
+        payload.setdefault("run_instance", self.run_instance)
+        payload.setdefault("started_at", utc_timestamp())
         self.manifest_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         return self.manifest_path
 

@@ -54,7 +54,18 @@ def run_turn(robot: dict, config: dict, seed: int) -> dict:
     recorder.log_event("skill_result", stand.to_dict())
     turn = router.execute(SkillRequest("turn", dict(skill_params)), context)
     recorder.log_event("skill_result", turn.to_dict())
-    stop = router.execute(SkillRequest("stop", {}), context)
+    stop = router.execute(
+        SkillRequest(
+            "stop",
+            {
+                "window_s": float(skill_params.get("stop_window_s", 1.0)),
+                "speed_threshold_mps": float(
+                    skill_params.get("stop_speed_threshold_mps", 0.10)
+                ),
+            },
+        ),
+        context,
+    )
     recorder.log_event("skill_result", stop.to_dict())
     success = bool(stand.ok and turn.ok)
     metrics = {

@@ -17,6 +17,12 @@ Tolerance: +/-15 deg (frozen in `configs/experiments/g1_turn_pilot.yaml`).
 The controller is deterministic, so the runs are identical; seeds are retained
 for traceability.
 
+The trailing stop step uses the same calibrated criterion as Baseline-001
+(trailing 1.0 s mean speed < 0.10 m/s). An earlier pilot run used the stricter
+default (0.05 m/s) and reported `stop = TIMEOUT` at a trailing mean of
+0.0621 m/s; the turn result itself was unaffected. The criterion was aligned
+with Baseline-001 before the five runs recorded here.
+
 ## Reproduce
 
 ```powershell

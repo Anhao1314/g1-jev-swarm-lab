@@ -36,6 +36,10 @@ policy with a zero velocity command (max tilt 4.9 degrees, min base height
 - Locomotion model + MuJoCo deployment + pretrained policy: `https://github.com/unitreerobotics/unitree_rl_gym` @ `276801e46c5d433564f24658bac64f254b7d2d4b`
 - Local assets are fetched by `scripts/fetch_g1_models.ps1` into `third_party/`
 (never committed; large meshes and policy binaries).
+- SHA-256 of `resources/robots/g1_description/scene.xml` (12-DOF model):
+  `08d6297979ea3f62768212b6f115f342a9c4dcdde1968d33330c292a0238921f`
+- SHA-256 of `unitree_robots/g1/scene_29dof.xml` (29-DOF model):
+  `958ed3f4a404d3d49ffce318bc8ac18cc3941fa17d214d655533620fb581856a`
 
 ## Evidence
 

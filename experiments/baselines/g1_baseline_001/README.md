@@ -57,6 +57,14 @@ heading controller is applied in this phase.
 4. **CPU physics.** Runs execute on the CPU physics path (~20x real time); no
 GPU physics (MJX/Warp) is used in this phase.
 5. **Scope.** Simulation only. No sim-to-real validation is claimed.
+6. **Revision traceability.** The five runs were executed from the working
+tree that became commit `d8a1afb`; the run manifests record the pre-commit
+HEAD `c2fd276`. An independent verification campaign re-ran the frozen
+protocol at `d8a1afb` and reproduced every metric bit-for-bit.
+7. **Asset identity.** `motion.pt` SHA-256
+`cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d`;
+`scene.xml` SHA-256
+`08d6297979ea3f62768212b6f115f342a9c4dcdde1968d33330c292a0238921f`.
 
 ## Evidence
 
