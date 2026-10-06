@@ -26,7 +26,7 @@ from ..paths import repo_root, resolve_repo_path
 from .benchmark import canonical_mission_hash, canonical_mission_payload
 
 DEFAULT_RUNTIME_PROTOCOL = "configs/experiments/oracle_mission_runtime_001.yaml"
-_VOLATILE_KEYS = {"total_wall_time_s", "wall_time_s"}
+_VOLATILE_KEYS = {"total_wall_time_s", "wall_time_s", "mission_id"}
 
 
 def load_runtime_protocol(path: str | Path = DEFAULT_RUNTIME_PROTOCOL) -> dict[str, Any]:

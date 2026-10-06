@@ -11,6 +11,8 @@ the project virtual environment active (see the README quick start).
 | `run_skill_pilot.py` | Pilot runs for individual skills (turn); writes `artifacts/skill-pilot/`. |
 | `run_characterization.py` | Phase 1.1 skill characterization campaigns (`--campaign pilot|final`); writes per-run evidence plus the committed summary and competence map. |
 | `run_oracle_missions.py` | Phase 2.0 structured Mission IR benchmark (`--pilot --repeat 2` or frozen `--final`); writes raw mission evidence under `artifacts/` and the committed summary/transition map under `experiments/phase2/oracle_mission_runtime_001/`. |
+| `build_language_corpus.py` | Rebuild/check the deterministic Phase 2.1 controlled-language corpus from its hand-authored source and bounded generator; `--check` verifies the frozen YAML. |
+| `run_language_benchmark.py` | Phase 2.1 controlled-language compiler benchmark (`--pilot` or frozen `--final`); writes compiler results/summary and Oracle execution equivalence under `experiments/phase2/controlled_language_001/`. |
 | `view_g1_skills.py` | Interactive MuJoCo viewer: reset -> stand -> walk 2 m -> stop -> turn +/-45 deg -> walk 5 m, real time, observation only. |
 | `view_mission.py` | Interactive MuJoCo viewer for Phase 2.0 missions: validate -> capability-ground -> task graph -> deterministic executor, real time, with a live HUD. Observation only (`--list`, `--plan-only`, `--no-viewer` available). |
 | `enter.ps1` | Activate `.venv` and keep pip cache and temp files inside the repository. |

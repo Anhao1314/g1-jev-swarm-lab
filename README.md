@@ -1,6 +1,17 @@
 # G1 Jev Swarm Lab
 
 
+**Phase 2.1 - controlled-language compiler (complete).** Controlled Chinese
+commands can be deterministically compiled into Mission IR under the frozen
+Phase 2.1 grammar. The 189-sample frozen corpus reached 189/189 status and
+canonical IR matches, all four language safety gates were zero, and 11/11
+representative language missions were runtime-equivalent to their Oracle IR
+counterparts. This is a bounded grammar-based baseline, not general language
+understanding. Artifacts: `experiments/phase2/controlled_language_001/`.
+
+
+
+
 **Phase 2.0 - Oracle mission runtime (complete).** Structured Mission IR
 (no natural language, LLM, Jev or swarm component) is now validated,
 capability-grounded against the frozen Phase 1.3 evidence, compiled into a
@@ -144,6 +155,7 @@ Safety-critical low-level control is never delegated to a language or decision m
 | Module | Responsibility |
 | --- | --- |
 | `src/g1swarm/mission/` | Typed Mission IR, static validator, capability/risk grounding, task graph, deterministic executor and per-mission evidence |
+| `src/g1swarm/language/` | Frozen Lark grammar, deterministic controlled-Chinese compiler, typed `CompilerResult`, normalization/units, corpus and compiler benchmark |
 | `src/g1swarm/simulation/` | `G1Simulation` adapter (`reset`, `step`, `get_robot_state`); MuJoCo `mjModel`/`mjData` stay private, viewer is optional |
 | `src/g1swarm/state/` | `RobotState` protocol shared by skills, router, evaluation and future decision layers |
 | `src/g1swarm/skills/` | `Skill`, `SkillContext`, `SkillResult`, `SkillStatus`, `SkillRouter`; concrete stand / stop / walk_forward / turn skills |
@@ -168,6 +180,8 @@ python .\scripts\run_compat_spike.py
 python .\scripts\run_baseline_001.py
 python .\scripts\run_skill_pilot.py
 python .\scripts\run_oracle_missions.py --pilot --repeat 2
+python .\scripts\run_language_benchmark.py --pilot
+python .\scripts\run_language_benchmark.py --final
 python .\scripts\view_mission.py --mission h5-stand-walk4-turn45-walk4-stop
 ```
 
