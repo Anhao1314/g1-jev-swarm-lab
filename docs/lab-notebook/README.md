@@ -36,6 +36,10 @@ Therefore, the entries in this notebook are a **faithful reconstruction from the
 
 Once those experiment branches are pushed, this notebook should link directly to the relevant code, reports, and artifacts.
 
+## Visual entry point
+
+- [Visual research summary](visual-summary.md) — timeline, experiment comparisons, integrity flow and architecture.
+
 ## Notebook map
 
 - [Research timeline](timeline.md)

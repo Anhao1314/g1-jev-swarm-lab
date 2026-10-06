@@ -4,6 +4,28 @@ Date range covered: **2026-10-06**
 
 This timeline reconstructs the project's progression from a blank repository to a language-grounded Unitree G1 mission runtime.
 
+```mermaid
+flowchart LR
+    P0["Phase 0<br/>Research charter"] --> P1["Phase 1<br/>Simulation baseline"]
+    P1 --> P11["1.1<br/>Competence"]
+    P11 --> P12["1.2<br/>Failure boundary"]
+    P12 --> P12B["1.2b<br/>Segmentation"]
+    P12B --> A["Audit"]
+    A --> P13["1.3<br/>Closed-loop"]
+    P13 --> P20["2.0<br/>Mission runtime"]
+    P20 --> P21["2.1<br/>Controlled language"]
+    P21 --> P22["2.2<br/>LLM compiler"]
+
+    classDef done fill:#dafbe1,stroke:#1a7f37,color:#1f2328;
+    classDef audit fill:#fff8c5,stroke:#9a6700,color:#1f2328;
+    classDef current fill:#ddf4ff,stroke:#0969da,color:#1f2328;
+    class P0,P1,P11,P12,P12B,P13,P20,P21 done;
+    class A audit;
+    class P22 current;
+```
+
+For the compact chart-based view, see the [Visual Research Summary](visual-summary.md).
+
 ---
 
 ## Phase 0 — Research charter

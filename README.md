@@ -65,7 +65,7 @@ The reconstructed research record now documents local progress through:
 
 These entries preserve the reported branch names, commit SHAs, protocol hashes, failures, corrections, negative results, and measured breakthroughs. They do **not** imply that the corresponding raw experiment branches are already present on the remote.
 
-See the [Research Lab Notebook](docs/lab-notebook/README.md).
+See the [Research Lab Notebook](docs/lab-notebook/README.md) and the [Visual Research Summary](docs/lab-notebook/visual-summary.md).
 
 ## Repository map
 
@@ -99,6 +99,7 @@ Failed and negative runs are retained when they are relevant to the conclusion.
 
 ## Research record
 
+- [Visual research summary](docs/lab-notebook/visual-summary.md)
 - [Lab notebook index](docs/lab-notebook/README.md)
 - [Research timeline](docs/lab-notebook/timeline.md)
 - [Phase 1 — embodied execution](docs/lab-notebook/phase1-embodied-execution.md)

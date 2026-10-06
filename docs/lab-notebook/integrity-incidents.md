@@ -29,6 +29,22 @@ The direct 4 m metrics were inside the nominal envelope.
 
 ### Root cause
 
+```mermaid
+flowchart LR
+    A["Mission metrics<br/>final_* fields"] --> B["Evaluator expects<br/>canonical fields"]
+    B --> C["Missing key → +∞"]
+    C --> D["False task failure"]
+    D --> E["Audit raw evidence"]
+    E --> F["Canonical aliases"]
+    F --> G["Regression tests"]
+    G --> H["Corrected rerun"]
+
+    classDef bad fill:#ffebe9,stroke:#cf222e,color:#1f2328;
+    classDef fix fill:#dafbe1,stroke:#1a7f37,color:#1f2328;
+    class A,B,C,D bad;
+    class E,F,G,H fix;
+```
+
 Segmentation missions used keys:
 
 - `final_lateral_drift_m`;
