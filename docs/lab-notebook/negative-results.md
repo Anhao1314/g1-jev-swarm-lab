@@ -111,6 +111,23 @@ Known limitations include:
 
 ---
 
+## 10. LLM coverage gain did not yet satisfy the fail-closed compiler contract
+
+**Observation:** Phase 2.2 achieved 1.0 blind valid exact IR and 1.0 open-language coverage, but two malformed controlled-regression inputs were accepted as valid Missions.
+
+The two failures involved:
+
+- repeated `然后`;
+- trailing extra `然后`.
+
+**Why it matters:** a conversational model may reasonably “repair” broken phrasing, but the robot compiler contract requires malformed language to be rejected rather than silently repaired.
+
+**Consequence:** Phase 2.2 remains PARTIAL and the project enters compiler hardening rather than Phase 2.3.
+
+**Additional limitations:** unsupported recall was 0.9375, fine-grained ambiguity error codes were not fully stable, and median inference latency was 2.227 s versus 91.9 µs for Lark.
+
+---
+
 ## General lesson
 
 The project should prefer:
