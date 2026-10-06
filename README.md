@@ -16,6 +16,30 @@ The project will specifically investigate **Jev as a high-level decision model**
 
 ## Current status
 
+**Phase 1.1 - G1 skill competence characterization (complete).** The frozen protocol
+(`experiments/baselines/g1_skill_characterization_001/protocol.yaml`, SHA-256
+`007b316f2334021c02865858988e758adb6f5d0b99bf6c9d09618c7dc80a45fb`) was executed
+at commit `6c6af04`: 237/237 runs succeeded, 0 failures.
+
+- Nominal WalkForward reaches its target within ~1 mm at 0.5-5 m, but lateral
+drift grows with distance (-0.159 m at 0.5 m to -0.707 m at 5 m) and heading error
+grows from -4.4 deg to -10.7 deg. Nominal runs are deterministic (3/3 identical).
+- Nominal Turn (30-90 deg, both directions) lands within 0.07-1.24 deg of the
+target with 0.12-0.23 m translation drift (frozen 15 deg tolerance).
+- Stand holds height (mean 0.778 m, min 0.773 m) with roll/pitch <= 4.0/3.3 deg
+over 5/10/20 s; the base creeps ~2.2 cm/s (0.09 m at 5 s to 0.45 m at 20 s).
+- Stop from 0.25/0.50/0.75 m/s needs 1.08/1.31/1.53 s and 0.10/0.19/0.29 m.
+- All 18 perturbation conditions (nominal/yaw/xy_offset/joint/friction/push x
+walk/turn/walk+stop, 10 seeds each) succeeded: the frozen envelope produced no
+failure. Perturbed conditions give 10/10 unique trajectories across seeds.
+- A real implementation bug was found by the pilot and fixed: TurnSkill ignored
+the sign of the target angle (-45 deg was executed as +45 deg). Before/after
+evidence is preserved in the characterization report.
+- Competence map: `experiments/baselines/g1_skill_characterization_001/competence_map.json`
+(schema 1.1.0) - machine-readable capability evidence for future routing layers.
+
+**Phase 1 (frozen baseline).**
+
 **Phase 1 — G1 simulation baseline.** The measured facts on this machine (Windows 11, Python 3.11.9, `mujoco==3.15.0`, `torch==2.14.1+cu130`, RTX 5060 Ti 16 GB):
 
 - Official Unitree G1 MJCF models load and run headless natively under MuJoCo for 1000 steps each with no NaN/Inf and no MuJoCo warnings: the full-body 29-DOF model (`unitree_mujoco` @ `1eb6642`) and the 12-DOF leg model used by Unitree's own MuJoCo deployment (`unitree_rl_gym` @ `276801e`).
@@ -24,7 +48,7 @@ The project will specifically investigate **Jev as a high-level decision model**
 - Phase 1 target skill status: `Stand` PASS, `Stop` PASS, `WalkForward` PASS, `Turn` PASS (45 deg pilot, 5/5, error 0.18 deg).
 - No locomotion training was performed. No Jev, multi-swarm, LLM, perception or manipulation component is active in this phase.
 
-Reports: [compatibility spike](experiments/baselines/g1_compat_spike/README.md) · [Baseline-001](experiments/baselines/g1_baseline_001/README.md) · [turn pilot](experiments/baselines/g1_turn_pilot/README.md).
+Reports: [compatibility spike](experiments/baselines/g1_compat_spike/README.md) · [Baseline-001](experiments/baselines/g1_baseline_001/README.md) · [skill characterization](experiments/baselines/g1_skill_characterization_001/report.md) · [turn pilot](experiments/baselines/g1_turn_pilot/README.md).
 
 ## Target architecture
 
