@@ -331,14 +331,19 @@ class G1Simulation:
         return {"roll_deg": math.degrees(roll), "pitch_deg": math.degrees(pitch), "yaw_deg": math.degrees(yaw)}
 
     # -- optional viewer ----------------------------------------------
-    def open_viewer(self) -> None:
-        """Open the interactive MuJoCo viewer (desktop sessions only)."""
+    def open_viewer(self):
+        """Open the interactive MuJoCo viewer and return its handle.
+
+        The handle exposes ``is_running()`` so callers can stop cleanly when the
+        user closes the window; existing callers may ignore the return value.
+        """
 
         if self._viewer is not None:
             return
         import mujoco.viewer
 
         self._viewer = mujoco.viewer.launch_passive(self._model, self._data)
+        return self._viewer
 
     def sync_viewer(self) -> None:
         if self._viewer is not None:
