@@ -162,6 +162,10 @@ Freeze a warehouse-corridor proxy and search one variable at a time.
 
 Only 54/91 were task successes.
 
+![Physical success versus task success](visuals/phase1-physical-vs-task.svg)
+
+This was the point where the project stopped treating “did not fall” as equivalent to “completed the task.”
+
 Representative failures:
 
 - 10 m walk: drift -1.440 m, heading -15.09°;
@@ -269,6 +273,8 @@ Open-loop boundary remained:
 
 ### Research conclusion
 
+![Segmentation comparison](visuals/phase1-segmentation.svg)
+
 The segmentation hypothesis failed.
 
 In fact, segmentation could convert an already successful 4 m task into a failure.
@@ -321,6 +327,8 @@ Lateral candidates: 0.5 / 1.0 / 2.0.
 `k_lateral=1.0` was frozen before final evaluation.
 
 ### Final result
+
+![Closed-loop correction comparison](visuals/phase1-closed-loop.svg)
 
 | Distance | Open-loop | Heading only | Heading + lateral |
 | ---: | --- | --- | --- |
