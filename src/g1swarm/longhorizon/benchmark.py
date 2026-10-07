@@ -163,6 +163,9 @@ def compiler_record(
         "guard_status": diagnostics.get("guard_status"),
         "guard_reason_code": diagnostics.get("guard_reason_code"),
         "llm_invocations": int(diagnostics.get("llm_invocations", 0) or 0),
+        "provider_attempts": (
+            int(diagnostics["attempts"]) if isinstance(diagnostics.get("attempts"), int) else None
+        ),
         "provider_tokens": _tokens_of(result),
         "latency_s": _latency_of(result),
         "wall_time_s": wall_time_s,
@@ -212,6 +215,9 @@ def control_record(
         "guard_status": diagnostics.get("guard_status"),
         "guard_reason_code": diagnostics.get("guard_reason_code"),
         "llm_invocations": int(diagnostics.get("llm_invocations", 0) or 0),
+        "provider_attempts": (
+            int(diagnostics["attempts"]) if isinstance(diagnostics.get("attempts"), int) else None
+        ),
         "latency_s": _latency_of(result),
         "provenance": dict(provenance or {}),
     }

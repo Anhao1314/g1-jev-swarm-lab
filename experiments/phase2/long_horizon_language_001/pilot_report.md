@@ -1,238 +1,153 @@
 # Phase 2.3 Pilot Report (PILOT ONLY — not final metrics)
 
-Verdict: **BLOCKED** — the frozen provider was unavailable from this session,
-so the real compiler pilot (Stage A) and the language-runtime pilot (Stage C)
-could not run. Everything that does not require the provider was completed:
-deterministic pilot selection, the 18-mission oracle runtime pilot, guard-level
-safety-control checks, the capability-unknown zero-step atomicity check, wall
-time instrumentation, budget estimation, figure-field verification and
-harness fixes found by the pilot.
+Verdict: **READY_FOR_FREEZE**. The provider-dependent half of the pilot ran
+against the restored frozen relay: Stage A compiled all 54 language inputs
+with the real `guarded_direct_llm_v1` architecture (54/54 exact IR), all six
+safety controls match their expected behaviour, and Stage C executed 54/54
+language-runtime missions with zero `RUNTIME_CONTRADICTION` and full pairing
+equivalence against the oracle path.
+
+> History (kept): the initial provider-dependent pilot attempt was **BLOCKED**
+> because the relay credentials/service were unavailable from the session
+> environment (`WinError 10061`, no env vars). That attempt completed
+> selection, the 18/18 oracle runtime pilot, guard-side controls, the
+> capability-unknown direct-IR check and the budget scaffolding.
 
 ## 0. Provenance
 
-- Branch: `phase2.3/long-horizon-language`; starting HEAD `e2c5f80`.
-- Protocol: `experiments/phase2/long_horizon_language_001/protocol.yaml`
-  remains **draft / frozen: false**. No final protocol hash was produced.
-- Frozen components were not modified (verified by diff): compiler, guard,
-  prompt, Phase 2.1 grammar, Phase 2.0 runtime, grounder, skills,
-  controller/policy, Phase 1 maps.
-- Pilot artifacts (gitignored):
-  `artifacts/long_horizon_language_001/pilot/` — `pilot_selection.json`,
-  `canonical_missions.yaml`, `language_realizations.yaml`,
-  `safety_controls.yaml`, `oracle_runtime_results.json`,
-  `safety_controls.json`, `walltime_budget.json`.
-- Committed pilot documents:
-  `experiments/phase2/long_horizon_language_001/pilot_selection.json`,
-  this report.
+- Branch `phase2.3/long-horizon-language`; session start HEAD `1b3db4e`.
+- Protocol remains **draft / frozen: false**; no final hash produced.
+- Frozen components untouched: guard, direct LLM compiler, prompt, grammar,
+  runtime, grounder, skills, controller/policy, Phase 1 maps.
+- Artifacts: `artifacts/long_horizon_language_001/pilot/` (raw, artifact-only).
+- Committed: `pilot_selection.json`, this report, `pilot_manifest.json`.
 
-## 1. Provider availability (blocker)
+## 1. Provider provenance (matches Phase 2.2b freeze)
 
-- `LLM_COMPILER_BASE_URL`, `LLM_COMPILER_API_KEY`, `OPENAI_API_KEY`,
-  `OPENAI_BASE_URL` are absent from the process, user and machine environment.
-- The relay endpoint used by the earlier Phase 2.x sessions was located in the
-  machine's own session history; a connection attempt was refused
-  (`WinError 10061`), i.e. the relay process is not running.
-- No candidate local LLM service is listening on the usual ports
-  (11434 / 1234 / 8000 / 8080 / 5000 / 7860 / 30000 / 11435).
-- Credential values were never printed or written to any evidence file.
-- `--scripted` was deliberately **not** used as pilot evidence (protocol §6).
+`guarded_direct_llm_v1` / `openai_compatible_responses` / `deepseek-flash` /
+prompt SHA-256 `913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110` /
+guard `2.2b.2` / temperature `0.0` / max output `4096` / timeout `60 s` /
+retries `2 x 0.5 s` on 429/500/502/503/504. No provenance drift. Smoke test
+(H1/L2): SUCCESS, exact IR, 1 call, 1 attempt, usage present, 1.86 s.
 
-To resume: start the frozen relay and export `LLM_COMPILER_BASE_URL` plus one
-of `LLM_COMPILER_API_KEY` / `OPENAI_API_KEY`, then run
-`python scripts/run_long_horizon.py --out-dir artifacts/long_horizon_language_001/pilot compile`
-followed by `... runtime`, then `... summarize`.
+## 2. Compiler pilot (Stage A) — 54/54 exact IR
 
-## 2. Pilot selection (deterministic, result-blind)
+54 real inputs (18 missions x L1/L2/L3), one frozen call each, no scripted or
+replay substitution.
 
-3 missions per horizon (18 total), covering walk-dominant / turn-dense / mixed
-profiles; all mission IDs are `excluded_from_final = true`. Selection ranks
-candidates purely from canonical IR shape (no run results). Full table:
-`pilot_selection.json`.
+- Exact IR 54/54; false rejection 0; wrong order 0; wrong parameter 0;
+  hallucinated skill 0; unsafe acceptance 0.
+- Tokens 126,077 total (mean 2,334.8; usage present for all 54).
+- Provider latency mean 3.08 s / median 2.81 s / P95 4.81 s.
+- Wall total 208.1 s / mean 3.85 s / P95 5.75 s / max 24.66 s.
 
-| Horizon | Profile | Mission ID | Steps |
-| --- | --- | --- | ---: |
-| H1 | walk_dominant | `lh-h1-00-w4` | 1 |
-| H1 | turn_dense | `lh-h1-01-r30` | 1 |
-| H1 | mixed | `lh-h1-02-s1` | 1 |
-| H3 | walk_dominant | `lh-h3-00-s5-w6-x` | 3 |
-| H3 | turn_dense | `lh-h3-01-w8-l30-x` | 3 |
-| H3 | mixed | `lh-h3-02-w8-r30-x` | 3 |
-| H5 | walk_dominant | `lh-h5-08-w6-s2-w8-s5-x` | 5 |
-| H5 | turn_dense | `lh-h5-01-s2-r90-w10-l45-x` | 5 |
-| H5 | mixed | `lh-h5-00-s2-r45-w10-s5-x` | 5 |
-| H8 | walk_dominant | `lh-h8-01-w12-r60-w4-l45-w6-s1-w8-x` | 8 |
-| H8 | turn_dense | `lh-h8-03-s5-r45-w15-r30-s1-l90-w8-x` | 8 |
-| H8 | mixed | `lh-h8-02-w6-r60-s1-w15-s5-l60-s5-x` | 8 |
-| H12 | walk_dominant | `lh-h12-02-w12-l90-s1-w10-s1-l30-w6-s5-w4-s2-w20-x` | 12 |
-| H12 | turn_dense | `lh-h12-00-w4-r60-s1-l60-w15-l90-w10-r45-w12-s5-r30-x` | 12 |
-| H12 | mixed | `lh-h12-09-s2-l30-w4-s2-r90-s5-l60-w12-l60-w8-s2-x` | 12 |
-| H16 | walk_dominant | `lh-h16-10-w4-s1-w20-l45-s2-w8-s5-l90-w10-s2-w6-s1-w10-s2-w6-x` | 16 |
-| H16 | turn_dense | `lh-h16-14-s1-w4-r90-s5-r30-s2-l45-s5-l90-s5-r45-s1-r90-w20-r30-x` | 16 |
-| H16 | mixed | `lh-h16-03-w8-s5-w6-r60-s5-w10-l90-s5-r45-w10-l45-s5-w6-s5-r45-x` | 16 |
+| Horizon | Exact | Tokens | Wall mean |
+| --- | ---: | ---: | ---: |
+| H1 | 9/9 | 16,964 | 1.93 s |
+| H3 | 9/9 | 17,971 | 2.14 s |
+| H5 | 9/9 | 19,263 | 2.47 s |
+| H8 | 9/9 | 21,319 | 3.42 s |
+| H12 | 9/9 | 23,819 | 3.87 s |
+| H16 | 9/9 | 26,741 | 4.63 s |
 
-Fallbacks (recorded in `pilot_selection.json`): H1 is single-step, so the three
-profiles map to one primitive each (walk / turn / stand); H3 has no strictly
-mixed mission in the current corpus, so the mixed slot used the deterministic
-minimum-imbalance fallback. Neither fallback depends on results.
+Conditions: L1 18/18 (41,125 tokens), L2 18/18 (41,315), L3 18/18 (43,637).
 
-## 3. Compiler pilot (Stage A)
+Ceiling note: 3 missions per horizon cannot show a degradation trend; this is
+a size property, not evidence for the final campaign (17/horizon).
 
-**NOT RUN — provider unavailable.** 0 of 54 language inputs compiled.
-Nothing about compiler behaviour, exact IR, latency or tokens may be inferred
-from this pilot; no partial sample was run to avoid bias.
+## 3. Safety controls (complete)
 
-Reference-only (NOT pilot data, clearly labeled as Phase 2.2b evidence):
-selected architecture B achieved fresh-blind exact IR 0.9857 / coverage
-0.9833 with 1,380.75 provider tokens per user mission and a provider-inclusive
-reconstructed latency of median 1.56 s / P95 2.61 s.
+| Control | Result |
+| --- | --- |
+| long malformed x3 | guard MALFORMED, **0 provider calls** -> PASS |
+| long ambiguous | `AMBIGUOUS`, no mission -> PASS fail-closed |
+| unsupported embedded | `UNSUPPORTED`, no mission -> PASS fail-closed |
+| capability-unknown embedded | compiler SUCCESS; grounder `CAPABILITY_UNKNOWN`; REJECTED, **0 simulation steps** -> PASS |
 
-## 4. Oracle runtime pilot (Stage B) — 18/18 SUCCESS
+Language and capability safety stay separated: the grounder made the
+capability decision, not the compiler or guard.
 
-All 18 canonical pilot missions executed through the frozen Phase 2.0 runtime
-in a single continuous run per mission (no in-mission simulator resets),
-grounding GROUNDED 18/18, mission success 18/18, zero failures.
+## 4. Oracle runtime (Stage B)
 
-| Horizon | n | wall mean / max (s) | sim time mean / max (s) | steps mean |
-| --- | ---: | ---: | ---: | ---: |
-| H1 | 3 | 0.84 / 2.15 | 3.8 / 8.7 | ~1.9k |
-| H3 | 3 | 1.49 / 1.57 | 19.7 / 20.0 | ~9.8k |
-| H5 | 3 | 2.13 / 2.45 | 33.3 / 38.0 | ~16.6k |
-| H8 | 3 | 4.18 / 4.57 | 65.9 / 71.4 | ~32.9k |
-| H12 | 3 | 6.51 / 8.16 | 103.0 / 126.8 | ~51.5k |
-| H16 | 3 | 7.43 / 9.56 | 124.3 / 157.1 | ~62.1k |
+Reused unchanged from session 2A: 18/18 SUCCESS, GROUNDED, complete
+transitions. Stage C re-ran the same deterministic oracle missions only to
+obtain in-memory `MissionResult` objects for pairing; summaries matched the
+stored artifact per mission (0 mismatches).
 
-H12/H16 feasibility: confirmed. No runtime hard timeout was hit; the slowest
-H16 mission completed in 9.56 s wall / 157.1 s simulation time. MuJoCo runs
-roughly 15x faster than real time on this machine for these missions.
+## 5. Language runtime (Stage C) — 54/54, zero contradictions
 
-Transition instrumentation: every mission records `transition_count` and the
-full ordered transition list (`previous_skill`, `next_skill`,
-`position_delta_m`, `heading_delta_deg`, `controller_memory_reset`); counts
-match `completed_nodes - 1` (0 for single-step H1). Controller-memory reset
-semantics are unchanged (each inter-skill transition records a reset).
+- Success 54/54; GROUNDED 54/54; runtime equivalence 54/54.
+- `RUNTIME_CONTRADICTION` 0; attribution counts empty.
+- Transitions 351 total = completed_nodes - 1 (H1 0, H3 18, H5 36, H8 63,
+  H12 99, H16 135).
+- Wall total 222.6 s / mean 4.12 s / max 12.28 s.
 
-## 5. Language runtime pilot (Stage C)
+## 6. Horizon summary (PILOT ONLY)
 
-**NOT RUN — depends on Stage A exact-IR samples.** No language runtime record
-exists, therefore no paired comparison and no `RUNTIME_CONTRADICTION` could be
-assessed. The oracle-only runs used the frozen runtime directly; no
-contradiction of the "same IR -> same behaviour" invariant was observed
-(there was no second path to compare).
+All horizons: exact IR 1.000, runtime|exact 1.000, E2E 1.000 (n=9 each).
+Adjacent-horizon deltas are 0 by construction of this pilot.
 
-## 6. Safety controls
+## 7. H12 / H16 observations (engineering only)
 
-| Control | Guard | Compiler | Runtime | Result |
-| --- | --- | --- | --- | --- |
-| long malformed ×3 | MALFORMED (REPEATED_CONNECTOR / EMPTY_CLAUSE / REPEATED_SEPARATOR) | 0 provider calls (by construction) | not executed | PASS (guard-side) |
-| long ambiguous | PASS (structural only) | NOT RUN (provider) | not executed | BLOCKED |
-| unsupported embedded | PASS (structural only) | NOT RUN (provider) | not executed | BLOCKED |
-| capability-unknown embedded | PASS | NOT RUN (provider) | direct-IR check: REJECTED, `CAPABILITY_UNKNOWN`, **0 simulation steps** | runtime half PASS; compiler half BLOCKED |
+- 9/9 exact at both horizons; tokens per successful input grow with length
+  (H12 2,646; H16 2,971); latency ~4-5 s.
+- Runtime: all succeed; transitions exact; longest language-runtime mission
+  12.28 s wall (H16). No corpus/prompt change made.
 
-Guard-side notes: the dangling-connector control is rejected by the
-"connector followed by punctuation" rule (`EMPTY_CLAUSE`) rather than the
-trailing-connector rule; the empty-clause control is rejected by
-`REPEATED_SEPARATOR`. Both are fail-closed outcomes.
+## 8. Latency and tokens (pilot-measured)
 
-## 7. Wall-time instrumentation
+- Compiler wall 208.1 s total / 3.85 s mean / 3.66 s median / 5.75 s P95 /
+  24.66 s max; provider latency 3.08 s mean / 2.81 s median / 4.81 s P95.
+- Language wall 222.6 s total / 4.12 s mean / 12.28 s max.
+- Tokens 126,077 total; tokens per successful mission rise from 1,885 (H1)
+  to 2,971 (H16).
 
-- Compiler: fields added (`wall_time_s` per sample, plus latency/token
-  aggregates) but no pilot measurement (provider unavailable).
-- Oracle runtime: measured (section 4); per-mission wall and simulation time
-  are recorded separately.
-- Language runtime: not measured.
+## 9. Updated final-campaign budget (real pilot data)
 
-## 8. Provider / token budget
+| Option | Missions | Compiler | Oracle | Language (max) | Total wall | Tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| A 17/horizon | 102 | 306 | 102 | 306 | **~45.3 min** | ~714k |
+| B 15/horizon | 90 | 270 | 90 | 270 | ~39.8 min | ~630k |
+| C 10/horizon | 60 | 180 | 60 | 180 | ~26.7 min | ~420k |
 
-Pilot provider usage: **not measured** (0 calls). Reference-only projection for
-306 compiler inputs (17/horizon × 3 conditions) using Phase 2.2b’s 1,380.75
-tokens per mission: **≈ 422,500 provider tokens**. Compiler wall time cannot
-be honestly projected from this pilot; Phase 2.2b reconstruction suggests
-roughly 8–13 minutes total for 306 calls at median 1.56 s / P95 2.61 s.
+Final oracle simulation projection ~5,948 s (MuJoCo ~15x faster than wall
+here). Full numbers: `walltime_budget.json`.
 
-## 9. Estimated final campaign budget
+## 10. Recommended final sample count (recommendation only)
 
-Assumptions: 6 horizons, 3 language conditions, final missions per horizon as
-in each option; runtime wall ≈ pilot oracle measurements; language wall = 3×
-oracle wall (worst case, all samples exact IR); simulation time ≈ measured.
+**Option A (17/horizon, 102 missions).** Cost is provider ~714k tokens and
+~45 min wall; neither argues for shrinking. Option B is the fallback if
+provider budget is constrained. Cost-based only, not accuracy-based.
 
-| Option | Missions | Compiler inputs | Oracle runs | Language runs (max) | Oracle wall | Language wall (max) | Simulation time | Tokens (reference) |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| A: 17/horizon | 102 | 306 | 102 | 306 | ≈ 6.4 min | ≈ 19.2 min | ≈ 99 min | ≈ 422k |
-| B: 15/horizon | 90 | 270 | 90 | 270 | ≈ 5.6 min | ≈ 16.9 min | ≈ 87 min | ≈ 373k |
-| C: 10/horizon | 60 | 180 | 60 | 180 | ≈ 3.8 min | ≈ 11.3 min | ≈ 58 min | ≈ 249k |
+## 11. Guard OOD safety sidecar (recommendation for Session 3)
 
-Exact numbers: `artifacts/long_horizon_language_001/pilot/walltime_budget.json`.
+An independent audit flagged shared framework-level provenance between the
+Phase 2.2b guard's fresh-blind set and its defect-derived rule frames. The
+pilot did not modify the corpus or the guard. Session 3 should add a **Guard
+OOD Safety Sidecar** (unseen malformed distributions, fail-closed, zero
+provider calls); it is not part of the 54-input pilot and must not be
+improvised during a provider session.
 
-## 10. Recommended final sample count (recommendation only — no freeze)
+## 12. Evidence hygiene
 
-**Option A (17/horizon, 102 canonical missions).** Runtime cost is small and
-scales linearly with mission count; the pilot shows H16 is comfortably within
-the wall-time budget, so there is no cost-based reason to shrink the corpus.
-The binding constraint is provider availability and token budget, not MuJoCo
-time. If the relay remains unreliable, Option B (15/horizon) is the fallback;
-this recommendation is based solely on runtime/provider cost and statistical
-usefulness, never on pilot outcome (this pilot produced no language outcomes
-at all). Final decision belongs to Session 3.
+Committed: pilot selection, draft protocol, machine summaries, report, and
+`pilot_manifest.json` (SHA-256 of pilot artifacts + source commits). Raw large
+artifacts remain artifact-only.
 
-## 11. Corpus / harness bugs discovered and fixed
+## 13. Harness / corpus issues discovered
 
-1. **Oracle evidence lacked transition detail.** `oracle_runtime_results.json`
-   recorded only `transition_count`. Fixed in `run_oracle_stage` (now records
-   the full transition list) and re-run; a test assertion was added.
-2. **Scripted harness returned no mission for the capability-unknown control.**
-   The offline stand-in mapped every control to its expected status, so the
-   expected-SUCCESS control produced no IR and the grounding/runtime half could
-   not be exercised. Fixed: the scripted compiler now returns the control’s
-   intended IR for expected-SUCCESS controls (harness-only change).
-3. **Wall-time fields were missing.** Per-sample `wall_time_s` added to
-   compiler records, runtime records and control records, plus wall-time
-   aggregates in `latency_tokens.json`.
-4. No corpus ground-truth bug was found: the full 120-mission corpus validates
-   and every L1 realization compiles to its canonical IR under the frozen
-   grammar (Session 1 self-check still green). Pilot artifacts are marked
-   `pilot_only` and `excluded_from_final`.
+1. `provider_attempts` not persisted in Stage A records; schema fixed after
+   the run (pilot not re-run to avoid duplicate semantic sampling).
+2. Oracle transition detail and wall-time fields added in session 2A.
+3. No corpus ground-truth bug; L1 self-check green.
 
-## 12. Protocol changes recommended for Session 3
+## 14. Figure feasibility
 
-- Add `compiler_pilot_completed_with_real_provider` and
-  `language_runtime_pilot_completed` to the freeze checklist; the protocol must
-  not be frozen while Stage A/C are NOT_RUN.
-- Record in the protocol that pilot artifacts are permanently excluded and
-  that the final corpus excludes the 18 pilot mission IDs.
-- Keep H16 (feasibility confirmed) and keep the grounded parameter whitelist.
-- Decide the final sample count (recommendation: 17/horizon) only after real
-  compiler pilot data exists.
+Figures 1-4 have populated machine fields; Figure 4 is empty for success
+curves (no failures) with controls recorded separately. Temporary QA chart
+rendered to system temp (not committed).
 
-## 13. Figure feasibility
+## 15. Next session
 
-- Figure 1 (exact IR vs horizon) / Figure 2 (E2E success vs horizon) /
-  Figure 4 (failure attribution): required fields exist in the compiler and
-  runtime record schemas (`horizon`, `condition`, `exact_ir_match`,
-  `mission_success`, `oracle`, `attribution`), but no compiler/language data
-  exists in this pilot, so no series can be drawn yet.
-- Figure 3 (oracle vs language runtime): the oracle series is available now
-  (18 missions, wall/sim per horizon); the language series is pending.
-- A temporary QA chart of oracle wall/simulation time per horizon was rendered
-  to the system temp directory to confirm the plotting path; it is not
-  committed.
-
-## 14. Frozen baseline audit
-
-`git diff` around the pilot confirms zero modifications to `src/g1swarm/llm/`,
-the structural guard, prompts, the Phase 2.1 grammar, `mission/runtime.py`,
-`mission/grounding.py`, skills, controller/policy or the Phase 1 maps. All
-pilot changes are confined to the new `src/g1swarm/longhorizon/` harness,
-`scripts/run_long_horizon.py`, and tests.
-
-## 15. Tests
-
-`python -m pytest -q`: **562 passed, 0 failed, 9 warnings** (556 pre-pilot +
-6 new pilot tests).
-
-## 16. Next session
-
-Resume the provider-dependent pilot first (Stage A compile + Stage C runtime
-with the frozen relay), then run **Session 3 — Protocol Freeze**. Do not freeze
-the protocol while Stage A/C are NOT_RUN. The Codex developer-agent tool-call
-interruption did not occur in this session; the blocker is the unavailable
-local provider relay.
+**Session 3 — Protocol Freeze.** Do not treat the pilot's 1.0 ceiling as
+evidence about the final campaign.

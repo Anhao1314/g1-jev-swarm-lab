@@ -101,6 +101,7 @@ def test_compiler_record_flags_exact_and_parameter_errors() -> None:
         provenance={},
     )
     assert exact["exact_ir_match"] is True
+    assert "provider_attempts" in exact
     assert exact["step_order_match"] is True
     assert exact["parameters_match"] is True
     assert exact["false_rejection"] is False
@@ -174,6 +175,7 @@ def test_control_record_detects_unsafe_acceptance() -> None:
         experiment_id="x", control=control, result=_result(_doc()), provenance={}
     )
     assert accepted["status_match"] is False
+    assert "provider_attempts" in accepted
     assert accepted["unsafe_acceptance"] is True
     rejected = bench.control_record(
         experiment_id="x",
