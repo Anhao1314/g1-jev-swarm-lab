@@ -10,6 +10,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
 
 import numpy as np
@@ -300,3 +301,256 @@ def test_uncommitted_acquisition_source_or_protocol_stops_before_any_physics(mon
         experiment.run_campaign(output)
     assert called == []
     assert not output.exists()
+
+
+@pytest.fixture(scope="module")
+def acquired_records():
+    """Requires complete retained evidence; a missing campaign is a failure."""
+    return _rows(DIRECTORY / "evidence/results.jsonl.gz")
+
+
+def _yaw(quaternion):
+    # Compute independently, without the new analysis module or simulator.
+    w, x, y, z = quaternion
+    return math.atan2(2*(w*z+x*y), 1-2*(y*y+z*z))
+
+
+def _wrapped(value):
+    return math.atan2(math.sin(value), math.cos(value))
+
+
+def _project(position, origin, heading):
+    dx, dy = position[0]-origin[0], position[1]-origin[1]
+    return math.cos(heading)*dx+math.sin(heading)*dy, -math.sin(heading)*dx+math.cos(heading)*dy
+
+
+def _source_science(value):
+    # Keep all actual scientific diagnostics. Strip only documented publication
+    # annotations and actual clock names, never an arbitrary key substring.
+    annotation = {"alpha", "heading_alignment_alpha", "run_id", "phase", "repetition", "provenance",
+        "evaluation_set", "checkpoint", "recorded_at", "treatment_label", "observer_audit",
+        "policy_decision_calls", "learned_policy_configured", "wall_time_s", "elapsed_wall_time_s"}
+    if isinstance(value, dict):
+        return {k: _source_science(v) for k, v in value.items() if k not in annotation}
+    if isinstance(value, list):
+        return [_source_science(v) for v in value]
+    return value
+
+
+def _cross_frame_science(value):
+    """Cross-alpha comparisons omit only the differing reference-mode label.
+
+    Actual reference coordinates, gains, command diagnostics and outcomes remain
+    present; the intervention's label is not an independent physical variable.
+    """
+    value = _source_science(value)
+    if isinstance(value, dict):
+        return {k: _cross_frame_science(v) for k, v in value.items() if k != "reference_mode"}
+    if isinstance(value, list):
+        return [_cross_frame_science(v) for v in value]
+    return value
+
+
+def test_complete_acquisition_preserves_schedule_and_prospective_git_provenance(acquired_records):
+    protocol = _json(DIRECTORY / "protocol.json")
+    assert len(acquired_records) == 16
+    for record, expected in zip(acquired_records, protocol["schedule"]):
+        for key in ("case_id", "alpha", "phase", "repetition"):
+            assert record[key] == expected[key]
+    manifest = _json(DIRECTORY / "evidence/manifest.json")
+    completion = _json(DIRECTORY / "evidence/completion.json")
+    assert completion["status"] == "COMPLETE"
+    assert completion["runs"] == 16
+    assert manifest["protocol"] == protocol
+    common = manifest["provenance"]
+    assert all(record["provenance"] == common for record in acquired_records)
+    assert common["PPO_training"] is False
+    assert common["residual_enabled"] is False
+    assert common["Console_UI_modified"] is False
+    assert common["no_independent_seed_claim"] is True
+    assert common["protocol_sha256"] == _sha(DIRECTORY / "protocol.json")
+    assert common["case_manifest_sha256"] == _sha(DIRECTORY / "case_manifest.json")
+    assert common["history_manifest_sha256"] == _sha(DIRECTORY / "history_freeze.json")
+    assert common["base_policy_sha256"] == _sha(ROOT / "third_party/unitree_rl_gym/deploy/pre_train/g1/motion.pt")
+    commit = common["code_commit"]
+    assert len(commit) == 40
+    for path, expected in common["source_hashes"].items():
+        assert _sha(ROOT / path) == expected
+        committed = subprocess.check_output(["git", "show", f"{commit}:{path}"], cwd=ROOT)
+        assert hashlib.sha256(committed).hexdigest() == expected
+    committed_protocol = subprocess.check_output([
+        "git", "show", f"{commit}:experiments/phase3a/correction_tradeoff_isolation_001/protocol.json"
+    ], cwd=ROOT)
+    assert hashlib.sha256(committed_protocol).hexdigest() == common["protocol_sha256"]
+    assert not (DIRECTORY / "evidence/stopped.json").exists()
+
+
+def test_exported_evidence_retains_every_raw_artifact_and_both_hashes():
+    inventory = _json(DIRECTORY / "evidence_manifest.json")
+    assert inventory["protocol_sha256"] == _sha(DIRECTORY / "protocol.json")
+    assert inventory["all_negative_results_retained"] is True
+    assert inventory["retry"] is False
+    raw_paths = set()
+    for name, pin in inventory["files"].items():
+        exported = (ROOT / name).read_bytes()
+        assert len(exported) == pin["bytes"], name
+        assert hashlib.sha256(exported).hexdigest() == pin["sha256"], name
+        decoded = gzip.decompress(exported) if pin["encoding"] == "gzip" else exported
+        assert hashlib.sha256(decoded).hexdigest() == pin["raw_sha256"], name
+        raw = ROOT / pin["raw_path"]
+        raw_paths.add(raw)
+        if raw.exists():
+            assert raw.read_bytes() == decoded, pin["raw_path"]
+    raw_root = ROOT / "artifacts/correction_tradeoff_isolation_001"
+    if raw_root.is_dir():
+        assert {p for p in raw_root.rglob("*") if p.is_file()} == raw_paths
+    assert len([n for n in inventory["files"] if n.endswith(".npz")]) == 16
+    assert len([n for n in inventory["files"] if "/traces/" in n]) == 16
+
+
+def test_every_control_anchor_and_repeat_has_exact_historical_evidence(acquired_records):
+    checks = _json(DIRECTORY / "evidence/anchor_checks.json")
+    assert checks["all_passed"] is True
+    assert len(checks["checks"]) == 12
+    for record in acquired_records:
+        if record["alpha"] not in (0.0, 0.5, 1.0):
+            continue
+        source, trace, locator = source_anchor(record["case_id"], record["alpha"])
+        assert _source_science(record) == _source_science(source)
+        retained = _rows(DIRECTORY / "evidence/traces" / (record["run_id"]+".jsonl.gz"))
+        assert retained == trace
+        certificate = next(c for c in checks["checks"] if c["run_id"] == record["run_id"])
+        assert certificate["passed"] is True
+        assert all(certificate[key] == value for key, value in locator.items())
+
+
+def test_repetition_identity_covers_full_streams_rng_tensors_traces_and_saved_poses(acquired_records):
+    primary = {(r["case_id"], r["alpha"]): r for r in acquired_records if r["phase"] == "primary"}
+    for repeated in acquired_records:
+        if repeated["phase"] != "repeatability":
+            continue
+        first = primary[(repeated["case_id"], repeated["alpha"])]
+        assert _source_science(repeated) == _source_science(first)
+        assert repeated["observer_audit"] == first["observer_audit"]
+        for directory, suffix in (("traces", ".jsonl.gz"), ("poses", ".npz")):
+            left = DIRECTORY / "evidence" / directory / (first["run_id"]+suffix)
+            right = DIRECTORY / "evidence" / directory / (repeated["run_id"]+suffix)
+            if suffix == ".jsonl.gz":
+                assert _rows(left) == _rows(right)
+            else:
+                with np.load(left, allow_pickle=False) as a, np.load(right, allow_pickle=False) as b:
+                    assert set(a.files) == set(b.files)
+                    assert all(np.array_equal(a[key], b[key], equal_nan=True) for key in a.files)
+    primitives = [r for r in acquired_records if r["case_id"] == "primitive-walk-8"]
+    assert len(primitives) == 6
+    assert all(_cross_frame_science(r) == _cross_frame_science(primitives[0]) for r in primitives)
+    assert all(r["observer_audit"] == primitives[0]["observer_audit"] for r in primitives)
+
+
+def test_read_only_observer_preserves_existing_observation_counts_and_zero_learning(acquired_records):
+    for record in acquired_records:
+        audit = record["observer_audit"]
+        assert audit["physics_steps"] == sum(n["simulation_steps"] for n in record["nodes"])
+        for stream in ("commands", "torques", "base_actions"):
+            assert audit["streams"][stream]["count"] == audit["physics_steps"]
+        assert audit["streams"]["base_observations"]["count"] > 0
+        assert audit["reward_calls"] == audit["optimizer_updates"] == audit["checkpoint_writes"] == 0
+        assert len(audit["physics_state_sha256"]) == len(audit["rng_after_sha256"]) == 64
+        assert len(audit["initial_tensors_sha256"]) == len(audit["final_tensors_sha256"]) == 64
+        trace = _rows(DIRECTORY / "evidence/traces" / (record["run_id"]+".jsonl.gz"))
+        assert audit["streams"]["residual_observations"]["count"] == sum(r["eligible"] for r in trace)
+        assert all(row["active"] is False and row["action"] == [0.0, 0.0, 0.0]
+                   and row["residual"] == [0.0, 0.0, 0.0] for row in trace)
+        assert all(np.array_equal(row["applied_command"], row["deterministic_command"]) for row in trace)
+
+
+def test_native_pose_coordinates_and_source_commands_independently_support_mechanism(acquired_records):
+    maximum_error = 0.0
+    observed_walk_commands = 0
+    for record in acquired_records:
+        path = DIRECTORY / "evidence/poses" / (record["run_id"]+".npz")
+        with np.load(path, allow_pickle=False) as poses:
+            assert poses["qpos"].shape == (len(poses["time_s"]), 19)
+            assert poses["qvel"].shape == (len(poses["time_s"]), 18)
+            assert poses["ctrl"].shape == (len(poses["time_s"]), 12)
+            assert np.isfinite(poses["qpos"]).all()
+            assert np.isfinite(poses["qvel"]).all()
+            assert np.isfinite(poses["ctrl"]).all()
+            assert poses["time_s"][0] == 0.0
+            assert np.all(np.diff(poses["time_s"]) > 0)
+            assert poses["time_s"][-1] == record["total_sim_time_s"]
+            assert np.array_equal(poses["qpos"][-1, :3], record["final_state"]["base_position"])
+            assert np.array_equal(poses["qpos"][-1, 3:7], record["final_state"]["base_orientation"])
+            for frame, node_index in enumerate(poses["node_index"]):
+                node = record["nodes"][int(node_index)]
+                if node["skill"] != "walk_forward":
+                    assert math.isnan(poses["reference_heading"][frame])
+                    continue
+                ref = node["walking_reference"]
+                assert np.array_equal(poses["local_origin"][frame], node["start_state"]["base_position"][:2])
+                assert poses["local_heading"][frame] == ref["measurement_heading_rad"]
+                if math.isnan(poses["reference_heading"][frame]):
+                    # Retain the frozen observer's initialization metadata gap:
+                    # the t=0 pose is copied before first Walk node setup. It
+                    # is a real pose, not a command-aligned observation. Never
+                    # synthesize a reference or alter the evidence to fill it.
+                    assert record["case_id"] == "primitive-walk-8"
+                    assert frame == 0 and poses["time_s"][frame] == 0.0
+                    assert int(node_index) == 0
+                    continue
+                assert poses["reference_heading"][frame] == ref["control_heading_rad"]
+                position = poses["qpos"][frame, :3]
+                lf, ll = _project(position, poses["local_origin"][frame], poses["local_heading"][frame])
+                cf, cl = _project(position, poses["local_origin"][frame], poses["reference_heading"][frame])
+                delta = _wrapped(poses["reference_heading"][frame]-poses["local_heading"][frame])
+                reconstructed = cf*math.sin(delta)+cl*math.cos(delta)
+                maximum_error = max(maximum_error, abs(ll-reconstructed))
+                assert ll == pytest.approx(reconstructed, abs=1e-10)
+                assert lf == pytest.approx(cf*math.cos(delta)-cl*math.sin(delta), abs=1e-10)
+        trace = _rows(DIRECTORY / "evidence/traces" / (record["run_id"]+".jsonl.gz"))
+        for row in trace:
+            if row["skill"] != "walk_forward":
+                continue
+            observed_walk_commands += 1
+            ref = row["walking_reference"]
+            state = row["state_before_command"]
+            _, cl = _project(state["base_position"], ref["control_origin"], ref["control_heading_rad"])
+            heading_error = _wrapped(_yaw(state["base_orientation"])-ref["control_heading_rad"])
+            yaw_raw = -1.5*heading_error-cl
+            yaw_raw = 0.0 if abs(yaw_raw) < 0.01 else yaw_raw
+            yaw_command = max(-0.6, min(0.6, yaw_raw))
+            expected = [row["nominal_command"][0], row["nominal_command"][1], yaw_command]
+            assert row["applied_command"] == pytest.approx(expected, abs=1e-10)
+    assert observed_walk_commands > 0
+    assert maximum_error < 1e-10
+
+
+def test_shared_pretreatment_stand_state_and_midpoint_negative_remain_visible(acquired_records):
+    sequence = [r for r in acquired_records if r["case_id"] == "sequence-mixed-16m"]
+    first_stand = _cross_frame_science(sequence[0]["nodes"][0])
+    assert all(_cross_frame_science(r["nodes"][0]) == first_stand for r in sequence)
+    midpoint = next(r for r in sequence if r["phase"] == "primary" and r["alpha"] == 0.5)
+    first_walk = midpoint["nodes"][1]
+    assert first_walk["lateral_drift_m"] == 0.37229234402137323
+    assert first_walk["physical_success"] is True
+    assert first_walk["task_success"] is True
+    assert first_walk["strict_success"] is False
+    assert first_walk["envelope"]["strict_envelope"]["violations"] == ["EXCESSIVE_DRIFT"]
+    assert first_walk["walking_correction_stats"]["saturation_count"] == 0
+
+
+@pytest.mark.parametrize("alpha,console_run", [(0.0, "alpha0-off"), (0.5, "alpha05-off")])
+def test_current_sequence_probe_matches_frozen_console_capture_off_and_on_streams(acquired_records, alpha, console_run):
+    record = next(r for r in acquired_records if r["case_id"] == "sequence-mixed-16m"
+                  and r["phase"] == "primary" and r["alpha"] == alpha)
+    audit = record["observer_audit"]
+    frozen = _json(ROOT / "experiments/research_console/vertical_slice_001/runs" / console_run / "parity.json")
+    assert frozen["capture_off_on_equal"] is True
+    for observer in ("capture_off", "capture_on"):
+        original = frozen[observer]
+        assert audit["physics_state_sha256"] == original["physics_state_sha256"]
+        assert audit["physics_steps"] == original["physics_steps"]
+        for name, stream in audit["streams"].items():
+            assert stream == original["streams"][name]
+        assert audit["initial_tensors_sha256"] == original["initial_policy_tensors_sha256"]
+        assert audit["final_tensors_sha256"] == original["final_policy_tensors_sha256"]
