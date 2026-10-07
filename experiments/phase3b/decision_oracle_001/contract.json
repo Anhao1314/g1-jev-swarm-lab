@@ -1,0 +1,37 @@
+{
+  "contract_id": "phase3b0_fixed14s_oracle_v0",
+  "scope": "offline decision labeling from retained, context-matched evidence; no robot or Jev control",
+  "decision_epoch": "before a bounded recovery action is applied",
+  "modes": {
+    "CONTINUE": {"action": [0, 0, 0], "meaning": "no recovery intervention"},
+    "LATERAL_RECOVERY": {"action": [0, -1, 0], "meaning": "first-Walk normalized lateral residual for 14 seconds only"},
+    "YAW_RECOVERY": {"action": [0, 0, -1], "meaning": "first-Walk normalized yaw residual for 14 seconds only"},
+    "COMBINED_RECOVERY": {"action": [0, -1, -1], "meaning": "first-Walk normalized lateral and yaw residual for 14 seconds only"},
+    "ABSTAIN": {"action": null, "meaning": "no recovery authorization; not a demonstrated physical stop maneuver"}
+  },
+  "fixed_recovery_conditions": {
+    "alpha": 0.5,
+    "origin": "actual-start",
+    "authority_window_s": 14.0,
+    "application": "skill=Walk8m, transition=Stand->Walk8m and decision_epoch=first_walk_entry only, at the inherited controller bounds, reference, policy, PD/gains, observation, reward, evaluator and thresholds"
+  },
+  "state": {
+    "state_id": "stable identifier for a distinct predecision state, not a treatment identifier",
+    "context_required": ["case_id", "seed", "decision_epoch", "skill", "transition", "alpha", "origin", "reference_id", "controller_id", "evaluator_id", "policy_id", "residual_bounds_id", "recovery_contract_id"],
+    "observables_required": ["local_lateral_error_m", "local_heading_error_deg", "route_x_error_m", "route_y_error_m", "route_heading_error_deg", "reference_heading_deg", "instantaneous_strict_margin_m", "remaining_distance_m", "previous_recovery"],
+    "observability_rule": "all observables must exist at decision time; route error is current pose versus route, and strict margin is instantaneous, never a formal endpoint or treatment outcome"
+  },
+  "outcomes": {
+    "storage": "separate from state and keyed by exact state_id, SHA256 canonical context fingerprint and SHA256 canonical full predecision state fingerprint",
+    "required_fields": ["nominal", "physical", "all_strict", "final_world_x_error_m", "final_world_y_error_m", "final_lateral_error_m", "final_heading_error_deg", "endpoint_norm_m", "evidence_source"],
+    "roundoff_audit_tolerance": 1e-10,
+    "roundoff_role": "arithmetic verification only; a paired gain within this tolerance is not an improvement"
+  },
+  "selection": [
+    "CONTINUE when its complete observed off outcome meets nominal, physical and all-strict gates; it is preferred to unnecessary recovery",
+    "otherwise recovery is in scope only at Stand->Walk8m first_walk_entry; each recovery requires complete observed nominal, physical and all-strict gates plus a strictly smaller final endpoint norm than its own off, and no worse absolute final commanded-axis lateral or heading error",
+    "select a recovery only if exactly one is admissible and all three recovery cells and the off comparator are complete",
+    "otherwise ABSTAIN, distinguishing missing evidence, no admissible recovery and ambiguous admissible recovery"
+  ],
+  "nonclaims": ["not a learned policy", "not a low-level controller", "not evidence of transfer to unmatched states", "not a physical STOP safety claim"]
+}
