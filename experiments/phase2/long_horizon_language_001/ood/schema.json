@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "expected_steps"
+              ]
+            },
+            {
+              "required": [
+                "expected_mission"
+              ]
+            },
+            {
+              "required": [
+                "mapping_version"
+              ]
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "expected_status": {
+            "const": "SUCCESS"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "expected_steps",
+          "expected_mission",
+          "mapping_version"
+        ]
+      }
+    },
+    {
+      "else": {
+        "properties": {
+          "split": {
+            "const": "disputed_sensitivity"
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "confidence": {
+            "const": "high"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "split": {
+            "const": "primary_gold"
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "author_phenomenon_group": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "candidate_id": {
+      "pattern": "^ood-[mv]-(00[1-9]|0[1-7][0-9]|080)$",
+      "type": "string"
+    },
+    "confidence": {
+      "enum": [
+        "high",
+        "low"
+      ]
+    },
+    "expected_mission": {
+      "description": "Must additionally pass frozen g1swarm.mission.ir.Mission and MissionValidator; reverse mapping must recover expected_steps exactly.",
+      "type": "object"
+    },
+    "expected_status": {
+      "enum": [
+        "MALFORMED",
+        "SUCCESS"
+      ]
+    },
+    "expected_steps": {
+      "items": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "const": "stand"
+              },
+              "duration_s": {
+                "enum": [
+                  1,
+                  2,
+                  5
+                ]
+              }
+            },
+            "required": [
+              "action",
+              "duration_s"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "const": "walk_forward"
+              },
+              "distance_m": {
+                "enum": [
+                  4,
+                  6,
+                  8,
+                  10,
+                  12,
+                  15,
+                  20
+                ]
+              }
+            },
+            "required": [
+              "action",
+              "distance_m"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "const": "turn"
+              },
+              "angle_deg": {
+                "enum": [
+                  30,
+                  45,
+                  60,
+                  90
+                ]
+              },
+              "direction": {
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              }
+            },
+            "required": [
+              "action",
+              "angle_deg",
+              "direction"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "const": "stop"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "type": "array"
+    },
+    "mapping_version": {
+      "const": "author_steps_to_mission_ir_v1"
+    },
+    "mission_length_class": {
+      "enum": [
+        "single",
+        "short",
+        "medium",
+        "long"
+      ]
+    },
+    "rationale": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_line": {
+      "maximum": 160,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "split": {
+      "enum": [
+        "primary_gold",
+        "disputed_sensitivity"
+      ]
+    },
+    "utterance": {
+      "maxLength": 512,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "utterance",
+    "rationale",
+    "author_phenomenon_group",
+    "mission_length_class",
+    "confidence",
+    "expected_status",
+    "split",
+    "source_line"
+  ],
+  "title": "Frozen Guard OOD row v1",
+  "type": "object"
+}

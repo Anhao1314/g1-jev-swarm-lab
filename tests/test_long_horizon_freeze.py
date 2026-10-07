@@ -50,10 +50,10 @@ def test_pilot_final_exclusion_is_total() -> None:
     assert pilot_ids & final_ids == set()
     pilot_artifact = (
         repo_root()
-        / "artifacts"
+        / "experiments" / "phase2"
         / "long_horizon_language_001"
-        / "pilot"
-        / "language_realizations.yaml"
+        / "ood" / "evidence"
+        / "pilot_language_realizations.yaml"
     )
     pilot_texts = {s["text"].strip() for s in load_yaml(pilot_artifact)["samples"]}
     final_texts = {s["text"].strip() for s in corpus["language_samples"]}
@@ -80,15 +80,15 @@ def test_final_l1_self_check_under_frozen_lark() -> None:
 
 def test_protocol_freeze_candidate_state() -> None:
     protocol = _protocol()
-    assert protocol["status"] == "draft"
-    assert protocol["frozen"] is False
+    assert protocol["status"] == "frozen"
+    assert protocol["frozen"] is True
     candidate = protocol["freeze_candidate"]
-    assert candidate["state"] == "prepared_pending_ood_sidecar"
+    assert candidate["state"] == "FROZEN_READY_FOR_FINAL"
     assert candidate["final_sample_size"]["canonical_missions"] == 102
     assert candidate["final_sample_size"]["language_samples"] == 306
     sidecar = candidate["guard_ood_safety_sidecar"]
-    assert sidecar["status"] == "pending_independent_authoring_session"
-    assert sidecar["freeze_blocking"] is True
+    assert sidecar["status"] == "frozen_independent_dataset"
+    assert sidecar["freeze_blocking"] is False
     assert candidate["no_pretty_gates"] is True
 
 
@@ -145,9 +145,9 @@ def test_ood_and_main_corpus_are_separated() -> None:
 
 def test_freeze_manifest_hashes_are_reproducible() -> None:
     manifest = json.loads((BASE / "freeze_manifest.json").read_text(encoding="utf-8"))
-    assert manifest["freeze_status"] == "pending_ood_sidecar"
-    assert manifest["freeze_commit"] is None
-    assert manifest["ood_dataset_sha256"] is None
+    assert manifest["freeze_status"] == "FROZEN_READY_FOR_FINAL"
+    assert manifest["freeze_commit"] == "refs/tags/phase2.3-final-protocol-freeze"
+    assert manifest["ood_dataset_sha256"] == _sha(BASE / "ood/guard_ood_dataset.jsonl")
     assert manifest["protocol"]["sha256"] == _sha(BASE / "protocol.yaml")
     assert manifest["canonical_corpus"]["sha256"] == _sha(FINAL / "canonical_missions_final.yaml")
     assert manifest["language_corpus"]["sha256"] == _sha(FINAL / "language_realizations_final.yaml")
