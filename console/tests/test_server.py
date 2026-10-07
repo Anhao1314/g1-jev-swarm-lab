@@ -175,6 +175,23 @@ def test_changed_media_not_served(service):
         assert response.status == 409
 
 
+def test_windows_download_abort_does_not_attempt_second_response(artifact):
+    _, data, _ = artifact
+    handler = object.__new__(SERVER.ConsoleHandler)
+    handler.headers = {}
+    handler.command = "GET"
+    responses = []
+    handler._headers = lambda *args, **kwargs: responses.append(args[0])
+
+    class ClosedBrowser:
+        def write(self, _):
+            raise ConnectionAbortedError(10053, "Browser closed a download")
+
+    handler.wfile = ClosedBrowser()
+    handler._file(data / "runs/treatment-off/rollout.mp4")
+    assert responses == [200]
+
+
 def test_result_locator_cannot_point_to_another_case(artifact):
     repo, data, _ = artifact
     path = data / "runs/treatment-off/run.json"

@@ -341,6 +341,8 @@ class ConsoleHandler(BaseHTTPRequestHandler):
                 self._file(target)
             else:
                 self._json({"error": "Not found"}, 404)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            self.close_connection = True
         except IntegrityError as error:
             self._json({"error": str(error)}, 409)
         except (FileNotFoundError, OSError, ValueError):
@@ -386,7 +388,7 @@ class ConsoleHandler(BaseHTTPRequestHandler):
                         break
                     self.wfile.write(chunk)
                     remaining -= len(chunk)
-        except (BrokenPipeError, ConnectionResetError):
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass  # Seeking/closing a browser cannot affect any research execution.
 
 

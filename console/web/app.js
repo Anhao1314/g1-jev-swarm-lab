@@ -3,7 +3,7 @@ import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForS
 const $ = id => document.getElementById(id);
 const state = {runs: [], active: 0, compare: false, time: 0, playing: false, rate: 1, startWall: 0, startTime: 0, frame: 0, lastDraw: 0, evidence: new Map(), lastFocus: null};
 const svgNS = "http://www.w3.org/2000/svg";
-const skillLabels = {stand: "Stand", walk_forward: "Walk", turn_in_place: "Turn", stop: "Stop"};
+const skillLabels = {stand: "Stand", walk_forward: "Walk", turn: "Turn", turn_in_place: "Turn", stop: "Stop"};
 const skillLabel = value => skillLabels[value] ?? value ?? "Unavailable";
 const metricDefinitions = [
   {key: "skill", label: "Current skill", format: skillLabel},
@@ -65,11 +65,15 @@ function buildVideos() {
     const header = element("div", "video-card-header");
     const label = element("div", "video-label");
     label.append(element("span", `arm-dot${index ? " secondary" : ""}`), element("span", "", run.label));
+    const identity = element("div", "video-identity");
+    const caseOutcomes = element("div", "case-outcomes");
+    caseOutcomes.append(element("span", "case-outcomes-label", "Case"), statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
+    identity.append(label, caseOutcomes);
     const meta = element("div", "video-meta", "Residual off · derived replay");
     const focus = element("button", "video-focus", "Inspect this arm");
     focus.type = "button";
     focus.addEventListener("click", () => setActive(index));
-    header.append(label, meta, focus);
+    header.append(identity, meta, focus);
     const viewport = element("div", "video-viewport");
     const video = element("video");
     video.src = run.video_url;
@@ -241,13 +245,13 @@ function drawNodeOutcomes() {
   const focused = recordedSample(currentRun());
   const currentNode = nodeAt(currentRun(), state.time, focused);
   const indexLabel = currentNode ? `${currentNode.index + 1} / ${currentRun().nodes.length}` : "Unavailable";
-  group.append(element("div", "node-name", `${skillLabel(currentNode?.skill)} · ${indexLabel}`));
+  group.append(element("div", "node-name", state.compare ? "Each arm at its captured frame" : `${skillLabel(currentNode?.skill)} · ${indexLabel}`));
   const row = element("div", "node-outcome");
   runs.forEach(run => {
     const sample = recordedSample(run);
     const node = nodeAt(run, state.time, sample);
     const arm = element("div", "outcome-arm");
-    if (state.compare) arm.append(element("span", "outcome-arm-label", run.label));
+    if (state.compare) arm.append(element("div", "outcome-arm-label", `${run.label} · ${skillLabel(node?.skill)} ${node ? `${node.index + 1}/${run.nodes.length}` : ""}`));
     arm.append(statusPill("Nominal", node?.task_status), document.createTextNode(" "), statusPill("Strict", node?.strict_status), document.createTextNode(" "), statusPill("Physical", node?.physical_status));
     if (finite(node?.nominal_lateral_limit_m) || finite(node?.strict_lateral_limit_m)) {
       arm.append(element("div", "small muted", `Frozen lateral limits · nominal ${formatNumber(node.nominal_lateral_limit_m, 2, " m")} / strict ${formatNumber(node.strict_lateral_limit_m, 2, " m")}`));
