@@ -111,3 +111,34 @@ def test_confirmation_rejects_censor_and_non_boolean_truthy_checks():
     checks["YAW_RECOVERY"] = {key: True for key in study.CONFIRMATION_KEYS}
     checks["YAW_RECOVERY"]["full_step_physics"] = "True"
     assert not study.confirmation_passed(checks)
+
+
+def test_attempt02_resumes_sha_verified_nominal_and_corrects_only_policy_state_check():
+    verified = study.verify_attempt01()
+    assert verified["verified_exported_files"] == 38
+    _, specs = study.declarations()
+    case = study.derive_case(json.loads((study.ROOT / specs["source_case"]).read_text()), specs["states"][0])
+    historical = json.loads(study.HISTORICAL.read_text())["evidence_sources"]
+    initial_digests, predecision_digests = set(), set()
+    for mode in study.MODES:
+        data, snapshot, events = study.inherited_nominal(mode)
+        record, traces, decisions, _, receipt = data
+        initial_digests.add(receipt["initial_tensors_sha256"])
+        predecision_digests.add(snapshot["policy_tensors_sha256"])
+        assert receipt["initial_tensors_sha256"] != receipt["final_tensors_sha256"]
+        audit = study.audit_cell(record, traces, decisions, receipt, case, mode, snapshot, events, None)
+        assert audit["passed"]
+        assert study.nominal_equivalence(mode, record, traces, receipt, snapshot, historical)["passed"]
+    assert len(initial_digests) == 1
+    assert len(predecision_digests) == 1
+
+
+def test_inherited_oracle_evidence_sources_resolve_to_committed_attempt01():
+    for mode in study.MODES:
+        locator = study.evidence_source(0, "sequence-mixed-16m", mode,
+                                        study.ROOT / "artifacts/decision_benchmark_acquisition_001_attempt02")
+        rel, checksum = locator.split("#sha256=")
+        assert rel.startswith("experiments/phase3b/decision_benchmark_acquisition_001/evidence/runs/")
+        path = study.ROOT / rel
+        assert path.is_file()
+        assert study.digest(path) == checksum
