@@ -142,3 +142,12 @@ def test_inherited_oracle_evidence_sources_resolve_to_committed_attempt01():
         path = study.ROOT / rel
         assert path.is_file()
         assert study.digest(path) == checksum
+
+
+def test_post_acquisition_benchmark_rebuilds_from_sha_bound_evidence():
+    spec = importlib.util.spec_from_file_location("phase3b0a_benchmark_builder", HERE / "build_benchmark.py")
+    builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(builder)
+    saved = json.loads((HERE / "benchmark.json").read_text(encoding="utf-8"))
+    assert builder.build() == saved
+    assert [row["oracle_label"]["mode"] for row in saved["records"]] == ["ABSTAIN", "CONTINUE", "ABSTAIN"]
