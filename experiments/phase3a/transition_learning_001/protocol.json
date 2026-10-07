@@ -1,0 +1,102 @@
+{
+  "experiment_id": "transition_learning_001",
+  "phase": "3A pilot",
+  "source_anchor": "624c8024c6587f7c502b1cc87b2b27797493af03",
+  "baseline_protocol": "configs/experiments/g1_closed_loop_correction_001.yaml",
+  "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+  "treatments": [
+    "frozen_baseline",
+    "deterministic_correction",
+    "learned"
+  ],
+  "residual": {
+    "level": "transition-conditioned command residual added to frozen deterministic controller",
+    "action": [
+      "delta_vx_mps",
+      "delta_vy_mps",
+      "delta_yaw_rate_radps"
+    ],
+    "bounds": [
+      0.1,
+      0.06,
+      0.12
+    ],
+    "decision_period_s": 0.1,
+    "window_s": 2.0,
+    "eligible_pairs": [
+      [
+        "walk_forward",
+        "turn"
+      ],
+      [
+        "turn",
+        "walk_forward"
+      ],
+      [
+        "walk_forward",
+        "stop"
+      ],
+      [
+        "stand",
+        "walk_forward"
+      ]
+    ],
+    "outside_window_or_primitive": "exact zero residual",
+    "policy_memory_resets": "original skill behavior unchanged",
+    "yaw_total_limit_radps": 0.6
+  },
+  "observation": "61 features: current/prior skill, nominal command, body velocity, angular velocity, gravity, height, local task errors/remaining goal, elapsed/window flag, phase, previous action, ideal-path error, joint position/velocity",
+  "reward": {
+    "dense": "per0.1s: -4*local_heading_rad^2 -4*local_lateral_m^2 for walk; -2*remaining_turn_rad^2 for turn; -2*speed^2 for stop; all -0.1*tilt_rad^2 -0.05*action_energy -0.02*action_change_energy",
+    "terminal": "+15 task success else -15; additional -50 physical failure; -10*sum(abs(local_heading_rad)+abs(walk_lateral_m))",
+    "historical_envelopes": "unchanged; reward is new training surrogate, not a replacement task gate"
+  },
+  "ppo": {
+    "n_steps": 512,
+    "batch_size": 64,
+    "n_epochs": 5,
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "ent_coef": 0.0,
+    "policy_kwargs": {
+      "net_arch": [
+        64,
+        64
+      ]
+    },
+    "device": "cpu"
+  },
+  "torch_threads": 1,
+  "smoke_timesteps": 512,
+  "train_timesteps": 8192,
+  "seeds": [
+    11,
+    29
+  ],
+  "checkpoint_selection": "fixed final checkpoint per seed; no evaluation-based selection",
+  "checkpoint_interval": 2048,
+  "split": "explicit distinct transition parameter combinations; nominal simulation seed alone is not unseen evaluation",
+  "evaluation": "all declared held-out transitions, primitive regressions and two longer sequences; no tuning after observation",
+  "metric_scope": "frozen local node envelopes plus separately reported ideal commanded path errors, physical stability, transition duration and reset counts",
+  "transition_recovery_diagnostic": {
+    "window_s": 2.0,
+    "body_velocity_error_max_mps": 0.15,
+    "yaw_rate_error_max_radps": 0.15,
+    "sustained_s": 0.2,
+    "standing": "original RobotState.standing",
+    "role": "new diagnostic only, never a task-success envelope; null means no sustained tracking recovery observed within window"
+  },
+  "negative_result_policy": "retain failures, checkpoints, rewards, PPO diagnostics and every evaluation record; never alter old threshold or baseline",
+  "scope_exclusions": [
+    "language compiler",
+    "Phase2.3 Final Runtime",
+    "Jev",
+    "Multi-Swarm",
+    "joint policy retraining"
+  ],
+  "frozen": true,
+  "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04",
+  "case_manifest_sha256": "c84cf2484d9cd6138d19828e09ad9fb7cb57467330c96e08ad8cbed853b0f55e"
+}
