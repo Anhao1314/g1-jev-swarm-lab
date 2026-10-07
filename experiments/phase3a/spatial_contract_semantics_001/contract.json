@@ -1,0 +1,67 @@
+{
+  "contract_id": "SC-3A.4c-001",
+  "status": "DECIDED_SEMANTICS_ONLY",
+  "runtime_configuration": false,
+  "historical_rescoring": false,
+  "question": "Separate spatial objective, acceptance constraints, controller diagnostics and physical execution without score substitution.",
+  "global_route": {
+    "role": "constrained optimization objective; no new global PASS threshold",
+    "anchor_authority": "frozen case initial world pose and ordered command schedule",
+    "update_rule": "Walk advances ideal position by commanded distance along commanded heading; Turn advances commanded heading by commanded relative angle; Stand/Stop retain commanded position and heading",
+    "forbidden_updates": ["actual endpoint reanchoring", "actor-selected waypoint", "nearest arbitrary route segment", "deleting or splitting nodes to wash out error"],
+    "measurements": ["ordered node/phase completion", "per-node world terminal XY error vector and norm", "signed along/cross errors in the designated commanded segment", "wrapped terminal heading error against the commanded phase target", "final world endpoint vector and norm", "sampled trajectory excursion with explicit coverage"],
+    "turn_semantics": "Retain relative skill-angle error separately from world terminal heading error. Raw transition yaw includes intended Turn rotation. No time-parameterized ideal Turn trajectory is assumed.",
+    "tradeoff_reporting": "Report every component and prefix; final lateral or endpoint improvement cannot erase earlier deviations or a worsened X/heading component. No scalar weights or Pareto winner are selected here."
+  },
+  "fixed_local_constraint": {
+    "canonical_name": "legacy_actual_start_node_endpoint_envelope",
+    "role": "independent nominal/strict eligibility constraints",
+    "anchor_authority": "actual state at the frozen EpisodeRunner node-start boundary, before skill execution",
+    "fixed_scope": "immutable within the complete original node; treatment-dependent across upstream outcomes",
+    "not_environment_geometry": true,
+    "temporal_scope": "Walk endpoint distance, lateral, heading and completion time; not full-path containment",
+    "limit_authority": "unchanged boundary/envelope.py definitions and original per-node envelope records",
+    "skill_authority": "original node parameters, reset/termination/status semantics; do not apply Walk envelopes to Turn/Stand/Stop",
+    "forbidden_updates": ["rotation to correction frame", "posthoc origin/heading reset", "new alignment phase before latch", "threshold relaxation", "favorable profile selection after results", "reclassifying endpoint PASS as path safety"],
+    "upstream_accounting": "Retain preceding Stand/Turn/Stop translation and yaw, actual-start anchor, and mission-world error. A new local anchor never resets global error.",
+    "profiles": {
+      "nominal": "Preserves current historical task_success semantics; physical predicate, original successful skill completion and original nominal envelope.",
+      "strict": "Preserves the separate historical strict_success predicate and all strict violations; it does not replace or weaken nominal."
+    }
+  },
+  "reference_tracking": {
+    "role": "subordinate controller diagnostic; optional future auxiliary objective",
+    "anchor_authority": "predeclared deterministic reference selection rule at the immutable node boundary",
+    "required_identity": ["origin", "heading", "selection rule/version", "node latch event", "source state", "source protocol/hash"],
+    "measurements": ["reference-relative lateral and heading errors", "full local-to-reference SE(2) transform", "actual applied command/residual", "saturation and oscillation", "origin/heading discrepancy from both local and commanded frames"],
+    "actor_authority": "No residual authority over evaluation frames, reference selector, node boundaries or task targets.",
+    "diagnostic_interpretation": "Nonzero reference error may be necessary to respect the fixed local constraint. Near-zero reference error does not imply global or local success. No new tracking tolerance is introduced.",
+    "compatibility": "Check exact frame transform and endpoint feasible sets; never demand simultaneous zero world error and zero reference tracking when incompatible with a required local profile."
+  },
+  "physical_execution": {
+    "role": "mandatory independent execution eligibility; no geometric or reward compensation",
+    "authority": "unchanged simulation/config, skill status and retained physical-success predicate",
+    "measurements": ["finite state", "valid control", "recorded fall events", "skill status and mission completion", "full-step max tilt/min height summaries", "transition standing fraction and speed/angular diagnostics"],
+    "coverage": "Existing execution checks and full-step summaries are distinct from 20Hz retained poses and 10Hz traces. Full-step digest is not a recoverable full trajectory.",
+    "scope": "Frozen MuJoCo upright/finite/control/completion proxies, not collision clearance, contact certification or hardware safety.",
+    "outcome_separation": "Keep original physical_success, skill status, completeness and task outcomes separate. TIMEOUT can preserve physical survival; corridor failure is not itself instability. The original sequence physical_success also requires sequence completeness."
+  },
+  "optimization_and_claims": {
+    "objective": "Reduce fixed mission-world route/endpoint errors subject to physical execution, original skill completion and the predeclared local profile; retain the global error vector rather than an unqualified scalar winner.",
+    "default_historical_task_profile": "nominal; no historical gate is reopened by this decision",
+    "profile_freeze": "A future experiment must declare nominal/strict gate roles and comparison criteria before training/acquisition; both original profiles must always be reported.",
+    "nominal_bounded_global_gain": "Requires physical eligibility, complete original skills, nominal eligibility and same-reference baseline comparison; disclose every strict regression and component tradeoff. Never describe it as strict corridor-preserving gain.",
+    "strict_corridor_preserving_global_gain": "Additionally requires unchanged strict endpoint eligibility and the declared paired regression checks. This claim still does not certify continuous or environmental containment.",
+    "outside_required_profile": "Retain as global improvement outside required local eligibility; cannot become overall PASS via weighted reward, frame rotation or profile switching.",
+    "same_frame_learning": "Compare each learned actor only with its own residual-off reference baseline; reference selection improvement is not learned gain.",
+    "tracking_priority": "Tracking and effort are diagnostic/subordinate to world objective and eligibility; no reward implementation or coefficients are selected.",
+    "missing_evidence": "Missing required metrics, trace coverage or provenance prevents the corresponding claim; do not silently treat unavailable evidence as PASS."
+  },
+  "feasibility": {
+    "level_1_endpoint_geometry": "Static intersection of declared terminal position/heading constraints; report an empty intersection or positive constrained-error lower bound explicitly.",
+    "level_2_path_geometry": "Requires an independently specified path/footprint corridor and coverage; endpoint acceptance is insufficient.",
+    "level_3_dynamic_authority": "Whether the frozen policy plus bounded residual and activation window can attain a feasible path within time remains unverified here.",
+    "response_to_conflict": "Preserve the required constraint and negative result. Accept a nonzero constrained global optimum or report incompatible hard goals; changing the task requires a separate authorized contract/version, never a historical score change."
+  },
+  "stopping_boundary": "No new physics, PPO, reward/observation/gain/PD/threshold changes, Console extension or Phase3A.5 execution."
+}
