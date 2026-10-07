@@ -1,6 +1,19 @@
 # G1 Jev Swarm Lab
 
 
+**Phase 2.2b - compiler hardening (PASS).** Four compiler architectures
+were evaluated against frozen safety, semantic and regression gates. Selected:
+`guarded_direct_llm_v1` (deterministic structural guard + frozen direct LLM
+compiler) - zero unsafe acceptance and zero silent repair on the 179-sample
+fresh-blind set (versus 37/37 for the unguarded baseline), exact Mission IR
+0.9857 and open-language coverage 0.9833 (frozen gates 0.98), controlled
+regression 1.0 exact IR with 0 unsafe acceptance, and both Phase 2.2 fail-open
+holes now rejected before any provider call. The canonicalization bridge and
+simplex architectures were safe but missed the frozen fresh semantic gates.
+Artifacts: `experiments/phase2/simplex_compiler_001/`. This is a constrained
+benchmark, not a claim of unrestricted natural-language understanding.
+
+
 **Phase 2.2 - LLM mission compiler benchmark (PARTIAL).** Phase 2.2 evaluates
 a constrained LLM mission compiler against the frozen deterministic grammar
 baseline. On the 153-sample blind set, the LLM reached 1.0 exact Mission IR
