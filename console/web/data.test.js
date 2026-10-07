@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, trajectoryBounds, plotTransform, nearestSample, statusKind} from "./data.js";
+import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, trajectoryBounds, plotTransform, nearestSample, statusKind, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
 
 test("shows an actual retained sample instead of interpolating an observation", () => {
   const samples = [
@@ -64,4 +64,25 @@ test("unknown data remains unavailable and signed errors stay signed", () => {
   assert.equal(formatNumber(null), "Unavailable");
   assert.equal(formatNumber(-1.840337, 3, " m"), "-1.840 m");
   assert.equal(formatTime(53.806), "00:53.81");
+});
+
+test("shares first-Walk time but freezes each arm at its own source completion", () => {
+  const runs = [{duration_s: 54, authority: {walk_start_s: 10, walk_end_s: 27.1}},
+                {duration_s: 53, authority: {walk_start_s: 10, walk_end_s: 26.7}}];
+  assert.deepEqual(playbackRange(runs, true), {start: 10, end: 27.1});
+  assert.equal(requestedRunTime(runs[1], 27, true), 26.7);
+  assert.equal(requestedRunTime(runs[0], 12, true), 12);
+  assert.deepEqual(playbackRange(runs, false), {start: 0, end: 54});
+  assert.equal(requestedRunTime(runs[1], 27, false), 27);
+});
+
+test("nearest completion frame keeps Walk axes without hiding its captured Turn identity", () => {
+  const run = {authority: {reference_heading_rad: 0}, samples: [{node_index:1,commanded_heading_deg:10}]};
+  const source = {node_index:2,skill:"turn",commanded_heading_deg:-80,actual_heading_deg:7,
+    local_lateral_m:0,first_walk_local_lateral_m:.37,first_walk_reference_lateral_m:-.005,first_walk_global_endpoint_error_m:.58};
+  const view = firstWalkDisplaySample(run, source);
+  assert.equal(view.node_index, 2); assert.equal(view.skill,"turn");
+  assert.equal(view.commanded_heading_deg,10); assert.equal(view.heading_error_deg,-3);
+  assert.equal(view.local_lateral_m,.37); assert.equal(view.reference_lateral_m,-.005);
+  assert.equal(source.commanded_heading_deg,-80); assert.equal(source.local_lateral_m,0);
 });

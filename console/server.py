@@ -171,6 +171,10 @@ class ConsoleData:
             ("result", "Original machine result"),
             ("trace", "Original command trace"),
             ("manifest", "Original evidence manifest"),
+            ("summary", "Original mechanism summary"),
+            ("poses", "Original acquisition poses"),
+            ("decisions", "Original residual decisions"),
+            ("independent_audit", "Independent source arithmetic audit"),
         ):
             relative = self._source_path(provenance, name)
             if relative is None:
@@ -185,9 +189,13 @@ class ConsoleData:
                 line = provenance.get("source_result_line")
                 if line is None and isinstance(source_locator, dict):
                     line = source_locator.get("line")
-                source_result = decode_result(path, line)
-                locator = f"decoded JSONL line {line}"
-                for field in ("case_id", "treatment_label"):
+                if provenance.get("source_result_format") == "json":
+                    source_result = load_json(path)
+                    locator = "original per-run JSON"
+                else:
+                    source_result = decode_result(path, line)
+                    locator = f"decoded JSONL line {line}"
+                for field in ("case_id", "treatment_label", "run_id", "probe_id"):
                     if field in run and run[field] != source_result.get(field):
                         raise IntegrityError(f"Source result {field} does not match the run")
                 acquisition = source_result.get("provenance", {})
@@ -198,9 +206,10 @@ class ConsoleData:
                         raise IntegrityError(f"Source result {source_key} does not match the run")
             if name == "manifest":
                 original_manifest = load_json(path)
+                manifest_inventory = original_manifest.get("inventory", original_manifest.get("files", {}))
                 source_manifest = {
-                    "experiment_id": original_manifest.get("experiment_id"),
-                    "inventory": {k: v for k, v in original_manifest.get("inventory", {}).items()
+                    "experiment_id": original_manifest.get("experiment_id", original_manifest.get("provenance", {}).get("experiment_id")),
+                    "inventory": {k: v for k, v in manifest_inventory.items()
                                   if k in [self._source_path(provenance, "result"), self._source_path(provenance, "trace")]},
                     "manifest_sha256": file_hash(path),
                 }
@@ -211,14 +220,15 @@ class ConsoleData:
                 raise IntegrityError("Frozen protocol does not match source acquisition provenance")
         if "manifest" in source_paths:
             original_manifest = load_json(source_paths["manifest"])
-            if "experiment_id" in run and original_manifest.get("experiment_id") != run["experiment_id"]:
+            manifest_experiment = original_manifest.get("experiment_id", original_manifest.get("provenance", {}).get("experiment_id"))
+            if "experiment_id" in run and manifest_experiment != run["experiment_id"]:
                 raise IntegrityError("Original experiment identity does not match the run")
-            for name in ("result", "trace"):
+            for name in ("result", "trace", "poses", "decisions", "independent_audit", "summary"):
                 if name not in source_paths:
                     continue
                 relative = self._source_path(provenance, name)
-                original_entry = original_manifest.get("inventory", {}).get(relative, {})
-                expected_export = original_entry.get("exported", {}).get("sha256")
+                original_entry = original_manifest.get("inventory", original_manifest.get("files", {})).get(relative, {})
+                expected_export = original_entry.get("exported", {}).get("sha256", original_entry.get("sha256"))
                 if expected_export is not None and file_hash(source_paths[name]) != expected_export:
                     raise IntegrityError(f"Original evidence manifest does not bind source {name}")
         capture_relative = provenance.get("capture_manifest_path", f"runs/{run_id}/capture_manifest.json")
@@ -240,6 +250,8 @@ class ConsoleData:
             raw[key] = self.checked(path)
             links.append({"label": label, "url": f"/raw/{run_id}/{key}", "locator": f"{relative} · {detail}"})
         self.raw[run_id] = raw
+        if "source-poses" in raw and "poses" not in raw:
+            raw["poses"] = raw["source-poses"]
         self.evidence[run_id] = {
             "run_id": run_id,
             "provenance": provenance,

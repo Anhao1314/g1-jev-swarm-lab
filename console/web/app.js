@@ -1,7 +1,8 @@
-import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, statusKind, trajectoryBounds, plotTransform, nearestSample} from "./data.js";
+import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, statusKind, trajectoryBounds, plotTransform, nearestSample, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
+import {armColors, renderAuthority, renderMechanismCharts} from "./mechanism.js";
 
 const $ = id => document.getElementById(id);
-const state = {runs: [], active: 0, compare: false, time: 0, playing: false, rate: 1, startWall: 0, startTime: 0, frame: 0, lastDraw: 0, evidence: new Map(), lastFocus: null};
+const state = {runs: [], catalog: null, walkFocus: false, active: 0, compare: false, time: 0, playing: false, rate: 1, startWall: 0, startTime: 0, frame: 0, lastDraw: 0, evidence: new Map(), lastFocus: null};
 const svgNS = "http://www.w3.org/2000/svg";
 const skillLabels = {stand: "Stand", walk_forward: "Walk", turn: "Turn", turn_in_place: "Turn", stop: "Stop"};
 const skillLabel = value => skillLabels[value] ?? value ?? "Unavailable";
@@ -12,6 +13,9 @@ const metricDefinitions = [
   {key: "commanded_heading_deg", label: "Commanded heading", format: value => formatNumber(value, 2, "°"), description: "Frozen ideal mission heading."},
   {key: "reference_heading_deg", label: "Correction reference", format: value => formatNumber(value, 2, "°"), description: "Walking correction heading. Unavailable outside a Walk node."},
   {key: "local_lateral_m", label: "Local lateral error", format: value => formatNumber(value, 3, " m"), description: "Signed displacement in the historical actual node-start frame. Display only; no new scoring."},
+  {key: "reference_lateral_m", label: "Reference-frame lateral", format: value => formatNumber(value, 3, " m"), description: "Signed offset from the fixed first-Walk correction reference. This is distinct from the local strict measurement frame."},
+  {key: "global_endpoint_error_m", label: "Global endpoint error", format: value => formatNumber(value, 3, " m"), description: "World distance to the frozen commanded endpoint of this node; first-Walk target in Walk focus."},
+  {key: "residual_action", label: "Residual action (normalized)", format: value => Array.isArray(value) ? `[${value.map(v => formatNumber(v, 2)).join(", ")}]` : "Unavailable"},
   {key: "global_lateral_m", label: "Global lateral error", format: value => formatNumber(value, 3, " m"), description: "Signed displacement relative to the planned route and commanded axis. Display only."},
   {key: "heading_error_deg", label: "Ideal heading error", format: value => formatNumber(value, 2, "°"), description: "Wrapped actual heading minus commanded heading."},
 ];
@@ -43,7 +47,9 @@ async function getJSON(url) {
 }
 function currentRun() { return state.runs[state.active]; }
 function visibleRuns() { return state.compare ? state.runs : [currentRun()].filter(Boolean); }
-function duration() { return Math.max(0, ...visibleRuns().map(run => run.duration_s)); }
+function timeRange() { return playbackRange(visibleRuns(), state.walkFocus); }
+function duration() { return timeRange().end; }
+function displayTime(time) { return time - timeRange().start; }
 function videoFor(run) { return document.querySelector(`video[data-run-index="${state.runs.indexOf(run)}"]`); }
 function mediaTime(run, time) {
   return frameForSimulationTime(run.frame_map, run.frame_fps, time)?.media_time_s ?? Math.max(0, time - (run.video_time_offset_s ?? 0));
@@ -53,14 +59,16 @@ function recordedSample(run) {
   const presentedTime = video?._presentedMediaTime;
   const mediaClock = finite(presentedTime) ? presentedTime : video?.currentTime;
   const frame = video?.readyState > 0 ? mediaFrame(run.frame_map, run.frame_fps, mediaClock) : frameForSimulationTime(run.frame_map, run.frame_fps, state.time);
-  if (frame && run.samples.length === run.frame_map.length) return {...run.samples[frame.index], sample_index: frame.index};
-  return sampleAt(run.samples, frame?.time_s ?? Math.min(state.time, run.duration_s));
+  const sample = frame && run.samples.length === run.frame_map.length ? {...run.samples[frame.index], sample_index: frame.index} : sampleAt(run.samples, frame?.time_s ?? requestedRunTime(run, state.time, state.walkFocus));
+  if (state.walkFocus) return firstWalkDisplaySample(run, sample);
+  return sample;
 }
 
 function buildVideos() {
   $("video-grid").replaceChildren();
   for (const [index, run] of state.runs.entries()) {
     const card = element("article", "video-card");
+    card.style.setProperty("--arm-color", armColors[index % armColors.length]);
     card.dataset.runIndex = index;
     const header = element("div", "video-card-header");
     const label = element("div", "video-label");
@@ -69,7 +77,7 @@ function buildVideos() {
     const caseOutcomes = element("div", "case-outcomes");
     caseOutcomes.append(element("span", "case-outcomes-label", "Case"), statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
     identity.append(label, caseOutcomes);
-    const meta = element("div", "video-meta", "Residual off · derived replay");
+    const meta = element("div", "video-meta", run.media_caption ?? "Residual off · derived replay");
     const focus = element("button", "video-focus", "Inspect this arm");
     focus.type = "button";
     focus.addEventListener("click", () => setActive(index));
@@ -106,6 +114,9 @@ function buildVideos() {
 
 function updateLayout() {
   $("video-grid").classList.toggle("compare", state.compare);
+  $("video-grid").style.setProperty("--arm-count", visibleRuns().length);
+  $("metrics").style.setProperty("--arm-count", visibleRuns().length);
+  $("node-outcomes").style.setProperty("--arm-count", visibleRuns().length);
   document.querySelectorAll(".video-card").forEach((card, index) => {
     card.hidden = !state.compare && index !== state.active;
     const focus = card.querySelector(".video-focus");
@@ -118,8 +129,9 @@ function updateLayout() {
   $("single-view").setAttribute("aria-pressed", !state.compare);
   $("compare-view").setAttribute("aria-pressed", state.compare);
   $("metrics").classList.toggle("comparing", state.compare);
-  $("seek").max = duration();
-  $("duration").textContent = formatTime(duration());
+  $("seek").min = timeRange().start; $("seek").max = duration();
+  $("seek").setAttribute("aria-label", state.walkFocus ? "Walk-relative time; 0s is the original first-Walk start" : "Simulation time");
+  $("duration").textContent = formatTime(duration() - timeRange().start);
   drawEvents();
   synchronizeVideos(true);
   drawPlayhead();
@@ -144,8 +156,8 @@ function synchronizeVideos(force = false) {
     const video = videoFor(run);
     if (!video) continue;
     const visible = state.compare || run === currentRun();
-    const target = mediaTime(run, Math.min(state.time, run.duration_s));
-    const atEnd = state.time >= run.duration_s;
+    const target = mediaTime(run, requestedRunTime(run, state.time, state.walkFocus));
+    const atEnd = state.time >= (state.walkFocus && run.authority ? run.authority.walk_end_s : run.duration_s);
     const maximum = finite(video.duration) ? Math.max(0, video.duration - .001) : target;
     if (video.readyState > 0 && (force || Math.abs(video.currentTime - target) > .12)) video.currentTime = Math.min(target, maximum);
     video.playbackRate = state.rate;
@@ -159,7 +171,7 @@ function synchronizeVideos(force = false) {
 }
 function resetWallClock() { state.startWall = performance.now(); state.startTime = state.time; }
 function play() {
-  if (state.time >= duration()) state.time = 0;
+  if (state.time >= duration()) state.time = timeRange().start;
   state.playing = true;
   resetWallClock();
   $("play-icon").textContent = "Ⅱ";
@@ -188,7 +200,7 @@ function tick(wall) {
   if (state.time >= duration()) pause(); else state.frame = requestAnimationFrame(tick);
 }
 function seek(time) {
-  state.time = clamp(Number(time), 0, duration());
+  state.time = clamp(Number(time), timeRange().start, duration());
   resetWallClock();
   synchronizeVideos(true);
   drawPlayhead();
@@ -197,14 +209,18 @@ function seek(time) {
 function drawPlayhead() {
   if (!state.runs.length) return;
   $("seek").value = state.time;
-  $("clock").textContent = formatTime(state.time);
+  $("clock").textContent = formatTime(displayTime(state.time));
   const focusedSample = recordedSample(currentRun());
-  if (focusedSample) $("clock").textContent = formatTime(focusedSample.time_s);
-  $("sample-time").textContent = focusedSample ? `source sample ${formatTime(focusedSample.time_s)}` : "No sample";
+  if (focusedSample) $("clock").textContent = formatTime(displayTime(focusedSample.time_s));
+  $("sample-time").textContent = focusedSample ? `${currentRun().visual_source === "state_playback" ? "acquisition" : "retained replay"} ${formatTime(focusedSample.time_s)} · frame ${focusedSample.frame_index}` : "No sample";
   $("metric-context").textContent = state.compare ? "Shared playhead · each arm shows its exact recorded frame" : currentRun().label;
   drawMetrics();
   drawNodeOutcomes();
   drawTrajectory();
+  renderAuthority({runs: state.runs, run: currentRun(), time: focusedSample?.time_s ?? state.time, walkFocus: state.walkFocus, seek: value => {pause(); seek(value);}, inspect: openInspector});
+  renderMechanismCharts({runs: state.runs, run: currentRun(), time: focusedSample?.time_s ?? state.time,
+    presentedTimes: Object.fromEntries(state.runs.map(run => [run.id, recordedSample(run)?.time_s ?? state.time])),
+    seek: value => {pause(); seek(value);}, inspect: openInspector});
   const source = currentRun().provenance ?? {};
   $("source-context").textContent = `${currentRun().case_id} · source ${String(source.source_commit ?? "unavailable").slice(0, 8)} · protocol ${String(source.protocol_sha ?? "unavailable").slice(0, 10)}`;
 }
@@ -215,10 +231,11 @@ function drawMetrics() {
   if (state.compare) {
     const heading = element("div", "metric-row treatment-head");
     heading.append(element("span", "metric-name", "Research signal"));
-    runs.forEach((run, index) => heading.append(element("span", `metric-value${index ? " secondary" : ""}`, run.label)));
+    runs.forEach((run, index) => { const label = element("span", "metric-value", run.label); label.style.color = armColors[state.runs.indexOf(run) % armColors.length]; heading.append(label); });
     rows.push(heading);
   }
   for (const metric of metricDefinitions) {
+    if (!currentRun().authority && ["reference_lateral_m", "global_endpoint_error_m", "residual_action"].includes(metric.key)) continue;
     const row = element("div", "metric-row");
     const name = element("span", "metric-name", metric.label);
     if (metric.description) name.title = metric.description;
@@ -226,11 +243,12 @@ function drawMetrics() {
     samples.forEach((sample, index) => {
       const value = element("span", "metric-value");
       const displayValue = sample?.[metric.key];
-      if (["local_lateral_m", "global_lateral_m", "heading_error_deg"].includes(metric.key) && finite(displayValue)) {
+      if (["local_lateral_m", "reference_lateral_m", "global_endpoint_error_m", "global_lateral_m", "heading_error_deg"].includes(metric.key) && finite(displayValue) && !(state.walkFocus && metric.key === "heading_error_deg")) {
+        const sourceMetric = state.walkFocus ? ({local_lateral_m: "first_walk_local_lateral_m", reference_lateral_m: "first_walk_reference_lateral_m", global_endpoint_error_m: "first_walk_global_endpoint_error_m"}[metric.key] ?? metric.key) : metric.key;
         const button = element("button", "", metric.format(displayValue));
         button.type = "button";
         button.title = `Inspect ${metric.label.toLowerCase()} and its underlying evidence`;
-        button.addEventListener("click", () => openInspector(runs[index], {time_s: sample?.time_s, label: metric.label, metric: metric.key, value: displayValue, node_index: sample?.node_index, frame_index: sample?.frame_index ?? sample?.sample_index, source_locator: sample?.source_locator ?? `runs/${runs[index].id}/poses.npz#frame=${sample?.frame_index ?? sample?.sample_index}`, derived_json_locator: `/raw/${runs[index].id}/derived-run#samples/${sample?.frame_index ?? sample?.sample_index}`, derived: true}));
+        button.addEventListener("click", () => openInspector(runs[index], {time_s: sample?.time_s, label: metric.label, metric: sourceMetric, value: displayValue, node_index: state.walkFocus ? 1 : sample?.node_index, frame_index: sample?.frame_index ?? sample?.sample_index, source_locator: sample?.source_locator ?? `runs/${runs[index].id}/poses.npz#frame=${sample?.frame_index ?? sample?.sample_index}`, derived_json_locator: `/raw/${runs[index].id}/derived-run#samples/${sample?.frame_index ?? sample?.sample_index}/${sourceMetric}`, derived: true}));
         value.append(button);
       } else value.textContent = metric.format(displayValue);
       row.append(value);
@@ -243,13 +261,13 @@ function drawNodeOutcomes() {
   const runs = visibleRuns();
   const group = element("div");
   const focused = recordedSample(currentRun());
-  const currentNode = nodeAt(currentRun(), state.time, focused);
+  const currentNode = state.walkFocus ? currentRun().nodes[1] : nodeAt(currentRun(), state.time, focused);
   const indexLabel = currentNode ? `${currentNode.index + 1} / ${currentRun().nodes.length}` : "Unavailable";
   group.append(element("div", "node-name", state.compare ? "Each arm at its captured frame" : `${skillLabel(currentNode?.skill)} · ${indexLabel}`));
   const row = element("div", "node-outcome");
   runs.forEach(run => {
     const sample = recordedSample(run);
-    const node = nodeAt(run, state.time, sample);
+    const node = state.walkFocus ? run.nodes[1] : nodeAt(run, state.time, sample);
     const arm = element("div", "outcome-arm");
     if (state.compare) arm.append(element("div", "outcome-arm-label", `${run.label} · ${skillLabel(node?.skill)} ${node ? `${node.index + 1}/${run.nodes.length}` : ""}`));
     arm.append(statusPill("Nominal", node?.task_status), document.createTextNode(" "), statusPill("Strict", node?.strict_status), document.createTextNode(" "), statusPill("Physical", node?.physical_status));
@@ -257,6 +275,7 @@ function drawNodeOutcomes() {
       arm.append(element("div", "small muted", `Frozen lateral limits · nominal ${formatNumber(node.nominal_lateral_limit_m, 2, " m")} / strict ${formatNumber(node.strict_lateral_limit_m, 2, " m")}`));
     }
     if (node?.strict_violations?.length) arm.append(element("div", "strict-reason", `Strict source reason: ${node.strict_violations.map(violation => typeof violation === "string" ? violation : JSON.stringify(violation)).join("; ")}`));
+    if (state.walkFocus && run.authority) arm.append(element("div", "small muted", `Formal Walk end ${formatNumber(run.authority.walk_end_s - run.authority.walk_start_s, 3, "s")} · captured ${formatNumber(sample?.time_s - run.authority.walk_start_s, 3, "s")} (${skillLabel(sample?.skill)})`));
     row.append(arm);
   });
   group.append(row);
@@ -268,7 +287,8 @@ function routePath(points, transform) {
 }
 function drawTrajectory() {
   const width = Math.max(340, $("trajectory").clientWidth - 28), height = Math.max(200, $("trajectory").clientHeight);
-  const bounds = trajectoryBounds(state.runs); // Frame never shifts when switching treatments.
+  const routeSamples = run => state.walkFocus && run.authority ? run.samples.filter(s => s.time_s >= run.authority.walk_start_s - 1e-8 && s.time_s <= run.authority.walk_end_s + .025) : run.samples;
+  const bounds = trajectoryBounds(state.runs.map(run => ({samples: routeSamples(run), ideal_route: state.walkFocus ? [run.authority.measurement_origin_xy, run.authority.first_walk_ideal_endpoint_reference_xy] : run.ideal_route}))); // Shared world scale; never recenter a treatment.
   const transform = plotTransform(bounds, width, height, 27);
   const svg = svgElement("svg", {viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": "Actual and ideal G1 route in world coordinates"});
   for (let x = Math.ceil(bounds.minX / 2) * 2; x <= bounds.maxX; x += 2) {
@@ -281,16 +301,30 @@ function drawTrajectory() {
     svg.append(svgElement("line", {x1: start[0], y1: start[1], x2: end[0], y2: end[1], class: "route-grid"}));
     const text = svgElement("text", {x: 8, y: start[1] + 3, class: "route-label"}); text.textContent = `${y}`; svg.append(text);
   }
-  const ideal = currentRun().ideal_route ?? [];
+  const ideal = state.walkFocus ? [currentRun().ideal_route[0], currentRun().authority.first_walk_ideal_endpoint_reference_xy] : currentRun().ideal_route ?? [];
   svg.append(svgElement("path", {d: routePath(ideal, transform), class: "route-ideal"}));
+  if (state.walkFocus) {
+    const a = currentRun().authority, origin = a.reference_origin_xy;
+    const length = Math.hypot(a.first_walk_ideal_endpoint_reference_xy[0] - origin[0], a.first_walk_ideal_endpoint_reference_xy[1] - origin[1]);
+    const endpoint = heading => [origin[0] + length * Math.cos(heading), origin[1] + length * Math.sin(heading)];
+    svg.append(svgElement("path", {d: routePath([origin, endpoint(a.reference_heading_rad)], transform), class: "fixed-reference-line"}));
+    svg.append(svgElement("path", {d: routePath([origin, endpoint(a.measurement_heading_rad)], transform), class: "measurement-line"}));
+    for (const side of [-1, 1]) {
+      const offset = [side * a.strict_lateral_limit_m * -Math.sin(a.measurement_heading_rad), side * a.strict_lateral_limit_m * Math.cos(a.measurement_heading_rad)];
+      const start = origin.map((value, i) => value + offset[i]), end = endpoint(a.measurement_heading_rad).map((value, i) => value + offset[i]);
+      svg.append(svgElement("path", {d: routePath([start, end], transform), class: "strict-guide"}));
+    }
+  }
   for (const run of visibleRuns()) {
     const secondary = state.runs.indexOf(run) > 0;
-    const points = run.samples.map(sample => [sample.x, sample.y]);
+    const displayed = routeSamples(run), points = displayed.map(sample => [sample.x, sample.y]);
+    const armColor = armColors[state.runs.indexOf(run) % armColors.length];
     const sample = recordedSample(run);
     svg.append(svgElement("path", {d: routePath(points, transform), class: `route-future${secondary ? " secondary" : ""}`}));
     if (sample) {
-      const past = points.slice(0, sample.sample_index + 1); past.push([sample.x, sample.y]);
-      svg.append(svgElement("path", {d: routePath(past, transform), class: `route-actual${secondary ? " secondary" : ""}`}));
+      const past = displayed.filter(point => point.time_s <= sample.time_s).map(point => [point.x, point.y]); past.push([sample.x, sample.y]);
+      const actualPath = svgElement("path", {d: routePath(past, transform), class: "route-actual"}); actualPath.style.stroke = armColor; svg.append(actualPath);
+      if (state.walkFocus) svg.append(svgElement("path", {d: routePath(displayed.filter(point => point.time_s <= run.authority.window_end_s).map(point => [point.x, point.y]), transform), class: "early-path", stroke: armColor}));
       if (finite(sample.x) && finite(sample.y)) {
         const position = transform.point(sample.x, sample.y);
         for (const [headingKey, className, length] of [["reference_heading_deg", "reference-arrow", .65], ["actual_heading_deg", `actual-arrow${secondary ? " secondary" : ""}`, .45]]) {
@@ -303,6 +337,7 @@ function drawTrajectory() {
       }
     }
     for (const event of run.events ?? []) {
+      if (event.time_s < timeRange().start || event.time_s > timeRange().end) continue;
       const at = sampleAt(run.samples, event.time_s);
       if (!at || !finite(at.x) || !finite(at.y)) continue;
       const position = transform.point(at.x, at.y);
@@ -318,7 +353,7 @@ function drawTrajectory() {
   svg.addEventListener("click", action => {
     const rect = svg.getBoundingClientRect();
     const [x, y] = transform.world((action.clientX - rect.left) * width / rect.width, (action.clientY - rect.top) * height / rect.height);
-    const sample = nearestSample(currentRun().samples, x, y);
+    const sample = nearestSample(routeSamples(currentRun()), x, y);
     if (!sample) return;
     pause(); seek(sample.time_s);
     openInspector(currentRun(), {time_s: sample.time_s, label: "Route sample", metric: "trajectory", node_index: sample.node_index, frame_index: sample.frame_index, source_locator: sample.source_locator ?? `runs/${currentRun().id}/poses.npz#frame=${sample.frame_index}`, derived_json_locator: `/raw/${currentRun().id}/derived-run#samples/${sample.frame_index}`, derived: true});
@@ -329,13 +364,14 @@ function drawEvents() {
   $("evidence-events").replaceChildren(); $("timeline-events").replaceChildren();
   for (const run of visibleRuns()) {
     for (const event of run.events ?? []) {
+      if (event.time_s < timeRange().start || event.time_s > timeRange().end) continue;
       const button = element("button", `event-button${event.failure ? " failure" : ""}`);
       button.type = "button";
       button.append(element("span", "", `${state.compare ? `${run.label} · ` : ""}${event.label}`), element("span", "event-time", formatTime(event.time_s)));
       button.addEventListener("click", () => { pause(); seek(event.time_s); openInspector(run, event); });
       $("evidence-events").append(button);
       const marker = element("button", `timeline-marker${event.failure ? " failure" : ""}`);
-      marker.type = "button"; marker.style.left = `${clamp(event.time_s / duration() * 100, 0, 100)}%`;
+      marker.type = "button"; marker.style.left = `${clamp((event.time_s - timeRange().start) / (duration() - timeRange().start) * 100, 0, 100)}%`;
       marker.title = `${run.label} · ${event.label} · ${formatTime(event.time_s)}`;
       marker.setAttribute("aria-label", marker.title);
       marker.addEventListener("click", () => { pause(); seek(event.time_s); openInspector(run, event); });
@@ -370,12 +406,12 @@ async function openInspector(run, event = null) {
       const frame = frameForSimulationTime(run.frame_map, run.frame_fps, event.time_s);
       if (frame && finite(event.time_s)) selected.append(element("div", "small mono", `Selected visual frame ${formatTime(frame.time_s)} · Δ ${(frame.time_s - event.time_s).toFixed(3)} s from evidence`));
       if (event.metric) selected.append(element("div", "mono", `${event.metric}: ${finite(event.value) ? event.value.toFixed(6) : (event.value ?? "See source")}`));
-      selected.append(element("div", "small", event.derived ? "Derived instantaneous reading. Frozen source node outcomes remain the scoring authority." : "Source-bound evidence marker. Follow the raw locator to inspect the frozen metric."));
+      selected.append(element("div", "small", event.source_comparison ? "Source-bound paired arithmetic from the original window trace/audit or formal endpoints; not the nearest video frame." : event.derived ? "Derived instantaneous reading. Frozen source node outcomes remain the scoring authority." : "Source-bound evidence marker. Follow the raw locator to inspect the frozen metric."));
       content.push(selected);
     }
     content.push(element("span", "integrity-tag", evidence.integrity_status ?? "Source hashes bound to artifact"));
     const identity = element("section", "inspector-section");
-    identity.append(element("h3", "", "Research identity"), provenanceRow("Experiment", run.experiment_id), provenanceRow("Treatment", run.treatment ?? run.label), provenanceRow("Case", run.case_id), provenanceRow("Seed", run.seed ?? provenance.seed ?? "Not applicable · residual off"), provenanceRow("Visual source", run.visual_source), provenanceRow("Protocol SHA-256", provenance.protocol_sha, true), provenanceRow("Scientific source commit", provenance.source_commit, true), provenanceRow("Base policy identity", provenance.policy_identity), provenanceRow("Base policy SHA-256", provenance.policy_sha, true), provenanceRow("Learned checkpoint SHA-256", provenance.checkpoint_sha ?? "Not applicable · residual off", true), provenanceRow("Reproducible visual producer commit", provenance.producer_commit ?? "Not yet committed · capture code hashes retained", true), provenanceRow("Producer execution base commit", provenance.producer_execution_base_commit, true), provenanceRow("Captured producer code SHA-256", provenance.captured_code_sha ?? provenance.capture_code_sha ?? provenance.producer_code_sha, true), provenanceRow("Validation code SHA-256", provenance.comparison_validation_code_sha ?? provenance.validation_code_sha ?? provenance.capture_validation_code_sha, true));
+    identity.append(element("h3", "", "Research identity"), provenanceRow("Experiment", run.experiment_id), provenanceRow("Treatment", run.treatment ?? run.label), provenanceRow("Profile", run.profile ? `${run.profile} · deterministic bounded probe; not trained` : run.label), provenanceRow("Case", run.case_id), provenanceRow("Seed", run.seed ?? provenance.seed ?? "Not applicable · residual off"), provenanceRow("Visual source", run.visual_source), provenanceRow("Protocol SHA-256", provenance.protocol_sha, true), provenanceRow("Scientific source commit", provenance.source_commit, true), provenanceRow("Base policy identity", provenance.policy_identity), provenanceRow("Base policy SHA-256", provenance.policy_sha, true), provenanceRow("Learned checkpoint SHA-256", provenance.checkpoint_sha ?? (run.authority ? "Not applicable · deterministic probe" : "Not applicable · residual off"), true), provenanceRow("Reproducible visual producer commit", provenance.producer_commit ?? "Current Console code · exact code hashes retained", true), provenanceRow("Producer execution base commit", provenance.producer_execution_base_commit, true), provenanceRow("Producer code SHA-256", provenance.captured_code_sha ?? provenance.capture_code_sha ?? provenance.producer_code_sha, true), provenanceRow("Validation code SHA-256", provenance.comparison_validation_code_sha ?? provenance.validation_code_sha ?? provenance.capture_validation_code_sha, true));
     content.push(identity);
     const locator = element("section", "inspector-section");
     locator.append(element("h3", "", "Metric → raw evidence"), provenanceRow("Selected metric", event?.metric ?? "Frozen case outcome"), provenanceRow("Selected source locator", event?.source_locator ?? provenance.source_result_locator, true), provenanceRow("Frozen result locator", provenance.source_result_locator, true), provenanceRow("Frozen trace locator", provenance.source_trace_locator, true));
@@ -408,7 +444,7 @@ async function openInspector(run, event = null) {
       content.push(details);
     }
     const note = element("section", "inspector-section");
-    note.append(element("h3", "", "How to read this visual"), element("p", "source-explanation", "This is a derived visualization replay, not an original acquisition recording. A separate native MuJoCo execution supplies retained states; the renderer plays those states without taking simulation steps. Each encoded frame maps to an exact captured simulation time, including the final pose. Original machine results and raw locators remain the scientific authority. Playback controls never change a protocol, threshold, or result."));
+    note.append(element("h3", "", "How to read this visual"), element("p", "source-explanation", run.visual_source === "state_playback" ? "This video is render-only playback of original acquisition state samples. No controller or physics step is run. The fixed Walk measurement frame remains separate from its correction reference. Exact formal endpoint scores are not replaced by the nearest captured video frame, which can be just before or after the node boundary. Original results remain scoring authority." : "This is a derived visualization replay, not an original acquisition recording. Retained states are rendered without physics steps; original machine results remain scoring authority."));
     if (provenance.historical_pose_identity_claim) note.append(element("p", "source-explanation", provenance.historical_pose_identity_claim));
     content.push(note);
     $("inspector-content").replaceChildren(...content);
@@ -425,22 +461,35 @@ function closeInspector() {
   drawTrajectory();
 }
 
+async function loadExperiment(experiment) {
+    if (state.runs.length) { pause(); closeInspector(); }
+    state.runs = await Promise.all(experiment.arms.map(arm => getJSON(arm.run_url)));
+    state.active = state.runs[0]?.authority ? 1 : 0;
+    state.walkFocus = Boolean(state.runs[0]?.authority); state.compare = state.walkFocus;
+    state.evidence.clear(); $("treatment").replaceChildren();
+    $("experiment").value = experiment.id;
+    $("experiment-title").textContent = experiment.title ?? experiment.case_id;
+    $("experiment-subtitle").textContent = experiment.description ?? experiment.case_id;
+    for (const [index, run] of state.runs.entries()) {
+      if (!run.samples?.length || !finite(run.duration_s)) throw new Error(`Incomplete replay data: ${run.id}`);
+      if (!["derived_visualization_replay", "state_playback", "acquisition_capture"].includes(run.visual_source)) throw new Error(`Unknown visual source: ${run.id}`);
+      const option = element("option", "", run.label); option.value = index; $("treatment").append(option);
+    }
+    $("treatment").value = state.active;
+    state.time = timeRange().start;
+    $("visual-type").textContent = state.walkFocus ? "Acquisition-state playback" : "Derived visualization replay";
+    $("visual-note").textContent = state.walkFocus ? "Original acquired poses · zero new physics steps · Walk 0s is the original node start. Formal endpoints and nearest visual frames remain distinct." : "Historical acquisition unchanged · separately verified retained replay states.";
+    buildVideos(); updateLayout();
+}
+
 async function init() {
   try {
     const catalog = await getJSON("/api/catalog");
+    state.catalog = catalog;
     const experiment = catalog.experiments?.[0];
     if (!experiment?.arms?.length) throw new Error("No verified replay artifacts have been indexed.");
-    state.runs = await Promise.all(experiment.arms.map(arm => getJSON(arm.run_url)));
-    for (const run of state.runs) {
-      if (!run.samples?.length || !finite(run.duration_s)) throw new Error(`Incomplete replay data: ${run.id}`);
-      if (run.visual_source !== "derived_visualization_replay" && run.visual_source !== "state_playback" && run.visual_source !== "acquisition_capture") throw new Error(`Unknown visual source: ${run.id}`);
-    }
-    $("experiment-title").textContent = experiment.title ?? experiment.case_id;
-    $("experiment-subtitle").textContent = experiment.description ?? `${experiment.case_id} · same frozen mission · source-bound visual replay`;
-    for (const [index, run] of state.runs.entries()) {
-      const option = element("option", "", run.label); option.value = index; $("treatment").append(option);
-    }
-    buildVideos(); updateLayout();
+    for (const item of catalog.experiments) { const option = element("option", "", item.title); option.value = item.id; $("experiment").append(option); }
+    await loadExperiment(experiment);
     $("play").disabled = false; $("seek").disabled = false; $("inspect-run").disabled = false;
     $("workspace").setAttribute("aria-busy", "false");
     const resize = new ResizeObserver(() => { if (state.runs.length) drawTrajectory(); }); resize.observe($("trajectory"));
@@ -454,6 +503,13 @@ async function init() {
 $("play").addEventListener("click", () => state.playing ? pause() : play());
 $("seek").addEventListener("input", event => seek(event.target.value));
 $("treatment").addEventListener("change", event => setActive(Number(event.target.value)));
+$("experiment").addEventListener("change", async event => {
+  try { await loadExperiment(state.catalog.experiments.find(item => item.id === event.target.value)); }
+  catch (error) { showError(error.message); }
+});
+$("walk-focus").addEventListener("click", () => {
+  pause(); state.walkFocus = !state.walkFocus; state.time = timeRange().start; updateLayout();
+});
 $("single-view").addEventListener("click", () => setCompare(false));
 $("compare-view").addEventListener("click", () => setCompare(true));
 $("playback-rate").addEventListener("change", event => { state.rate = Number(event.target.value); resetWallClock(); synchronizeVideos(true); });

@@ -70,3 +70,25 @@ export function nearestSample(samples, x, y) {
   }
   return match;
 }
+
+export function playbackRange(runs, walkFocus = false) {
+  if (walkFocus && runs.length && runs.every(run => run.authority)) {
+    return {start: Math.min(...runs.map(run => run.authority.walk_start_s)),
+            end: Math.max(...runs.map(run => run.authority.walk_end_s))};
+  }
+  return {start: 0, end: Math.max(0, ...runs.map(run => run.duration_s))};
+}
+export function requestedRunTime(run, time, walkFocus = false) {
+  return walkFocus && run.authority ? clamp(time, run.authority.walk_start_s, run.authority.walk_end_s) : Math.min(time, run.duration_s);
+}
+
+export function firstWalkDisplaySample(run, sample) {
+  if (!sample || !run.authority) return sample;
+  const commanded = run.samples.find(item => item.node_index === 1)?.commanded_heading_deg;
+  return {...sample, local_lateral_m: sample.first_walk_local_lateral_m,
+    reference_lateral_m: sample.first_walk_reference_lateral_m,
+    global_endpoint_error_m: sample.first_walk_global_endpoint_error_m,
+    reference_heading_deg: run.authority.reference_heading_rad * 180 / Math.PI,
+    commanded_heading_deg: commanded,
+    heading_error_deg: finite(commanded) ? wrapDegrees(sample.actual_heading_deg - commanded) : null};
+}

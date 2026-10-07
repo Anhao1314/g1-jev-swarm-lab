@@ -18,11 +18,13 @@
     <main id="workspace" class="workspace" aria-busy="true">
       <section class="experiment-header" aria-labelledby="experiment-title">
         <div>
-          <div class="eyebrow">PHASE 3A · REFERENCE FRAME</div>
+          <div class="eyebrow">PHASE 3A · MECHANISM REPLAY</div>
           <h1 id="experiment-title">16 m mixed sequence</h1>
           <p id="experiment-subtitle" class="muted">Loading verified replay artifacts…</p>
         </div>
         <div class="view-controls">
+          <label class="sr-only" for="experiment">Experiment</label>
+          <select id="experiment" aria-label="Select evidence experiment"></select>
           <label class="treatment-label" for="treatment">Treatment</label>
           <select id="treatment" aria-label="Select treatment"></select>
           <div class="segmented" aria-label="Replay layout">
@@ -33,6 +35,12 @@
       </section>
 
       <div id="error-banner" class="error-banner" role="alert" hidden></div>
+      <section id="mechanism-panel" class="mechanism-panel panel" aria-label="Residual authority mechanism" hidden>
+        <div class="panel-header"><div><h2>Early authority, late correction</h2><p class="small muted">First Walk · original acquisition states · evidence-bound endpoint outcomes</p></div><button id="walk-focus" class="quiet-button" type="button">Show full 16m sequence</button></div>
+        <div id="authority-timeline" class="authority-timeline"></div>
+        <div id="authority-evidence" class="authority-evidence"></div>
+        <p id="authority-phase" class="phase-readout"></p>
+      </section>
 
       <section class="replay-section" aria-label="MuJoCo visual replay">
         <div id="video-grid" class="video-grid"></div>
@@ -48,12 +56,14 @@
           <select id="playback-rate" class="speed-select" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
           <button id="inspect-run" class="quiet-button" type="button" disabled>Provenance ↗</button>
         </div>
-        <div class="replay-caption"><span class="source-type">Derived visualization replay</span><span>Historical acquisition is unchanged. Video is newly rendered from a separately verified replay; playback speed does not change simulation.</span></div>
+        <div class="replay-caption"><span id="visual-type" class="source-type">Derived visualization replay</span><span id="visual-note">Historical acquisition is unchanged. Video is rendered from retained states; playback does not change simulation.</span></div>
       </section>
+
+      <section id="mechanism-charts" class="mechanism-charts" aria-label="Metrics over Walk time" hidden></section>
 
       <section class="analysis-grid" aria-label="Synchronized research evidence">
         <article class="trajectory-panel panel">
-          <div class="panel-header"><div><h2>Route geometry</h2><p class="small muted">World coordinates · same scale for both treatments</p></div><div class="trajectory-legend"><span class="legend-line ideal"></span>Ideal<span class="legend-line actual"></span>Actual</div></div>
+          <div class="panel-header"><div><h2>Route geometry</h2><p class="small muted">World coordinates · shared scale across treatments</p></div><div class="trajectory-legend"><span class="legend-line ideal"></span>Ideal<span class="legend-line actual"></span>Actual<span class="legend-line reference"></span>Fixed reference<span class="legend-line corridor"></span>Endpoint corridor</div></div>
           <div id="trajectory" class="trajectory-container"></div>
           <div class="plot-hint">Click the route or an evidence marker to inspect the corresponding sample.</div>
           <div id="evidence-events" class="evidence-events"></div>

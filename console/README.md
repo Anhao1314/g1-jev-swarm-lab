@@ -1,5 +1,24 @@
 # Research Console v0.1
 
+## Residual authority mechanism replay
+
+The latest observer view is **http://127.0.0.1:8766/**: residual-off, combined inward,
+and forward/inward corner from the same retained 16m case. The Walk-relative
+phase strip, native acquisition-state replay, world routes, reference line and
+source-bound metrics show the early authority effect and its subsequent decay.
+The original two-arm slice remains selectable. See the
+[mechanism replay report](../experiments/research_console/residual_authority_replay_001/REPORT.md).
+
+```powershell
+.venv\Scripts\python.exe console/server.py --data experiments/research_console/residual_authority_replay_001 --port 8766
+```
+
+These three new videos are original acquisition **state playback**, with zero
+physics steps. The older slice described below retains its distinct derived
+visualization replay provenance. Scientific strict FAIL outcomes are unchanged.
+
+## Original reference slice
+
 One read-only workstation: native MuJoCo G1 replay → synchronized route and
 diagnostics → the original machine evidence. The retained slice is the same
 `sequence-mixed-16m` under α=0 and α=0.5, both residual off.
