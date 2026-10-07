@@ -1,0 +1,12 @@
+---
+name: g1-visual-evidence
+description: Integrate retained G1 acquisition poses, source metrics and provenance into Research Console, with render-only playback and targeted browser QA.
+---
+
+Start with `$g1-research-ops` context/plan. Existing scientific evidence is authoritative; a mechanism replay UI is implementation unless its task makes a new scientific claim or changes measurement/execution.
+
+1. Run `scripts/research_ops.py check console` before producing assets. Follow the selected manifest/catalog/source locators, not all historical experiments. Existing `console/build_authority_replay.py` binds primary 01/05/06 to native saved poses; `console/render_mechanism.py` restores states with mj_forward and zero mj_step. Production requires task authorization and a NEW output namespace. Never rerun capture/acquisition merely because poses, rendering or browser QA are inconvenient.
+2. Preserve run/probe/seed/commit/protocol/policy identity, paired operands, original outcomes and thresholds. Keep acquisition state playback distinct from older derived visualization replay. Freeze first-Walk measurement/reference axes across the boundary frame; formal endpoint time differs from nearest sampled visual time. Do not rescore or hardcode scientific metrics in UI text.
+3. For builder/source wiring, run `python -m pytest console/tests/test_authority_replay.py -q`; for server/provenance/transport, add `console/tests/test_server.py`; for time/frame/frontend, run `node --test console/web/data.test.js`. Shared observer contract changes require relevant integrity checks; simulation equivalence is needed before a changed acquisition observer is used scientifically.
+4. Batch browser QA on the final UI: three decoded videos; 2s cutoff at simulation 12s/frame240; advance/pause; each own Walk completion; formal vs nearest-frame evidence; Inspector raw/provenance links; full-sequence and old-slice switch; desktop/narrow layout; console errors. Recheck affected behavior after fixes, not every unrelated control. Never count a reused receipt as a fresh browser run. Direct JSON navigation BLOCKED_BY_CLIENT is retained; successful Inspector/HTTP access does not erase it.
+5. Run `check console` and scoped closeout. Browser reuse requires exact recorded UI/server/test/data hashes; a mismatch marks REQUIRES_FRESH_BROWSER_QA. Hash equality is necessary, not proof of a current browser/environment. Preserve screenshots, limitation and explicit reuse provenance. No new physics, PPO, provider, Jev or Multi-Swarm follows closeout.

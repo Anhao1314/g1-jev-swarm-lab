@@ -1,0 +1,50 @@
+..............F....FF                                                    [100%]
+================================== FAILURES ===================================
+______________ test_new_untracked_experiment_cannot_be_invisible ______________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-116/test_new_untracked_experiment_0')
+
+    def test_new_untracked_experiment_cannot_be_invisible(tmp_path):
+        root=mini_repo(tmp_path); target=root/'experiments/phase3a/new'; target.mkdir(parents=True); (target/'report.json').write_text('{}')
+>       assert ops.context(root)['status']=='STALE'
+E       AssertionError: assert 'CURRENT' == 'STALE'
+E         
+E         - STALE
+E         + CURRENT
+
+tests\test_research_ops.py:57: AssertionError
+____________ test_tampered_export_is_detected_before_browser_reuse ____________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-116/test_tampered_export_is_detect0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A6C3858110>
+
+    def test_tampered_export_is_detected_before_browser_reuse(tmp_path, monkeypatch):
+        # Real inventory validated independently; inject one byte identity failure.
+        original=ops.sha
+        def changed(path):
+            return '0'*64 if str(path).endswith('evidence/completion.json') else original(path)
+        monkeypatch.setattr(ops,'sha',changed)
+>       with pytest.raises(ValueError,match='Scientific export mismatch'): ops.check_console()
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_research_ops.py:103: Failed
+__________________ test_browser_code_drift_requires_fresh_qa __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A6C228A350>
+
+    def test_browser_code_drift_requires_fresh_qa(monkeypatch):
+        original=ops.sha
+        monkeypatch.setattr(ops,'sha',lambda path: '0'*64 if str(path).endswith('console/web/app.js') else original(path))
+        result=ops.check_console()
+>       assert result['browser_qa']=='REQUIRES_FRESH_BROWSER_QA'
+E       AssertionError: assert 'REUSED_BYTE_...TICAL_RECEIPT' == 'REQUIRES_FRESH_BROWSER_QA'
+E         
+E         - REQUIRES_FRESH_BROWSER_QA
+E         + REUSED_BYTE_IDENTICAL_RECEIPT
+
+tests\test_research_ops.py:110: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_research_ops.py::test_new_untracked_experiment_cannot_be_invisible
+FAILED tests/test_research_ops.py::test_tampered_export_is_detected_before_browser_reuse
+FAILED tests/test_research_ops.py::test_browser_code_drift_requires_fresh_qa
+3 failed, 18 passed in 2.43s

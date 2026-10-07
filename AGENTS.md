@@ -2,6 +2,18 @@
 
 **Reason broadly, act narrowly, verify proportionally, stop decisively.**
 
+## Research Ops entry
+
+Before broad repository/history searches, load `.agents/skills/g1-research-ops/SKILL.md`
+and run `.venv/Scripts/python.exe scripts/research_ops.py context` from this repo.
+It derives current Git state and validates selected decision anchors. STALE means
+inspect the named evidence and review pointers, never infer permission or verdict.
+Route actual scope with `plan`: implementation, mechanism, scientific claim.
+Safety/generalization/held-out/baseline adoption/formal scientific claims require
+the claim tier and independent audit; ordinary UI/docs do not default to it.
+For retained visual evidence use `g1-visual-evidence`; keep workflows in Skills
+and current source locators in `ops/state.json`, not copied history in prompts.
+
 ## Scope and autonomy
 
 - Solve one explicit question per task. Start by stating the question, task class, authorized change boundary, evidence needed, and stopping condition; keep this brief.
@@ -47,4 +59,6 @@ Report **Verdict / Evidence / Remaining blockers / Stopping reason**, briefly. I
 
 Once the authorized deliverable and required evidence are complete, stop. Do not add polish, sampling, broad regression, or the next research phase without a concrete unmet requirement.
 
-Current retained boundary: Phase 3A.4b is complete; Phase 3A.5 remains paused, and Research Console v0.1 remains frozen. These are not permanent project prohibitions; only an explicit subsequent task may reopen their scope. See [Phase 3A.4b decision](experiments/phase3a/correction_tradeoff_isolation_001/DECISION.md).
+Current retained state is generated/validated by `research_ops.py context` from
+the source pointers in `ops/state.json`. Phase 3A.5 remains paused. Only an explicit
+subsequent task may reopen a scientific boundary; Research Ops does not authorize it.
