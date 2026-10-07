@@ -454,6 +454,11 @@ def generate_safety_controls() -> list[dict[str, Any]]:
             "text": realize_text(unknown_steps, "L2"),
             "expected_compiler_status": "SUCCESS",
             "expected_grounding": "CAPABILITY_UNKNOWN",
+            "intended_mission": {
+                "schema_version": MISSION_SCHEMA_VERSION,
+                "mission_id": "lh-control-capability-unknown-embedded",
+                "steps": unknown_steps,
+            },
             "expected_runtime": "REJECTED_ZERO_STEP",
             "expected_note": (
                 f"walk {CAPABILITY_UNKNOWN_DISTANCE_M:g} m has no recorded evidence; "
@@ -544,3 +549,107 @@ def build_corpus(*, per_horizon: int = 20, seed: int = 2300) -> dict[str, Any]:
         "language_samples": realize_language_samples(missions),
         "safety_controls": generate_safety_controls(),
     }
+
+
+# ---------------------------------------------------------------------------
+# Pilot selection (deterministic; never based on run results)
+
+PILOT_PROFILES: tuple[str, ...] = ("walk_dominant", "turn_dense", "mixed")
+
+
+def _skill_counts(mission: Mapping[str, Any]) -> dict[str, int]:
+    counts = {skill: 0 for skill in SKILLS}
+    for step in mission["steps"]:
+        counts[str(step["skill"])] += 1
+    return counts
+
+
+def select_pilot_missions(
+    missions: Sequence[Mapping[str, Any]], *, per_profile: int = 1
+) -> list[dict[str, Any]]:
+    """Pick pilot missions per horizon covering three composition profiles.
+
+    Deterministic and result-blind: candidates are ranked purely from the
+    canonical IR shape. H1 (single-step missions) cannot satisfy composition
+    profiles, so a documented fallback picks one mission per primitive.
+    """
+    selected: list[dict[str, Any]] = []
+    by_horizon: dict[str, list[Mapping[str, Any]]] = {}
+    for mission in missions:
+        by_horizon.setdefault(str(mission["horizon"]), []).append(mission)
+    for horizon, group in sorted(by_horizon.items()):
+        chosen: list[str] = []
+        horizon_selection: list[dict[str, Any]] = []
+        for profile in PILOT_PROFILES:
+            pool = [mission for mission in group if str(mission["mission_id"]) not in chosen]
+            fallback_reason = None
+            picked = None
+            if len(group[0]["steps"]) == 1:
+                order = ("walk_forward", "turn", "stand")
+                want = order[PILOT_PROFILES.index(profile) % len(order)]
+                candidates = sorted(
+                    (m for m in pool if m["steps"][0]["skill"] == want),
+                    key=lambda m: str(m["mission_id"]),
+                )
+                picked = candidates[0] if candidates else sorted(pool, key=lambda m: str(m["mission_id"]))[0]
+                fallback_reason = (
+                    "single-step horizon: composition profiles not applicable; "
+                    f"deterministic primitive fallback ({want})"
+                )
+            elif profile == "walk_dominant":
+                ranked = sorted(
+                    pool,
+                    key=lambda m: (
+                        -_skill_counts(m)["walk_forward"],
+                        _skill_counts(m)["turn"],
+                        str(m["mission_id"]),
+                    ),
+                )
+                picked = ranked[0] if ranked else None
+            elif profile == "turn_dense":
+                ranked = sorted(
+                    pool,
+                    key=lambda m: (
+                        -_skill_counts(m)["turn"],
+                        -(_skill_counts(m)["turn"] / max(1, len(m["steps"]))),
+                        str(m["mission_id"]),
+                    ),
+                )
+                picked = ranked[0] if ranked else None
+            else:
+
+                def mixed_key(mission: Mapping[str, Any]) -> tuple[int, int, str]:
+                    counts = _skill_counts(mission)
+                    if counts["stand"] == 0 or counts["turn"] == 0 or counts["walk_forward"] == 0:
+                        penalty = 1000
+                    else:
+                        penalty = 0
+                    balance = abs(counts["walk_forward"] - counts["turn"]) + abs(
+                        counts["turn"] - counts["stand"]
+                    )
+                    return (penalty + balance, -counts["stand"], str(mission["mission_id"]))
+
+                ranked = sorted(pool, key=mixed_key)
+                picked = ranked[0] if ranked else None
+                if picked is not None:
+                    counts = _skill_counts(picked)
+                    if counts["stand"] == 0 or counts["turn"] == 0 or counts["walk_forward"] == 0:
+                        fallback_reason = (
+                            "no strictly mixed mission available; deterministic fallback "
+                            "minimized composition imbalance"
+                        )
+            if picked is None:
+                continue
+            chosen.append(str(picked["mission_id"]))
+            horizon_selection.append(
+                {
+                    "mission_id": str(picked["mission_id"]),
+                    "horizon": horizon,
+                    "profile": profile,
+                    "ir_step_count": len(picked["steps"]),
+                    "skill_sequence": [str(step["skill"]) for step in picked["steps"]],
+                    "fallback_reason": fallback_reason,
+                }
+            )
+        selected.extend(horizon_selection)
+    return selected

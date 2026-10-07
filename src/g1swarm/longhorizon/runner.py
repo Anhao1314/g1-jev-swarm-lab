@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import statistics
+import time
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -135,7 +137,11 @@ def scripted_answers_from_corpus(corpus: Mapping[str, Any]) -> dict[str, tuple[s
         mission = missions[str(sample["mission_id"])]
         answers[str(sample["text"])] = ("SUCCESS", benchmark.mission_document(mission))
     for control in corpus["safety_controls"]:
-        answers[str(control["text"])] = (str(control["expected_compiler_status"]), None)
+        intended = control.get("intended_mission")
+        if intended is not None:
+            answers[str(control["text"])] = ("SUCCESS", intended)
+        else:
+            answers[str(control["text"])] = (str(control["expected_compiler_status"]), None)
     return answers
 
 
@@ -178,25 +184,34 @@ def run_compiler_stage(
     experiment_id: str = EXPERIMENT_ID,
 ) -> dict[str, Any]:
     missions = {str(mission["mission_id"]): mission for mission in corpus["canonical_missions"]}
-    records = [
-        benchmark.compiler_record(
-            experiment_id=experiment_id,
-            sample=sample,
-            mission=missions[str(sample["mission_id"])],
-            result=compiler.compile(str(sample["text"])),
-            provenance=provenance,
+    records = []
+    for sample in corpus["language_samples"]:
+        started = time.perf_counter()
+        result = compiler.compile(str(sample["text"]))
+        wall_time_s = time.perf_counter() - started
+        records.append(
+            benchmark.compiler_record(
+                experiment_id=experiment_id,
+                sample=sample,
+                mission=missions[str(sample["mission_id"])],
+                result=result,
+                provenance=provenance,
+                wall_time_s=wall_time_s,
+            )
         )
-        for sample in corpus["language_samples"]
-    ]
-    controls = [
-        benchmark.control_record(
+    controls = []
+    for control in corpus["safety_controls"]:
+        started = time.perf_counter()
+        result = compiler.compile(str(control["text"]))
+        wall_time_s = time.perf_counter() - started
+        record = benchmark.control_record(
             experiment_id=experiment_id,
             control=control,
-            result=compiler.compile(str(control["text"])),
+            result=result,
             provenance=provenance,
         )
-        for control in corpus["safety_controls"]
-    ]
+        record["wall_time_s"] = wall_time_s
+        controls.append(record)
     return {
         "experiment_id": experiment_id,
         "stage": "compiler",
@@ -236,6 +251,7 @@ def run_oracle_stage(
             "total_simulation_time_s": float(result.total_simulation_time_s),
             "total_wall_time_s": float(result.total_wall_time_s),
             "grounding": dict(result.grounding),
+            "transitions": [dict(transition) for transition in result.transitions],
             "_result": result,
         }
     summary_success = sum(1 for entry in results.values() if entry["mission_success"])
@@ -384,3 +400,201 @@ def generate_corpus_files(
         ),
     }
     return outputs
+
+
+# ---------------------------------------------------------------------------
+# Pilot helpers (Session 2: selection, control-runtime check, budget estimate)
+
+
+def build_pilot_corpus(
+    corpus: Mapping[str, Any], selection: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
+    ids = {str(entry["mission_id"]) for entry in selection}
+    return {
+        "canonical_missions": [
+            mission for mission in corpus["canonical_missions"] if str(mission["mission_id"]) in ids
+        ],
+        "language_samples": [
+            sample for sample in corpus["language_samples"] if str(sample["mission_id"]) in ids
+        ],
+        "safety_controls": list(corpus["safety_controls"]),
+    }
+
+
+def write_pilot_files(
+    corpus: Mapping[str, Any],
+    selection: Sequence[Mapping[str, Any]],
+    *,
+    corpus_dir: Path,
+    selection_path: Path,
+) -> dict[str, Path]:
+    from .corpus import PILOT_PROFILES
+
+    pilot = build_pilot_corpus(corpus, selection)
+    outputs = {
+        "canonical_missions": write_yaml(
+            corpus_dir / "canonical_missions.yaml",
+            {
+                "schema_version": corpus["schema_version"],
+                "corpus_id": f"{EXPERIMENT_ID}-pilot",
+                "pilot_only": True,
+                "excluded_from_final": True,
+                "missions": pilot["canonical_missions"],
+            },
+        ),
+        "language_realizations": write_yaml(
+            corpus_dir / "language_realizations.yaml",
+            {
+                "schema_version": corpus["schema_version"],
+                "pilot_only": True,
+                "conditions": corpus["conditions"],
+                "samples": pilot["language_samples"],
+            },
+        ),
+        "safety_controls": write_yaml(
+            corpus_dir / "safety_controls.yaml",
+            {
+                "schema_version": corpus["schema_version"],
+                "pilot_only": True,
+                "controls": pilot["safety_controls"],
+            },
+        ),
+        "pilot_selection": write_json(
+            selection_path,
+            {
+                "experiment_id": EXPERIMENT_ID,
+                "pilot": True,
+                "excluded_from_final": True,
+                "profile_order": list(PILOT_PROFILES),
+                "selection_rules": {
+                    "walk_dominant": "max walk count, then min turn count, id tie-break",
+                    "turn_dense": "max turn count, then max turn ratio, id tie-break",
+                    "mixed": "mixed mission with minimal composition imbalance, id tie-break",
+                    "single_step_fallback": "H1 picks one primitive per profile deterministically",
+                    "result_blind": True,
+                },
+                "missions": [dict(entry) for entry in selection],
+            },
+        ),
+    }
+    return outputs
+
+
+def run_control_runtime_stage(
+    compiler_stage: Mapping[str, Any],
+    *,
+    runtime_protocol_path: str | Path,
+    seed: int = 0,
+    provenance: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Execute safety controls that produced a mission (currently the
+    capability-unknown control). Grounder rejection must be zero-step."""
+    runtime_protocol = load_runtime_protocol(runtime_protocol_path)
+    executor = build_runtime_executor(protocol=runtime_protocol, seed=seed)
+    records: list[dict[str, Any]] = []
+    for control in compiler_stage.get("safety_controls", []):
+        mission_doc = control.get("compiled_mission")
+        if mission_doc is None or control.get("expected_grounding") is None:
+            continue
+        result = executor.run(mission_doc, phase="final", write_evidence=False)
+        grounding = dict(result.grounding or {})
+        records.append(
+            {
+                "experiment_id": EXPERIMENT_ID,
+                "control_id": control["control_id"],
+                "kind": control.get("kind"),
+                "mission_id": result.mission_id,
+                "state": result.state,
+                "failure_type": result.failure_type,
+                "grounding_status": grounding.get("status"),
+                "expected_grounding": control.get("expected_grounding"),
+                "grounding_match": grounding.get("status") == control.get("expected_grounding"),
+                "simulation_steps_executed": int(result.simulation_steps_executed),
+                "zero_step": int(result.simulation_steps_executed) == 0,
+                "mission_success": bool(result.mission_success),
+                "wall_time_s": float(result.total_wall_time_s),
+                "provenance": dict(provenance or {}),
+            }
+        )
+    return {
+        "experiment_id": EXPERIMENT_ID,
+        "stage": "safety_control_runtime",
+        "record_count": len(records),
+        "records": records,
+    }
+
+
+def build_walltime_budget(
+    *,
+    oracle_stage: Mapping[str, Any],
+    compiler_stage: Mapping[str, Any] | None = None,
+    language_stage: Mapping[str, Any] | None = None,
+    final_missions_per_horizon: int = 17,
+) -> dict[str, Any]:
+    buckets: dict[str, list[Mapping[str, Any]]] = {}
+    for entry in oracle_stage.get("results", {}).values():
+        buckets.setdefault(str(entry["horizon"]), []).append(entry)
+    per_horizon: dict[str, Any] = {}
+    projected_oracle_wall = 0.0
+    projected_oracle_sim = 0.0
+    for horizon, entries in sorted(buckets.items()):
+        wall = [float(entry["total_wall_time_s"]) for entry in entries]
+        sim = [float(entry["total_simulation_time_s"]) for entry in entries]
+        mean_wall = statistics.fmean(wall)
+        mean_sim = statistics.fmean(sim)
+        scale = final_missions_per_horizon / max(1, len(entries))
+        per_horizon[horizon] = {
+            "pilot_runs": len(entries),
+            "pilot_wall_total_s": sum(wall),
+            "pilot_wall_mean_s": mean_wall,
+            "pilot_wall_max_s": max(wall),
+            "pilot_simulation_total_s": sum(sim),
+            "projected_final_oracle_wall_s": mean_wall * final_missions_per_horizon,
+            "projected_final_language_wall_max_s": mean_wall * final_missions_per_horizon * 3,
+            "projected_final_oracle_simulation_s": mean_sim * final_missions_per_horizon,
+        }
+        projected_oracle_wall += mean_wall * final_missions_per_horizon
+        projected_oracle_sim += mean_sim * final_missions_per_horizon
+    payload: dict[str, Any] = {
+        "experiment_id": EXPERIMENT_ID,
+        "pilot_only": True,
+        "assumption_final_missions_per_horizon": final_missions_per_horizon,
+        "assumption_language_conditions": 3,
+        "pilot_oracle": per_horizon,
+        "projected_final": {
+            "oracle_runs": final_missions_per_horizon * len(per_horizon),
+            "language_runtime_runs_max": final_missions_per_horizon * len(per_horizon) * 3,
+            "compiler_inputs": final_missions_per_horizon * len(per_horizon) * 3,
+            "oracle_wall_total_s": projected_oracle_wall,
+            "language_wall_total_s_max": projected_oracle_wall * 3,
+            "oracle_simulation_total_s": projected_oracle_sim,
+        },
+    }
+    if compiler_stage is not None:
+        rows = list(compiler_stage.get("records", []))
+        wall = [float(row["wall_time_s"]) for row in rows if row.get("wall_time_s") is not None]
+        tokens = [int(row["provider_tokens"]) for row in rows if row.get("provider_tokens") is not None]
+        payload["pilot_compiler"] = {
+            "samples": len(rows),
+            "wall_total_s": sum(wall) if wall else None,
+            "wall_mean_s": statistics.fmean(wall) if wall else None,
+            "wall_p95_s": None if not wall else sorted(wall)[max(0, int(round((len(wall) - 1) * 0.95)))],
+            "wall_max_s": max(wall) if wall else None,
+            "provider_tokens_total": sum(tokens) if tokens else None,
+        }
+        if wall:
+            mean = statistics.fmean(wall)
+            payload["projected_final"]["compiler_wall_total_s"] = (
+                mean * payload["projected_final"]["compiler_inputs"]
+            )
+    else:
+        payload["pilot_compiler"] = {"status": "not_measured_provider_unavailable"}
+    if language_stage is not None:
+        rows = list(language_stage.get("records", []))
+        wall = [float(row["wall_time_s"]) for row in rows if row.get("wall_time_s") is not None]
+        payload["pilot_language_runtime"] = {
+            "runs": len(rows),
+            "wall_total_s": sum(wall) if wall else None,
+            "wall_mean_s": statistics.fmean(wall) if wall else None,
+        }
+    return payload

@@ -137,6 +137,7 @@ def compiler_record(
     mission: Mapping[str, Any] | Mission,
     result: Any,
     provenance: Mapping[str, Any] | None = None,
+    wall_time_s: float | None = None,
 ) -> dict[str, Any]:
     """One Stage A (compiler-only) evidence record for an expected-valid sample."""
     oracle = as_mission(mission)
@@ -164,6 +165,7 @@ def compiler_record(
         "llm_invocations": int(diagnostics.get("llm_invocations", 0) or 0),
         "provider_tokens": _tokens_of(result),
         "latency_s": _latency_of(result),
+        "wall_time_s": wall_time_s,
         "false_rejection": status != "SUCCESS",
         "hallucinated_skills": hallucinated,
         "unsafe_acceptance": False,
@@ -205,6 +207,7 @@ def control_record(
         "mission_produced": mission is not None,
         "unsafe_acceptance": expected_status != "SUCCESS" and mission is not None,
         "hallucinated_skills": hallucinated,
+        "compiled_mission": mission_document(mission) if mission is not None else None,
         "route": diagnostics.get("route"),
         "guard_status": diagnostics.get("guard_status"),
         "guard_reason_code": diagnostics.get("guard_reason_code"),
@@ -345,6 +348,7 @@ def runtime_record(
         "skill_invocations": int(language_result.skill_invocations),
         "simulation_steps_executed": int(language_result.simulation_steps_executed),
         "total_simulation_time_s": float(language_result.total_simulation_time_s),
+        "wall_time_s": float(language_result.total_wall_time_s),
         "transition_count": int(language_result.transition_count),
         "controller_memory_resets": int(language_result.controller_memory_resets),
         "physical_success": bool(language_result.physical_success),
@@ -580,11 +584,16 @@ def latency_token_summary(compiler_records: Sequence[Mapping[str, Any]]) -> dict
         tokens = [int(r["provider_tokens"]) for r in group if r.get("provider_tokens") is not None]
         exact = [r for r in group if r.get("exact_ir_match")]
         exact_tokens = [int(r["provider_tokens"]) for r in exact if r.get("provider_tokens") is not None]
+        wall = [float(r["wall_time_s"]) for r in group if r.get("wall_time_s") is not None]
         output[horizon] = {
             "samples": len(group),
             "latency_mean_s": statistics.fmean(latencies) if latencies else None,
             "latency_median_s": statistics.median(latencies) if latencies else None,
             "latency_p95_s": _percentile(latencies, 0.95),
+            "wall_time_mean_s": statistics.fmean(wall) if wall else None,
+            "wall_time_median_s": statistics.median(wall) if wall else None,
+            "wall_time_p95_s": _percentile(wall, 0.95),
+            "wall_time_max_s": max(wall) if wall else None,
             "provider_tokens_total": sum(tokens) if tokens else None,
             "provider_tokens_mean": statistics.fmean(tokens) if tokens else None,
             "provider_tokens_per_successful_mission": (

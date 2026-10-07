@@ -319,6 +319,7 @@ def test_runtime_stage_smoke_on_single_h1_walk() -> None:
     assert compiler_stage["records"][0]["exact_ir_match"] is True
     oracle_stage = runner.run_oracle_stage(corpus, runtime_protocol_path=RUNTIME_PROTOCOL)
     assert oracle_stage["results"][mission["mission_id"]]["mission_success"] is True
+    assert "transitions" in oracle_stage["results"][mission["mission_id"]]
     runtime_stage = runner.run_language_stage(
         compiler_stage,
         oracle_stage,
