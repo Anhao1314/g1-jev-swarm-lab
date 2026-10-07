@@ -216,6 +216,14 @@ pilot:
   horizons: [H1, H3, H5, H8, H12, H16]
   missions_per_horizon: 3
   conditions: [L1, L2, L3]
+  selection: experiments/phase2/long_horizon_language_001/pilot_selection.json
+  artifacts: artifacts/long_horizon_language_001/pilot/
+  report: experiments/phase2/long_horizon_language_001/pilot_report.md
+  status: blocked_provider_unavailable
+  completed: [pilot_selection, oracle_runtime_18_of_18, guard_malformed_controls, capability_unknown_zero_step_atomicity, wall_time_instrumentation]
+  not_run: [compiler_stage_54_inputs, language_runtime_stage, long_ambiguous_control, unsupported_embedded_control]
+  recommended_final_missions_per_horizon: 17
+  recommendation_note: "cost-based only; final decision belongs to Session 3"
   checks:
     - compiler_harness
     - ir_equality
@@ -225,6 +233,8 @@ pilot:
     - figure_feasibility
 
 freeze_checklist:
+  - compiler_pilot_completed_with_real_provider
+  - language_runtime_pilot_completed
   - pilot_completed
   - wall_time_and_simulation_budget_confirmed
   - horizons_final
@@ -235,6 +245,7 @@ freeze_checklist:
   - scoring_and_attribution_frozen
   - interpretation_criteria_frozen
   - protocol_sha256_recorded
+  - pilot_artifacts_excluded_from_final
 
 # ---------------------------------------------------------------------------
 # Evidence outputs (written under experiments/phase2/long_horizon_language_001/).
