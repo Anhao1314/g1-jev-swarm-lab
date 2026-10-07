@@ -1,0 +1,172 @@
+{
+  "PPO_training": false,
+  "alpha_optimization": false,
+  "analysis": {
+    "endpoint_rotation_identity": "y_local=x_local*tan(delta)+y_control/cos(delta); delta=wrap(ref-local)",
+    "global_position_budget": "sum actual node displacements minus ideal Walk displacements equals endpoint error vector",
+    "heading_recursion": "e_walk_end=wrap((1-alpha)*e_start_global+e_control); Turn carries inherited error plus turn residual",
+    "no_new_score_thresholds": true,
+    "numerical_audit_tolerance": 1e-10,
+    "physical_stability": "Report original physical/fall/tilt/height/standing/oscillation/saturation; corridor departure alone is not physical instability",
+    "role": "roundoff audit, NOT a new task or stability threshold",
+    "strict_semantics": "Original endpoint actual-start lateral gate; sampled peak is a diagnostic only",
+    "tracking_claim": "Report actual control-frame remainder relative to rotated projection and existing strict limit; identity alone is not evidence of good tracking",
+    "verdict": "Distinguish real local-contract/global precision conflict from physical instability and evaluator/implementation artifacts"
+  },
+  "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+  "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04",
+  "case_manifest_sha256": "0799556722dc6a9c90841acf29e425f88e3c3c690eb5f1f3b4768d061ba961c9",
+  "checkpoint_writes": 0,
+  "console": {
+    "manifest_sha256": "54f63c9f6a35507a25e0b9cdbf1fdd883fab5db8ef8f27071601d97d699a2e79",
+    "source_files": 13,
+    "visual_files": 34
+  },
+  "data_scope": "Seen mechanism/regression case interventions; no fresh blind/noise/generalization claim",
+  "device": "cpu",
+  "expand_cases": false,
+  "experiment_id": "correction_tradeoff_isolation_001",
+  "factor": "wrapped correction heading alignment strength; control heading AND lateral axes rotate together",
+  "fine_scan": false,
+  "fixed_alphas": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "frozen": true,
+  "frozen_controls": [
+    "motion.pt",
+    "base controller/PD",
+    "gains1.5/1.0",
+    "yaw clamp0.6/deadband0.01",
+    "skills/reset/termination",
+    "original nominal/strict/physical envelopes",
+    "case parameters",
+    "no reward or observation change"
+  ],
+  "history_manifest_sha256": "cabd4333090ceb548aca70ae148b560f880794283aa81cb8f7525ba12c5c500e",
+  "novel_dose_gate": "All six historical primary anchors and their exact repeats must pass before alpha.25/.75",
+  "optimizer_updates": 0,
+  "origin": "actual node start",
+  "pose_capture_hz": 20,
+  "primary_runs": 8,
+  "prior_frame_protocol_sha256": "df0529a7f9f542463eadf99a1b01c36346344bec184009b13b44eef688781afb",
+  "prior_heading_protocol_sha256": "f07a434f79cf2df9fca8ff0bf3c33775845eec0a95ab01b00c4188609077dabc",
+  "repeatability_runs": 8,
+  "residual_enabled": false,
+  "reward_calls_expected": 0,
+  "runs": 16,
+  "schedule": [
+    {
+      "alpha": 0.0,
+      "case_id": "sequence-mixed-16m",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 0.5,
+      "case_id": "sequence-mixed-16m",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 1.0,
+      "case_id": "sequence-mixed-16m",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 0.0,
+      "case_id": "primitive-walk-8",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 0.5,
+      "case_id": "primitive-walk-8",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 1.0,
+      "case_id": "primitive-walk-8",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 0.0,
+      "case_id": "sequence-mixed-16m",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 0.5,
+      "case_id": "sequence-mixed-16m",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 1.0,
+      "case_id": "sequence-mixed-16m",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 0.0,
+      "case_id": "primitive-walk-8",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 0.5,
+      "case_id": "primitive-walk-8",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 1.0,
+      "case_id": "primitive-walk-8",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 0.25,
+      "case_id": "sequence-mixed-16m",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 0.75,
+      "case_id": "sequence-mixed-16m",
+      "phase": "primary",
+      "repetition": 0
+    },
+    {
+      "alpha": 0.25,
+      "case_id": "sequence-mixed-16m",
+      "phase": "repeatability",
+      "repetition": 1
+    },
+    {
+      "alpha": 0.75,
+      "case_id": "sequence-mixed-16m",
+      "phase": "repeatability",
+      "repetition": 1
+    }
+  ],
+  "seed": 0,
+  "seed_meaning": "Stored deterministic reset seed; not randomized state or independent statistical trials",
+  "semantic_failure_retry": false,
+  "session": "Phase 3A.4b",
+  "stop_after_completion": "No Phase3A.5; no Console UI change; no chosen best alpha",
+  "stop_conditions": [
+    "Historical full scientific record or trace mismatch",
+    "Existing file/protocol/policy drift",
+    "Command/scoring/frame reconstruction error",
+    "Unexpected upstream Stand-state or null-control mismatch"
+  ],
+  "timestep_s": 0.002,
+  "torch_threads": 1
+}
