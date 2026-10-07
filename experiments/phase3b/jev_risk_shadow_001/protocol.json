@@ -1,0 +1,71 @@
+{
+  "schema": "phase3b1_jev_risk_shadow_protocol_v1",
+  "status": "FROZEN_BEFORE_SCORED_CALLS",
+  "scientific_role": "bounded_probabilistic_risk_assessor",
+  "target": "current_walk_node_future_strict_violation",
+  "cohort": "Phase3A transition_learning_001 frozen_baseline walk_forward nodes",
+  "benchmark_path": "experiments/phase3b/jev_risk_shadow_001/benchmark.json",
+  "usage": "all previously seen development/regression evidence; no train split, no fresh held-out or generalization claim",
+  "primary_view": "geometry_only",
+  "secondary_view": "geometry_plus_velocity",
+  "assessment_unit": "unique model-visible state per view; 18 each; paired partitions identical",
+  "model": "jev-latest",
+  "typed_question": "strict_risk: STRICT_VIOLATION versus STRICT_PASS",
+  "decision_threshold": 0.5,
+  "threshold_rule": "predict strict violation when probability_strict_violation >= 0.5",
+  "low_confidence_cutoff": 0.6,
+  "low_confidence_rule": "descriptive flag when confidence < 0.6; does not change binary prediction",
+  "input_allowlist": [
+    "controller",
+    "decision_epoch",
+    "previous_skill",
+    "target_distance_m",
+    "commanded_speed_mps",
+    "route_frame_position_error_m",
+    "route_heading_error_deg",
+    "strict_limits",
+    "route_frame_velocity only in secondary view"
+  ],
+  "input_forbidden": [
+    "case ID",
+    "family",
+    "strict label",
+    "future trajectory",
+    "end state",
+    "node outcome metrics",
+    "treatment outcome",
+    "oracle result"
+  ],
+  "scored_call_budget": {
+    "max_calls": 36,
+    "concurrency": 1,
+    "attempts_per_unit": 1,
+    "timeout_seconds": 30,
+    "stop_after_consecutive_transport_failures": 3,
+    "wall_clock_cap_seconds": 300
+  },
+  "scoring": [
+    "accuracy",
+    "false_safe_count_and_rate_among_true_violations",
+    "false_alarm_count_and_rate_among_true_passes",
+    "brier_score_descriptive",
+    "per_state_probability_confidence",
+    "low_confidence_count",
+    "latency_median_descriptive",
+    "availability_and_provider_failures",
+    "token_usage_and_attempts",
+    "case_family_cluster_descriptive"
+  ],
+  "missingness": "provider failure and timeout remain unavailable, never counted as semantic success or abstention",
+  "evidence_boundary": "raw model output and failures retained write-once in ignored artifacts; metadata-only scored summary in repo; credentials never retained",
+  "prohibited": [
+    "robot actuation",
+    "new physics",
+    "PPO",
+    "recovery search",
+    "reward tuning",
+    "Multi-Swarm",
+    "Language Runtime"
+  ],
+  "interpretation_limit": "tiny seen-development sample; correlated missions and family imbalance preclude stable calibration/generalization claims"
+}
