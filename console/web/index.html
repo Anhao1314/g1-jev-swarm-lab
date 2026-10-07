@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Research Console · G1</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script type="module" src="/static/app.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="/" aria-label="Research Console home"><span class="brand-mark">R</span>Research Console<span class="version">v0.1</span></a>
+      <div class="header-context"><span class="context-dot"></span>Embodied learning<span class="separator">/</span>Unitree G1</div>
+      <span class="read-only">Read-only evidence</span>
+    </header>
+
+    <main id="workspace" class="workspace" aria-busy="true">
+      <section class="experiment-header" aria-labelledby="experiment-title">
+        <div>
+          <div class="eyebrow">PHASE 3A · REFERENCE FRAME</div>
+          <h1 id="experiment-title">16 m mixed sequence</h1>
+          <p id="experiment-subtitle" class="muted">Loading verified replay artifacts…</p>
+        </div>
+        <div class="view-controls">
+          <label class="treatment-label" for="treatment">Treatment</label>
+          <select id="treatment" aria-label="Select treatment"></select>
+          <div class="segmented" aria-label="Replay layout">
+            <button id="single-view" class="active" type="button" aria-pressed="true">Replay</button>
+            <button id="compare-view" type="button" aria-pressed="false">Compare</button>
+          </div>
+        </div>
+      </section>
+
+      <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+      <section class="replay-section" aria-label="MuJoCo visual replay">
+        <div id="video-grid" class="video-grid"></div>
+        <div class="playback-controls">
+          <button id="play" class="play-button" type="button" aria-label="Play replay" disabled><span id="play-icon">▶</span><span id="play-label">Play</span></button>
+          <output id="clock" class="clock">00:00.00</output>
+          <div class="timeline-wrap">
+            <div id="timeline-events" class="timeline-events" aria-label="Evidence markers"></div>
+            <input id="seek" type="range" min="0" max="1" step="0.01" value="0" aria-label="Simulation time" disabled>
+          </div>
+          <output id="duration" class="clock muted">00:00.00</output>
+          <label class="sr-only" for="playback-rate">Playback speed</label>
+          <select id="playback-rate" class="speed-select" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+          <button id="inspect-run" class="quiet-button" type="button" disabled>Provenance ↗</button>
+        </div>
+        <div class="replay-caption"><span class="source-type">Derived visualization replay</span><span>Historical acquisition is unchanged. Video is newly rendered from a separately verified replay; playback speed does not change simulation.</span></div>
+      </section>
+
+      <section class="analysis-grid" aria-label="Synchronized research evidence">
+        <article class="trajectory-panel panel">
+          <div class="panel-header"><div><h2>Route geometry</h2><p class="small muted">World coordinates · same scale for both treatments</p></div><div class="trajectory-legend"><span class="legend-line ideal"></span>Ideal<span class="legend-line actual"></span>Actual</div></div>
+          <div id="trajectory" class="trajectory-container"></div>
+          <div class="plot-hint">Click the route or an evidence marker to inspect the corresponding sample.</div>
+          <div id="evidence-events" class="evidence-events"></div>
+        </article>
+        <article class="metrics-panel panel">
+          <div class="panel-header"><div><h2>At the playhead</h2><p id="metric-context" class="small muted">Synchronized to simulation time</p></div><span id="sample-time" class="small mono muted"></span></div>
+          <div id="metrics" class="metrics"></div>
+          <div class="outcome-header"><h3>Frozen node outcomes</h3><span class="small muted">Scored at node end</span></div>
+          <div id="node-outcomes" class="node-outcomes"></div>
+          <p class="outcome-note">Instantaneous readings explain motion. Nominal and strict outcomes come from the original evidence and are never rescored by this interface.</p>
+        </article>
+      </section>
+      <footer class="workspace-footer"><span id="source-context">Loading provenance…</span><span>Visual evidence explains machine scoring.</span></footer>
+    </main>
+
+    <aside id="inspector" class="inspector" aria-labelledby="inspector-title" aria-hidden="true" inert>
+      <div class="inspector-header"><div><div class="eyebrow">EVIDENCE INSPECTOR</div><h2 id="inspector-title">Source provenance</h2></div><button id="close-inspector" class="close-button" type="button" aria-label="Close Evidence Inspector">×</button></div>
+      <div id="inspector-content" class="inspector-content"></div>
+    </aside>
+    <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+  </body>
+</html>
