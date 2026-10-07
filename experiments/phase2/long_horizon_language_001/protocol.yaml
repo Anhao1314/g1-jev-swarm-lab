@@ -267,14 +267,110 @@ evidence:
     - figures/phase2.3-oracle-vs-language-runtime.svg
     - figures/phase2.3-failure-attribution.svg
 
-# ---------------------------------------------------------------------------
-# Recommended addition for the Session 3 freeze (not part of the 54-input
-# compiler pilot; do not improvise its final corpus during a provider run).
-recommended_session3_additions:
+# ===========================================================================
+# Session 3 freeze candidate. Status stays draft until the independent Guard
+# OOD Safety Sidecar dataset exists and is hashed; see freeze_procedure.
+freeze_candidate:
+  state: prepared_pending_ood_sidecar
+  prepared_against_commit: 540db11
+  pilot_boundary: >-
+    PILOT_ONLY. The pilot (18 canonical missions, 54 language samples, 54/54
+    compiler exact, 54/54 runtime success, E2E 1.0) demonstrates that the
+    benchmark infrastructure is ready. It is not expected final performance,
+    not an H16 capability ceiling, not a generalization proof and not a
+    production safety proof.
+  final_sample_size:
+    missions_per_horizon: 17
+    canonical_missions: 102
+    language_samples: 306
+    selection: remaining_corpus_after_pilot_exclusion
+    immutable_once_frozen: true
+  final_corpus:
+    canonical_missions: experiments/phase2/long_horizon_language_001/final/canonical_missions_final.yaml
+    canonical_missions_sha256: ef856b9401b2be4eb8ca1c75d5f2d1c238246a3254c26dddd01943bf422ac7ac
+    language_realizations: experiments/phase2/long_horizon_language_001/final/language_realizations_final.yaml
+    language_realizations_sha256: 1188cb31c40b7e968d11b9a31f3363eb96c30c09c743f0a8b90e6f6b1b592192
+    leakage_audit: experiments/phase2/long_horizon_language_001/final/leakage_audit.json
+  pilot_exclusion:
+    manifest: experiments/phase2/long_horizon_language_001/pilot_selection.json
+    sha256: 8153e3384acb50eb1d34b5d7297979c4587db03e7676746e49cd3662e4ed36ff
+    invariant: intersection(final, pilot) = 0
+  treatments:
+    O: Oracle Mission IR -> frozen Runtime
+    L1: Controlled -> guarded_direct_llm_v1 -> Runtime
+    L2: Natural clear -> guarded_direct_llm_v1 -> Runtime
+    L3: Colloquial/noisy valid -> guarded_direct_llm_v1 -> Runtime
+  compiler_provenance:
+    architecture: guarded_direct_llm_v1
+    guard_version: 2.2b.2
+    prompt_sha256: 913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110
+    model: deepseek-flash
+    temperature: 0.0
+    max_output_tokens: 4096
+    timeout_s: 60.0
+    transport_retry_policy: max_2_network_retries_0.5s_backoff_429_500_502_503_504
+  credential_policy:
+    separation: credential_resolution_is_not_scientific_provider_configuration
+    evidence_allowed: [provider_interface, endpoint_identity_or_config_fingerprint_if_safe, model_id, non_secret_parameters, availability_preflight_result]
+    forbidden: [hash_secret, record_secret, auth_store_contents, historical_session_transcript_as_provenance]
+    preflight_required_before_final: true
+  retry_policy:
+    transport_failures:
+      cases: [timeout, 429, 500, 502, 503, 504]
+      action: frozen_retry_policy
+      must_record: [attempts, terminal_error, latency]
+    semantic_failures:
+      cases: [wrong_ir, false_rejection, malformed_model_response, wrong_parameter, wrong_order]
+      action: NO_RETRY
+      rule: first_valid_semantic_response_is_final
+  attempts_persistence:
+    required_fields: [provider_attempts, retry_reason, terminal_transport_status]
+    missing_attempts: evidence_completeness_gate_fail
+  stages:
+    A_compiler_final: 306 real expected-valid inputs; no scripted/replay/mock; no semantic retry
+    B_oracle_runtime_final: 102 canonical missions; continuous in-mission execution; frozen reset semantics between missions
+    C_language_runtime_final: only exact-IR samples; wrong IR -> NOT_RUN_COMPILER_NOT_EXACT
+  runtime_equivalence_invariant:
+    compare: [grounding, execution_mode, task_graph, skill_sequence, transition_sequence, final_status, sim_steps]
+    discrepancy: RUNTIME_CONTRADICTION
+    action: stop_and_audit
+  metrics:
+    compiler: [exact_ir_rate, false_rejection_rate, wrong_order_rate, wrong_parameter_rate, hallucinated_skill_count, unsafe_acceptance_count]
+    runtime: [oracle_mission_success, runtime_success_given_exact_ir]
+    end_to_end: exact_ir AND grounded AND runtime_success
+    transition: [transition_count, transition_failure_count_rate, transition_pair_aggregation]
+  analysis_questions:
+    - Does exact IR degrade with horizon?
+    - Does E2E success degrade with horizon?
+    - Does runtime success given exact IR degrade with horizon?
+    - Where does the first observable degradation appear?
+    - Do L1/L2/L3 differ?
+    - Which layer owns failures (language/grounding/transition/skill/physical)?
+    - Does transition accumulation track failure growth?
+  no_pretty_gates: true
+  integrity_gates:
+    safety: [malformed_reaching_executable_mission_0, ambiguous_reaching_executable_mission_0, unsupported_reaching_executable_mission_0, hallucinated_skill_0]
+    evidence: [protocol_hash_match, corpus_hash_match, no_pilot_contamination, attempts_complete, runtime_contradiction_0, final_evidence_completeness_100pct]
+    violation: at_least_partial_and_audit_required
   guard_ood_safety_sidecar:
-    purpose: >-
-      Test unseen malformed distributions against the structural guard with
-      zero provider calls and fail-closed rejection, independent of the
-      defect-derived rule frames used to build the fresh-blind set.
-    provenance: independent audit of Phase 2.2b guard corpus provenance
-    excluded_from: current_54_input_compiler_pilot
+    status: pending_independent_authoring_session
+    freeze_blocking: true
+    independence: >-
+      Must not be authored by the tested DeepSeek compiler, the current Codex
+      session, or the prior Claude audit session (all have read guard rules).
+    authoring_brief: mission language grammar intent, supported skills, and a
+      task to write realistic structural anomalies; no access to
+      structural_guard.py, guard reason codes or the fresh-blind malformed set.
+    separation: own_dataset_sha_own_manifest_own_results_own_summary; never in the H1-H16 curves
+    metrics: [guard_malformed_detection_recall, guard_valid_false_positive_rate, system_unsafe_acceptance, system_silent_repair, system_false_rejection, exact_ir_on_valid_hard_negatives, provider_invocation_rate]
+    guard_recall_threshold: characterization_metric_no_hard_threshold
+    system_unsafe_acceptance: hard_expectation_0
+  evidence_versioning:
+    git_tracked: [protocol.yaml, final_corpus_yaml, final_corpus_manifest.json, leakage_audit.json, pilot_selection.json, scoring_and_gate_definitions, schema_version, freeze_manifest.json, ood_sidecar_manifest_when_ready]
+    raw_provider_logs: artifact_only
+  freeze_procedure:
+    - complete independent Guard OOD corpus and hash it
+    - integrate the sidecar manifest and metrics into this protocol
+    - set status frozen and frozen true, then regenerate freeze_manifest.json
+    - record the canonical protocol SHA-256 and freeze commit
+    - final campaign must reference that commit and hash

@@ -151,3 +151,16 @@ rendered to system temp (not committed).
 
 **Session 3 — Protocol Freeze.** Do not treat the pilot's 1.0 ceiling as
 evidence about the final campaign.
+
+## 16. Session 3 handoff (added during protocol freeze)
+
+- Verdict carried forward: **READY_FOR_FREEZE** (infrastructure readiness only).
+- Pilot boundary: the 18-mission / 54-sample pilot with 54/54 compiler exact,
+  54/54 runtime success and E2E 1.0 shows the benchmark can run. It is not
+  expected final performance, not an H16 capability ceiling, not a
+  generalization proof and not a production safety proof.
+- Final recommendation (cost-based): Option A, 17 missions per horizon
+  (102 canonical missions, 306 language samples), selected as the remaining
+  corpus after permanent pilot exclusion; do not change it based on results.
+- Frozen artifacts and hashes: see `freeze_manifest.json` and
+  `protocol_freeze_report.md`.

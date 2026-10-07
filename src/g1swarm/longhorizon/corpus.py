@@ -257,31 +257,53 @@ def generate_canonical_missions(
 # Language realization (canonical IR -> text; template-only, deterministic)
 
 
-def _skill_clause_l1(step: Mapping[str, Any]) -> str:
+# Synonym banks used for deterministic variant selection. All L1 variants stay
+# inside the frozen Phase 2.1 controlled-language vocabulary and are verified
+# by the local frozen-Lark self-check.
+_L1_WALK = ("向前走", "往前走", "向前移动")
+_L1_TURN_LEFT = ("向左转", "左转", "逆时针转")
+_L1_TURN_RIGHT = ("向右转", "右转", "顺时针转")
+_L1_STAND = ("站立", "保持站立", "站立")
+_L1_STOP = ("停止", "停下", "立即停止")
+_L1_CONNECTOR = ("，然后", "，接着", "，再")
+_L2_WALK = ("向前走", "向前走", "往前走")
+_L2_TURN_LEFT = ("向左转", "向左转", "往左拐")
+_L2_TURN_RIGHT = ("向右转", "向右转", "往右拐")
+_L2_STAND = ("保持站立", "保持站立", "原地站立")
+_L2_STOP = ("停下来", "停下", "停下来")
+_L2_HEAD = ("先", "首先", "一开始")
+_L2_MID = ("再", "接着", "之后")
+_L2_TAIL = ("最后", "最终", "最后")
+
+
+def _skill_clause_l1(step: Mapping[str, Any], variant: int = 0) -> str:
+    v = variant % 3
     skill = step["skill"]
     params = step["parameters"]
     if skill == "walk_forward":
-        return f"向前走{_fmt_num(params['distance_m'])}米"
+        return f"{_L1_WALK[v]}{_fmt_num(params['distance_m'])}米"
     if skill == "turn":
         angle = float(params["angle_deg"])
-        direction = "向左转" if angle > 0 else "向右转"
-        return f"{direction}{_fmt_num(abs(angle))}度"
+        verb = _L1_TURN_LEFT[v] if angle > 0 else _L1_TURN_RIGHT[v]
+        return f"{verb}{_fmt_num(abs(angle))}度"
     if skill == "stand":
-        return f"站立{_fmt_num(params['duration_s'])}秒"
-    return "停止"
+        return f"{_L1_STAND[v]}{_fmt_num(params['duration_s'])}秒"
+    return _L1_STOP[v]
 
 
-def _skill_clause_l2(step: Mapping[str, Any]) -> str:
+def _skill_clause_l2(step: Mapping[str, Any], variant: int = 0) -> str:
+    v = variant % 3
     skill = step["skill"]
     params = step["parameters"]
     if skill == "walk_forward":
-        return f"向前走{_fmt_num(params['distance_m'])}米"
+        return f"{_L2_WALK[v]}{_fmt_num(params['distance_m'])}米"
     if skill == "turn":
         angle = float(params["angle_deg"])
-        return f"向左转{_fmt_num(abs(angle))}度" if angle > 0 else f"向右转{_fmt_num(abs(angle))}度"
+        verb = _L2_TURN_LEFT[v] if angle > 0 else _L2_TURN_RIGHT[v]
+        return f"{verb}{_fmt_num(abs(angle))}度"
     if skill == "stand":
-        return f"保持站立{_fmt_num(params['duration_s'])}秒"
-    return "停下来"
+        return f"{_L2_STAND[v]}{_fmt_num(params['duration_s'])}秒"
+    return _L2_STOP[v]
 
 
 def _skill_clause_l3(step: Mapping[str, Any], variant: int) -> str:
@@ -312,21 +334,23 @@ def _skill_clause_l3(step: Mapping[str, Any], variant: int) -> str:
     return "最后停下来哈"
 
 
-def _join_l1(steps: Sequence[Mapping[str, Any]]) -> str:
-    clauses = [_skill_clause_l1(step) for step in steps]
-    return "，然后".join(clauses) + "。"
+def _join_l1(steps: Sequence[Mapping[str, Any]], variant: int = 0) -> str:
+    v = variant % 3
+    clauses = [_skill_clause_l1(step, v) for step in steps]
+    return _L1_CONNECTOR[v].join(clauses) + "。"
 
 
-def _join_l2(steps: Sequence[Mapping[str, Any]]) -> str:
+def _join_l2(steps: Sequence[Mapping[str, Any]], variant: int = 0) -> str:
+    v = variant % 3
     if len(steps) == 1:
-        return "先" + _skill_clause_l2(steps[0]) + "。"
-    clauses = [_skill_clause_l2(step) for step in steps]
+        return _L2_HEAD[v] + _skill_clause_l2(steps[0], v) + "。"
+    clauses = [_skill_clause_l2(step, v) for step in steps]
     head, middle, tail = clauses[0], clauses[1:-1], clauses[-1]
-    parts = ["先" + head]
-    for clause in middle:
-        parts.append("再" + clause)
-    parts.append("最后" + tail)
-    return "，然后".join([parts[0], *parts[1:-1]]) + "，" + parts[-1] + "。"
+    parts = [_L2_HEAD[v] + head]
+    parts.extend(_L2_MID[v] + clause for clause in middle)
+    parts.append(_L2_TAIL[v] + tail)
+    connector = "，然后" if v == 0 else ("，接着" if v == 1 else "，之后")
+    return connector.join(parts[:-1]) + "，" + parts[-1] + "。"
 
 
 def _join_l3(steps: Sequence[Mapping[str, Any]], variant: int) -> str:
@@ -345,9 +369,9 @@ def _join_l3(steps: Sequence[Mapping[str, Any]], variant: int) -> str:
 
 def realize_text(steps: Sequence[Mapping[str, Any]], condition: str, *, variant: int = 0) -> str:
     if condition == "L1":
-        return _join_l1(steps)
+        return _join_l1(steps, variant % 3)
     if condition == "L2":
-        return _join_l2(steps)
+        return _join_l2(steps, variant % 3)
     if condition == "L3":
         return _join_l3(steps, variant % 3)
     raise ValueError(f"unknown language condition {condition!r}")
