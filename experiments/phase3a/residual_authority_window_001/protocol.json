@@ -1,0 +1,161 @@
+{
+  "authority": {
+    "decision_period_s": 0.1,
+    "legacy_window_s": 2.0,
+    "mask": "Only node1 Stand->Walk authority duration changes; original mask remains2s at all other nodes",
+    "normalized_action_box": [
+      -1,
+      1
+    ],
+    "observation": "Original61 features and original2s active flag retained; deterministic probe ignores observation/reward",
+    "physical_bounds": [
+      0.1,
+      0.06,
+      0.12
+    ],
+    "physics_timestep_s": 0.002,
+    "policy_period_s": 0.02,
+    "probe_subset": "combined_inward (0,-1,-1), first Walk only; zero elsewhere",
+    "scope_limit": "Later residual actions cannot repair the first Walk strict failure; finite first-window profiles do not cover all continuous admissible action sequences",
+    "total_yaw_limit_radps": 0.6,
+    "units": [
+      "m/s",
+      "m/s",
+      "rad/s"
+    ],
+    "velocity_basis": "body command inputs to frozen locomotion controller",
+    "window_s": 14.0
+  },
+  "base_commit": "4a81311744da442f2487a0b9fc6b939d00275250",
+  "budget": {
+    "alpha_scan": false,
+    "checkpoint_writes": 0,
+    "confirmation_runs": 1,
+    "control_runs": 2,
+    "historical_window_s": 2.0,
+    "longer_window_primary_runs": 1,
+    "maximum_complete_case_executions": 4,
+    "provider_calls": 0,
+    "training_steps": 0,
+    "window_scan": false,
+    "windows_tested_s": [
+      14.0
+    ]
+  },
+  "case_sha256": "6850ebbcc9ab86a161fbdc8b26ba6c20e0b1f88114fde7e01e55942a5799ee98",
+  "class": "Experimental",
+  "contract_id": "SC-3A.4c-001",
+  "contract_sha256": "19a5b637502036714bebaf381776799d8022fc6843ab8d0dfd1371d8fcc222fc",
+  "controls": [
+    "combined2 reproduces historical05 scientific records, traces, command/torque/observation/reward/full-step physics streams and poses",
+    "zero14 reproduces historical01 off scientific records, commands/torques/base observations/actions/full-step physics and poses; reward callbacks intentionally differ"
+  ],
+  "evidence": [
+    "immutable manifest",
+    "all raw result rows including failures",
+    "10Hz command/decision/state traces",
+    "full-step command/torque/physics hashes",
+    "20Hz state archives and exact final pose (acquisition samples, no media)",
+    "callback proposed action/reward ledger",
+    "paired/off/zero and repeat integrity",
+    "summary and failure attribution"
+  ],
+  "experiment_id": "residual_authority_window_001",
+  "frozen": true,
+  "global_claim": {
+    "additional_requirements": [
+      "final absolute commanded-axis lateral not worse",
+      "final absolute wrapped commanded-heading error not worse"
+    ],
+    "metric": "final commanded-world Euclidean endpoint error strictly lower than its alpha0.5 residual-off baseline",
+    "not_claimed": "all-prefix or all-component Pareto improvement; no new historical global success threshold",
+    "required_disclosure": [
+      "full final XY vector including any X regression",
+      "per-node world vector/norm/head, including prefix tradeoff",
+      "Turn/Stand/Stop translation contributions"
+    ]
+  },
+  "historical_source": {
+    "authority_window_s": 2.0,
+    "combined_run": "05--combined_inward--primary",
+    "experiment": "residual_authority_feasibility_001",
+    "off_run": "01--off--primary",
+    "repeat_run": "09--combined_inward--repeat"
+  },
+  "interpretation": "Within-case deterministic mechanism contrast; not generalization, baseline adoption or full-space infeasibility. Joint gate definitions inherited unchanged. The duration intervention also increases integrated exposure; these cannot be disentangled by this single contrast.",
+  "local_claim": "STRICT endpoint eligibility on all original nodes; nominal independent secondary report; not continuous/environmental corridor safety",
+  "origin": "actual node start; frozen selector unchanged",
+  "phase": "3A.4e mechanism",
+  "physical_claim": "original complete physical success, finite/valid execution and all original nodes SUCCESS; report status/fall/tilt/height separately",
+  "preregistration": {
+    "chosen_before_new_physics": true,
+    "chosen_window_s": 14.0,
+    "mechanism": "Historical17.148s combined Walk minus14s leaves3.148s washout, shorter than observed3.6s post-cutoff half-attenuation. Test persistence while retaining a finite post-authority segment; does not predict treatment duration or guarantee strict.",
+    "rationale_file": "window_rationale.json",
+    "rationale_sha256": "650147e0ba3496648edc1c65b8fc73c9e89586031e782963b54088af441b29e6"
+  },
+  "preserved": [
+    "policy/PD/gains/clamps/reference selector/evaluator",
+    "original observation and dense_reward callback path; reward ignored, never tuned",
+    "node boundaries/targets/skill lifecycle and all envelopes",
+    "Console and all historical evidence",
+    "Legacy2s transition diagnostic monitor and observation active feature; only applied firstWalk authority mask extends"
+  ],
+  "probes_in_order": [
+    {
+      "action": [
+        0,
+        -1,
+        -1
+      ],
+      "end_s": 14.0,
+      "id": "combined_inward",
+      "onset_s": 0.0
+    }
+  ],
+  "process_limits": {
+    "failure": "preserve partial; no automatic retry",
+    "inactivity_diagnostic_after_s": 30,
+    "maximum_campaign_wall_s": 180,
+    "progress": "flushed10Hz trace and decision ledger plus per-run completed message"
+  },
+  "question": "Does extending only first-Walk residual authority from 2s to 14s preserve steering and construct the frozen strict/physical/same-reference-global witness?",
+  "reference_alpha": 0.5,
+  "reference_choice": "fixed retained challenge, not alpha optimization",
+  "roundoff_audit_tolerance": 1e-10,
+  "roundoff_role": "arithmetic verification only, not a task threshold; paired gains within this resolution cannot establish FEASIBLE",
+  "run_plan": [
+    {
+      "id": "01--combined2--control",
+      "probe_id": "combined_inward",
+      "repetition": 0,
+      "window_s": 2.0
+    },
+    {
+      "id": "02--zero14--control",
+      "probe_id": "zero",
+      "repetition": 0,
+      "window_s": 14.0
+    },
+    {
+      "id": "03--combined14--primary",
+      "probe_id": "combined_inward",
+      "repetition": 0,
+      "window_s": 14.0
+    },
+    {
+      "id": "04--combined14--repeat",
+      "probe_id": "combined_inward",
+      "repetition": 1,
+      "window_s": 14.0
+    }
+  ],
+  "schedule_and_stop": "Run exact order; both control gates before14s nonzero. Repeat14s once irrespective of favorable/unfavorable completed outcome. Any integrity failure or physical/incomplete execution stops acquisition, preserving all evidence. No alternate duration or profile. A joint witness requires exact confirmation.",
+  "source_manifest_sha256": "993fec72f6f0eafb074c381fac1f5715b75cbb0743afd3cd32af29edf7056e00",
+  "stopping_boundary": "After four bounded runs, targeted audit/report and Git closeout. No PPO, reward/observation/gains/reference changes, Phase3A.5, Jev, Multi-Swarm, or alternate window.",
+  "verdict_rules": {
+    "FEASIBLE": "At least one deterministic profile and its exact confirmation satisfy all frozen strict, complete physical and declared paired-global conditions.",
+    "INCONCLUSIVE": "No repeated joint witness and no full-space certificate; retain probed failures and measured window/authority effects without training expansion.",
+    "NOT_FEASIBLE": "Only with a validated reachability/invariant bound covering the entire admissible continuous authority or mutually incompatible required hard goals; saturation/failed probes/command integrals are not such proof."
+  }
+}
