@@ -1,0 +1,11 @@
+# Additive cross-model Pilot evidence
+
+The content manifest pins exact raw bytes of the new Pilot directory, runner, offline analyzer, packager and their tests. A deterministic ZIP uses sorted paths, fixed metadata and stored compression. The manifest excludes itself; the final publication receipt is excluded from the bundle to avoid circular hashes.
+
+All 9,153 pre-existing tracked paths are external dependencies, pinned by starting Git commit, Git blob, raw-byte SHA and length in inputs.json. They are not duplicated in the new archive. The original V1 and DD packages, GLM integration/preflight and old labels remain unchanged. Reproduction requires this repository history and its existing development evidence.
+
+The experiment's own .gitattributes sets -text for new files. New scripts/.gitattributes and tests/.gitattributes apply only to cross_model_certificate filenames and themselves. No old attribute file was edited. Checkouts with different newline preferences can verify the new content manifest and reconstruct the identical ZIP; full old checkout-byte validation additionally depends on the original raw snapshot recorded in inputs.json.
+
+Offline analysis independently reconstructs full source-only requests, validates first-response/wire binding, parses typed certificates, replays the deterministic gate, recomputes scores and checks all original file hashes. It makes no network or Runtime calls. The transient runner freeze incident, exact acquired source and later guard-only variant are retained in integrity_incident.json and the two source snapshots.
+
+Entry points: scripts/analyze_cross_model_certificate_pilot.py for offline analysis/validation; scripts/package_cross_model_certificate.py freeze or check for byte verification. Acquisition is a one-time first-response run; the original runner is preserved byte-for-byte as scripts/run_cross_model_certificate_pilot.py and acquisition_runner_snapshot.py. Publication relocated its filename only after the process completed. Original preflight hash keys are retained; the offline validator requires the sole allowed relocated runner to match the original SHA and snapshot. The completed published campaign must not be collected or resumed again; its runner's dynamic binding path reflects the publication name. Do not rerun the fixed experiment to replace a failed result.
