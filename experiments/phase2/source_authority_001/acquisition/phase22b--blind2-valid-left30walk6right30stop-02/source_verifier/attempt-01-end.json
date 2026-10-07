@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 7.58855290000065,
+  "provider_document": {
+    "created_at": 1791360141,
+    "id": "resp_d99c81b0-0d28-47df-8eeb-1a49747ab2ff",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_d99c81b0-0d28-47df-8eeb-1a49747ab2ff",
+        "reasoning_content": "Source: \"麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\"\n\nActions: turn CCW 30 deg (positive 30), walk_forward 6m, turn CW 30 deg (-30), stop. Order: sequential \"先...接着...再...最后\". Unique.\n\nDimensions all UNIQUE. Candidate matches.\n\nNeed coverage with exact text spans concatenating to whole source.\n\nLet me split:\n- \"麻烦先\" — hmm, need meaningful spans. Let's split carefully keeping exact text.\n\nSource: 麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\n\nSpans:\n1. \"麻烦\" CONTEXT — politeness, no effect.\n2. \"先\" RELATION — first action marker.\n3. \"逆时针转30度\" ACTION — turn +30.\n4. \"，\" SEPARATOR.\n5. \"接着\" RELATION.\n6. \"向前移动6m\" ACTION — walk 6m.\n7. \"，\" SEPARATOR.\n8. \"再\" RELATION.\n9. \"顺时针转30度\" ACTION — turn -30.\n10. \"，\" SEPARATOR.\n11. \"最后\" RELATION.\n12. \"停止\" ACTION — stop.\n\nThat concatenates exactly: 麻烦 + 先 + 逆时针转30度 + ， + 接着 + 向前移动6m + ， + 再 + 顺时针转30度 + ， + 最后 + 停止 = \"麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\" ✓.\n\nPlan: s1 turn 30, s2 walk_forward 6, s3 turn -30, s4 stop.\n\nStatus AUTHORIZED_UNIQUE.\n\nDimensions explanations.\n\nOutput JSON.",
+        "summary": [
+          {
+            "text": "Source: \"麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\"\n\nActions: turn CCW 30 deg (positive 30), walk_forward 6m, turn CW 30 deg (-30), stop. Order: sequential \"先...接着...再...最后\". Unique.\n\nDimensions all UNIQUE. Candidate matches.\n\nNeed coverage with exact text spans concatenating to whole source.\n\nLet me split:\n- \"麻烦先\" — hmm, need meaningful spans. Let's split carefully keeping exact text.\n\nSource: 麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\n\nSpans:\n1. \"麻烦\" CONTEXT — politeness, no effect.\n2. \"先\" RELATION — first action marker.\n3. \"逆时针转30度\" ACTION — turn +30.\n4. \"，\" SEPARATOR.\n5. \"接着\" RELATION.\n6. \"向前移动6m\" ACTION — walk 6m.\n7. \"，\" SEPARATOR.\n8. \"再\" RELATION.\n9. \"顺时针转30度\" ACTION — turn -30.\n10. \"，\" SEPARATOR.\n11. \"最后\" RELATION.\n12. \"停止\" ACTION — stop.\n\nThat concatenates exactly: 麻烦 + 先 + 逆时针转30度 + ， + 接着 + 向前移动6m + ， + 再 + 顺时针转30度 + ， + 最后 + 停止 = \"麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\" ✓.\n\nPlan: s1 turn 30, s2 walk_forward 6, s3 turn -30, s4 stop.\n\nStatus AUTHORIZED_UNIQUE.\n\nDimensions explanations.\n\nOutput JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness opener ('please/trouble you'); it expresses courtesy only and introduces no action, parameter, order, repetition or reference, so it does not alter authorization.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the first action in a linear sequence. It binds to the immediately following action (逆时针转30度), making that action step 1 with no predecessor.\"},{\"text\":\"逆时针转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn of 30 degrees counterclockwise. Per compilation semantics counterclockwise/逆时针 is positive, so angle_deg = 30; this is a legal nonzero finite angle within the 180-degree maximum. This is the first executed action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause delimiter; it separates the first action from the following continuation marker and adds no executable content.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Means 'next/then' and establishes strict sequential succession: the following action is performed immediately after the preceding turn, with no simultaneity or branching.\"},{\"text\":\"向前移动6m\",\"role\":\"ACTION\",\"explanation\":\"Requests forward walking of 6 meters; 'm' denotes meters, so distance_m = 6.0, a positive finite value. This action is second in the sequence, depending on the first turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause delimiter; it separates the walking action from the next continuation marker and carries no executable meaning.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Means 'then/again next', continuing the single linear order: the following action occurs after the walk, preserving sequence without repetition of earlier actions.\"},{\"text\":\"顺时针转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn of 30 degrees clockwise. Per compilation semantics clockwise/顺时针 is negative, so angle_deg = -30; a legal nonzero finite angle within the 180-degree maximum. This is the third executed action, depending on the walk.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause delimiter; it separates the second turn from the final marker and adds no executable content.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Means 'finally/last', fixing the following action as the terminal step of the one authorized linear order, after the clockwise turn.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop skill with empty parameters {}; it is the fourth and final step, depending on the preceding turn. No duration, condition or timing is specified, and none may be invented.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly four actions are requested and each appears once: counterclockwise turn 30 degrees, forward walk 6 m, clockwise turn 30 degrees, and stop. No clause adds a fifth action, repeats an action, or replaces one action with another; 再 ('then') continues the sequence rather than adding a duplicate.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先 (first), 接着 (next), 再 (then), 最后 (finally) impose one exact linear execution order: turn +30, walk 6 m, turn -30, stop. No alternative or partially ordered reading is permitted, and there is no simultaneity or waiting relation.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, negation or replacement clause appears anywhere in the source; every instruction stands as originally stated, so there is nothing whose scope must be determined.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, loop, 'again' or repeated span is expressed. The adverb 再 here means sequential 'then', not repetition, so each of the four actions is executed exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Every action is stated with its own explicit skill and parameter; no pronouns, ordinals referring to earlier items, or omitted shared arguments occur. Each action's referent is self-contained, so no external context is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence is strictly consecutive with no before/after concurrency, waiting, delays or completion conditions: 先 then 接着 then 再 then 最后 yields a single linear four-step order that the depends_on chain represents exactly.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no relation unresolved: order, count, parameters and termination are all explicit. 停止 is a plain stop with no duration or condition, and in particular no vague duration is stated that would require defaulting.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_d99c81b0-0d28-47df-8eeb-1a49747ab2ff",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 158,
+      "input_tokens_details": {
+        "cached_tokens": 1152
+      },
+      "output_tokens": 1507,
+      "output_tokens_details": {
+        "reasoning_tokens": 383
+      },
+      "total_tokens": 2817
+    }
+  },
+  "request_sha256": "3f9412263b4c46409afabd1da7ace35d8156ab66db26a90c4615ad3a1884a394",
+  "status": "SUCCESS"
+}

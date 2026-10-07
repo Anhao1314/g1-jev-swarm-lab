@@ -1,0 +1,357 @@
+{
+  "added_wall_s": 18.14370599999893,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 18.139725500001077,
+        "provider_document": {
+          "created_at": 1791359778,
+          "id": "resp_689990bd-03eb-4cc6-beeb-54a7cd4b8a89",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_689990bd-03eb-4cc6-beeb-54a7cd4b8a89",
+              "reasoning_content": "We need answer exactly JSON object. Need derive plan. Need analyze source. Source Chinese: \"先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\"\n\nWe need parse. It defines 甲 and 乙? \"先做甲，再做乙。\" First do 甲, then do 乙. Then definitions: 甲 is stand two seconds then turn left 60 degrees; 乙 is walk forward ten meters then stop. Need consider action multiplicity/order/reference etc. Essentially sequence: stand 2s, turn left 60°, walk_forward 10m, stop. Candidate matches. Need produce coverage exactly concatenating whole source. Dimensions likely all UNIQUE. Need ensure no ambiguity.\n\nLet's inspect all clauses:\n- \"先做甲，再做乙。\" means first do A, then do B. Order relation defines A before B. A/B are placeholders resolved by subsequent definitions. Is there ambiguity? \"甲是站两秒接着左转六十度；乙是前进十米接着停止。\" Definitions: A = stand 2 sec then turn left 60 deg; B = walk_forward 10 m then stop. Semicolon separates definitions. \"接着\" means then/next. Within each, sequence. Overall sequence A internal then B internal = stand, turn, walk, stop. Unique.\n\nNeed coverage split meaningful spans exactly. Need text values concatenated exactly entire original source. We can split into arbitrary spans but must cover exact. Need roles. Should include punctuation? We can include punctuation with span or as SEPARATOR. Need every action, relation, edit clause. There are no edits. Need \"先做甲，再做乙。\" maybe split:\n1 \"先做甲，\" ACTION? Or RELATION? It describes first do A. Maybe ACTION (ref to group) and order relation.\n2 \"再做乙。\" ACTION/RELATION.\n3 \"甲是站两秒接着左转六十度；\" ACTION/RELATION/definition.\n4 \"乙是前进十米接着停止。\" ACTION/RELATION/definition.\n\nNeed every explanation nonempty. Need no omission. Could split into smaller spans:\n- \"先做甲，\" ACTION? It requests A first.\n- \"再做乙。\" ACTION? It requests B after.\n- \"甲是\" CONTEXT? Defines A.\n- \"站两秒\" ACTION + QUANTITY.\n- \"接着\" RELATION.\n- \"左转六十度\" ACTION + QUANTITY.\n- \"；\" SEPARATOR.\n- \"乙是\" CONTEXT\n- \"前进十米\" ACTION + QUANTITY\n- \"接着\" RELATION\n- \"停止。\" ACTION.\nNeed concatenate exactly. Let's ensure exact string. The source: 先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\n\nLet's index chars: 先 做 甲 ， 再 做 乙 。 甲 是 站 两 秒 接 着 左 转 六 十 度 ； 乙 是 前 进 十 米 接 着 停 止 。\nIf split as above:\n\"先做甲，\" = 先做甲，\n\"再做乙。\" = 再做乙。\n\"甲是\" = 甲是\n\"站两秒\" = 站两秒\n\"接着\" = 接着\n\"左转六十度\" = 左转六十度\n\"；\" = ；\n\"乙是\" = 乙是\n\"前进十米\" = 前进十米\n\"接着\" = 接着\n\"停止。\" = 停止。\nConcatenate: 先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。 Yes.\n\nNeed role for each. The guidance roles: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. For \"先做甲，\" maybe ACTION? It says first do A, references group. But if \"甲\" definition later, action maybe group reference/action request. Explanation: orders group A before B; resolved by 甲 definition. \"再做乙。\" also ACTION/RELATION? It requests B after A. \"甲是\" CONTEXT? It introduces definition of A. It is a label/definition, nonexecuting but resolves references. \"站两秒\" ACTION with duration. \"接着\" RELATION. \"左转六十度\" ACTION with turn. \"；\" separator. \"乙是\" context. \"前进十米\" action. \"接着\" relation. \"停止。\" action.\n\nCould combine \"甲是站两秒接着左转六十度；\" as ACTION? But coverage needs every relation. Let's do detailed.\n\nDimensions:\n- action_multiplicity UNIQUE: four executable actions: stand, turn, walk_forward, stop. 甲 and 乙 are macro/group refs, each defines two actions, no add/repeat. We account both definitions. Candidate has four.\n- action_order UNIQUE: 先 A 再 B; inside A 站两秒接着左转; inside B 前进接着停止. Exact linear: stand, turn, walk, stop.\n- correction_scope UNIQUE/inapplicable: no edits/corrections. If inapplicable, status UNIQUE? The instruction says UNIQUE means source resolves this dimension, or it is inapplicable and introduces no alternative. So UNIQUE with explanation no corrections.\n- repetition_scope UNIQUE: no repetitions specified; each action once.\n- reference_resolution UNIQUE: 甲/乙 placeholders resolved by definitions; pronouns? \"甲是...\" defines exactly. \"乙是...\" defines exactly. \"接着\" sequential relation.\n- temporal_relations UNIQUE: 先...再..., 接着 within groups. Single linear order no timing beyond stand duration. \"站两秒\" duration exactly 2.0. \"左转六十度\" positive 60 deg; max <=180. \"前进十米\" 10 m. stop.\n- unresolved_relations UNIQUE: no explicit unresolved choices.\n\nNeed plan JSON:\nsteps:\ns1 stand parameters duration_s 2.0 depends_on []\ns2 turn angle_deg 60.0 depends_on [\"s1\"]\ns3 walk_forward distance_m 10.0 depends_on [\"s2\"]\ns4 stop parameters {} depends_on [\"s3\"]\nNo mission_id needed? The output step schema exactly id, skill, parameters, depends_on. authorized_plan list. Could include no mission_id. They specified authorized_plan is complete list. Maybe overall JSON only status, coverage, dimensions, authorized_plan. No schema_version. Need no extra fields. Good.\n\nNeed decide status AUTHORIZED_UNIQUE. candidate matches.\n\nNeed ensure coverage text values concatenated exactly equal entire original source. We can include exact Chinese punctuation. Need not include extra spaces. The source JSON string has no spaces except none. Let's ensure no missing quoting? We'll produce JSON with unicode Chinese. Need escape? JSON allows Chinese. Need quotes. For \"coverage\": list objects with exactly text role explanation. Explanations nonempty. Need include complete source. Let's verify text concatenation manually.\n\nCoverage:\n[\n{\"text\":\"先做甲，\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.\"},\n{\"text\":\"再做乙。\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.\"},\n{\"text\":\"甲是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.\"},\n{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the left turn immediately after the stand within group 甲.\"},\n{\"text\":\"左转六十度\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.\"},\n{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.\"},\n{\"text\":\"乙是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.\"},\n{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"Specifies walking forward ten meters, so distance_m is 10.0.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders stop immediately after walk_forward within group 乙.\"},\n{\"text\":\"停止。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final stop action; the period is sentence punctuation with no executable effect.\"}\n]\nConcatenate:\n先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\nLet's check: \"先做甲，\" + \"再做乙。\" = \"先做甲，再做乙。\"; + \"甲是\" = \"先做甲，再做乙。甲是\"; + \"站两秒\" = \"...甲是站两秒\"; + \"接着\" = \"...站两秒接着\"; + \"左转六十度\" = \"...接着左转六十度\"; + \"；\" = full before乙; + \"乙是\" = \"；乙是\"; + \"前进十米\" = \"乙是前进十米\"; + \"接着\" = \"...前进十米接着\"; + \"停止。\" = \"...接着停止。\". Yes.\n\nNeed maybe \"先做甲，\" role could be RELATION? It contains action request. \"再做乙。\" maybe relation too. But roles don't matter except semantic. Could be ACTION for group action. \"先\" and \"再\" establish temporal relation; role maybe RELATION. But role choices allowed. Need \"every action, relation and edit clause\". If role ACTION for \"先做甲\" includes the relation. But maybe better split \"先做甲，\" as ACTION with explanation includes order. The role field is one of allowed. It's okay.\n\nPotential issue: \"甲是站两秒接着左转六十度\" Could \"站两秒\" be stand duration exactly 2, yes. Chinese \"两\" = 2. \"六十\" = 60. \"十\" = 10. Left positive.\n\nNeed consider \"先做甲，再做乙。甲是...\" Does \"先做甲\" itself a request to do A; \"甲是...\" defines A. The source might be interpreted as two sentences: first \"Do A first, then do B.\" Then \"A is stand...\" Could there be no explicit action \"do A\" beyond definition? But yes. Unique.\n\nPotential hidden issue: \"甲是站两秒接着左转六十度；乙是前进十米接着停止。\" The semicolon separates. \"接着\" could be ambiguous as \"then\" vs \"next to\"? In Chinese \"接着\" means then/continue. In this context sequential. Unique.\n\nPotential hidden issue: action order across groups: \"先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\" Does \"甲\" and \"乙\" definitions order imply all actions of A then all of B? \"先做甲，再做乙\" means execute A then B. Within A, stand then turn. Within B, walk then stop. So linear. Unique.\n\nPotential issue: \"先做甲，再做乙\" maybe \"先做甲\" and \"再做乙\" are two actions, but then definitions \"甲是...\" maybe not separate actions but definitions. Our plan treats them as four. Good.\n\nNeed output exactly JSON no markdown. No code fences.\n\nLet's craft JSON with dimensions exactly seven keys. Each dimension object has status and explanation. Need status values. For correction_scope UNIQUE because no correction. The explanation should mention no edit clauses, so no earlier instruction replaced or preserved beyond definitions. Repetition_scope UNIQUE no repetition. Reference_resolution UNIQUE. temporal_relations UNIQUE. unresolved_relations UNIQUE.\n\nNeed ensure \"dimensions has exactly the seven dimension names above.\" So keys: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed not include \"coverage\" maybe nonempty list. Good.\n\nPotential problem: \"authorized_plan is null for AMBIGUOUS or UNKNOWN. For AUTHORIZED_UNIQUE it is complete source-derived list.\" Good.\n\nLet's consider if candidate IR has mission_id, schema_version; our output doesn't include those. They said output keys exactly status, coverage, dimensions, authorized_plan. authorized_plan steps each exactly id, skill, parameters, depends_on. No mission_id needed. Fine.\n\nNeed maybe include \"stop\" parameters exactly {}. Good.\n\nLet's formulate explanations concise but sufficient.\n\nDouble-check JSON validity with Chinese. Use normal double quotes. Need escape? No internal quotes in explanations. Use \"2.0\" number. 60.0, 10.0.\n\nPotential issue: \"左转六十度\" maximum abs angle 180, nonzero. Good.\n\nPotential issue: \"站两秒\" stand duration at most 60 and positive. 2.\n\nPotential issue: Plan contains 1 to 32 steps. 4 steps. IDs s1..s4. First depends_on []. Later exactly previous. Good.\n\nLet's final. Ensure no markdown.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON object. Need derive plan. Need analyze source. Source Chinese: \"先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\"\n\nWe need parse. It defines 甲 and 乙? \"先做甲，再做乙。\" First do 甲, then do 乙. Then definitions: 甲 is stand two seconds then turn left 60 degrees; 乙 is walk forward ten meters then stop. Need consider action multiplicity/order/reference etc. Essentially sequence: stand 2s, turn left 60°, walk_forward 10m, stop. Candidate matches. Need produce coverage exactly concatenating whole source. Dimensions likely all UNIQUE. Need ensure no ambiguity.\n\nLet's inspect all clauses:\n- \"先做甲，再做乙。\" means first do A, then do B. Order relation defines A before B. A/B are placeholders resolved by subsequent definitions. Is there ambiguity? \"甲是站两秒接着左转六十度；乙是前进十米接着停止。\" Definitions: A = stand 2 sec then turn left 60 deg; B = walk_forward 10 m then stop. Semicolon separates definitions. \"接着\" means then/next. Within each, sequence. Overall sequence A internal then B internal = stand, turn, walk, stop. Unique.\n\nNeed coverage split meaningful spans exactly. Need text values concatenated exactly entire original source. We can split into arbitrary spans but must cover exact. Need roles. Should include punctuation? We can include punctuation with span or as SEPARATOR. Need every action, relation, edit clause. There are no edits. Need \"先做甲，再做乙。\" maybe split:\n1 \"先做甲，\" ACTION? Or RELATION? It describes first do A. Maybe ACTION (ref to group) and order relation.\n2 \"再做乙。\" ACTION/RELATION.\n3 \"甲是站两秒接着左转六十度；\" ACTION/RELATION/definition.\n4 \"乙是前进十米接着停止。\" ACTION/RELATION/definition.\n\nNeed every explanation nonempty. Need no omission. Could split into smaller spans:\n- \"先做甲，\" ACTION? It requests A first.\n- \"再做乙。\" ACTION? It requests B after.\n- \"甲是\" CONTEXT? Defines A.\n- \"站两秒\" ACTION + QUANTITY.\n- \"接着\" RELATION.\n- \"左转六十度\" ACTION + QUANTITY.\n- \"；\" SEPARATOR.\n- \"乙是\" CONTEXT\n- \"前进十米\" ACTION + QUANTITY\n- \"接着\" RELATION\n- \"停止。\" ACTION.\nNeed concatenate exactly. Let's ensure exact string. The source: 先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\n\nLet's index chars: 先 做 甲 ， 再 做 乙 。 甲 是 站 两 秒 接 着 左 转 六 十 度 ； 乙 是 前 进 十 米 接 着 停 止 。\nIf split as above:\n\"先做甲，\" = 先做甲，\n\"再做乙。\" = 再做乙。\n\"甲是\" = 甲是\n\"站两秒\" = 站两秒\n\"接着\" = 接着\n\"左转六十度\" = 左转六十度\n\"；\" = ；\n\"乙是\" = 乙是\n\"前进十米\" = 前进十米\n\"接着\" = 接着\n\"停止。\" = 停止。\nConcatenate: 先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。 Yes.\n\nNeed role for each. The guidance roles: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. For \"先做甲，\" maybe ACTION? It says first do A, references group. But if \"甲\" definition later, action maybe group reference/action request. Explanation: orders group A before B; resolved by 甲 definition. \"再做乙。\" also ACTION/RELATION? It requests B after A. \"甲是\" CONTEXT? It introduces definition of A. It is a label/definition, nonexecuting but resolves references. \"站两秒\" ACTION with duration. \"接着\" RELATION. \"左转六十度\" ACTION with turn. \"；\" separator. \"乙是\" context. \"前进十米\" action. \"接着\" relation. \"停止。\" action.\n\nCould combine \"甲是站两秒接着左转六十度；\" as ACTION? But coverage needs every relation. Let's do detailed.\n\nDimensions:\n- action_multiplicity UNIQUE: four executable actions: stand, turn, walk_forward, stop. 甲 and 乙 are macro/group refs, each defines two actions, no add/repeat. We account both definitions. Candidate has four.\n- action_order UNIQUE: 先 A 再 B; inside A 站两秒接着左转; inside B 前进接着停止. Exact linear: stand, turn, walk, stop.\n- correction_scope UNIQUE/inapplicable: no edits/corrections. If inapplicable, status UNIQUE? The instruction says UNIQUE means source resolves this dimension, or it is inapplicable and introduces no alternative. So UNIQUE with explanation no corrections.\n- repetition_scope UNIQUE: no repetitions specified; each action once.\n- reference_resolution UNIQUE: 甲/乙 placeholders resolved by definitions; pronouns? \"甲是...\" defines exactly. \"乙是...\" defines exactly. \"接着\" sequential relation.\n- temporal_relations UNIQUE: 先...再..., 接着 within groups. Single linear order no timing beyond stand duration. \"站两秒\" duration exactly 2.0. \"左转六十度\" positive 60 deg; max <=180. \"前进十米\" 10 m. stop.\n- unresolved_relations UNIQUE: no explicit unresolved choices.\n\nNeed plan JSON:\nsteps:\ns1 stand parameters duration_s 2.0 depends_on []\ns2 turn angle_deg 60.0 depends_on [\"s1\"]\ns3 walk_forward distance_m 10.0 depends_on [\"s2\"]\ns4 stop parameters {} depends_on [\"s3\"]\nNo mission_id needed? The output step schema exactly id, skill, parameters, depends_on. authorized_plan list. Could include no mission_id. They specified authorized_plan is complete list. Maybe overall JSON only status, coverage, dimensions, authorized_plan. No schema_version. Need no extra fields. Good.\n\nNeed decide status AUTHORIZED_UNIQUE. candidate matches.\n\nNeed ensure coverage text values concatenated exactly equal entire original source. We can include exact Chinese punctuation. Need not include extra spaces. The source JSON string has no spaces except none. Let's ensure no missing quoting? We'll produce JSON with unicode Chinese. Need escape? JSON allows Chinese. Need quotes. For \"coverage\": list objects with exactly text role explanation. Explanations nonempty. Need include complete source. Let's verify text concatenation manually.\n\nCoverage:\n[\n{\"text\":\"先做甲，\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.\"},\n{\"text\":\"再做乙。\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.\"},\n{\"text\":\"甲是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.\"},\n{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the left turn immediately after the stand within group 甲.\"},\n{\"text\":\"左转六十度\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.\"},\n{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.\"},\n{\"text\":\"乙是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.\"},\n{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"Specifies walking forward ten meters, so distance_m is 10.0.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders stop immediately after walk_forward within group 乙.\"},\n{\"text\":\"停止。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final stop action; the period is sentence punctuation with no executable effect.\"}\n]\nConcatenate:\n先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\nLet's check: \"先做甲，\" + \"再做乙。\" = \"先做甲，再做乙。\"; + \"甲是\" = \"先做甲，再做乙。甲是\"; + \"站两秒\" = \"...甲是站两秒\"; + \"接着\" = \"...站两秒接着\"; + \"左转六十度\" = \"...接着左转六十度\"; + \"；\" = full before乙; + \"乙是\" = \"；乙是\"; + \"前进十米\" = \"乙是前进十米\"; + \"接着\" = \"...前进十米接着\"; + \"停止。\" = \"...接着停止。\". Yes.\n\nNeed maybe \"先做甲，\" role could be RELATION? It contains action request. \"再做乙。\" maybe relation too. But roles don't matter except semantic. Could be ACTION for group action. \"先\" and \"再\" establish temporal relation; role maybe RELATION. But role choices allowed. Need \"every action, relation and edit clause\". If role ACTION for \"先做甲\" includes the relation. But maybe better split \"先做甲，\" as ACTION with explanation includes order. The role field is one of allowed. It's okay.\n\nPotential issue: \"甲是站两秒接着左转六十度\" Could \"站两秒\" be stand duration exactly 2, yes. Chinese \"两\" = 2. \"六十\" = 60. \"十\" = 10. Left positive.\n\nNeed consider \"先做甲，再做乙。甲是...\" Does \"先做甲\" itself a request to do A; \"甲是...\" defines A. The source might be interpreted as two sentences: first \"Do A first, then do B.\" Then \"A is stand...\" Could there be no explicit action \"do A\" beyond definition? But yes. Unique.\n\nPotential hidden issue: \"甲是站两秒接着左转六十度；乙是前进十米接着停止。\" The semicolon separates. \"接着\" could be ambiguous as \"then\" vs \"next to\"? In Chinese \"接着\" means then/continue. In this context sequential. Unique.\n\nPotential hidden issue: action order across groups: \"先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\" Does \"甲\" and \"乙\" definitions order imply all actions of A then all of B? \"先做甲，再做乙\" means execute A then B. Within A, stand then turn. Within B, walk then stop. So linear. Unique.\n\nPotential issue: \"先做甲，再做乙\" maybe \"先做甲\" and \"再做乙\" are two actions, but then definitions \"甲是...\" maybe not separate actions but definitions. Our plan treats them as four. Good.\n\nNeed output exactly JSON no markdown. No code fences.\n\nLet's craft JSON with dimensions exactly seven keys. Each dimension object has status and explanation. Need status values. For correction_scope UNIQUE because no correction. The explanation should mention no edit clauses, so no earlier instruction replaced or preserved beyond definitions. Repetition_scope UNIQUE no repetition. Reference_resolution UNIQUE. temporal_relations UNIQUE. unresolved_relations UNIQUE.\n\nNeed ensure \"dimensions has exactly the seven dimension names above.\" So keys: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed not include \"coverage\" maybe nonempty list. Good.\n\nPotential problem: \"authorized_plan is null for AMBIGUOUS or UNKNOWN. For AUTHORIZED_UNIQUE it is complete source-derived list.\" Good.\n\nLet's consider if candidate IR has mission_id, schema_version; our output doesn't include those. They said output keys exactly status, coverage, dimensions, authorized_plan. authorized_plan steps each exactly id, skill, parameters, depends_on. No mission_id needed. Fine.\n\nNeed maybe include \"stop\" parameters exactly {}. Good.\n\nLet's formulate explanations concise but sufficient.\n\nDouble-check JSON validity with Chinese. Use normal double quotes. Need escape? No internal quotes in explanations. Use \"2.0\" number. 60.0, 10.0.\n\nPotential issue: \"左转六十度\" maximum abs angle 180, nonzero. Good.\n\nPotential issue: \"站两秒\" stand duration at most 60 and positive. 2.\n\nPotential issue: Plan contains 1 to 32 steps. 4 steps. IDs s1..s4. First depends_on []. Later exactly previous. Good.\n\nLet's final. Ensure no markdown.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先做甲，\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.\"},{\"text\":\"再做乙。\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.\"},{\"text\":\"甲是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the left turn immediately after the stand within group 甲.\"},{\"text\":\"左转六十度\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.\"},{\"text\":\"乙是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"Specifies walking forward ten meters, so distance_m is 10.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders stop immediately after walk_forward within group 乙.\"},{\"text\":\"停止。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final stop action; the period is sentence punctuation with no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source defines two groups, 甲 and 乙, and each group contains exactly two executable actions: 甲 = stand then left turn, 乙 = walk_forward then stop. No additional action is requested and no action is replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one exact linear order: 先做甲，再做乙 means group 甲 before group 乙; within 甲, 站两秒接着左转六十度 means stand then turn; within 乙, 前进十米接着停止 means walk_forward then stop. Thus the executable order is stand, turn, walk_forward, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no edit or correction clauses. The definitions of 甲 and 乙 resolve placeholders but do not replace any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated. Each action in 甲 and 乙 is specified once, so the plan contains exactly four steps without compression or duplication.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"甲 is resolved uniquely by the following clause 甲是站两秒接着左转六十度; 乙 is resolved uniquely by 乙是前进十米接着停止. The ordering words 先/再 and 接着 resolve to the stated sequential relations.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only sequential relations: group 甲 before group 乙, stand before left turn within 甲, and walk_forward before stop within 乙. This yields a single linear execution order without inventing waiting, events, or alternative timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, reference, or relation unresolved. All requested actions and their sequence are fixed by the definitions of 甲 and 乙.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_689990bd-03eb-4cc6-beeb-54a7cd4b8a89",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 418,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 3844,
+            "output_tokens_details": {
+              "reasoning_tokens": 2907
+            },
+            "total_tokens": 5158
+          }
+        },
+        "request_sha256": "b5d196330b5156e70d1dea7b47a13a1cbb898432b824898a6e57ef50ae5af12b",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 18.137851900002715,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_689990bd-03eb-4cc6-beeb-54a7cd4b8a89",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先做甲，\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.\"},{\"text\":\"再做乙。\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.\"},{\"text\":\"甲是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the left turn immediately after the stand within group 甲.\"},{\"text\":\"左转六十度\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.\"},{\"text\":\"乙是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"Specifies walking forward ten meters, so distance_m is 10.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders stop immediately after walk_forward within group 乙.\"},{\"text\":\"停止。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final stop action; the period is sentence punctuation with no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source defines two groups, 甲 and 乙, and each group contains exactly two executable actions: 甲 = stand then left turn, 乙 = walk_forward then stop. No additional action is requested and no action is replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one exact linear order: 先做甲，再做乙 means group 甲 before group 乙; within 甲, 站两秒接着左转六十度 means stand then turn; within 乙, 前进十米接着停止 means walk_forward then stop. Thus the executable order is stand, turn, walk_forward, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no edit or correction clauses. The definitions of 甲 and 乙 resolve placeholders but do not replace any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated. Each action in 甲 and 乙 is specified once, so the plan contains exactly four steps without compression or duplication.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"甲 is resolved uniquely by the following clause 甲是站两秒接着左转六十度; 乙 is resolved uniquely by 乙是前进十米接着停止. The ordering words 先/再 and 接着 resolve to the stated sequential relations.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only sequential relations: group 甲 before group 乙, stand before left turn within 甲, and walk_forward before stop within 乙. This yields a single linear execution order without inventing waiting, events, or alternative timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, reference, or relation unresolved. All requested actions and their sequence are fixed by the definitions of 甲 and 乙.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+        "usage": {
+          "input_tokens": 418,
+          "output_tokens": 3844,
+          "total_tokens": 5158
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.743547699999908,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 30,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 435,
+      "raw_response_sha256": "1e3040f7e3789160ec8bde9be5c8e4f0c1f99248cc7b2c7e78ac61b9a75707ac",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_e0b3cccb-99f4-409f-a0c8-b4f2966a286d",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 18.14285380000001,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 18.137851900002715,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先做甲，\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.\"},{\"text\":\"再做乙。\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.\"},{\"text\":\"甲是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the left turn immediately after the stand within group 甲.\"},{\"text\":\"左转六十度\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.\"},{\"text\":\"乙是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"Specifies walking forward ten meters, so distance_m is 10.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders stop immediately after walk_forward within group 乙.\"},{\"text\":\"停止。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final stop action; the period is sentence punctuation with no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source defines two groups, 甲 and 乙, and each group contains exactly two executable actions: 甲 = stand then left turn, 乙 = walk_forward then stop. No additional action is requested and no action is replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one exact linear order: 先做甲，再做乙 means group 甲 before group 乙; within 甲, 站两秒接着左转六十度 means stand then turn; within 乙, 前进十米接着停止 means walk_forward then stop. Thus the executable order is stand, turn, walk_forward, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no edit or correction clauses. The definitions of 甲 and 乙 resolve placeholders but do not replace any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated. Each action in 甲 and 乙 is specified once, so the plan contains exactly four steps without compression or duplication.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"甲 is resolved uniquely by the following clause 甲是站两秒接着左转六十度; 乙 is resolved uniquely by 乙是前进十米接着停止. The ordering words 先/再 and 接着 resolve to the stated sequential relations.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only sequential relations: group 甲 before group 乙, stand before left turn within 甲, and walk_forward before stop within 乙. This yields a single linear execution order without inventing waiting, events, or alternative timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, reference, or relation unresolved. All requested actions and their sequence are fixed by the definitions of 甲 and 乙.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+          "raw_response_sha256": "c7e80d2278afeed1921261517d9f7ab6cf6ae64d2069f8a4de7861a4d107c2b1",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_689990bd-03eb-4cc6-beeb-54a7cd4b8a89",
+          "source_aware": true,
+          "source_sha256": "cf76f09f0cafff80bef0d6615c8b545be8726bb0b86809d99e11d13549c0ac02",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 418,
+            "output_tokens": 3844,
+            "total_tokens": 5158
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 2.0
+                },
+                "skill": "stand"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "angle_deg": 60.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {
+                  "distance_m": 10.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s3"
+                ],
+                "id": "s4",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.",
+                "role": "ACTION",
+                "text": "先做甲，"
+              },
+              {
+                "explanation": "Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.",
+                "role": "ACTION",
+                "text": "再做乙。"
+              },
+              {
+                "explanation": "Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.",
+                "role": "CONTEXT",
+                "text": "甲是"
+              },
+              {
+                "explanation": "Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.",
+                "role": "ACTION",
+                "text": "站两秒"
+              },
+              {
+                "explanation": "Orders the left turn immediately after the stand within group 甲.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.",
+                "role": "ACTION",
+                "text": "左转六十度"
+              },
+              {
+                "explanation": "Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.",
+                "role": "CONTEXT",
+                "text": "乙是"
+              },
+              {
+                "explanation": "Specifies walking forward ten meters, so distance_m is 10.0.",
+                "role": "ACTION",
+                "text": "前进十米"
+              },
+              {
+                "explanation": "Orders stop immediately after walk_forward within group 乙.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Specifies the final stop action; the period is sentence punctuation with no executable effect.",
+                "role": "ACTION",
+                "text": "停止。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source defines two groups, 甲 and 乙, and each group contains exactly two executable actions: 甲 = stand then left turn, 乙 = walk_forward then stop. No additional action is requested and no action is replaced.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The source gives one exact linear order: 先做甲，再做乙 means group 甲 before group 乙; within 甲, 站两秒接着左转六十度 means stand then turn; within 乙, 前进十米接着停止 means walk_forward then stop. Thus the executable order is stand, turn, walk_forward, stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There are no edit or correction clauses. The definitions of 甲 and 乙 resolve placeholders but do not replace any earlier action or parameter.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "甲 is resolved uniquely by the following clause 甲是站两秒接着左转六十度; 乙 is resolved uniquely by 乙是前进十米接着停止. The ordering words 先/再 and 接着 resolve to the stated sequential relations.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition is stated. Each action in 甲 and 乙 is specified once, so the plan contains exactly four steps without compression or duplication.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies only sequential relations: group 甲 before group 乙, stand before left turn within 甲, and walk_forward before stop within 乙. This yields a single linear execution order without inventing waiting, events, or alternative timing.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any scope, order, reference, or relation unresolved. All requested actions and their sequence are fixed by the definitions of 甲 and 乙.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 225,
+        "output_tokens": 400,
+        "total_tokens": 2161
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 10.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先做甲再做乙,甲是站两秒接着左转六十度,乙是前进十米接着停止",
+    "status": "SUCCESS"
+  }
+}

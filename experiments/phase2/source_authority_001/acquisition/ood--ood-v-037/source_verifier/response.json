@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 13.887115100000301,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_febfcc28-2d51-4511-a40f-3085cd9655f4",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Identifies the first action as forward walking; it is later quantified by 10米.\"},{\"text\":\"10米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies distance_m 10.0 for the preceding walk_forward action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the walk instruction from the next clause; it does not change the action or parameters.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stand action as occurring after the walk_forward action.\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"Identifies the second action as standing; its duration is supplied by 5秒.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies duration_s 5.0 for the stand action, not for walking.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the stand instruction from the final clause; it has no executable effect.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stop action as the final step after standing.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Identifies the third action as stop with empty parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation separates the initial action sequence from the clarification; it does not alter execution.\"},{\"text\":\"站5秒是第二步，\",\"role\":\"EDIT\",\"explanation\":\"Clarifies that the already specified 5-second stand is step 2; it does not add a new stand action or change its duration.\"},{\"text\":\"不是给走路计时。\",\"role\":\"EDIT\",\"explanation\":\"Negates interpreting the 5 seconds as timing the walk; it preserves walk_forward 10米 and confirms the 5 seconds belongs to stand.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one walk_forward (往前走10米), one stand (站5秒), and one stop (停). The later phrase 站5秒是第二步... refers back to the same stand action and does not add a fourth action; 不是给走路计时 only negates attaching the 5 seconds to walking.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"再 sequences stand after walk, 最后 marks stop as final, and 第二步 explicitly identifies stand as step 2, giving walk_forward -> stand -> stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The edit clause 站5秒是第二步，不是给走路计时。 fixes the 5-second duration to the stand action and rejects reading it as walking duration; it preserves the prior walk distance 10米, stand duration 5秒, and final stop.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No instruction asks to repeat an action. The second occurrence of 站5秒 inside the edit is a reference to the same stand action, not a second execution.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"第二步 resolves to the stand action just described; 给走路计时 resolves to timing the walk_forward action and is negated. 再 and 最后 resolve the ordering references to the following actions.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear execution: walk_forward, then stand, then stop. It contains no simultaneous, waiting, or completion-dependent relation beyond sequential dependency.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not leave any action count, parameter attachment, order, or repetition unresolved; the edit resolves the only potential attachment ambiguity for 5秒.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+  "usage": {
+    "input_tokens": 385,
+    "output_tokens": 3197,
+    "total_tokens": 4478
+  }
+}

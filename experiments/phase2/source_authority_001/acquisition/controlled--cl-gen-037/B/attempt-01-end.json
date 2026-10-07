@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 2.4101573999978427,
+  "provider_document": {
+    "created_at": 1791360985,
+    "id": "resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+        "reasoning_content": "We need answer JSON only. Need parse Chinese: \"站立5秒然后前进六米接着向右转45度最后立即停止\"\n\nWe need Mission IR. Steps:\ns1 stand duration_s 5.0\ns2 walk_forward distance_m 6.0\ns3 turn angle_deg -45.0 (right negative)\ns4 stop {}\ndepends each previous.\n\nMission_id safe. Need choose e.g. \"mission-stand-walk-right-stop\". Must match regex. No extra text. Ensure exactly fields.\n\nNeed decide status SUCCESS. No ambiguity. \"立即停止\" stop. Good.\n\nNeed output JSON object with status mission error_code. Ensure no markdown. ",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse Chinese: \"站立5秒然后前进六米接着向右转45度最后立即停止\"\n\nWe need Mission IR. Steps:\ns1 stand duration_s 5.0\ns2 walk_forward distance_m 6.0\ns3 turn angle_deg -45.0 (right negative)\ns4 stop {}\ndepends each previous.\n\nMission_id safe. Need choose e.g. \"mission-stand-walk-right-stop\". Must match regex. No extra text. Ensure exactly fields.\n\nNeed decide status SUCCESS. No ambiguity. \"立即停止\" stop. Good.\n\nNeed output JSON object with status mission error_code. Ensure no markdown. ",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_cce1cf12-4fbf-44c9-8972-d348e079143c",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 214,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 288,
+      "output_tokens_details": {
+        "reasoning_tokens": 142
+      },
+      "total_tokens": 2038
+    }
+  },
+  "request_sha256": "538747b748bfbfc983a7dd4bdee6643b4afc775a96c2b1275da895879f11bc5e",
+  "status": "SUCCESS"
+}

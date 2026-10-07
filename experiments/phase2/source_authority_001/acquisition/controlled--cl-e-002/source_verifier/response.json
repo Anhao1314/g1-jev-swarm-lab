@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 10.239950399998634,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_26ba3301-9507-42f0-8421-ea5022a53df3",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the first action in the explicit sequence; it orders the turn before the later walk and stop actions and introduces no additional executable step.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies a turn action with left/counterclockwise direction, which maps to a positive turn angle under the compilation semantics.\"},{\"text\":\"90度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the turn magnitude as 90 degrees, so angle_deg is exactly 90.0 and is within the legal maximum absolute angle.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause punctuation separating the first action from the next relation; it has no executable effect.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action after the first one; together with the source sequence it places walk_forward after turn.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Specifies a forward walking action, which compiles to the walk_forward skill.\"},{\"text\":\"6米\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the forward distance as 6 meters, so distance_m is exactly 6.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause punctuation separating the walking action from the final relation; it has no executable effect.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the final action in the sequence, placing stop after both turn and walk_forward.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies a stop action, which compiles to the stop skill with empty parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it terminates the source and has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three actions: turn left 90 degrees, walk forward 6 meters, and stop. There are no corrections, replacements, or repetitions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 再, and 最后 establish exactly one linear order: turn first, walk_forward second, stop third.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement clause appears in the source, so no earlier instruction is changed or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker, so each of the three actions is performed exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers uniquely refer to positions in the stated order; turn receives left/90度, walk_forward receives 6米, and stop has no parameters.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The required temporal relation is a single sequential order with each later action following the previous one, representable by depends_on chain s1, s2, s3.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no unresolved choice, scope, order, or relation; the complete executable interpretation is fully specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+  "usage": {
+    "input_tokens": 250,
+    "output_tokens": 2163,
+    "total_tokens": 3437
+  }
+}

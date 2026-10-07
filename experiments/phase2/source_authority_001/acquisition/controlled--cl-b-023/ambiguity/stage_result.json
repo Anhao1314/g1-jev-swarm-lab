@@ -1,0 +1,264 @@
+{
+  "added_wall_s": 11.405544499997632,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 11.399847000000591,
+        "provider_document": {
+          "created_at": 1791360497,
+          "id": "resp_e0e31e1e-e011-4dbf-9357-c07479780119",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_e0e31e1e-e011-4dbf-9357-c07479780119",
+              "reasoning_content": "We need answer JSON. Need analyze source Chinese: \"向前移动6m，接着立即停止\" = move forward 6m, then immediately stop. Need decide seven dimensions. Likely unique. Need coverage split exact text into spans concatenating entire source. Source string: 向前移动6m，接着立即停止. Need split meaningful spans. Roles ACTION, RELATION, etc. Need preserve exact characters. Could split:\n- \"向前移动6m\" ACTION\n- \"，\" SEPARATOR\n- \"接着\" RELATION\n- \"立即\" maybe CONTEXT? It modifies timing? \"immediately\" maybe temporal relation. Could be RELATION? We need roles allowed. \n- \"停止\" ACTION\n\nNeed ensure concatenation equals entire original: \"向前移动6m，接着立即停止\". If split as above: \"向前移动6m\" + \"，\" + \"接着\" + \"立即\" + \"停止\" = exact. Good. Role for 立即 maybe RELATION? It indicates immediate continuation from stop, no wait. But \"接着立即停止\" perhaps relation \"then immediately stop\". We can have \"接着\" RELATION and \"立即\" CONTEXT? But context explanation nonexecuting? It modifies timing, not action. Better role RELATION for \"接着立即\"? Then stop ACTION. But split needs coverage every action relation editing clause. Could split \"接着立即\" as relation. But text \"接着立即\" includes adverb. Then stop action. That's okay. But \"立即\" itself could be quantity? no. It's temporal modifier. Use RELATION for \"接着立即\": establishes that stop occurs immediately after forwarding, with no intervening wait. Then stop ACTION. Then coverage: \"向前移动6m\" ACTION; \"，\" SEPARATOR; \"接着立即\" RELATION; \"停止\" ACTION. Concatenation exact.\n\nNeed dimensions:\naction_multiplicity: two actions: walk_forward 6m and stop. Account both. No repeated/replaced. UNIQUE.\naction_order: forward before stop. \"接着立即\" establishes sequence. UNIQUE.\ncorrection_scope: no edit/correction. Inapplicable, no alternative. UNIQUE.\nrepetition_scope: no repetition. Inapplicable. UNIQUE.\nreference_resolution: no pronouns/ordinal/omitted args. \"向前\" direction; distance explicit. \"停止\" no args. UNIQUE.\ntemporal_relations: exact linear order: walk then immediately stop. \"立即\" indicates no wait. Representable as s1 walk_forward distance_m 6, s2 stop. UNIQUE. Need consider \"立即\" vague? Is \"immediately\" an explicit vague duration? It is not duration. It doesn't require delay. It means no wait, contiguous. Legal IR can represent sequential steps. Should be unique.\nunresolved_relations: none explicitly unresolved. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object. Keys status, coverage, dimensions. dimensions object exactly seven names. Explanations nonempty.\n\nNeed be careful \"coverage text values concatenated in list order equal entire original source exactly\". Our split: [\"向前移动6m\",\"，\",\"接着立即\",\"停止\"]. Concatenate = \"向前移动6m，接着立即停止\" yes. Wait original has \"，\" comma Chinese. Good.\n\nNeed maybe include entire source as one span? But coverage list should split meaningful. Our split okay. Role for \"立即\" part in \"接着立即\" as RELATION. But then stop action separate. Good.\n\nLet's craft explanations.\n\nPotential issue: \"向前移动6m\" includes action + quantity. Role ACTION but quantity included. That's fine. But coverage says every action, relation, editing clause considered. Quantity maybe distance. We can maybe split \"向前移动\" ACTION, \"6m\" QUANTITY, \"，\" SEPARATOR, \"接着立即\" RELATION, \"停止\" ACTION. Concatenate: \"向前移动\" + \"6m\" + \"，\" + \"接着立即\" + \"停止\" = exact. This better distinguishes quantity. But \"向前移动\" action without distance; quantity \"6m\" supplies. Is that okay? Yes. But action word alone plus quantity. Role ACTION: forward move. QUANTITY: positive finite 6 meters. RELATION: then immediately. ACTION: stop. This is more complete. Need ensure no omitted shared args. Reference_resolution maybe \"向前移动\" omitted direction? Actually \"向前\" means forward. It is part of action and resolves direction. \"6m\" quantity. Good.\n\nLet's use split:\n1 \"向前移动\" ACTION\n2 \"6m\" QUANTITY\n3 \"，\" SEPARATOR\n4 \"接着立即\" RELATION\n5 \"停止\" ACTION\n\nConcatenation exact: 向前移动6m，接着立即停止. Yes.\n\nNeed explain \"向前移动\" action: walk_forward action; direction is forward; distance supplied by following quantity 6m. But in IR, action only walk_forward requires distance. Good.\n\n\"6m\": quantity: explicit positive finite distance 6 meters; not vague. It is the distance_m argument for preceding walk_forward.\n\n\"，\": separator punctuation between clauses; no authority modification.\n\n\"接着立即\": relation: establishes second action follows first immediately, no wait or intervening event; also gives exact linear order. Does \"立即\" perhaps ambiguous? It doesn't specify exact time but \"immediately\" means no explicit wait. The IR steps depend sequentially, so representable. Is there any ambiguity about whether stop occurs immediately after completing 6m or begins immediately after start? Chinese \"向前移动6m，接着立即停止\": move forward 6m, then immediately stop. Clearly after completion. Unique. \"立即\" not duration. Good.\n\n\"停止\": stop action, no params. \n\nDimensions explanations. Need mention action_multiplicity: exactly two actions, no replacement. \"移动\" and \"停止\" distinct. \"向前\" modifies move direction not separate action. Quantity not action. No repetition.\naction_order: forward then stop due \"接着立即\"; no alternative order.\ncorrection_scope: no correction/edit markers. No prior instruction replaced/preserved.\nrepetition_scope: no repetition markers; one instance of each action; \"立即\" not repetition.\nreference_resolution: all arguments local: forward direction from 向前; distance from 6m; stop no params. No pronouns/ordinals/omitted shared args.\ntemporal_relations: sequential linear: s1 walk_forward 6m then s2 stop immediately. \"立即\" means no wait; sequential dependency represents. No simultaneity/waiting. \nunresolved_relations: none; all relations resolved.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure JSON valid, no markdown. Use double quotes. Chinese characters okay. Need no extra fields. \"coverage\" nonempty list. \"dimensions\" exactly seven names.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON. Need analyze source Chinese: \"向前移动6m，接着立即停止\" = move forward 6m, then immediately stop. Need decide seven dimensions. Likely unique. Need coverage split exact text into spans concatenating entire source. Source string: 向前移动6m，接着立即停止. Need split meaningful spans. Roles ACTION, RELATION, etc. Need preserve exact characters. Could split:\n- \"向前移动6m\" ACTION\n- \"，\" SEPARATOR\n- \"接着\" RELATION\n- \"立即\" maybe CONTEXT? It modifies timing? \"immediately\" maybe temporal relation. Could be RELATION? We need roles allowed. \n- \"停止\" ACTION\n\nNeed ensure concatenation equals entire original: \"向前移动6m，接着立即停止\". If split as above: \"向前移动6m\" + \"，\" + \"接着\" + \"立即\" + \"停止\" = exact. Good. Role for 立即 maybe RELATION? It indicates immediate continuation from stop, no wait. But \"接着立即停止\" perhaps relation \"then immediately stop\". We can have \"接着\" RELATION and \"立即\" CONTEXT? But context explanation nonexecuting? It modifies timing, not action. Better role RELATION for \"接着立即\"? Then stop ACTION. But split needs coverage every action relation editing clause. Could split \"接着立即\" as relation. But text \"接着立即\" includes adverb. Then stop action. That's okay. But \"立即\" itself could be quantity? no. It's temporal modifier. Use RELATION for \"接着立即\": establishes that stop occurs immediately after forwarding, with no intervening wait. Then stop ACTION. Then coverage: \"向前移动6m\" ACTION; \"，\" SEPARATOR; \"接着立即\" RELATION; \"停止\" ACTION. Concatenation exact.\n\nNeed dimensions:\naction_multiplicity: two actions: walk_forward 6m and stop. Account both. No repeated/replaced. UNIQUE.\naction_order: forward before stop. \"接着立即\" establishes sequence. UNIQUE.\ncorrection_scope: no edit/correction. Inapplicable, no alternative. UNIQUE.\nrepetition_scope: no repetition. Inapplicable. UNIQUE.\nreference_resolution: no pronouns/ordinal/omitted args. \"向前\" direction; distance explicit. \"停止\" no args. UNIQUE.\ntemporal_relations: exact linear order: walk then immediately stop. \"立即\" indicates no wait. Representable as s1 walk_forward distance_m 6, s2 stop. UNIQUE. Need consider \"立即\" vague? Is \"immediately\" an explicit vague duration? It is not duration. It doesn't require delay. It means no wait, contiguous. Legal IR can represent sequential steps. Should be unique.\nunresolved_relations: none explicitly unresolved. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object. Keys status, coverage, dimensions. dimensions object exactly seven names. Explanations nonempty.\n\nNeed be careful \"coverage text values concatenated in list order equal entire original source exactly\". Our split: [\"向前移动6m\",\"，\",\"接着立即\",\"停止\"]. Concatenate = \"向前移动6m，接着立即停止\" yes. Wait original has \"，\" comma Chinese. Good.\n\nNeed maybe include entire source as one span? But coverage list should split meaningful. Our split okay. Role for \"立即\" part in \"接着立即\" as RELATION. But then stop action separate. Good.\n\nLet's craft explanations.\n\nPotential issue: \"向前移动6m\" includes action + quantity. Role ACTION but quantity included. That's fine. But coverage says every action, relation, editing clause considered. Quantity maybe distance. We can maybe split \"向前移动\" ACTION, \"6m\" QUANTITY, \"，\" SEPARATOR, \"接着立即\" RELATION, \"停止\" ACTION. Concatenate: \"向前移动\" + \"6m\" + \"，\" + \"接着立即\" + \"停止\" = exact. This better distinguishes quantity. But \"向前移动\" action without distance; quantity \"6m\" supplies. Is that okay? Yes. But action word alone plus quantity. Role ACTION: forward move. QUANTITY: positive finite 6 meters. RELATION: then immediately. ACTION: stop. This is more complete. Need ensure no omitted shared args. Reference_resolution maybe \"向前移动\" omitted direction? Actually \"向前\" means forward. It is part of action and resolves direction. \"6m\" quantity. Good.\n\nLet's use split:\n1 \"向前移动\" ACTION\n2 \"6m\" QUANTITY\n3 \"，\" SEPARATOR\n4 \"接着立即\" RELATION\n5 \"停止\" ACTION\n\nConcatenation exact: 向前移动6m，接着立即停止. Yes.\n\nNeed explain \"向前移动\" action: walk_forward action; direction is forward; distance supplied by following quantity 6m. But in IR, action only walk_forward requires distance. Good.\n\n\"6m\": quantity: explicit positive finite distance 6 meters; not vague. It is the distance_m argument for preceding walk_forward.\n\n\"，\": separator punctuation between clauses; no authority modification.\n\n\"接着立即\": relation: establishes second action follows first immediately, no wait or intervening event; also gives exact linear order. Does \"立即\" perhaps ambiguous? It doesn't specify exact time but \"immediately\" means no explicit wait. The IR steps depend sequentially, so representable. Is there any ambiguity about whether stop occurs immediately after completing 6m or begins immediately after start? Chinese \"向前移动6m，接着立即停止\": move forward 6m, then immediately stop. Clearly after completion. Unique. \"立即\" not duration. Good.\n\n\"停止\": stop action, no params. \n\nDimensions explanations. Need mention action_multiplicity: exactly two actions, no replacement. \"移动\" and \"停止\" distinct. \"向前\" modifies move direction not separate action. Quantity not action. No repetition.\naction_order: forward then stop due \"接着立即\"; no alternative order.\ncorrection_scope: no correction/edit markers. No prior instruction replaced/preserved.\nrepetition_scope: no repetition markers; one instance of each action; \"立即\" not repetition.\nreference_resolution: all arguments local: forward direction from 向前; distance from 6m; stop no params. No pronouns/ordinals/omitted shared args.\ntemporal_relations: sequential linear: s1 walk_forward 6m then s2 stop immediately. \"立即\" means no wait; sequential dependency represents. No simultaneity/waiting. \nunresolved_relations: none; all relations resolved.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure JSON valid, no markdown. Use double quotes. Chinese characters okay. Need no extra fields. \"coverage\" nonempty list. \"dimensions\" exactly seven names.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"指定一个向前行走动作，对应唯一的 walk_forward 动作；其方向由“向前”确定，距离参数由后续的“6m”提供。\"},{\"text\":\"6m\",\"role\":\"QUANTITY\",\"explanation\":\"明确给出正有限距离 6 米，作为前一行走动作的 distance_m 参数，不是模糊时长。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个动作子句的标点，不改变动作内容，也不引入额外动作或关系。\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"明确建立前后顺序关系：第二个动作紧接第一个动作之后发生，且没有等待或中间事件；它把停止动作放在行走动作之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"指定一个停止动作，对应唯一的 stop 动作；stop 不接受参数，因此没有需要额外解析的参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好包含两个可执行动作：向前移动和停止。“向前”是移动方向而不是独立动作，“6m”是距离量而不是动作；没有替换、编辑或重复导致额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“接着立即”明确要求先完成向前移动 6 米，然后立即停止，因此只有一种执行顺序：walk_forward 在前，stop 在后。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有更正、替换或编辑标记；没有先前指令需要被修改、替换或保留，因此该维度不引入其他解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；“向前移动”和“停止”各出现一次，“立即”表示时序而非重复，因此不存在被重复的跨度或次数歧义。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"所有引用都在源内可解析：移动方向由“向前”给出，距离由“6m”给出，停止动作无参数；没有代词、序数引用或省略共享参数需要外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"唯一线性顺序为：第一步向前移动 6 米，第二步停止； “接着立即”表示停止紧接移动之后，无需等待或并发，可由依赖前一步的逐步线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；两个动作、距离参数和前后顺序均已确定。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_e0e31e1e-e011-4dbf-9357-c07479780119",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 144,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2014,
+            "output_tokens_details": {
+              "reasoning_tokens": 1441
+            },
+            "total_tokens": 2926
+          }
+        },
+        "request_sha256": "636178fda38aa7f1ca652e408e1e4ce10fbeadb9a5e2c9d06efe5cf776ce6189",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 11.39829760000066,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e0e31e1e-e011-4dbf-9357-c07479780119",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"指定一个向前行走动作，对应唯一的 walk_forward 动作；其方向由“向前”确定，距离参数由后续的“6m”提供。\"},{\"text\":\"6m\",\"role\":\"QUANTITY\",\"explanation\":\"明确给出正有限距离 6 米，作为前一行走动作的 distance_m 参数，不是模糊时长。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个动作子句的标点，不改变动作内容，也不引入额外动作或关系。\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"明确建立前后顺序关系：第二个动作紧接第一个动作之后发生，且没有等待或中间事件；它把停止动作放在行走动作之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"指定一个停止动作，对应唯一的 stop 动作；stop 不接受参数，因此没有需要额外解析的参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好包含两个可执行动作：向前移动和停止。“向前”是移动方向而不是独立动作，“6m”是距离量而不是动作；没有替换、编辑或重复导致额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“接着立即”明确要求先完成向前移动 6 米，然后立即停止，因此只有一种执行顺序：walk_forward 在前，stop 在后。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有更正、替换或编辑标记；没有先前指令需要被修改、替换或保留，因此该维度不引入其他解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；“向前移动”和“停止”各出现一次，“立即”表示时序而非重复，因此不存在被重复的跨度或次数歧义。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"所有引用都在源内可解析：移动方向由“向前”给出，距离由“6m”给出，停止动作无参数；没有代词、序数引用或省略共享参数需要外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"唯一线性顺序为：第一步向前移动 6 米，第二步停止； “接着立即”表示停止紧接移动之后，无需等待或并发，可由依赖前一步的逐步线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；两个动作、距离参数和前后顺序均已确定。\"}}}",
+        "usage": {
+          "input_tokens": 144,
+          "output_tokens": 2014,
+          "total_tokens": 2926
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.970617899998615,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-walk6-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 12,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-walk6-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "12b7a63803a228ae4622cfada367af9b4c31901aaa3872dd204c0cce11c8c72b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b868ed79-4e0e-4468-b132-72b9cc2517fc",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 11.404831799998647,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 11.39829760000066,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"指定一个向前行走动作，对应唯一的 walk_forward 动作；其方向由“向前”确定，距离参数由后续的“6m”提供。\"},{\"text\":\"6m\",\"role\":\"QUANTITY\",\"explanation\":\"明确给出正有限距离 6 米，作为前一行走动作的 distance_m 参数，不是模糊时长。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个动作子句的标点，不改变动作内容，也不引入额外动作或关系。\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"明确建立前后顺序关系：第二个动作紧接第一个动作之后发生，且没有等待或中间事件；它把停止动作放在行走动作之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"指定一个停止动作，对应唯一的 stop 动作；stop 不接受参数，因此没有需要额外解析的参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好包含两个可执行动作：向前移动和停止。“向前”是移动方向而不是独立动作，“6m”是距离量而不是动作；没有替换、编辑或重复导致额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“接着立即”明确要求先完成向前移动 6 米，然后立即停止，因此只有一种执行顺序：walk_forward 在前，stop 在后。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有更正、替换或编辑标记；没有先前指令需要被修改、替换或保留，因此该维度不引入其他解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；“向前移动”和“停止”各出现一次，“立即”表示时序而非重复，因此不存在被重复的跨度或次数歧义。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"所有引用都在源内可解析：移动方向由“向前”给出，距离由“6m”给出，停止动作无参数；没有代词、序数引用或省略共享参数需要外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"唯一线性顺序为：第一步向前移动 6 米，第二步停止； “接着立即”表示停止紧接移动之后，无需等待或并发，可由依赖前一步的逐步线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；两个动作、距离参数和前后顺序均已确定。\"}}}",
+          "raw_response_sha256": "1470d9141aba33ab5aaa122390f006005b50aaa350d5ac9e9e62cba4bdc1f256",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_e0e31e1e-e011-4dbf-9357-c07479780119",
+          "source_aware": false,
+          "source_sha256": "a64317e25d88cff299d50f5aebefa3e75edc7b8e871d0c3365558f92c6ee9bc3",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 144,
+            "output_tokens": 2014,
+            "total_tokens": 2926
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "指定一个向前行走动作，对应唯一的 walk_forward 动作；其方向由“向前”确定，距离参数由后续的“6m”提供。",
+                "role": "ACTION",
+                "text": "向前移动"
+              },
+              {
+                "explanation": "明确给出正有限距离 6 米，作为前一行走动作的 distance_m 参数，不是模糊时长。",
+                "role": "QUANTITY",
+                "text": "6m"
+              },
+              {
+                "explanation": "分隔前后两个动作子句的标点，不改变动作内容，也不引入额外动作或关系。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "明确建立前后顺序关系：第二个动作紧接第一个动作之后发生，且没有等待或中间事件；它把停止动作放在行走动作之后。",
+                "role": "RELATION",
+                "text": "接着立即"
+              },
+              {
+                "explanation": "指定一个停止动作，对应唯一的 stop 动作；stop 不接受参数，因此没有需要额外解析的参数。",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源中恰好包含两个可执行动作：向前移动和停止。“向前”是移动方向而不是独立动作，“6m”是距离量而不是动作；没有替换、编辑或重复导致额外动作。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“接着立即”明确要求先完成向前移动 6 米，然后立即停止，因此只有一种执行顺序：walk_forward 在前，stop 在后。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有更正、替换或编辑标记；没有先前指令需要被修改、替换或保留，因此该维度不引入其他解释。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "所有引用都在源内可解析：移动方向由“向前”给出，距离由“6m”给出，停止动作无参数；没有代词、序数引用或省略共享参数需要外部上下文。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有重复标记；“向前移动”和“停止”各出现一次，“立即”表示时序而非重复，因此不存在被重复的跨度或次数歧义。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "唯一线性顺序为：第一步向前移动 6 米，第二步停止； “接着立即”表示停止紧接移动之后，无需等待或并发，可由依赖前一步的逐步线性计划表示。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源没有显式留下未决的选择、范围、顺序或关系；两个动作、距离参数和前后顺序均已确定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 207,
+        "output_tokens": 219,
+        "total_tokens": 1962
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-walk6-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "向前移动6m接着立即停止",
+    "status": "SUCCESS"
+  }
+}

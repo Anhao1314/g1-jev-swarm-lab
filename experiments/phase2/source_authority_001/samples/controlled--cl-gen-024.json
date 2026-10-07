@@ -1,0 +1,897 @@
+{
+  "B": {
+    "added_wall_s": 2.5476938000028895,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 2.5034052999981213,
+          "provider_document": {
+            "created_at": 1791360882,
+            "id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+                "reasoning_content": "We need answer JSON only. Need parse Chinese command: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止\n\nNeed produce Mission IR. Steps:\n- turn right 90 deg -> angle_deg -90.0\n- walk_forward 6.0 m\n- turn counter-clockwise 90 -> angle_deg +90.0\n- stop.\n\nSequential dependencies. mission_id path-safe. Need exact fields. No extra. Ensure status SUCCESS.\n\nCheck \"立即停止\" stop parameters {}.\n\nNeed order: s1 turn -90, s2 walk 6, s3 turn +90, s4 stop. depends_on previous.\n\nMission id e.g. \"cmd-turn-walk-turn-stop\". Valid [A-Za-z0-9][A-Za-z0-9._-]{0,63}, not ending dot. Good.\n\nReturn exactly JSON.",
+                "summary": [
+                  {
+                    "text": "We need answer JSON only. Need parse Chinese command: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止\n\nNeed produce Mission IR. Steps:\n- turn right 90 deg -> angle_deg -90.0\n- walk_forward 6.0 m\n- turn counter-clockwise 90 -> angle_deg +90.0\n- stop.\n\nSequential dependencies. mission_id path-safe. Need exact fields. No extra. Ensure status SUCCESS.\n\nCheck \"立即停止\" stop parameters {}.\n\nNeed order: s1 turn -90, s2 walk 6, s3 turn +90, s4 stop. depends_on previous.\n\nMission id e.g. \"cmd-turn-walk-turn-stop\". Valid [A-Za-z0-9][A-Za-z0-9._-]{0,63}, not ending dot. Good.\n\nReturn exactly JSON.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 218,
+              "input_tokens_details": {
+                "cached_tokens": 1536
+              },
+              "output_tokens": 335,
+              "output_tokens_details": {
+                "reasoning_tokens": 189
+              },
+              "total_tokens": 2089
+            }
+          },
+          "request_sha256": "89deb41b5b6d805e7fa1cf1765971f0bfff0dc80078c130aa149def073e8a63a",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 2.500938799999858,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+          "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+          "usage": {
+            "input_tokens": 218,
+            "output_tokens": 335,
+            "total_tokens": 2089
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_v1",
+        "attempts": 1,
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 2.500938799999858,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "cmd-turn-walk-turn-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 29,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+        "raw_response_sha256": "f90572840656e257b8852e96f09770969cfd5e3fb9c5b7ddfc8099ea14f401eb",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+        "route": "GUARDED_DIRECT_LLM",
+        "step_count": 4,
+        "usage": {
+          "input_tokens": 218,
+          "output_tokens": 335,
+          "total_tokens": 2089
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "cmd-turn-walk-turn-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "angle_deg": -90.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 6.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": 90.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "向右转90度然后前进6.0米接着逆时针转90度最后立即停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  },
+  "baseline_kind": "new_frozen_B_first_response",
+  "gate_order": [
+    "source_verifier",
+    "ambiguity"
+  ],
+  "sample": {
+    "baseline_recorded": null,
+    "expected_mission": {
+      "mission_id": "oracle-cl-gen-024",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "expected_status": "SUCCESS",
+    "family": "sequence_variant",
+    "population": "controlled",
+    "sample_id": "cl-gen-024",
+    "source": "向右转90度然后前进6.0米接着逆时针转90度最后立即停止",
+    "split": "already_seen_regression"
+  },
+  "treatments": {
+    "ambiguity": {
+      "added_wall_s": 13.32558330000029,
+      "live_evidence": {
+        "events": [
+          {
+            "index": 1,
+            "latency_s": 13.319451499999559,
+            "provider_document": {
+              "created_at": 1791360904,
+              "id": "resp_0182f520-94f2-4e69-8ebd-f6c38984a892",
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "object": "response",
+              "output": [
+                {
+                  "id": "rs_resp_0182f520-94f2-4e69-8ebd-f6c38984a892",
+                  "reasoning_content": "We need answer JSON only. Need inspect Chinese source. Need produce coverage spans exactly concatenated. Need decide dimensions.\n\nSource: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"\n\nTranslate: Turn right 90 degrees then move forward 6.0 meters then turn counterclockwise 90 degrees finally immediately stop.\n\nNeed analyze seven dimensions. Actions: turn right 90, walk_forward 6.0m, turn counterclockwise 90, stop. Order explicit: 然后 then, 接着 then, 最后 finally. Unique order. Action multiplicity: four distinct actions. Repetition none. Correction none. Reference resolution likely pronouns? \"向右转90度\" then \"逆时针转90度\" explicit, no pronoun. \"立即停止\" immediate stop; temporal relation maybe \"立即\" means immediately after previous action? Need represent linear order. \"最后立即停止\": finally immediately stop. It specifies stop after third action, immediate? Linear plan can represent sequential stop depending on predecessor. \"立即\" maybe no wait. Is that representable? Probably yes, just stop immediately after turn. Could be no issue.\n\nNeed check legality bounds: walk_forward 6.0 m positive finite. turn right 90 => angle -90 (right clockwise negative). turn counterclockwise 90 => +90. max abs 180 ok. stop no params. Max steps 4 <=32. stand none.\n\nPotential ambiguity: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\" Chinese \"向右转90度\" is turn right 90 degrees, \"逆时针转90度\" turn counterclockwise 90 degrees. Good. \"最后立即停止\" maybe \"finally immediately stop\" stop action. \"立即\" temporal immediate, can be interpreted as stop action after previous. No alternative.\n\nNeed output status AUTHORIZED_UNIQUE. But let's be careful: The prompt is designed perhaps to catch \"立即停止\" as vague duration? No, stop has no params, immediate not duration. It might be okay. The source is a single sequence.\n\nNeed coverage list exact text spans. Need every action, relation and editing clause considered. We can split into spans. Need text concatenated exactly entire source. Source has no spaces. We can split by meaningful tokens:\n\"向右转90度\" ACTION\n\"然后\" RELATION\n\"前进6.0米\" ACTION\n\"接着\" RELATION\n\"逆时针转90度\" ACTION\n\"最后\" RELATION? maybe temporal/order relation\n\"立即\" maybe CONTEXT/RELATION? It expresses immediacy. \n\"停止\" ACTION. But \"最后立即停止\" maybe split as \"最后\" and \"立即\" and \"停止\". Need ensure concatenation exact.\n\nAlternatively split: \"向右转90度\" / \"然后\" / \"前进6.0米\" / \"接着\" / \"逆时针转90度\" / \"最后立即停止\". Then \"立即\" is within action? Role ACTION? But stop action includes immediate. However coverage role for \"最后立即停止\" could be ACTION. But explanation account for final stop and immediacy. It's okay. But need every action, relation and editing clause. There are relations 然后, 接着, 最后. \"立即\" is temporal relation maybe within last span. To be thorough, split \"最后\" RELATION, \"立即\" RELATION or CONTEXT, \"停止\" ACTION.\n\nNeed text values concatenated exactly. Let's create:\n1 text \"向右转90度\" role ACTION explanation: first action, turn right 90 degrees; right/clockwise negative -> turn angle -90.\n2 \"然后\" role RELATION explanation: explicit sequencing between first turn and next walk; establishes first then second.\n3 \"前进6.0米\" role ACTION explanation: second action walk_forward 6.0 meters positive finite.\n4 \"接着\" role RELATION explanation: explicit sequencing between walk and next turn.\n5 \"逆时针转90度\" role ACTION explanation: third action turn counterclockwise 90 -> +90.\n6 \"最后\" role RELATION explanation: explicit final sequencing marker.\n7 \"立即\" role RELATION? It modifies stop, immediate, no wait/duration; does not create extra action or unresolved timing? Need justify. Role RELATION perhaps temporal relation: stop immediately after preceding turn, representable as immediate sequential dependency. It doesn't introduce parallel or delay. Could be CONTEXT? The roles allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"立即\" is temporal adverb, relation. \n8 \"停止\" role ACTION explanation: final stop action no params.\n\nConcatenate: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\" yes.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE. Explanation source lists four actions: turn right 90, forward 6.0, CCW turn 90, stop. No repeated/edited action; no replacement.\n- action_order: UNIQUE. Explicit 然后, 接着, 最后 with sequence: s1 turn right, s2 walk, s3 turn CCW, s4 stop.\n- correction_scope: UNIQUE. No edit/correction markers; no prior instruction replaced. Inapplicable and no alternatives.\n- repetition_scope: UNIQUE. No repetition terms. Each action occurs once.\n- reference_resolution: UNIQUE. No pronouns/ordinals/shared omitted args; \"逆时针转90度\" has explicit direction and angle; \"停止\" no params; no external context needed.\n- temporal_relations: UNIQUE? Need be careful with \"立即\". It means immediately stop. The linear plan each step after first depends on exactly predecessor. Does immediate stop conflict? It can be represented as next sequential step following turn; no waiting. No simultaneity. The word \"立即\" requires immediate after previous, okay. Maybe UNIQUE. \n- unresolved_relations: UNIQUE. No explicitly unresolved choice/scope/order. \n\nThus AUTHORIZED_UNIQUE.\n\nNeed ensure JSON object exactly keys status, coverage, dimensions. No markdown. Explanation strings nonempty. Use Chinese? Fine maybe English. Need no extra fields. Ensure valid JSON, escaping maybe Chinese okay. Need text exact. Let's formulate.\n\nDouble-check source: {\"source\":\"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"} Source string contains no spaces. We copy exactly.\n\nPotential issue: In Chinese \"向右转\" can mean \"turn right\" (clockwise) but mapping says \"left/counterclockwise positive, right/clockwise negative\". So -90. \"逆时针转90度\" +90. Good.\n\nPotential issue: \"最后立即停止\" maybe \"finally immediately stop\" could imply stop immediately at end. Stop action no parameters. Fine.\n\nPotential issue: Is \"立即\" a requested temporal relation that cannot be represented? The IR linear plan with step after predecessor; immediate can be represented as immediate succession. No wait or timing. Since no explicit time durations except walk distance. \"立即\" not a duration. It's just sequencing. So unique.\n\nPotential issue: The gate asks \"Decide whether complete source uniquely authorizes exactly one legal linear Mission IR 2.0 interpretation.\" All good.\n\nNeed maybe coverage explanation for relation spans. Keep concise.\n\nLet's craft JSON.\n\nCheck valid JSON: keys and arrays. Use Unicode okay. Ensure no unescaped newline. Explanations can contain apostrophes? Use no problematic. Use English.\n\nCoverage:\n[\n{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"First requested action: turn right 90 degrees, compiled as turn angle -90 degrees because right/clockwise is negative. It introduces one distinct action.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the preceding right turn, with no alternative order.\"},\n{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Second requested action: walk_forward 6.0 meters. Distance is positive and finite, so it is legal and distinct from the turns.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the forward motion, fixing the next order relation.\"},\n{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Third requested action: turn counterclockwise 90 degrees, compiled as turn angle +90 degrees. It is distinct from the earlier right turn, not a correction or repetition.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Explicit final sequencing relation: the next action is last after the counterclockwise turn.\"},\n{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation modifying the final action: stop immediately after the preceding turn. It adds no delay, simultaneity, or unresolved timing and is representable as the next sequential step.\"},\n{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fourth and final requested action: stop, which has no parameters and consumes the final linear step.\"}\n]\n\nConcatenate:\n向右转90度 + 然后 = 向右转90度然后\n+ 前进6.0米 = 向右转90度然后前进6.0米\n+ 接着 = ...接着\n+ 逆时针转90度 = ...\n+ 最后 = ...\n+ 立即 = ...\n+ 停止 = full. Yes.\n\nDimensions object. Need exactly names. Use explanations.\n\nAction order explanation mention s1-s4. Temporal relations mention no waiting etc.\n\nNow final. Ensure no markdown.",
+                  "summary": [
+                    {
+                      "text": "We need answer JSON only. Need inspect Chinese source. Need produce coverage spans exactly concatenated. Need decide dimensions.\n\nSource: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"\n\nTranslate: Turn right 90 degrees then move forward 6.0 meters then turn counterclockwise 90 degrees finally immediately stop.\n\nNeed analyze seven dimensions. Actions: turn right 90, walk_forward 6.0m, turn counterclockwise 90, stop. Order explicit: 然后 then, 接着 then, 最后 finally. Unique order. Action multiplicity: four distinct actions. Repetition none. Correction none. Reference resolution likely pronouns? \"向右转90度\" then \"逆时针转90度\" explicit, no pronoun. \"立即停止\" immediate stop; temporal relation maybe \"立即\" means immediately after previous action? Need represent linear order. \"最后立即停止\": finally immediately stop. It specifies stop after third action, immediate? Linear plan can represent sequential stop depending on predecessor. \"立即\" maybe no wait. Is that representable? Probably yes, just stop immediately after turn. Could be no issue.\n\nNeed check legality bounds: walk_forward 6.0 m positive finite. turn right 90 => angle -90 (right clockwise negative). turn counterclockwise 90 => +90. max abs 180 ok. stop no params. Max steps 4 <=32. stand none.\n\nPotential ambiguity: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\" Chinese \"向右转90度\" is turn right 90 degrees, \"逆时针转90度\" turn counterclockwise 90 degrees. Good. \"最后立即停止\" maybe \"finally immediately stop\" stop action. \"立即\" temporal immediate, can be interpreted as stop action after previous. No alternative.\n\nNeed output status AUTHORIZED_UNIQUE. But let's be careful: The prompt is designed perhaps to catch \"立即停止\" as vague duration? No, stop has no params, immediate not duration. It might be okay. The source is a single sequence.\n\nNeed coverage list exact text spans. Need every action, relation and editing clause considered. We can split into spans. Need text concatenated exactly entire source. Source has no spaces. We can split by meaningful tokens:\n\"向右转90度\" ACTION\n\"然后\" RELATION\n\"前进6.0米\" ACTION\n\"接着\" RELATION\n\"逆时针转90度\" ACTION\n\"最后\" RELATION? maybe temporal/order relation\n\"立即\" maybe CONTEXT/RELATION? It expresses immediacy. \n\"停止\" ACTION. But \"最后立即停止\" maybe split as \"最后\" and \"立即\" and \"停止\". Need ensure concatenation exact.\n\nAlternatively split: \"向右转90度\" / \"然后\" / \"前进6.0米\" / \"接着\" / \"逆时针转90度\" / \"最后立即停止\". Then \"立即\" is within action? Role ACTION? But stop action includes immediate. However coverage role for \"最后立即停止\" could be ACTION. But explanation account for final stop and immediacy. It's okay. But need every action, relation and editing clause. There are relations 然后, 接着, 最后. \"立即\" is temporal relation maybe within last span. To be thorough, split \"最后\" RELATION, \"立即\" RELATION or CONTEXT, \"停止\" ACTION.\n\nNeed text values concatenated exactly. Let's create:\n1 text \"向右转90度\" role ACTION explanation: first action, turn right 90 degrees; right/clockwise negative -> turn angle -90.\n2 \"然后\" role RELATION explanation: explicit sequencing between first turn and next walk; establishes first then second.\n3 \"前进6.0米\" role ACTION explanation: second action walk_forward 6.0 meters positive finite.\n4 \"接着\" role RELATION explanation: explicit sequencing between walk and next turn.\n5 \"逆时针转90度\" role ACTION explanation: third action turn counterclockwise 90 -> +90.\n6 \"最后\" role RELATION explanation: explicit final sequencing marker.\n7 \"立即\" role RELATION? It modifies stop, immediate, no wait/duration; does not create extra action or unresolved timing? Need justify. Role RELATION perhaps temporal relation: stop immediately after preceding turn, representable as immediate sequential dependency. It doesn't introduce parallel or delay. Could be CONTEXT? The roles allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"立即\" is temporal adverb, relation. \n8 \"停止\" role ACTION explanation: final stop action no params.\n\nConcatenate: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\" yes.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE. Explanation source lists four actions: turn right 90, forward 6.0, CCW turn 90, stop. No repeated/edited action; no replacement.\n- action_order: UNIQUE. Explicit 然后, 接着, 最后 with sequence: s1 turn right, s2 walk, s3 turn CCW, s4 stop.\n- correction_scope: UNIQUE. No edit/correction markers; no prior instruction replaced. Inapplicable and no alternatives.\n- repetition_scope: UNIQUE. No repetition terms. Each action occurs once.\n- reference_resolution: UNIQUE. No pronouns/ordinals/shared omitted args; \"逆时针转90度\" has explicit direction and angle; \"停止\" no params; no external context needed.\n- temporal_relations: UNIQUE? Need be careful with \"立即\". It means immediately stop. The linear plan each step after first depends on exactly predecessor. Does immediate stop conflict? It can be represented as next sequential step following turn; no waiting. No simultaneity. The word \"立即\" requires immediate after previous, okay. Maybe UNIQUE. \n- unresolved_relations: UNIQUE. No explicitly unresolved choice/scope/order. \n\nThus AUTHORIZED_UNIQUE.\n\nNeed ensure JSON object exactly keys status, coverage, dimensions. No markdown. Explanation strings nonempty. Use Chinese? Fine maybe English. Need no extra fields. Ensure valid JSON, escaping maybe Chinese okay. Need text exact. Let's formulate.\n\nDouble-check source: {\"source\":\"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"} Source string contains no spaces. We copy exactly.\n\nPotential issue: In Chinese \"向右转\" can mean \"turn right\" (clockwise) but mapping says \"left/counterclockwise positive, right/clockwise negative\". So -90. \"逆时针转90度\" +90. Good.\n\nPotential issue: \"最后立即停止\" maybe \"finally immediately stop\" could imply stop immediately at end. Stop action no parameters. Fine.\n\nPotential issue: Is \"立即\" a requested temporal relation that cannot be represented? The IR linear plan with step after predecessor; immediate can be represented as immediate succession. No wait or timing. Since no explicit time durations except walk distance. \"立即\" not a duration. It's just sequencing. So unique.\n\nPotential issue: The gate asks \"Decide whether complete source uniquely authorizes exactly one legal linear Mission IR 2.0 interpretation.\" All good.\n\nNeed maybe coverage explanation for relation spans. Keep concise.\n\nLet's craft JSON.\n\nCheck valid JSON: keys and arrays. Use Unicode okay. Ensure no unescaped newline. Explanations can contain apostrophes? Use no problematic. Use English.\n\nCoverage:\n[\n{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"First requested action: turn right 90 degrees, compiled as turn angle -90 degrees because right/clockwise is negative. It introduces one distinct action.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the preceding right turn, with no alternative order.\"},\n{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Second requested action: walk_forward 6.0 meters. Distance is positive and finite, so it is legal and distinct from the turns.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the forward motion, fixing the next order relation.\"},\n{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Third requested action: turn counterclockwise 90 degrees, compiled as turn angle +90 degrees. It is distinct from the earlier right turn, not a correction or repetition.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Explicit final sequencing relation: the next action is last after the counterclockwise turn.\"},\n{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation modifying the final action: stop immediately after the preceding turn. It adds no delay, simultaneity, or unresolved timing and is representable as the next sequential step.\"},\n{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fourth and final requested action: stop, which has no parameters and consumes the final linear step.\"}\n]\n\nConcatenate:\n向右转90度 + 然后 = 向右转90度然后\n+ 前进6.0米 = 向右转90度然后前进6.0米\n+ 接着 = ...接着\n+ 逆时针转90度 = ...\n+ 最后 = ...\n+ 立即 = ...\n+ 停止 = full. Yes.\n\nDimensions object. Need exactly names. Use explanations.\n\nAction order explanation mention s1-s4. Temporal relations mention no waiting etc.\n\nNow final. Ensure no markdown.",
+                      "type": "summary_text"
+                    }
+                  ],
+                  "type": "reasoning"
+                },
+                {
+                  "content": [
+                    {
+                      "annotations": [],
+                      "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"First requested action: turn right 90 degrees, compiled as a turn angle of -90 degrees because right/clockwise is negative. It introduces one distinct action.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the preceding right turn, with no alternative order.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Second requested action: walk_forward 6.0 meters. The distance is positive and finite, so it is legal and distinct from the turns.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the forward motion, fixing the next order relation.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Third requested action: turn counterclockwise 90 degrees, compiled as a turn angle of +90 degrees. It is distinct from the earlier right turn, not a correction or repetition.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Explicit final sequencing relation: the next action is last after the counterclockwise turn.\"},{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation modifying the final action: stop immediately after the preceding turn. It adds no delay, simultaneity, or unresolved timing and is representable as the next sequential step.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fourth and final requested action: stop, which has no parameters and consumes the final linear step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests four distinct actions: right turn 90 degrees, walk forward 6.0 meters, counterclockwise turn 90 degrees, and stop. There is no edited action, replacement, or hidden additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source fixes one order with 然后, 接着, and 最后: s1 right turn 90, s2 walk_forward 6.0 meters, s3 counterclockwise turn 90, s4 stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit is present. Nothing replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. Each listed action occurs exactly once, and no span is silently narrowed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or external references requiring resolution. Direction and angle are explicit for each turn, distance is explicit for the walk, and stop needs no arguments.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are strictly sequential: after the first turn, then forward, then the second turn, and finally an immediate stop. Immediate stop is representable as the next dependent step with no invented delay or simultaneity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, order, or relationship unresolved. All requested actions, quantities, and sequencing relations are explicitly determined.\"}}}",
+                      "type": "output_text"
+                    }
+                  ],
+                  "id": "msg_0182f520-94f2-4e69-8ebd-f6c38984a892",
+                  "role": "assistant",
+                  "status": "completed",
+                  "type": "message"
+                }
+              ],
+              "status": "completed",
+              "temperature": 0.0,
+              "usage": {
+                "input_tokens": 155,
+                "input_tokens_details": {
+                  "cached_tokens": 768
+                },
+                "output_tokens": 2693,
+                "output_tokens_details": {
+                  "reasoning_tokens": 2002
+                },
+                "total_tokens": 3616
+              }
+            },
+            "request_sha256": "887b2bd56e87504c23c86d6ce34a153f6f15d9d4498b3860be18abad6302bc2c",
+            "status": "SUCCESS"
+          }
+        ],
+        "provider_attempts": 1,
+        "provider_calls": 1,
+        "responses": [
+          {
+            "attempts": 1,
+            "finish_reason": "completed",
+            "latency_s": 13.31798649999837,
+            "model": "deepseek-flash",
+            "provider_status": "completed",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_0182f520-94f2-4e69-8ebd-f6c38984a892",
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"First requested action: turn right 90 degrees, compiled as a turn angle of -90 degrees because right/clockwise is negative. It introduces one distinct action.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the preceding right turn, with no alternative order.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Second requested action: walk_forward 6.0 meters. The distance is positive and finite, so it is legal and distinct from the turns.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the forward motion, fixing the next order relation.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Third requested action: turn counterclockwise 90 degrees, compiled as a turn angle of +90 degrees. It is distinct from the earlier right turn, not a correction or repetition.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Explicit final sequencing relation: the next action is last after the counterclockwise turn.\"},{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation modifying the final action: stop immediately after the preceding turn. It adds no delay, simultaneity, or unresolved timing and is representable as the next sequential step.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fourth and final requested action: stop, which has no parameters and consumes the final linear step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests four distinct actions: right turn 90 degrees, walk forward 6.0 meters, counterclockwise turn 90 degrees, and stop. There is no edited action, replacement, or hidden additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source fixes one order with 然后, 接着, and 最后: s1 right turn 90, s2 walk_forward 6.0 meters, s3 counterclockwise turn 90, s4 stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit is present. Nothing replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. Each listed action occurs exactly once, and no span is silently narrowed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or external references requiring resolution. Direction and angle are explicit for each turn, distance is explicit for the walk, and stop needs no arguments.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are strictly sequential: after the first turn, then forward, then the second turn, and finally an immediate stop. Immediate stop is representable as the next dependent step with no invented delay or simultaneity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, order, or relationship unresolved. All requested actions, quantities, and sequencing relations are explicitly determined.\"}}}",
+            "usage": {
+              "input_tokens": 155,
+              "output_tokens": 2693,
+              "total_tokens": 3616
+            }
+          }
+        ]
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+          "attempts": 1,
+          "baseline_status": "SUCCESS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "contract_violation_count": 0,
+          "contract_violations": [],
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 2.500938799999858,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "mission_id": "cmd-turn-walk-turn-stop",
+          "model": "deepseek-flash",
+          "normalized_length": 29,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+          "raw_response_sha256": "f90572840656e257b8852e96f09770969cfd5e3fb9c5b7ddfc8099ea14f401eb",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "release_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "released_executable": true,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "attempts": 1,
+              "automatic_repair": false,
+              "declared_status": "AUTHORIZED_UNIQUE",
+              "finish_reason": "completed",
+              "latency_s": 13.324855599999864,
+              "model": "deepseek-flash",
+              "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+              "provider_calls": 1,
+              "provider_latency_s": 13.31798649999837,
+              "provider_status": "completed",
+              "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"First requested action: turn right 90 degrees, compiled as a turn angle of -90 degrees because right/clockwise is negative. It introduces one distinct action.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the preceding right turn, with no alternative order.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Second requested action: walk_forward 6.0 meters. The distance is positive and finite, so it is legal and distinct from the turns.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequencing relation: the following action occurs after the forward motion, fixing the next order relation.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Third requested action: turn counterclockwise 90 degrees, compiled as a turn angle of +90 degrees. It is distinct from the earlier right turn, not a correction or repetition.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Explicit final sequencing relation: the next action is last after the counterclockwise turn.\"},{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation modifying the final action: stop immediately after the preceding turn. It adds no delay, simultaneity, or unresolved timing and is representable as the next sequential step.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fourth and final requested action: stop, which has no parameters and consumes the final linear step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests four distinct actions: right turn 90 degrees, walk forward 6.0 meters, counterclockwise turn 90 degrees, and stop. There is no edited action, replacement, or hidden additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source fixes one order with 然后, 接着, and 最后: s1 right turn 90, s2 walk_forward 6.0 meters, s3 counterclockwise turn 90, s4 stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit is present. Nothing replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. Each listed action occurs exactly once, and no span is silently narrowed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or external references requiring resolution. Direction and angle are explicit for each turn, distance is explicit for the walk, and stop needs no arguments.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are strictly sequential: after the first turn, then forward, then the second turn, and finally an immediate stop. Immediate stop is representable as the next dependent step with no invented delay or simultaneity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, order, or relationship unresolved. All requested actions, quantities, and sequencing relations are explicitly determined.\"}}}",
+              "raw_response_sha256": "b91c822b8b614808ac66c770853086f0b25023a38b2f8aa3fb403d5ccb0942d9",
+              "request_parameters": {
+                "max_network_retries": 2,
+                "max_output_tokens": 4096,
+                "model": "deepseek-flash",
+                "retry_backoff_s": 0.5,
+                "stream": false,
+                "temperature": 0.0
+              },
+              "response_id": "resp_0182f520-94f2-4e69-8ebd-f6c38984a892",
+              "source_aware": false,
+              "source_sha256": "750a7df07030363538e9093234dbd0ba165fc45339e2cccabcb92851a3055b50",
+              "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+              "usage": {
+                "input_tokens": 155,
+                "output_tokens": 2693,
+                "total_tokens": 3616
+              },
+              "witness": {
+                "coverage": [
+                  {
+                    "explanation": "First requested action: turn right 90 degrees, compiled as a turn angle of -90 degrees because right/clockwise is negative. It introduces one distinct action.",
+                    "role": "ACTION",
+                    "text": "向右转90度"
+                  },
+                  {
+                    "explanation": "Explicit sequencing relation: the following action occurs after the preceding right turn, with no alternative order.",
+                    "role": "RELATION",
+                    "text": "然后"
+                  },
+                  {
+                    "explanation": "Second requested action: walk_forward 6.0 meters. The distance is positive and finite, so it is legal and distinct from the turns.",
+                    "role": "ACTION",
+                    "text": "前进6.0米"
+                  },
+                  {
+                    "explanation": "Explicit sequencing relation: the following action occurs after the forward motion, fixing the next order relation.",
+                    "role": "RELATION",
+                    "text": "接着"
+                  },
+                  {
+                    "explanation": "Third requested action: turn counterclockwise 90 degrees, compiled as a turn angle of +90 degrees. It is distinct from the earlier right turn, not a correction or repetition.",
+                    "role": "ACTION",
+                    "text": "逆时针转90度"
+                  },
+                  {
+                    "explanation": "Explicit final sequencing relation: the next action is last after the counterclockwise turn.",
+                    "role": "RELATION",
+                    "text": "最后"
+                  },
+                  {
+                    "explanation": "Temporal relation modifying the final action: stop immediately after the preceding turn. It adds no delay, simultaneity, or unresolved timing and is representable as the next sequential step.",
+                    "role": "RELATION",
+                    "text": "立即"
+                  },
+                  {
+                    "explanation": "Fourth and final requested action: stop, which has no parameters and consumes the final linear step.",
+                    "role": "ACTION",
+                    "text": "停止"
+                  }
+                ],
+                "dimensions": {
+                  "action_multiplicity": {
+                    "explanation": "The source requests four distinct actions: right turn 90 degrees, walk forward 6.0 meters, counterclockwise turn 90 degrees, and stop. There is no edited action, replacement, or hidden additional action.",
+                    "status": "UNIQUE"
+                  },
+                  "action_order": {
+                    "explanation": "The source fixes one order with 然后, 接着, and 最后: s1 right turn 90, s2 walk_forward 6.0 meters, s3 counterclockwise turn 90, s4 stop.",
+                    "status": "UNIQUE"
+                  },
+                  "correction_scope": {
+                    "explanation": "No correction or edit is present. Nothing replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.",
+                    "status": "UNIQUE"
+                  },
+                  "reference_resolution": {
+                    "explanation": "There are no pronouns, ordinals, omitted shared arguments, or external references requiring resolution. Direction and angle are explicit for each turn, distance is explicit for the walk, and stop needs no arguments.",
+                    "status": "UNIQUE"
+                  },
+                  "repetition_scope": {
+                    "explanation": "No repetition is requested. Each listed action occurs exactly once, and no span is silently narrowed or broadened.",
+                    "status": "UNIQUE"
+                  },
+                  "temporal_relations": {
+                    "explanation": "The relations are strictly sequential: after the first turn, then forward, then the second turn, and finally an immediate stop. Immediate stop is representable as the next dependent step with no invented delay or simultaneity.",
+                    "status": "UNIQUE"
+                  },
+                  "unresolved_relations": {
+                    "explanation": "The source leaves no choice, scope, order, or relationship unresolved. All requested actions, quantities, and sequencing relations are explicitly determined.",
+                    "status": "UNIQUE"
+                  }
+                },
+                "status": "AUTHORIZED_UNIQUE"
+              }
+            },
+            "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "step_count": 4,
+          "usage": {
+            "input_tokens": 218,
+            "output_tokens": 335,
+            "total_tokens": 2089
+          },
+          "validation": {
+            "issues": [],
+            "valid": true
+          }
+        },
+        "error_code": null,
+        "error_message": null,
+        "mission": {
+          "mission_id": "cmd-turn-walk-turn-stop",
+          "schema_version": "2.0.0",
+          "steps": [
+            {
+              "id": "s1",
+              "parameters": {
+                "angle_deg": -90.0
+              },
+              "skill": "turn"
+            },
+            {
+              "depends_on": [
+                "s1"
+              ],
+              "id": "s2",
+              "parameters": {
+                "distance_m": 6.0
+              },
+              "skill": "walk_forward"
+            },
+            {
+              "depends_on": [
+                "s2"
+              ],
+              "id": "s3",
+              "parameters": {
+                "angle_deg": 90.0
+              },
+              "skill": "turn"
+            },
+            {
+              "depends_on": [
+                "s3"
+              ],
+              "id": "s4",
+              "parameters": {},
+              "skill": "stop"
+            }
+          ]
+        },
+        "normalized_text": "向右转90度然后前进6.0米接着逆时针转90度最后立即停止",
+        "status": "SUCCESS"
+      },
+      "score": {
+        "false_rejection": false,
+        "released": true,
+        "status": "SUCCESS",
+        "unauthorized_release": false,
+        "valid_exact": true,
+        "wrong_ir": false
+      }
+    },
+    "source_verifier": {
+      "added_wall_s": 18.997189300000173,
+      "live_evidence": {
+        "events": [
+          {
+            "index": 1,
+            "latency_s": 18.990362699998514,
+            "provider_document": {
+              "created_at": 1791360888,
+              "id": "resp_5a9e4795-1de1-4e10-83e7-ed24295b6860",
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "object": "response",
+              "output": [
+                {
+                  "id": "rs_resp_5a9e4795-1de1-4e10-83e7-ed24295b6860",
+                  "reasoning_content": "We need answer JSON only. Need derive source plan. Source: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"\n\nNeed parse Chinese. Actions:\n向右转90度 = turn right 90 degrees. right/clockwise = negative, so angle_deg -90.\n然后 = then\n前进6.0米 = walk_forward distance_m 6.0\n接着 = then\n逆时针转90度 = turn counterclockwise/逆时针 positive, so angle_deg +90\n最后 = finally\n立即停止 = immediately stop. \"立即\" immediately? Source says finally immediately stop. Is that temporal relation? stop skill only parameters {}. \"立即\" adverb meaning immediately; no extra parameter. Does it impose timing simultaneous? \"最后立即停止\" could mean finally stop immediately. \"立即\" maybe unresolved timing? Need assess. Legal skills only stand walk turn stop. Stop is just stop. \"立即\" maybe context/relation emphasizing no wait; no parameter. It doesn't create executable timing. Probably unique, stop action last. Need check action_order: sequence \"然后\", \"接着\", \"最后\" gives exact order: turn right, walk, turn left, stop. Unique.\n\nCorrection_scope none. Repetition none. Reference none? Shared/omitted? none. Temporal \"立即\" immediately stop perhaps no before/after with other action? It is after previous, immediate. IR doesn't represent timing, but \"immediately\" relative to completion? Maybe it says stop immediately (no delay). This is executable stop after prior step. Could be unique. Need consider if \"立即停止\" is a separate action or modifies last? It's action stop.\n\nCandidate matches exactly? Candidate s1 turn -90, s2 walk 6, s3 turn 90, s4 stop. Yes. So status AUTHORIZED_UNIQUE. Need output coverage split entire source exactly concatenated. Need include spans preserving punctuation/whitespace. Source has no spaces. Need split into meaningful spans. Need ensure concatenation equals original exactly. Let's design coverage list:\n1 text \"向右转90度\" role ACTION, explanation turn clockwise? Wait \"向右转\" means turn right 90 degrees; right maps negative. It requests turn skill with angle_deg -90. This is first action.\n2 text \"然后\" role RELATION, explanation orders first action before next action, no extra step.\n3 text \"前进6.0米\" role ACTION (includes QUANTITY maybe role ACTION? It includes quantity. Could split \"前进\" and \"6.0米\"? Need every action, relation, edit clause. Could use ACTION for whole. But coverage roles maybe QUANTITY for 6.0米. However text values concatenated all. We can split more granular.\nNeed exact original:\n向右转90度然后前进6.0米接着逆时针转90度最后立即停止\n\nLet's count. Could split:\n\"向右转90度\" (ACTION)\n\"然后\" (RELATION)\n\"前进\" (ACTION?) Actually \"前进6.0米\" is action+quantity. Maybe split \"前进\" ACTION and \"6.0米\" QUANTITY.\n\"接着\" RELATION\n\"逆时针转90度\" ACTION? Could split \"逆时针转\" ACTION? \"90度\" QUANTITY. But action text phrase includes direction and quantity; role ACTION for full maybe okay. But for semantic explanation need quantify.\n\"最后\" RELATION\n\"立即停止\" ACTION. Could split \"立即\" CONTEXT? \"停止\" ACTION. Since \"立即\" adverb modifies stop. It doesn't change skill params. We can role CONTEXT for \"立即\" and ACTION for \"停止\". But action clause is \"立即停止\"; if split, \"停止\" is action and \"立即\" context/time relation. That is okay. Need every action relation edit clause. No edit.\n\nMaybe better:\n[\n{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: a turn. 向右 means clockwise/right, so the signed angle is -90 degrees; skill turn, parameter angle_deg=-90.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequences the first turn before the next action; it adds no executable step or parameter.\"},\n{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Requests the second action: walk_forward for distance_m=6.0. 米 are meters, so no conversion; it is executed after the first turn.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequences the preceding walk before the next action; no additional step or parameter.\"},\n{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; skill turn, parameter angle_deg=90.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as last in the ordered plan; it introduces no extra executable action.\"},\n{\"text\":\"立即停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding step but adds no IR parameter or separate event, and stop is executed after the second turn.\"}\n]\nConcatenate: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止. Yes.\n\nNeed dimensions exactly seven names:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nEach status UNIQUE and explanation nonempty. Need maybe mention immediate. Temporal relation unique linear order due sequence markers and final. \"立即\" indicates stop after turn with no waiting; representable as last step no delay. Is \"立即\" ambiguous? Hmm. We need be careful. The instructions say \"honor before/after, simultaneous, waiting and completion relations; require a single linear order representable without inventing timing or events.\" \"立即\" could imply stop immediately after previous action, no delay. IR only has linear order. Since stop is after turn; \"immediately\" no extra timing. If we cannot represent \"immediately\" maybe unknown? But IR doesn't encode timing; does removing \"立即\" from plan alter authorization? It might not because stop skill inherently stops. But \"立即\" is adverb, no parameter. The plan order includes stop last. Is \"立即\" a temporal relation that requires simultaneous? \"立即停止\" means stop right away, not after wait. Linear order after previous and no delay. No explicit wait. Unique.\n\nPotential issue: \"向右转90度\" right turn negative. Maximum abs 90 <=180. \"逆时针转90度\" positive 90. Good.\n\nAction_multiplicity: exactly four actions. \"最后立即停止\": Does \"最后立即停止\" mean final action is immediate stop. It's one stop. Unique.\n\nCorrection_scope: no edits. Unique/inapplicable. Repetition: none. Reference: no pronouns/ordinals; \"最后\" just final position, no referent? \"最后\" means finally, refers to last action? It introduces final action; not ambiguous. Unique.\n\nNo unresolved explicit choices.\n\nNeed authorized_plan list:\ns1 turn angle_deg -90.0 depends_on []\ns2 walk_forward distance_m 6.0 depends_on [\"s1\"]\ns3 turn angle_deg 90.0 depends_on [\"s2\"]\ns4 stop parameters {} depends_on [\"s3\"]\nIDs exactly.\n\nNeed output exactly JSON, no markdown. Ensure JSON valid. Use double quotes. Ensure numbers finite. Could use -90.0, 6.0, 90.0. parameters exactly. Step order as source.\n\nNeed coverage text values concatenated exactly. Check source: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\". Our coverage: \"向右转90度\" + \"然后\" + \"前进6.0米\" + \"接着\" + \"逆时针转90度\" + \"最后\" + \"立即停止\". Concatenate: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止. Yes.\n\nNeed any whitespace? Source has no spaces. Good.\n\nNeed role values exactly ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. We use ACTION, RELATION. Okay. Maybe should use QUANTITY for quantities? Not required. But dimensions coverage maybe split quantity? The instruction says split source into meaningful spans so every action, relation and edit clause is analyzed. Action spans can include quantity. Fine.\n\nNeed explanations nonempty and state meaning/effect. \"nonexecuting text does not alter authorization\" for relation spans. Include.\n\nNeed maybe mention no correction/repetition in coverage? Not necessarily every dimension in coverage? We analyze clauses. Could include no edit? Source has no edit. Coverage must cover entire source. We can't add nonexistent text. Explanations can mention no edit. Fine.\n\nNow dimension explanations:\n- action_multiplicity: Source contains four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, 立即停止. None repeated or replaced; \"然后/接着/最后\" sequence them rather than add alternatives. Unique.\n- action_order: Source explicitly orders them via 然后, 接着, 最后: turn right 90, walk 6.0 m, turn CCW 90, stop. Single linear order. Unique.\n- correction_scope: No correction words (e.g., not, instead, 改, 不) and no edit clause; no earlier instruction is replaced. Unique/inapplicable.\n- repetition_scope: No repetition markers, counts, or spans; each action occurs once. Unique/inapplicable.\n- reference_resolution: No pronouns/ordinal references requiring external referent. \"最后\" refers to final position in same sequence, resolving to the stop action. Unique.\n- temporal_relations: The sequence markers establish before/after: stop is after turn, no waiting or simultaneous actions. \"立即\" means no delay but adds no representable timing beyond linear order; stop is last. Unique.\n- unresolved_relations: No explicit unresolved choices or alternative relations; all sequence and action parameters resolved. Unique.\n\nNeed status AUTHORIZED_UNIQUE. Candidate matches. But status only source uniqueness. Good.\n\nPotential nuance: \"向右转90度\" in Chinese \"向右转\" can mean turn right. \"右\" = right; per semantics right/clockwise negative. \"逆时针\" = counterclockwise positive. Good.\n\nPotential nuance: \"最后立即停止\" \"立即\" maybe \"immediately\" as stop action maybe should be stop at this moment, could be simultaneous with previous? But \"最后\" after previous. No ambiguity.\n\nNeed ensure \"authorized_plan\" complete source-derived list. For AUTHORIZED_UNIQUE.\n\nLet's craft final JSON exactly. Need no markdown. Check keys exactly status, coverage, dimensions, authorized_plan. Coverage objects exactly text, role, explanation. Dimensions objects exactly status, explanation. Step objects exactly id, skill, parameters, depends_on. No extra fields.\n\nLet's ensure JSON string escape none. Chinese okay. Numbers -90.0. Use valid. Good.\n\nNeed maybe \"action_multiplicity\" explanation mention \"立即停止\" one action despite adverb. Good.\n\nLet's final.",
+                  "summary": [
+                    {
+                      "text": "We need answer JSON only. Need derive source plan. Source: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"\n\nNeed parse Chinese. Actions:\n向右转90度 = turn right 90 degrees. right/clockwise = negative, so angle_deg -90.\n然后 = then\n前进6.0米 = walk_forward distance_m 6.0\n接着 = then\n逆时针转90度 = turn counterclockwise/逆时针 positive, so angle_deg +90\n最后 = finally\n立即停止 = immediately stop. \"立即\" immediately? Source says finally immediately stop. Is that temporal relation? stop skill only parameters {}. \"立即\" adverb meaning immediately; no extra parameter. Does it impose timing simultaneous? \"最后立即停止\" could mean finally stop immediately. \"立即\" maybe unresolved timing? Need assess. Legal skills only stand walk turn stop. Stop is just stop. \"立即\" maybe context/relation emphasizing no wait; no parameter. It doesn't create executable timing. Probably unique, stop action last. Need check action_order: sequence \"然后\", \"接着\", \"最后\" gives exact order: turn right, walk, turn left, stop. Unique.\n\nCorrection_scope none. Repetition none. Reference none? Shared/omitted? none. Temporal \"立即\" immediately stop perhaps no before/after with other action? It is after previous, immediate. IR doesn't represent timing, but \"immediately\" relative to completion? Maybe it says stop immediately (no delay). This is executable stop after prior step. Could be unique. Need consider if \"立即停止\" is a separate action or modifies last? It's action stop.\n\nCandidate matches exactly? Candidate s1 turn -90, s2 walk 6, s3 turn 90, s4 stop. Yes. So status AUTHORIZED_UNIQUE. Need output coverage split entire source exactly concatenated. Need include spans preserving punctuation/whitespace. Source has no spaces. Need split into meaningful spans. Need ensure concatenation equals original exactly. Let's design coverage list:\n1 text \"向右转90度\" role ACTION, explanation turn clockwise? Wait \"向右转\" means turn right 90 degrees; right maps negative. It requests turn skill with angle_deg -90. This is first action.\n2 text \"然后\" role RELATION, explanation orders first action before next action, no extra step.\n3 text \"前进6.0米\" role ACTION (includes QUANTITY maybe role ACTION? It includes quantity. Could split \"前进\" and \"6.0米\"? Need every action, relation, edit clause. Could use ACTION for whole. But coverage roles maybe QUANTITY for 6.0米. However text values concatenated all. We can split more granular.\nNeed exact original:\n向右转90度然后前进6.0米接着逆时针转90度最后立即停止\n\nLet's count. Could split:\n\"向右转90度\" (ACTION)\n\"然后\" (RELATION)\n\"前进\" (ACTION?) Actually \"前进6.0米\" is action+quantity. Maybe split \"前进\" ACTION and \"6.0米\" QUANTITY.\n\"接着\" RELATION\n\"逆时针转90度\" ACTION? Could split \"逆时针转\" ACTION? \"90度\" QUANTITY. But action text phrase includes direction and quantity; role ACTION for full maybe okay. But for semantic explanation need quantify.\n\"最后\" RELATION\n\"立即停止\" ACTION. Could split \"立即\" CONTEXT? \"停止\" ACTION. Since \"立即\" adverb modifies stop. It doesn't change skill params. We can role CONTEXT for \"立即\" and ACTION for \"停止\". But action clause is \"立即停止\"; if split, \"停止\" is action and \"立即\" context/time relation. That is okay. Need every action relation edit clause. No edit.\n\nMaybe better:\n[\n{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: a turn. 向右 means clockwise/right, so the signed angle is -90 degrees; skill turn, parameter angle_deg=-90.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequences the first turn before the next action; it adds no executable step or parameter.\"},\n{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Requests the second action: walk_forward for distance_m=6.0. 米 are meters, so no conversion; it is executed after the first turn.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequences the preceding walk before the next action; no additional step or parameter.\"},\n{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; skill turn, parameter angle_deg=90.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as last in the ordered plan; it introduces no extra executable action.\"},\n{\"text\":\"立即停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding step but adds no IR parameter or separate event, and stop is executed after the second turn.\"}\n]\nConcatenate: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止. Yes.\n\nNeed dimensions exactly seven names:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nEach status UNIQUE and explanation nonempty. Need maybe mention immediate. Temporal relation unique linear order due sequence markers and final. \"立即\" indicates stop after turn with no waiting; representable as last step no delay. Is \"立即\" ambiguous? Hmm. We need be careful. The instructions say \"honor before/after, simultaneous, waiting and completion relations; require a single linear order representable without inventing timing or events.\" \"立即\" could imply stop immediately after previous action, no delay. IR only has linear order. Since stop is after turn; \"immediately\" no extra timing. If we cannot represent \"immediately\" maybe unknown? But IR doesn't encode timing; does removing \"立即\" from plan alter authorization? It might not because stop skill inherently stops. But \"立即\" is adverb, no parameter. The plan order includes stop last. Is \"立即\" a temporal relation that requires simultaneous? \"立即停止\" means stop right away, not after wait. Linear order after previous and no delay. No explicit wait. Unique.\n\nPotential issue: \"向右转90度\" right turn negative. Maximum abs 90 <=180. \"逆时针转90度\" positive 90. Good.\n\nAction_multiplicity: exactly four actions. \"最后立即停止\": Does \"最后立即停止\" mean final action is immediate stop. It's one stop. Unique.\n\nCorrection_scope: no edits. Unique/inapplicable. Repetition: none. Reference: no pronouns/ordinals; \"最后\" just final position, no referent? \"最后\" means finally, refers to last action? It introduces final action; not ambiguous. Unique.\n\nNo unresolved explicit choices.\n\nNeed authorized_plan list:\ns1 turn angle_deg -90.0 depends_on []\ns2 walk_forward distance_m 6.0 depends_on [\"s1\"]\ns3 turn angle_deg 90.0 depends_on [\"s2\"]\ns4 stop parameters {} depends_on [\"s3\"]\nIDs exactly.\n\nNeed output exactly JSON, no markdown. Ensure JSON valid. Use double quotes. Ensure numbers finite. Could use -90.0, 6.0, 90.0. parameters exactly. Step order as source.\n\nNeed coverage text values concatenated exactly. Check source: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\". Our coverage: \"向右转90度\" + \"然后\" + \"前进6.0米\" + \"接着\" + \"逆时针转90度\" + \"最后\" + \"立即停止\". Concatenate: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止. Yes.\n\nNeed any whitespace? Source has no spaces. Good.\n\nNeed role values exactly ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. We use ACTION, RELATION. Okay. Maybe should use QUANTITY for quantities? Not required. But dimensions coverage maybe split quantity? The instruction says split source into meaningful spans so every action, relation and edit clause is analyzed. Action spans can include quantity. Fine.\n\nNeed explanations nonempty and state meaning/effect. \"nonexecuting text does not alter authorization\" for relation spans. Include.\n\nNeed maybe mention no correction/repetition in coverage? Not necessarily every dimension in coverage? We analyze clauses. Could include no edit? Source has no edit. Coverage must cover entire source. We can't add nonexistent text. Explanations can mention no edit. Fine.\n\nNow dimension explanations:\n- action_multiplicity: Source contains four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, 立即停止. None repeated or replaced; \"然后/接着/最后\" sequence them rather than add alternatives. Unique.\n- action_order: Source explicitly orders them via 然后, 接着, 最后: turn right 90, walk 6.0 m, turn CCW 90, stop. Single linear order. Unique.\n- correction_scope: No correction words (e.g., not, instead, 改, 不) and no edit clause; no earlier instruction is replaced. Unique/inapplicable.\n- repetition_scope: No repetition markers, counts, or spans; each action occurs once. Unique/inapplicable.\n- reference_resolution: No pronouns/ordinal references requiring external referent. \"最后\" refers to final position in same sequence, resolving to the stop action. Unique.\n- temporal_relations: The sequence markers establish before/after: stop is after turn, no waiting or simultaneous actions. \"立即\" means no delay but adds no representable timing beyond linear order; stop is last. Unique.\n- unresolved_relations: No explicit unresolved choices or alternative relations; all sequence and action parameters resolved. Unique.\n\nNeed status AUTHORIZED_UNIQUE. Candidate matches. But status only source uniqueness. Good.\n\nPotential nuance: \"向右转90度\" in Chinese \"向右转\" can mean turn right. \"右\" = right; per semantics right/clockwise negative. \"逆时针\" = counterclockwise positive. Good.\n\nPotential nuance: \"最后立即停止\" \"立即\" maybe \"immediately\" as stop action maybe should be stop at this moment, could be simultaneous with previous? But \"最后\" after previous. No ambiguity.\n\nNeed ensure \"authorized_plan\" complete source-derived list. For AUTHORIZED_UNIQUE.\n\nLet's craft final JSON exactly. Need no markdown. Check keys exactly status, coverage, dimensions, authorized_plan. Coverage objects exactly text, role, explanation. Dimensions objects exactly status, explanation. Step objects exactly id, skill, parameters, depends_on. No extra fields.\n\nLet's ensure JSON string escape none. Chinese okay. Numbers -90.0. Use valid. Good.\n\nNeed maybe \"action_multiplicity\" explanation mention \"立即停止\" one action despite adverb. Good.\n\nLet's final.",
+                      "type": "summary_text"
+                    }
+                  ],
+                  "type": "reasoning"
+                },
+                {
+                  "content": [
+                    {
+                      "annotations": [],
+                      "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: a turn. 向右 means right/clockwise, so the signed angle is -90 degrees; the step is turn with angle_deg=-90.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequences the first turn before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Requests the second action: walk_forward with distance_m=6.0. 米 are meters, so no unit conversion is needed.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequences the preceding walk before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; the step is turn with angle_deg=90.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as the final action in the ordered plan. It is nonexecuting text and introduces no extra step or parameter.\"},{\"text\":\"立即停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding action but adds no IR parameter or separate executable event.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, and 立即停止. None is repeated or replaced; 然后, 接着, and 最后 sequence the actions rather than add alternatives.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 然后, 接着, and 最后 establish one exact linear order: turn right 90 degrees, walk forward 6.0 meters, turn counterclockwise 90 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. No earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers, counts, or repeated spans. Each of the four actions occurs once in the plan.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or external referent is needed. 最后 refers to the final position in the same action sequence and resolves to the stop action; all other actions and parameters are explicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single linear execution order with before/after relations through 然后, 接着, and 最后. 立即 adds immediacy to the final stop but does not introduce a representable wait, simultaneous action, or additional event, so stop remains the last step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. The actions, order, directions, distances, angle, and final stop are all resolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+                      "type": "output_text"
+                    }
+                  ],
+                  "id": "msg_5a9e4795-1de1-4e10-83e7-ed24295b6860",
+                  "role": "assistant",
+                  "status": "completed",
+                  "type": "message"
+                }
+              ],
+              "status": "completed",
+              "temperature": 0.0,
+              "usage": {
+                "input_tokens": 156,
+                "input_tokens_details": {
+                  "cached_tokens": 1152
+                },
+                "output_tokens": 3217,
+                "output_tokens_details": {
+                  "reasoning_tokens": 2401
+                },
+                "total_tokens": 4525
+              }
+            },
+            "request_sha256": "1b8fee37d2458bcfe5451b52bc1460e151c8096311a0896ba3f7abd299966930",
+            "status": "SUCCESS"
+          }
+        ],
+        "provider_attempts": 1,
+        "provider_calls": 1,
+        "responses": [
+          {
+            "attempts": 1,
+            "finish_reason": "completed",
+            "latency_s": 18.988882300000114,
+            "model": "deepseek-flash",
+            "provider_status": "completed",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_5a9e4795-1de1-4e10-83e7-ed24295b6860",
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: a turn. 向右 means right/clockwise, so the signed angle is -90 degrees; the step is turn with angle_deg=-90.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequences the first turn before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Requests the second action: walk_forward with distance_m=6.0. 米 are meters, so no unit conversion is needed.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequences the preceding walk before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; the step is turn with angle_deg=90.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as the final action in the ordered plan. It is nonexecuting text and introduces no extra step or parameter.\"},{\"text\":\"立即停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding action but adds no IR parameter or separate executable event.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, and 立即停止. None is repeated or replaced; 然后, 接着, and 最后 sequence the actions rather than add alternatives.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 然后, 接着, and 最后 establish one exact linear order: turn right 90 degrees, walk forward 6.0 meters, turn counterclockwise 90 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. No earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers, counts, or repeated spans. Each of the four actions occurs once in the plan.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or external referent is needed. 最后 refers to the final position in the same action sequence and resolves to the stop action; all other actions and parameters are explicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single linear execution order with before/after relations through 然后, 接着, and 最后. 立即 adds immediacy to the final stop but does not introduce a representable wait, simultaneous action, or additional event, so stop remains the last step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. The actions, order, directions, distances, angle, and final stop are all resolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+            "usage": {
+              "input_tokens": 156,
+              "output_tokens": 3217,
+              "total_tokens": 4525
+            }
+          }
+        ]
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_source_authority_v1",
+          "attempts": 1,
+          "baseline_status": "SUCCESS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "contract_violation_count": 0,
+          "contract_violations": [],
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 2.500938799999858,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "mission_id": "cmd-turn-walk-turn-stop",
+          "model": "deepseek-flash",
+          "normalized_length": 29,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+          "raw_response_sha256": "f90572840656e257b8852e96f09770969cfd5e3fb9c5b7ddfc8099ea14f401eb",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "release_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "released_executable": true,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "attempts": 1,
+              "authorized_plan_validation": {
+                "issues": [],
+                "valid": true
+              },
+              "automatic_repair": false,
+              "declared_status": "AUTHORIZED_UNIQUE",
+              "finish_reason": "completed",
+              "latency_s": 18.996517499999754,
+              "model": "deepseek-flash",
+              "plan_matches_candidate": true,
+              "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+              "provider_calls": 1,
+              "provider_latency_s": 18.988882300000114,
+              "provider_status": "completed",
+              "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: a turn. 向右 means right/clockwise, so the signed angle is -90 degrees; the step is turn with angle_deg=-90.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequences the first turn before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Requests the second action: walk_forward with distance_m=6.0. 米 are meters, so no unit conversion is needed.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequences the preceding walk before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; the step is turn with angle_deg=90.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as the final action in the ordered plan. It is nonexecuting text and introduces no extra step or parameter.\"},{\"text\":\"立即停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding action but adds no IR parameter or separate executable event.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, and 立即停止. None is repeated or replaced; 然后, 接着, and 最后 sequence the actions rather than add alternatives.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 然后, 接着, and 最后 establish one exact linear order: turn right 90 degrees, walk forward 6.0 meters, turn counterclockwise 90 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. No earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers, counts, or repeated spans. Each of the four actions occurs once in the plan.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or external referent is needed. 最后 refers to the final position in the same action sequence and resolves to the stop action; all other actions and parameters are explicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single linear execution order with before/after relations through 然后, 接着, and 最后. 立即 adds immediacy to the final stop but does not introduce a representable wait, simultaneous action, or additional event, so stop remains the last step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. The actions, order, directions, distances, angle, and final stop are all resolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+              "raw_response_sha256": "637116c3a54037d5bda0ba17c31c7e886ea13b5e5e789cb3dbd070142bf86763",
+              "request_parameters": {
+                "max_network_retries": 2,
+                "max_output_tokens": 4096,
+                "model": "deepseek-flash",
+                "retry_backoff_s": 0.5,
+                "stream": false,
+                "temperature": 0.0
+              },
+              "response_id": "resp_5a9e4795-1de1-4e10-83e7-ed24295b6860",
+              "source_aware": true,
+              "source_sha256": "750a7df07030363538e9093234dbd0ba165fc45339e2cccabcb92851a3055b50",
+              "treatment": "guarded_direct_llm_source_authority_v1",
+              "usage": {
+                "input_tokens": 156,
+                "output_tokens": 3217,
+                "total_tokens": 4525
+              },
+              "witness": {
+                "authorized_plan": [
+                  {
+                    "depends_on": [],
+                    "id": "s1",
+                    "parameters": {
+                      "angle_deg": -90.0
+                    },
+                    "skill": "turn"
+                  },
+                  {
+                    "depends_on": [
+                      "s1"
+                    ],
+                    "id": "s2",
+                    "parameters": {
+                      "distance_m": 6.0
+                    },
+                    "skill": "walk_forward"
+                  },
+                  {
+                    "depends_on": [
+                      "s2"
+                    ],
+                    "id": "s3",
+                    "parameters": {
+                      "angle_deg": 90.0
+                    },
+                    "skill": "turn"
+                  },
+                  {
+                    "depends_on": [
+                      "s3"
+                    ],
+                    "id": "s4",
+                    "parameters": {},
+                    "skill": "stop"
+                  }
+                ],
+                "coverage": [
+                  {
+                    "explanation": "Requests the first action: a turn. 向右 means right/clockwise, so the signed angle is -90 degrees; the step is turn with angle_deg=-90.",
+                    "role": "ACTION",
+                    "text": "向右转90度"
+                  },
+                  {
+                    "explanation": "Sequences the first turn before the next action. It is nonexecuting text and introduces no additional step or parameter.",
+                    "role": "RELATION",
+                    "text": "然后"
+                  },
+                  {
+                    "explanation": "Requests the second action: walk_forward with distance_m=6.0. 米 are meters, so no unit conversion is needed.",
+                    "role": "ACTION",
+                    "text": "前进6.0米"
+                  },
+                  {
+                    "explanation": "Sequences the preceding walk before the next action. It is nonexecuting text and introduces no additional step or parameter.",
+                    "role": "RELATION",
+                    "text": "接着"
+                  },
+                  {
+                    "explanation": "Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; the step is turn with angle_deg=90.",
+                    "role": "ACTION",
+                    "text": "逆时针转90度"
+                  },
+                  {
+                    "explanation": "Marks the following action as the final action in the ordered plan. It is nonexecuting text and introduces no extra step or parameter.",
+                    "role": "RELATION",
+                    "text": "最后"
+                  },
+                  {
+                    "explanation": "Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding action but adds no IR parameter or separate executable event.",
+                    "role": "ACTION",
+                    "text": "立即停止"
+                  }
+                ],
+                "dimensions": {
+                  "action_multiplicity": {
+                    "explanation": "The source contains exactly four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, and 立即停止. None is repeated or replaced; 然后, 接着, and 最后 sequence the actions rather than add alternatives.",
+                    "status": "UNIQUE"
+                  },
+                  "action_order": {
+                    "explanation": "The sequence markers 然后, 接着, and 最后 establish one exact linear order: turn right 90 degrees, walk forward 6.0 meters, turn counterclockwise 90 degrees, then stop.",
+                    "status": "UNIQUE"
+                  },
+                  "correction_scope": {
+                    "explanation": "There is no correction or edit clause in the source. No earlier action, parameter, group, or relation is replaced or preserved by an edit.",
+                    "status": "UNIQUE"
+                  },
+                  "reference_resolution": {
+                    "explanation": "No pronoun or external referent is needed. 最后 refers to the final position in the same action sequence and resolves to the stop action; all other actions and parameters are explicit.",
+                    "status": "UNIQUE"
+                  },
+                  "repetition_scope": {
+                    "explanation": "There are no repetition markers, counts, or repeated spans. Each of the four actions occurs once in the plan.",
+                    "status": "UNIQUE"
+                  },
+                  "temporal_relations": {
+                    "explanation": "The source gives a single linear execution order with before/after relations through 然后, 接着, and 最后. 立即 adds immediacy to the final stop but does not introduce a representable wait, simultaneous action, or additional event, so stop remains the last step.",
+                    "status": "UNIQUE"
+                  },
+                  "unresolved_relations": {
+                    "explanation": "The source leaves no explicit unresolved choice, scope, order, or relationship. The actions, order, directions, distances, angle, and final stop are all resolved.",
+                    "status": "UNIQUE"
+                  }
+                },
+                "status": "AUTHORIZED_UNIQUE"
+              }
+            },
+            "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "step_count": 4,
+          "usage": {
+            "input_tokens": 218,
+            "output_tokens": 335,
+            "total_tokens": 2089
+          },
+          "validation": {
+            "issues": [],
+            "valid": true
+          }
+        },
+        "error_code": null,
+        "error_message": null,
+        "mission": {
+          "mission_id": "cmd-turn-walk-turn-stop",
+          "schema_version": "2.0.0",
+          "steps": [
+            {
+              "id": "s1",
+              "parameters": {
+                "angle_deg": -90.0
+              },
+              "skill": "turn"
+            },
+            {
+              "depends_on": [
+                "s1"
+              ],
+              "id": "s2",
+              "parameters": {
+                "distance_m": 6.0
+              },
+              "skill": "walk_forward"
+            },
+            {
+              "depends_on": [
+                "s2"
+              ],
+              "id": "s3",
+              "parameters": {
+                "angle_deg": 90.0
+              },
+              "skill": "turn"
+            },
+            {
+              "depends_on": [
+                "s3"
+              ],
+              "id": "s4",
+              "parameters": {},
+              "skill": "stop"
+            }
+          ]
+        },
+        "normalized_text": "向右转90度然后前进6.0米接着逆时针转90度最后立即停止",
+        "status": "SUCCESS"
+      },
+      "score": {
+        "false_rejection": false,
+        "released": true,
+        "status": "SUCCESS",
+        "unauthorized_release": false,
+        "valid_exact": true,
+        "wrong_ir": false
+      }
+    }
+  }
+}

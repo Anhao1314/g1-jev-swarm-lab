@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 17.776264800000718,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_9d3a810e-3d9b-41dd-ac59-be534f0cc5ad",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示顺序关系，要求“站五秒”作为第一步，先于后续动作执行；它不是可执行技能。\"},{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand，持续时间为 5 秒；5 秒为正有限秒数且不超过 60，因此参数为 duration_s=5.0。\"},{\"text\":\"→\",\"role\":\"RELATION\",\"explanation\":\"箭头连接相邻动作并指明执行顺序，使“向前走二十米”排在“站五秒”之后；它本身不新增动作。\"},{\"text\":\"向前走二十米\",\"role\":\"ACTION\",\"explanation\":\"请求执行 walk_forward，距离为二十米；转换为 distance_m=20.0，为正有限数。\"},{\"text\":\"→\",\"role\":\"RELATION\",\"explanation\":\"第二个箭头连接“向前走二十米”和“停”，使 stop 排在前一动作之后；它本身不新增动作。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop，无参数，参数为 {}。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，仅结束动作序列，不改变动作或顺序。\"},{\"text\":\"箭头就代表先后\",\"role\":\"CONTEXT\",\"explanation\":\"说明箭头表示先后顺序，确认前面箭头的顺序语义；不新增、删除或修改任何动作，因此不改变授权计划。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，结束说明句；对计划无额外影响。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中只有三个可执行动作：站五秒、向前走二十米、停，且各出现一次；没有添加、替换或重复动作的语句，‘箭头就代表先后’也不引入动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”和两个箭头共同给出唯一线性顺序：先 stand，再 walk_forward，最后 stop；没有其他顺序许可。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、撤销或替换任何动作、参数、组或关系的编辑语句，因此编辑范围不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记或重复次数；三个动作各执行一次，箭头只是顺序连接，不表示重复。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中唯一的指代是“箭头”，它回指前面的两个箭头，且该句只说明箭头含义；所有动作参数均显式给出，没有需要外部上下文才能解析的动作引用或省略参数。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”和箭头给出单一先后关系：stand 完成后 walk_forward，walk_forward 完成后 stop；没有同时、等待或条件完成关系导致多顺序。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有“或”“任选”“待定”等显式未决关系；动作、参数、顺序均被唯一确定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+  "usage": {
+    "input_tokens": 379,
+    "output_tokens": 3035,
+    "total_tokens": 4310
+  }
+}

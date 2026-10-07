@@ -1,0 +1,276 @@
+{
+  "added_wall_s": 9.351446600001509,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 9.345634500001324,
+        "provider_document": {
+          "created_at": 1791359150,
+          "id": "resp_c1dd17d8-6469-4c3f-aed6-cad967f2e9ea",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_c1dd17d8-6469-4c3f-aed6-cad967f2e9ea",
+              "reasoning_content": "We need answer JSON only. Need analyze source. Source: \"forward 十米，please。\" Chinese \"十米\" ten meters, comma Chinese, English please, Chinese period. Legal skill? \"forward\" maps to walk_forward likely. distance 10 meters. Only one action. Need assess seven dimensions. candidate matches. Need output status AUTHORIZED_UNIQUE, coverage spans exact concatenation equals entire source. Need split meaningful spans. Source exact: \"forward 十米，please。\" Let's count characters: forward(7 letters? f o r w a r d =7), space, 十米 (2 chars), ， (1), please (6), 。 (1). Total 7+1+2+1+6+1=18. Need coverage list objects text copied exactly with original punctuation and whitespace. Concatenated in order equals source. We can split \"forward\" ACTION, \" \" separator, \"十米\" QUANTITY, \"，\" separator maybe relation? \"please\" CONTEXT, \"。\" separator. Need explain. But role choices. The source has \"forward\" maybe skill instruction, \"十米\" quantity. \"please\" is politeness nonexecuting. Chinese comma separator. period punctuation.\n\nNeed derive plan: steps s1 walk_forward distance_m 10.0 depends_on [].\n\nCheck dimensions:\n- action_multiplicity: one action. UNIQUE.\n- action_order: single action. UNIQUE.\n- correction_scope: no corrections. UNIQUE/inapplicable.\n- repetition_scope: no repetitions. UNIQUE/inapplicable.\n- reference_resolution: no pronouns/ordinals omitted args? \"forward 十米\" complete. \"please\" no reference. UNIQUE.\n- temporal_relations: no temporal relations. UNIQUE.\n- unresolved_relations: none. UNIQUE.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty. Each object exactly text, role, explanation. Need split so concatenation exact. If I split \"forward\", \" \", \"十米\", \"，\", \"please\", \"。\" then concat equals. Explain nonexecuting text.\n\nPotential issue: source uses Chinese \"十米\" and English \"forward\". Is \"forward\" legal skill? The legal skills include walk_forward, turn, stand, stop. \"forward\" is natural language but likely maps to walk_forward. Need maybe \"forward\" alone could mean move forward, but with distance confirms walk_forward. Since source says forward 十米. Unique? Yes.\n\nNeed output JSON exactly. No markdown. Ensure numbers finite. authorized_plan list steps with id s1 skill walk_forward parameters distance_m 10.0 depends_on [].\n\nNeed consider if \"十米\" is 10 meters. Chinese numeral 十 = 10. \"米\" meters. Yes.\n\nNeed ensure coverage text values include exact whitespace. We have \"forward 十米，please。\" includes space after forward. If split as \"forward\", \" \", \"十米\", \"，\", \"please\", \"。\" concat exact. \"，\" Chinese comma. \"。\" Chinese full stop.\n\nNeed explanations nonempty and state span's meaning/effect. For separator space: separator between skill and quantity, no authorization change. For Chinese comma: separator, no action. Please context politeness nonexecuting. Period separator.\n\nCould combine \"forward 十米\" as ACTION? But role ACTION includes quantity maybe. Better split as above. The instruction says split source into meaningful spans so every action, relation and edit clause is analyzed. Separators okay. Role CONTEXT for \"please\"; QUANTITY for \"十米\"; ACTION for \"forward\"; SEPARATOR for space, comma, period. Does \"，\" maybe SEPARATOR; \"。\" SEPARATOR. Space also SEPARATOR. Good.\n\nNeed dimensions exactly seven names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each value has status and explanation.\n\nNeed maybe status of correction_scope \"UNIQUE\" with explanation \"No edit/correction clause present; nothing to replace or preserve.\" Inapplicable but unique. Similarly repetition. Temporal. Unresolved.\n\nNeed be careful \"authorized_plan\" null? For AUTHORIZED_UNIQUE it is list.\n\nPotential subtlety: Source \"forward 十米，please。\" The \"please\" may be interpreted as polite request, not action. Good.\n\nPotential subtlety: \"forward\" could be adverb not skill. But legal skill \"walk_forward\" corresponds. Source uniquely authorizes a forward movement of ten meters. \"forward\" maybe direction, but only forward skill. Yes.\n\nNeed output JSON only. Ensure valid JSON, no trailing commas. Use double quotes. Explanation strings can contain unicode. Need maybe escape? Fine.\n\nLet's formulate.\n\nCoverage:\n[\n {\"text\":\"forward\",\"role\":\"ACTION\",\"explanation\":\"Denotes the requested motion skill, resolving to walk_forward because a forward displacement with a distance is specified.\"},\n {\"text\":\" \",\"role\":\"SEPARATOR\",\"explanation\":\"Whitespace separates the skill word from the distance quantity and adds no action or parameter.\"},\n {\"text\":\"十米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies ten meters (10 m) as the walk_forward distance_m parameter.\"},\n {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separates the executable request from the politeness phrase and has no executable effect.\"},\n {\"text\":\"please\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker only; it does not add, remove, reorder, correct, or repeat any action.\"},\n {\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop terminates the sentence and has no executable effect.\"}\n]\nConcatenation: forward + space + 十米 + ， + please + 。 = \"forward 十米，please。\" yes.\n\nDimensions:\naction_multiplicity: UNIQUE. \"The source contains exactly one action: forward movement of ten meters. No conjunction, repetition, or additional verb requests another action.\"\naction_order: UNIQUE. \"With one action, the only execution order is that single walk_forward step.\"\ncorrection_scope: UNIQUE. \"No correction or replacement wording appears; no earlier action or parameter is edited.\"\nrepetition_scope: UNIQUE. \"No repetition count, iterative marker, or repeated action phrase appears; the action occurs once.\"\nreference_resolution: UNIQUE. \"The distance 十米 directly supplies the only parameter for forward; there are no pronouns, ordinals, or omitted arguments needing external context.\"\ntemporal_relations: UNIQUE. \"No before/after, waiting, simultaneous, or completion relation is stated; a single step fully represents the plan.\"\nunresolved_relations: UNIQUE. \"No explicit unresolved choice, order, scope, or relation is left open; please is merely polite context.\"\n\nauthorized_plan:\n[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]}]\n\nNeed check schema maybe \"schema_version\" not in authorized_plan? The output authorized_plan is list of steps. Yes. No mission_id.\n\nNeed maybe if \"forward\" is adverb with \"十米\" distance, legal. Yes.\n\nNeed final exactly JSON object no markdown. Let's output.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source. Source: \"forward 十米，please。\" Chinese \"十米\" ten meters, comma Chinese, English please, Chinese period. Legal skill? \"forward\" maps to walk_forward likely. distance 10 meters. Only one action. Need assess seven dimensions. candidate matches. Need output status AUTHORIZED_UNIQUE, coverage spans exact concatenation equals entire source. Need split meaningful spans. Source exact: \"forward 十米，please。\" Let's count characters: forward(7 letters? f o r w a r d =7), space, 十米 (2 chars), ， (1), please (6), 。 (1). Total 7+1+2+1+6+1=18. Need coverage list objects text copied exactly with original punctuation and whitespace. Concatenated in order equals source. We can split \"forward\" ACTION, \" \" separator, \"十米\" QUANTITY, \"，\" separator maybe relation? \"please\" CONTEXT, \"。\" separator. Need explain. But role choices. The source has \"forward\" maybe skill instruction, \"十米\" quantity. \"please\" is politeness nonexecuting. Chinese comma separator. period punctuation.\n\nNeed derive plan: steps s1 walk_forward distance_m 10.0 depends_on [].\n\nCheck dimensions:\n- action_multiplicity: one action. UNIQUE.\n- action_order: single action. UNIQUE.\n- correction_scope: no corrections. UNIQUE/inapplicable.\n- repetition_scope: no repetitions. UNIQUE/inapplicable.\n- reference_resolution: no pronouns/ordinals omitted args? \"forward 十米\" complete. \"please\" no reference. UNIQUE.\n- temporal_relations: no temporal relations. UNIQUE.\n- unresolved_relations: none. UNIQUE.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty. Each object exactly text, role, explanation. Need split so concatenation exact. If I split \"forward\", \" \", \"十米\", \"，\", \"please\", \"。\" then concat equals. Explain nonexecuting text.\n\nPotential issue: source uses Chinese \"十米\" and English \"forward\". Is \"forward\" legal skill? The legal skills include walk_forward, turn, stand, stop. \"forward\" is natural language but likely maps to walk_forward. Need maybe \"forward\" alone could mean move forward, but with distance confirms walk_forward. Since source says forward 十米. Unique? Yes.\n\nNeed output JSON exactly. No markdown. Ensure numbers finite. authorized_plan list steps with id s1 skill walk_forward parameters distance_m 10.0 depends_on [].\n\nNeed consider if \"十米\" is 10 meters. Chinese numeral 十 = 10. \"米\" meters. Yes.\n\nNeed ensure coverage text values include exact whitespace. We have \"forward 十米，please。\" includes space after forward. If split as \"forward\", \" \", \"十米\", \"，\", \"please\", \"。\" concat exact. \"，\" Chinese comma. \"。\" Chinese full stop.\n\nNeed explanations nonempty and state span's meaning/effect. For separator space: separator between skill and quantity, no authorization change. For Chinese comma: separator, no action. Please context politeness nonexecuting. Period separator.\n\nCould combine \"forward 十米\" as ACTION? But role ACTION includes quantity maybe. Better split as above. The instruction says split source into meaningful spans so every action, relation and edit clause is analyzed. Separators okay. Role CONTEXT for \"please\"; QUANTITY for \"十米\"; ACTION for \"forward\"; SEPARATOR for space, comma, period. Does \"，\" maybe SEPARATOR; \"。\" SEPARATOR. Space also SEPARATOR. Good.\n\nNeed dimensions exactly seven names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each value has status and explanation.\n\nNeed maybe status of correction_scope \"UNIQUE\" with explanation \"No edit/correction clause present; nothing to replace or preserve.\" Inapplicable but unique. Similarly repetition. Temporal. Unresolved.\n\nNeed be careful \"authorized_plan\" null? For AUTHORIZED_UNIQUE it is list.\n\nPotential subtlety: Source \"forward 十米，please。\" The \"please\" may be interpreted as polite request, not action. Good.\n\nPotential subtlety: \"forward\" could be adverb not skill. But legal skill \"walk_forward\" corresponds. Source uniquely authorizes a forward movement of ten meters. \"forward\" maybe direction, but only forward skill. Yes.\n\nNeed output JSON only. Ensure valid JSON, no trailing commas. Use double quotes. Explanation strings can contain unicode. Need maybe escape? Fine.\n\nLet's formulate.\n\nCoverage:\n[\n {\"text\":\"forward\",\"role\":\"ACTION\",\"explanation\":\"Denotes the requested motion skill, resolving to walk_forward because a forward displacement with a distance is specified.\"},\n {\"text\":\" \",\"role\":\"SEPARATOR\",\"explanation\":\"Whitespace separates the skill word from the distance quantity and adds no action or parameter.\"},\n {\"text\":\"十米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies ten meters (10 m) as the walk_forward distance_m parameter.\"},\n {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separates the executable request from the politeness phrase and has no executable effect.\"},\n {\"text\":\"please\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker only; it does not add, remove, reorder, correct, or repeat any action.\"},\n {\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop terminates the sentence and has no executable effect.\"}\n]\nConcatenation: forward + space + 十米 + ， + please + 。 = \"forward 十米，please。\" yes.\n\nDimensions:\naction_multiplicity: UNIQUE. \"The source contains exactly one action: forward movement of ten meters. No conjunction, repetition, or additional verb requests another action.\"\naction_order: UNIQUE. \"With one action, the only execution order is that single walk_forward step.\"\ncorrection_scope: UNIQUE. \"No correction or replacement wording appears; no earlier action or parameter is edited.\"\nrepetition_scope: UNIQUE. \"No repetition count, iterative marker, or repeated action phrase appears; the action occurs once.\"\nreference_resolution: UNIQUE. \"The distance 十米 directly supplies the only parameter for forward; there are no pronouns, ordinals, or omitted arguments needing external context.\"\ntemporal_relations: UNIQUE. \"No before/after, waiting, simultaneous, or completion relation is stated; a single step fully represents the plan.\"\nunresolved_relations: UNIQUE. \"No explicit unresolved choice, order, scope, or relation is left open; please is merely polite context.\"\n\nauthorized_plan:\n[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]}]\n\nNeed check schema maybe \"schema_version\" not in authorized_plan? The output authorized_plan is list of steps. Yes. No mission_id.\n\nNeed maybe if \"forward\" is adverb with \"十米\" distance, legal. Yes.\n\nNeed final exactly JSON object no markdown. Let's output.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"forward\",\"role\":\"ACTION\",\"explanation\":\"Denotes the requested motion skill, resolving to walk_forward because a forward displacement with a distance is specified.\"},{\"text\":\" \",\"role\":\"SEPARATOR\",\"explanation\":\"Whitespace separates the skill word from the distance quantity and adds no action or parameter.\"},{\"text\":\"十米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies ten meters, so distance_m is 10.0 for the walk_forward step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separates the executable request from the politeness phrase and has no executable effect.\"},{\"text\":\"please\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker only; it does not add, remove, reorder, correct, or repeat any action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop terminates the sentence and has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: forward movement of ten meters. No conjunction, repetition, or additional verb requests another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With one action, the only execution order is that single walk_forward step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or replacement wording appears; no earlier action or parameter is edited.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, iterative marker, or repeated action phrase appears; the action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The distance 十米 directly supplies the only parameter for forward; there are no pronouns, ordinals, or omitted arguments needing external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated; a single step fully represents the plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No explicit unresolved choice, order, scope, or relation is left open; please is merely polite context.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_c1dd17d8-6469-4c3f-aed6-cad967f2e9ea",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 317,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 2032,
+            "output_tokens_details": {
+              "reasoning_tokens": 1537
+            },
+            "total_tokens": 3245
+          }
+        },
+        "request_sha256": "659e6cf713d907f321c56d834937a233b31065a07b7612d37eb82090a753e020",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 9.344213099999251,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_c1dd17d8-6469-4c3f-aed6-cad967f2e9ea",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"forward\",\"role\":\"ACTION\",\"explanation\":\"Denotes the requested motion skill, resolving to walk_forward because a forward displacement with a distance is specified.\"},{\"text\":\" \",\"role\":\"SEPARATOR\",\"explanation\":\"Whitespace separates the skill word from the distance quantity and adds no action or parameter.\"},{\"text\":\"十米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies ten meters, so distance_m is 10.0 for the walk_forward step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separates the executable request from the politeness phrase and has no executable effect.\"},{\"text\":\"please\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker only; it does not add, remove, reorder, correct, or repeat any action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop terminates the sentence and has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: forward movement of ten meters. No conjunction, repetition, or additional verb requests another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With one action, the only execution order is that single walk_forward step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or replacement wording appears; no earlier action or parameter is edited.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, iterative marker, or repeated action phrase appears; the action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The distance 十米 directly supplies the only parameter for forward; there are no pronouns, ordinals, or omitted arguments needing external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated; a single step fully represents the plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No explicit unresolved choice, order, scope, or relation is left open; please is merely polite context.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 317,
+          "output_tokens": 2032,
+          "total_tokens": 3245
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.4046137999994244,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "forward-10m",
+      "model": "deepseek-flash",
+      "normalized_length": 16,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 196,
+      "raw_response_sha256": "5fb59599b9590f27f199c702a4d6f470a7e8c69ae8374f08c496d05fc00c7ccb",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_284c0a23-b6e4-4f68-b50c-15ddf9ac73a1",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 9.350749299999734,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 9.344213099999251,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"forward\",\"role\":\"ACTION\",\"explanation\":\"Denotes the requested motion skill, resolving to walk_forward because a forward displacement with a distance is specified.\"},{\"text\":\" \",\"role\":\"SEPARATOR\",\"explanation\":\"Whitespace separates the skill word from the distance quantity and adds no action or parameter.\"},{\"text\":\"十米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies ten meters, so distance_m is 10.0 for the walk_forward step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separates the executable request from the politeness phrase and has no executable effect.\"},{\"text\":\"please\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker only; it does not add, remove, reorder, correct, or repeat any action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop terminates the sentence and has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: forward movement of ten meters. No conjunction, repetition, or additional verb requests another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With one action, the only execution order is that single walk_forward step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or replacement wording appears; no earlier action or parameter is edited.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, iterative marker, or repeated action phrase appears; the action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The distance 十米 directly supplies the only parameter for forward; there are no pronouns, ordinals, or omitted arguments needing external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated; a single step fully represents the plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No explicit unresolved choice, order, scope, or relation is left open; please is merely polite context.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "d7156de9fbfbaa5efab5907e247070b81ddb53d5dfbf2ec7345f8e975bba4806",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_c1dd17d8-6469-4c3f-aed6-cad967f2e9ea",
+          "source_aware": true,
+          "source_sha256": "00f8fa46e75795e0b879433e2be3bcd1508445d357a2c5a4ffa28b58120280d3",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 317,
+            "output_tokens": 2032,
+            "total_tokens": 3245
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 10.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Denotes the requested motion skill, resolving to walk_forward because a forward displacement with a distance is specified.",
+                "role": "ACTION",
+                "text": "forward"
+              },
+              {
+                "explanation": "Whitespace separates the skill word from the distance quantity and adds no action or parameter.",
+                "role": "SEPARATOR",
+                "text": " "
+              },
+              {
+                "explanation": "Specifies ten meters, so distance_m is 10.0 for the walk_forward step.",
+                "role": "QUANTITY",
+                "text": "十米"
+              },
+              {
+                "explanation": "Chinese comma separates the executable request from the politeness phrase and has no executable effect.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Politeness marker only; it does not add, remove, reorder, correct, or repeat any action.",
+                "role": "CONTEXT",
+                "text": "please"
+              },
+              {
+                "explanation": "Chinese full stop terminates the sentence and has no executable effect.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action: forward movement of ten meters. No conjunction, repetition, or additional verb requests another action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "With one action, the only execution order is that single walk_forward step.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or replacement wording appears; no earlier action or parameter is edited.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The distance 十米 directly supplies the only parameter for forward; there are no pronouns, ordinals, or omitted arguments needing external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition count, iterative marker, or repeated action phrase appears; the action occurs once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, waiting, simultaneous, or completion relation is stated; a single step fully represents the plan.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No explicit unresolved choice, order, scope, or relation is left open; please is merely polite context.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 206,
+        "output_tokens": 241,
+        "total_tokens": 1983
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "forward-10m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 10.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "forward十米,please",
+    "status": "SUCCESS"
+  }
+}

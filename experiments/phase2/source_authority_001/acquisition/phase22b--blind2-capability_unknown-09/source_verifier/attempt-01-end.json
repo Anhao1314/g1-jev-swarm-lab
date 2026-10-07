@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.561188699997729,
+  "provider_document": {
+    "created_at": 1791360278,
+    "id": "resp_c01a6c76-a7eb-4d01-95d4-3fa0c1a49459",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_c01a6c76-a7eb-4d01-95d4-3fa0c1a49459",
+        "reasoning_content": "We need answer JSON only. Need analyze source Chinese: \"麻烦向前移动75米\" = Please move forward 75 meters. Need derive plan. Legal skills stand, walk_forward, turn, stop. \"向前移动75米\" maps to walk_forward distance_m 75. \"麻烦\" polite context. No duration. So one action. Unique. candidate matches. Need output exact JSON. Need coverage split source into meaningful spans exact concatenation equals entire source. Source is \"麻烦向前移动75米\". Need coverage objects with text, role, explanation. Need nonempty, exact punctuation/whitespace. Could split \"麻烦\" CONTEXT, \"向前移动\" ACTION? \"75米\" QUANTITY. But text concatenated in order exactly source. Need ensure spans no gaps. Maybe:\n1 text \"麻烦\" role CONTEXT explanation polite marker, no plan effect.\n2 text \"向前移动\" role ACTION? Actually action phrase \"move forward\" maps to walk_forward. \n3 text \"75\" role QUANTITY.\n4 text \"米\" role QUANTITY.\nConcatenate \"麻烦向前移动75米\". Or maybe \"向前移动75米\" as ACTION? Need every action, relation, edit clause. There is only action. Role for \"向前移动\" ACTION, \"75米\" QUANTITY. \"麻烦\" CONTEXT. Good.\n\nNeed dimensions all seven. status UNIQUE. explanations.\n\nauthorized_plan steps: id s1 skill walk_forward parameters {\"distance_m\":75.0} depends_on [].\n\nNeed ensure JSON valid, no markdown. Let's craft with exact keys. coverage nonempty list. dimension keys exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status and explanation.\n\nNeed maybe mention no edits/repetitions. action_order single step unique. etc.\n\nPotential issue: Chinese \"向前移动\" could mean move forward; skill walk_forward. \"75米\" = 75 meters. unique.\n\nNeed final only JSON.\n\nLet's produce. Ensure coverage explanations mention no effect. \"麻烦\" context no action. \"向前移动\" action: one walk_forward. \"75\" quantity: positive finite meters. \"米\" unit: meters.\n\nCould split \"75米\" as one QUANTITY but text includes both. Simpler: \"麻烦\" CONTEXT, \"向前移动\" ACTION, \"75米\" QUANTITY. Text concat exactly. Good.\n\nNeed status AUTHORIZED_UNIQUE. Candidate matches but source uniqueness independent.\n\nFinal.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source Chinese: \"麻烦向前移动75米\" = Please move forward 75 meters. Need derive plan. Legal skills stand, walk_forward, turn, stop. \"向前移动75米\" maps to walk_forward distance_m 75. \"麻烦\" polite context. No duration. So one action. Unique. candidate matches. Need output exact JSON. Need coverage split source into meaningful spans exact concatenation equals entire source. Source is \"麻烦向前移动75米\". Need coverage objects with text, role, explanation. Need nonempty, exact punctuation/whitespace. Could split \"麻烦\" CONTEXT, \"向前移动\" ACTION? \"75米\" QUANTITY. But text concatenated in order exactly source. Need ensure spans no gaps. Maybe:\n1 text \"麻烦\" role CONTEXT explanation polite marker, no plan effect.\n2 text \"向前移动\" role ACTION? Actually action phrase \"move forward\" maps to walk_forward. \n3 text \"75\" role QUANTITY.\n4 text \"米\" role QUANTITY.\nConcatenate \"麻烦向前移动75米\". Or maybe \"向前移动75米\" as ACTION? Need every action, relation, edit clause. There is only action. Role for \"向前移动\" ACTION, \"75米\" QUANTITY. \"麻烦\" CONTEXT. Good.\n\nNeed dimensions all seven. status UNIQUE. explanations.\n\nauthorized_plan steps: id s1 skill walk_forward parameters {\"distance_m\":75.0} depends_on [].\n\nNeed ensure JSON valid, no markdown. Let's craft with exact keys. coverage nonempty list. dimension keys exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status and explanation.\n\nNeed maybe mention no edits/repetitions. action_order single step unique. etc.\n\nPotential issue: Chinese \"向前移动\" could mean move forward; skill walk_forward. \"75米\" = 75 meters. unique.\n\nNeed final only JSON.\n\nLet's produce. Ensure coverage explanations mention no effect. \"麻烦\" context no action. \"向前移动\" action: one walk_forward. \"75\" quantity: positive finite meters. \"米\" unit: meters.\n\nCould split \"75米\" as one QUANTITY but text includes both. Simpler: \"麻烦\" CONTEXT, \"向前移动\" ACTION, \"75米\" QUANTITY. Text concat exactly. Good.\n\nNeed status AUTHORIZED_UNIQUE. Candidate matches but source uniqueness independent.\n\nFinal.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it does not specify, modify, repeat, or reorder any action, so it adds no executable step.\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"Requests one forward walking action, which maps to the legal skill walk_forward.\"},{\"text\":\"75米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance parameter as 75 meters, which is a positive finite meter value for walk_forward.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: moving forward. There is no conjunction, repetition, or additional action clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one action, the execution order is exactly that single walk_forward step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span in the source; the action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The action has no pronoun, ordinal reference, or omitted argument requiring external context; the distance is explicitly 75 meters.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no before, after, simultaneous, waiting, or completion relations; a single linear step satisfies the source.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":75.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_c01a6c76-a7eb-4d01-95d4-3fa0c1a49459",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 187,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 929,
+      "output_tokens_details": {
+        "reasoning_tokens": 534
+      },
+      "total_tokens": 2140
+    }
+  },
+  "request_sha256": "0e223c6084c5eb283bcb791cc63c06fa90b2eb91a86d21e0f8f2d25dd504967e",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,264 @@
+{
+  "added_wall_s": 8.29549059999772,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.290736099999776,
+        "provider_document": {
+          "created_at": 1791360482,
+          "id": "resp_11e6a2e7-a52a-4402-8940-055f9a82f755",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_11e6a2e7-a52a-4402-8940-055f9a82f755",
+              "reasoning_content": "We need answer JSON only. Need analyze source: \"向前走六米，再停下\" Chinese: walk forward 6 meters, then stop.\n\nDimensions:\naction_multiplicity: two actions: walk_forward 6m, stop. Unique.\naction_order: \"再\" means then, order walk then stop. Unique.\ncorrection_scope: no edits. Inapplicable unique.\nrepetition_scope: no repetition. Unique.\nreference_resolution: no pronouns? \"向前\" forward direction perhaps inherent. \"再\" refers to sequence. No unresolved.\ntemporal_relations: walk then stop, linear. Unique.\nunresolved_relations: none explicit. Unique.\n\nLegal interpretation: walk_forward distance_m=6, stop. Positive finite. 2 steps. Authorized unique.\n\nNeed coverage list splitting source exactly. Source: \"向前走六米，再停下\". Need spans meaningful: \"向前走六米\" action walk forward 6m, \"，\" separator, \"再停下\" action stop? But \"再\" is relation/temporal adverb, \"停下\" action. Need text concatenated exactly. Could split into [\"向前走六米\", \"，\", \"再停下\"] roles ACTION, SEPARATOR, ACTION? But \"再\" within \"再停下\" is relation/temporal. Maybe split \"再\" as RELATION and \"停下\" ACTION. Then text concatenation: \"向前走六米\" + \"，\" + \"再\" + \"停下\" = exact. Roles: ACTION for \"向前走六米\"; SEPARATOR for \"，\"; RELATION for \"再\"; ACTION for \"停下\". Need explanations. \"向前\" within first action includes direction. Quantity \"六米\" within action? We can split further: \"向前走\" ACTION, \"六米\" QUANTITY, \"，\" SEPARATOR, \"再\" RELATION, \"停下\" ACTION. That covers quantity. Concatenate exact: \"向前走\" + \"六米\" + \"，\" + \"再\" + \"停下\" = \"向前走六米，再停下\". Good. Role for \"向前走\" ACTION; \"六米\" QUANTITY; \"，\" SEPARATOR; \"再\" RELATION; \"停下\" ACTION. Explanations.\n\nNeed ensure no extra fields. dimensions exactly names. status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed explain each dimension. Let's formulate concise.\n\nPotential issue: \"向前走六米\" means walk_forward? Legal semantics only stand, walk_forward, turn, stop. \"向前走\" = walk_forward. Yes.\n\nCheck maximum turn angle irrelevant. Max steps 2. duration none.\n\nNeed be careful: \"再\" could mean \"then\" or \"again\"? In Chinese \"再停下\" here means then stop. It could also mean \"stop again\" if there was prior stop, but no prior. The intended: walk 6m, then stop. Is there any ambiguity? Maybe \"再\" can mean \"and then\" not repetition. It doesn't introduce repetition. Unique.\n\nCould \"向前走六米，再停下\" be interpreted as walk forward 6 meters, then stop (stop action) maybe stop after completion. Linear. Unique.\n\nNeed output JSON exactly. No markdown.\n\nLet's craft coverage:\n[\n {\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward action with forward direction; no other action or parameter is specified here.\"},\n {\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the immediately preceding walk_forward action as six meters, a positive finite distance_m value.\"},\n {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action phrase from the following sequential instruction; it does not alter authority.\"},\n {\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Introduces a temporal/sequential relation meaning the next action follows the prior action, not a repetition of the prior action.\"},\n {\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action after the walk_forward action; stop has no parameters.\"}\n]\n\nNeed maybe \"再停下\" as ACTION? But \"再\" relation. Fine.\n\nDimensions:\naction_multiplicity UNIQUE explanation: source contains exactly two requested actions, walk_forward (向前走) with distance six meters, and stop (停下). No repeated or edited action.\n\naction_order UNIQUE: \"再\" establishes stop after walk. Single order s1 walk, s2 stop.\n\ncorrection_scope UNIQUE: no edit/correction clause; none.\n\nrepetition_scope UNIQUE: \"再\" is sequential, not repetition. No span repeated.\n\nreference_resolution UNIQUE: no pronouns/ordinals/omitted arguments requiring external referent. \"向前\" specifies direction, \"六米\" supplies distance to walk. \"再\" resolves to preceding action as predecessor.\n\ntemporal_relations UNIQUE: one linear order, walk then stop. No simultaneity/waiting; no invented timing.\n\nunresolved_relations UNIQUE: no explicit unresolved choice/order/scope.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure \"coverage\" list text concatenated exactly equals entire source. Let's verify source string from user: {\"source\":\"向前走六米，再停下\"}. The source is Chinese text no spaces. Our concatenation: \"向前走\" + \"六米\" = \"向前走六米\"; + \"，\" = \"向前走六米，\"; + \"再\" = \"向前走六米，再\"; + \"停下\" = \"向前走六米，再停下\". Yes.\n\nPotential issue: Role QUANTITY for \"六米\" but it parameterizes action. Good.\n\nNeed JSON valid. Use unicode Chinese fine. No markdown. Ensure keys exactly status, coverage, dimensions. dimensions object exactly seven names. Each value object exactly status, explanation. No extra fields. Good.\n\nLet's produce final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source: \"向前走六米，再停下\" Chinese: walk forward 6 meters, then stop.\n\nDimensions:\naction_multiplicity: two actions: walk_forward 6m, stop. Unique.\naction_order: \"再\" means then, order walk then stop. Unique.\ncorrection_scope: no edits. Inapplicable unique.\nrepetition_scope: no repetition. Unique.\nreference_resolution: no pronouns? \"向前\" forward direction perhaps inherent. \"再\" refers to sequence. No unresolved.\ntemporal_relations: walk then stop, linear. Unique.\nunresolved_relations: none explicit. Unique.\n\nLegal interpretation: walk_forward distance_m=6, stop. Positive finite. 2 steps. Authorized unique.\n\nNeed coverage list splitting source exactly. Source: \"向前走六米，再停下\". Need spans meaningful: \"向前走六米\" action walk forward 6m, \"，\" separator, \"再停下\" action stop? But \"再\" is relation/temporal adverb, \"停下\" action. Need text concatenated exactly. Could split into [\"向前走六米\", \"，\", \"再停下\"] roles ACTION, SEPARATOR, ACTION? But \"再\" within \"再停下\" is relation/temporal. Maybe split \"再\" as RELATION and \"停下\" ACTION. Then text concatenation: \"向前走六米\" + \"，\" + \"再\" + \"停下\" = exact. Roles: ACTION for \"向前走六米\"; SEPARATOR for \"，\"; RELATION for \"再\"; ACTION for \"停下\". Need explanations. \"向前\" within first action includes direction. Quantity \"六米\" within action? We can split further: \"向前走\" ACTION, \"六米\" QUANTITY, \"，\" SEPARATOR, \"再\" RELATION, \"停下\" ACTION. That covers quantity. Concatenate exact: \"向前走\" + \"六米\" + \"，\" + \"再\" + \"停下\" = \"向前走六米，再停下\". Good. Role for \"向前走\" ACTION; \"六米\" QUANTITY; \"，\" SEPARATOR; \"再\" RELATION; \"停下\" ACTION. Explanations.\n\nNeed ensure no extra fields. dimensions exactly names. status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed explain each dimension. Let's formulate concise.\n\nPotential issue: \"向前走六米\" means walk_forward? Legal semantics only stand, walk_forward, turn, stop. \"向前走\" = walk_forward. Yes.\n\nCheck maximum turn angle irrelevant. Max steps 2. duration none.\n\nNeed be careful: \"再\" could mean \"then\" or \"again\"? In Chinese \"再停下\" here means then stop. It could also mean \"stop again\" if there was prior stop, but no prior. The intended: walk 6m, then stop. Is there any ambiguity? Maybe \"再\" can mean \"and then\" not repetition. It doesn't introduce repetition. Unique.\n\nCould \"向前走六米，再停下\" be interpreted as walk forward 6 meters, then stop (stop action) maybe stop after completion. Linear. Unique.\n\nNeed output JSON exactly. No markdown.\n\nLet's craft coverage:\n[\n {\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward action with forward direction; no other action or parameter is specified here.\"},\n {\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the immediately preceding walk_forward action as six meters, a positive finite distance_m value.\"},\n {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action phrase from the following sequential instruction; it does not alter authority.\"},\n {\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Introduces a temporal/sequential relation meaning the next action follows the prior action, not a repetition of the prior action.\"},\n {\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action after the walk_forward action; stop has no parameters.\"}\n]\n\nNeed maybe \"再停下\" as ACTION? But \"再\" relation. Fine.\n\nDimensions:\naction_multiplicity UNIQUE explanation: source contains exactly two requested actions, walk_forward (向前走) with distance six meters, and stop (停下). No repeated or edited action.\n\naction_order UNIQUE: \"再\" establishes stop after walk. Single order s1 walk, s2 stop.\n\ncorrection_scope UNIQUE: no edit/correction clause; none.\n\nrepetition_scope UNIQUE: \"再\" is sequential, not repetition. No span repeated.\n\nreference_resolution UNIQUE: no pronouns/ordinals/omitted arguments requiring external referent. \"向前\" specifies direction, \"六米\" supplies distance to walk. \"再\" resolves to preceding action as predecessor.\n\ntemporal_relations UNIQUE: one linear order, walk then stop. No simultaneity/waiting; no invented timing.\n\nunresolved_relations UNIQUE: no explicit unresolved choice/order/scope.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure \"coverage\" list text concatenated exactly equals entire source. Let's verify source string from user: {\"source\":\"向前走六米，再停下\"}. The source is Chinese text no spaces. Our concatenation: \"向前走\" + \"六米\" = \"向前走六米\"; + \"，\" = \"向前走六米，\"; + \"再\" = \"向前走六米，再\"; + \"停下\" = \"向前走六米，再停下\". Yes.\n\nPotential issue: Role QUANTITY for \"六米\" but it parameterizes action. Good.\n\nNeed JSON valid. Use unicode Chinese fine. No markdown. Ensure keys exactly status, coverage, dimensions. dimensions object exactly seven names. Each value object exactly status, explanation. No extra fields. Good.\n\nLet's produce final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward action with a forward direction; no other action is introduced here.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the immediately preceding walk_forward action as six meters, a positive finite distance_m value.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action phrase from the following sequential instruction; it does not itself modify authority.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Introduces a sequential relation meaning the next action follows the prior action, not a repetition of the prior action.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action after the walk_forward action; stop has no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: walk_forward with distance six meters, and stop. No action is repeated, edited, or left unaccounted for.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear order: walk forward six meters first, then stop. The character 再 establishes stop after the walk.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, replacement, or parameter-edit clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition instruction. 再 is used as a sequential connector, not as a request to repeat a span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, or external reference requires resolution. 向前 fixes the direction, 六米 supplies the distance for the walk, and 再 refers to the immediately preceding action as the predecessor of stop.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is a single linear sequence: walk_forward then stop. No simultaneity, waiting, or unspecified timing is introduced.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, ordering, scope, or relationship unresolved.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_11e6a2e7-a52a-4402-8940-055f9a82f755",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 143,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1714,
+            "output_tokens_details": {
+              "reasoning_tokens": 1240
+            },
+            "total_tokens": 2625
+          }
+        },
+        "request_sha256": "84d8793e57cdf7c652d4e77289558c2e55d6557eb91c56d8908b9ec0686d9494",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.289199599999847,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_11e6a2e7-a52a-4402-8940-055f9a82f755",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward action with a forward direction; no other action is introduced here.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the immediately preceding walk_forward action as six meters, a positive finite distance_m value.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action phrase from the following sequential instruction; it does not itself modify authority.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Introduces a sequential relation meaning the next action follows the prior action, not a repetition of the prior action.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action after the walk_forward action; stop has no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: walk_forward with distance six meters, and stop. No action is repeated, edited, or left unaccounted for.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear order: walk forward six meters first, then stop. The character 再 establishes stop after the walk.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, replacement, or parameter-edit clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition instruction. 再 is used as a sequential connector, not as a request to repeat a span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, or external reference requires resolution. 向前 fixes the direction, 六米 supplies the distance for the walk, and 再 refers to the immediately preceding action as the predecessor of stop.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is a single linear sequence: walk_forward then stop. No simultaneity, waiting, or unspecified timing is introduced.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, ordering, scope, or relationship unresolved.\"}}}",
+        "usage": {
+          "input_tokens": 143,
+          "output_tokens": 1714,
+          "total_tokens": 2625
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.191120299998147,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk6-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk6-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "c219f922612c0eccb2bcd64a5735caedb9e650d841e68e4273716293bff1ad87",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_364117bd-0f1b-4d71-acfb-78e27beda2e4",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.294652500000666,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.289199599999847,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward action with a forward direction; no other action is introduced here.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the immediately preceding walk_forward action as six meters, a positive finite distance_m value.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action phrase from the following sequential instruction; it does not itself modify authority.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Introduces a sequential relation meaning the next action follows the prior action, not a repetition of the prior action.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action after the walk_forward action; stop has no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: walk_forward with distance six meters, and stop. No action is repeated, edited, or left unaccounted for.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear order: walk forward six meters first, then stop. The character 再 establishes stop after the walk.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, replacement, or parameter-edit clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition instruction. 再 is used as a sequential connector, not as a request to repeat a span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, or external reference requires resolution. 向前 fixes the direction, 六米 supplies the distance for the walk, and 再 refers to the immediately preceding action as the predecessor of stop.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is a single linear sequence: walk_forward then stop. No simultaneity, waiting, or unspecified timing is introduced.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, ordering, scope, or relationship unresolved.\"}}}",
+          "raw_response_sha256": "bf822df1bb29f25b4e4ca3a80f4c1953f6244c27aa2a01d859a821ecf12a27be",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_11e6a2e7-a52a-4402-8940-055f9a82f755",
+          "source_aware": false,
+          "source_sha256": "e26264bbc8b2b0ae9dcbe2b00b13be251a04072d0c9d91304ed87c8e81822e53",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 143,
+            "output_tokens": 1714,
+            "total_tokens": 2625
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Requests the walk_forward action with a forward direction; no other action is introduced here.",
+                "role": "ACTION",
+                "text": "向前走"
+              },
+              {
+                "explanation": "Specifies the distance for the immediately preceding walk_forward action as six meters, a positive finite distance_m value.",
+                "role": "QUANTITY",
+                "text": "六米"
+              },
+              {
+                "explanation": "Punctuation separating the first action phrase from the following sequential instruction; it does not itself modify authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Introduces a sequential relation meaning the next action follows the prior action, not a repetition of the prior action.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Requests the stop action after the walk_forward action; stop has no parameters.",
+                "role": "ACTION",
+                "text": "停下"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly two actions: walk_forward with distance six meters, and stop. No action is repeated, edited, or left unaccounted for.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The source gives one linear order: walk forward six meters first, then stop. The character 再 establishes stop after the walk.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, replacement, or parameter-edit clause in the source.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "No pronoun, ordinal, or external reference requires resolution. 向前 fixes the direction, 六米 supplies the distance for the walk, and 再 refers to the immediately preceding action as the predecessor of stop.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition instruction. 再 is used as a sequential connector, not as a request to repeat a span.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The only temporal relation is a single linear sequence: walk_forward then stop. No simultaneity, waiting, or unspecified timing is introduced.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, ordering, scope, or relationship unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 206,
+        "output_tokens": 215,
+        "total_tokens": 1957
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk6-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "向前走六米再停下",
+    "status": "SUCCESS"
+  }
+}

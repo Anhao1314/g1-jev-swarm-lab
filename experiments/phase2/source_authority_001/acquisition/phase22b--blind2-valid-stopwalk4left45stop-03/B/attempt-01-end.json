@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 2.620646499999566,
+  "provider_document": {
+    "created_at": 1791360166,
+    "id": "resp_d5f72889-73f3-436d-bf47-43175e962ce9",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_d5f72889-73f3-436d-bf47-43175e962ce9",
+        "reasoning_content": "We need answer only JSON. Need parse Chinese: \"先立即停止，再向前走400厘米，之后左转45°，最后停住\"\n\nSkills: stop, walk_forward distance 400 cm -> 4.0 m, turn left 45° -> angle_deg positive 45.0, stop.\n\nSequence four steps. mission_id path-safe. Need depends_on exactly previous.\n\nNeed check \"立即停止\" stop, \"停住\" stop. Parameters {}.\n\nNeed produce JSON. Ensure status SUCCESS, mission_id e.g. \"cmd-stop-walk-turn-stop\". No extra.\n\nNeed exactly fields. Steps ids s1... depends. \n\nCheck any ambiguity? \"向前走400厘米\" clear. \"左转45°\" clear. \"先...再...之后...最后\" sequence. Good.\n\nReturn only JSON.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need parse Chinese: \"先立即停止，再向前走400厘米，之后左转45°，最后停住\"\n\nSkills: stop, walk_forward distance 400 cm -> 4.0 m, turn left 45° -> angle_deg positive 45.0, stop.\n\nSequence four steps. mission_id path-safe. Need depends_on exactly previous.\n\nNeed check \"立即停止\" stop, \"停住\" stop. Parameters {}.\n\nNeed produce JSON. Ensure status SUCCESS, mission_id e.g. \"cmd-stop-walk-turn-stop\". No extra.\n\nNeed exactly fields. Steps ids s1... depends. \n\nCheck any ambiguity? \"向前走400厘米\" clear. \"左转45°\" clear. \"先...再...之后...最后\" sequence. Good.\n\nReturn only JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-stop-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_d5f72889-73f3-436d-bf47-43175e962ce9",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 217,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 309,
+      "output_tokens_details": {
+        "reasoning_tokens": 171
+      },
+      "total_tokens": 2062
+    }
+  },
+  "request_sha256": "8cb8e8037d26967f08b387336f2a182cdb391ebe6476c035c93bf1b913692089",
+  "status": "SUCCESS"
+}

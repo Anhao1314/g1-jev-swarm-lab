@@ -1,0 +1,266 @@
+{
+  "added_wall_s": 10.155551800002286,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.148104399999283,
+        "provider_document": {
+          "created_at": 1791360009,
+          "id": "resp_a7ffa221-22bd-417a-b492-aeefba61dc49",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_a7ffa221-22bd-417a-b492-aeefba61dc49",
+              "reasoning_content": "We need answer JSON object exactly. Need derive source. Chinese: \"麻烦顺时针转三十度\" means \"Please turn clockwise 30 degrees.\" Need assess dimensions. Legal turn clockwise negative, angle -30. Unique. Need coverage split spans exactly. Source text: 麻烦顺时针转三十度. Need split meaningful spans, concatenated exactly. Need roles. Could split as \"麻烦\" CONTEXT (polite), \"顺时针\" QUANTITY? Actually direction, role maybe ACTION? Need role options ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Need every span explanation. We can split into characters/words. Ensure concatenation equals entire source. Need maybe \"麻烦\" context, \"顺时针\" quantity? Hmm \"顺时针\" specifies direction parameter, not quantity? Role QUANTITY could cover direction modifier? The role list doesn't include PARAM. It says QUANTITY perhaps for values/units. \"顺时针\" is direction, maybe action modifier. Role ACTION? \"转\" ACTION. \"三十度\" QUANTITY. \"麻烦\" CONTEXT. Could split \"顺时针转\" ACTION? But then 顺时针 is part of action? Better coverage: \"麻烦\" CONTEXT, \"顺时针\" QUANTITY or ACTION? \"转\" ACTION, \"三十度\" QUANTITY. Need role for 顺时针 maybe QUANTITY because parameter direction. Explanation: clockwise maps to negative angle sign. That seems okay. But role QUANTITY for non-numeric direction? It affects parameter. Or CONTEXT? It is essential action parameter, not context. Since roles only ACTION/RELATION/EDIT/QUANTITY/CONTEXT/SEPARATOR; QUANTITY is nearest for parameter specification. Could also split into \"麻烦\" CONTEXT, \"顺时针转\" ACTION, \"三十度\" QUANTITY. But then 顺时针 included in ACTION explanation includes direction. Yet \"转\" alone is action. Need \"meaningful spans so every action, relation and edit clause analyzed\". Since no relation/edit. Could make \"麻烦\" CONTEXT, \"顺时针\" QUANTITY, \"转\" ACTION, \"三十度\" QUANTITY. Concatenate: 麻烦顺时针转三十度. Yes. Explanations nonempty.\n\nDimensions:\naction_multiplicity: one action turn. Unique.\naction_order: single action no order constraints. Unique.\ncorrection_scope: no corrections. Unique/inapplicable.\nrepetition_scope: no repetition. Unique.\nreference_resolution: no pronouns/ordinal/shared args. \"顺时针转三十度\" self-contained. Unique.\ntemporal_relations: no temporal relation. Unique.\nunresolved_relations: none, source resolves direction and angle. Unique.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan steps id s1 skill turn parameters angle_deg -30.0 depends_on [].\n\nNeed ensure numbers finite JSON numbers. angle -30.0. Good.\n\nPotential issue: source says \"三十度\" = 30 degrees, within max 180. Clockwise negative.\n\nCandidate matches. But we need output exactly JSON. Need not include markdown. Need comply \"coverage is nonempty list... text values concatenated in order must equal entire original source exactly\". Our split \"麻烦\" + \"顺时针\" + \"转\" + \"三十度\" = 麻烦顺时针转三十度. Yes.\n\nNeed dimensions exactly seven names. Need explanation. Could include Chinese source and mapping.\n\nNeed no extra fields. Output one JSON object.\n\nLet's craft robust JSON. Ensure valid. Chinese characters okay. Need maybe escape? JSON can contain UTF-8.\n\nLet's ensure coverage all spans:\n1 text \"麻烦\", role \"CONTEXT\", explanation \"Polite request prefix; does not create an action, parameter, order, correction, repetition, reference, or temporal relation.\"\n2 text \"顺时针\", role \"QUANTITY\", explanation \"Direction modifier for the turn action; by compilation semantics clockwise means negative angle sign.\"\n3 text \"转\", role \"ACTION\", explanation \"Identifies exactly one turn action.\"\n4 text \"三十度\", role \"QUANTITY\", explanation \"Angle magnitude 30 degrees; combined with clockwise direction gives angle_deg -30.0.\"\n\nWould \"顺时针\" role QUANTITY be accepted? The role values are limited. It is a parameter/direction. QUANTITY seems acceptable. Maybe better role ACTION? If role ACTION for 顺时针? No. Role QUANTITY can be for quantity parameter. But direction isn't quantity. Maybe action? Hmm \"顺时针\" is adverb modifying action, could be ACTION? The role list maybe not perfect. Let's consider if we split \"顺时针转\" as ACTION and \"三十度\" as QUANTITY. Then no questionable role. Explanation for \"顺时针转\" identifies action and direction. But \"顺时针\" is not action by itself. Role ACTION covers action phrase. The instruction: \"Split source into meaningful spans so every action, relation and edit clause is analyzed.\" It doesn't require minimal tokens. Role ACTION for \"顺时针转\" maybe okay because action word with direction modifier. Then \"麻烦\" CONTEXT, \"顺时针转\" ACTION, \"三十度\" QUANTITY. But then we don't separately analyze direction? Explanation can. Is that sufficient? It says every action, relation and edit clause. Direction is parameter, not action. But role QUANTITY for angle. Direction in ACTION explanation. Hmm.\n\nMaybe split as:\n- \"麻烦\" CONTEXT\n- \"顺时针\" ACTION? no.\nI think QUANTITY for direction parameter is okay because role set has no PARAMETER; it indicates parameter value. It says role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. \"顺时针\" is a parameter direction, so QUANTITY/parameter. Explanation states. Fine.\n\nNeed dimensions. Let's write concise.\n\nPotential nuance: \"麻烦\" means \"please\" / \"trouble\", no effect. Unique.\n\nNeed status AUTHORIZED_UNIQUE.\n\nDouble-check if \"麻烦顺时针转三十度\" could be parsed as \"Please turn clockwise 30 degrees.\" No unresolved. \"顺时针\" could be clockwise, yes. \"三十度\" 30. Negative. Unique.\n\nNeed decide if \"turn\" angle max 180, positive finite nonzero. -30 legal.\n\nLet's produce final exactly JSON. Ensure no markdown. Use double quotes. Good.",
+              "summary": [
+                {
+                  "text": "We need answer JSON object exactly. Need derive source. Chinese: \"麻烦顺时针转三十度\" means \"Please turn clockwise 30 degrees.\" Need assess dimensions. Legal turn clockwise negative, angle -30. Unique. Need coverage split spans exactly. Source text: 麻烦顺时针转三十度. Need split meaningful spans, concatenated exactly. Need roles. Could split as \"麻烦\" CONTEXT (polite), \"顺时针\" QUANTITY? Actually direction, role maybe ACTION? Need role options ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Need every span explanation. We can split into characters/words. Ensure concatenation equals entire source. Need maybe \"麻烦\" context, \"顺时针\" quantity? Hmm \"顺时针\" specifies direction parameter, not quantity? Role QUANTITY could cover direction modifier? The role list doesn't include PARAM. It says QUANTITY perhaps for values/units. \"顺时针\" is direction, maybe action modifier. Role ACTION? \"转\" ACTION. \"三十度\" QUANTITY. \"麻烦\" CONTEXT. Could split \"顺时针转\" ACTION? But then 顺时针 is part of action? Better coverage: \"麻烦\" CONTEXT, \"顺时针\" QUANTITY or ACTION? \"转\" ACTION, \"三十度\" QUANTITY. Need role for 顺时针 maybe QUANTITY because parameter direction. Explanation: clockwise maps to negative angle sign. That seems okay. But role QUANTITY for non-numeric direction? It affects parameter. Or CONTEXT? It is essential action parameter, not context. Since roles only ACTION/RELATION/EDIT/QUANTITY/CONTEXT/SEPARATOR; QUANTITY is nearest for parameter specification. Could also split into \"麻烦\" CONTEXT, \"顺时针转\" ACTION, \"三十度\" QUANTITY. But then 顺时针 included in ACTION explanation includes direction. Yet \"转\" alone is action. Need \"meaningful spans so every action, relation and edit clause analyzed\". Since no relation/edit. Could make \"麻烦\" CONTEXT, \"顺时针\" QUANTITY, \"转\" ACTION, \"三十度\" QUANTITY. Concatenate: 麻烦顺时针转三十度. Yes. Explanations nonempty.\n\nDimensions:\naction_multiplicity: one action turn. Unique.\naction_order: single action no order constraints. Unique.\ncorrection_scope: no corrections. Unique/inapplicable.\nrepetition_scope: no repetition. Unique.\nreference_resolution: no pronouns/ordinal/shared args. \"顺时针转三十度\" self-contained. Unique.\ntemporal_relations: no temporal relation. Unique.\nunresolved_relations: none, source resolves direction and angle. Unique.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan steps id s1 skill turn parameters angle_deg -30.0 depends_on [].\n\nNeed ensure numbers finite JSON numbers. angle -30.0. Good.\n\nPotential issue: source says \"三十度\" = 30 degrees, within max 180. Clockwise negative.\n\nCandidate matches. But we need output exactly JSON. Need not include markdown. Need comply \"coverage is nonempty list... text values concatenated in order must equal entire original source exactly\". Our split \"麻烦\" + \"顺时针\" + \"转\" + \"三十度\" = 麻烦顺时针转三十度. Yes.\n\nNeed dimensions exactly seven names. Need explanation. Could include Chinese source and mapping.\n\nNeed no extra fields. Output one JSON object.\n\nLet's craft robust JSON. Ensure valid. Chinese characters okay. Need maybe escape? JSON can contain UTF-8.\n\nLet's ensure coverage all spans:\n1 text \"麻烦\", role \"CONTEXT\", explanation \"Polite request prefix; does not create an action, parameter, order, correction, repetition, reference, or temporal relation.\"\n2 text \"顺时针\", role \"QUANTITY\", explanation \"Direction modifier for the turn action; by compilation semantics clockwise means negative angle sign.\"\n3 text \"转\", role \"ACTION\", explanation \"Identifies exactly one turn action.\"\n4 text \"三十度\", role \"QUANTITY\", explanation \"Angle magnitude 30 degrees; combined with clockwise direction gives angle_deg -30.0.\"\n\nWould \"顺时针\" role QUANTITY be accepted? The role values are limited. It is a parameter/direction. QUANTITY seems acceptable. Maybe better role ACTION? If role ACTION for 顺时针? No. Role QUANTITY can be for quantity parameter. But direction isn't quantity. Maybe action? Hmm \"顺时针\" is adverb modifying action, could be ACTION? The role list maybe not perfect. Let's consider if we split \"顺时针转\" as ACTION and \"三十度\" as QUANTITY. Then no questionable role. Explanation for \"顺时针转\" identifies action and direction. But \"顺时针\" is not action by itself. Role ACTION covers action phrase. The instruction: \"Split source into meaningful spans so every action, relation and edit clause is analyzed.\" It doesn't require minimal tokens. Role ACTION for \"顺时针转\" maybe okay because action word with direction modifier. Then \"麻烦\" CONTEXT, \"顺时针转\" ACTION, \"三十度\" QUANTITY. But then we don't separately analyze direction? Explanation can. Is that sufficient? It says every action, relation and edit clause. Direction is parameter, not action. But role QUANTITY for angle. Direction in ACTION explanation. Hmm.\n\nMaybe split as:\n- \"麻烦\" CONTEXT\n- \"顺时针\" ACTION? no.\nI think QUANTITY for direction parameter is okay because role set has no PARAMETER; it indicates parameter value. It says role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. \"顺时针\" is a parameter direction, so QUANTITY/parameter. Explanation states. Fine.\n\nNeed dimensions. Let's write concise.\n\nPotential nuance: \"麻烦\" means \"please\" / \"trouble\", no effect. Unique.\n\nNeed status AUTHORIZED_UNIQUE.\n\nDouble-check if \"麻烦顺时针转三十度\" could be parsed as \"Please turn clockwise 30 degrees.\" No unresolved. \"顺时针\" could be clockwise, yes. \"三十度\" 30. Negative. Unique.\n\nNeed decide if \"turn\" angle max 180, positive finite nonzero. -30 legal.\n\nLet's produce final exactly JSON. Ensure no markdown. Use double quotes. Good.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"麻烦\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Polite request prefix meaning please; it adds no action, parameter, order, correction, repetition, reference, or temporal relation.\"\n    },\n    {\n      \"text\": \"顺时针\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Direction parameter for the turn action; under compilation semantics clockwise/顺时针 maps to a negative angle sign.\"\n    },\n    {\n      \"text\": \"转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Identifies exactly one turn action, with no additional actions, repetitions, or edits.\"\n    },\n    {\n      \"text\": \"三十度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the angle magnitude as 30 degrees; combined with clockwise direction, the turn parameter is angle_deg = -30.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly one action: 转. There is no coordination, repetition, or additional command.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so the execution order is exactly that single turn step.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No correction or replacement clause appears in the source.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition count or repeated span appears in the source.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no pronoun, ordinal reference, or omitted argument requiring external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No before, after, simultaneous, waiting, or completion relation appears; the single action has no temporal constraint.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source fully resolves direction as clockwise and magnitude as 30 degrees, leaving no explicit unresolved choice, order, or relation.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": -30.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_a7ffa221-22bd-417a-b492-aeefba61dc49",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 188,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1890,
+            "output_tokens_details": {
+              "reasoning_tokens": 1324
+            },
+            "total_tokens": 3102
+          }
+        },
+        "request_sha256": "a41f1a455d39c1ecdd5539e490761c0d9f665ce8b4a11d89255d0428a4391a4e",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.146658900001057,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_a7ffa221-22bd-417a-b492-aeefba61dc49",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"麻烦\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Polite request prefix meaning please; it adds no action, parameter, order, correction, repetition, reference, or temporal relation.\"\n    },\n    {\n      \"text\": \"顺时针\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Direction parameter for the turn action; under compilation semantics clockwise/顺时针 maps to a negative angle sign.\"\n    },\n    {\n      \"text\": \"转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Identifies exactly one turn action, with no additional actions, repetitions, or edits.\"\n    },\n    {\n      \"text\": \"三十度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the angle magnitude as 30 degrees; combined with clockwise direction, the turn parameter is angle_deg = -30.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly one action: 转. There is no coordination, repetition, or additional command.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so the execution order is exactly that single turn step.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No correction or replacement clause appears in the source.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition count or repeated span appears in the source.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no pronoun, ordinal reference, or omitted argument requiring external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No before, after, simultaneous, waiting, or completion relation appears; the single action has no temporal constraint.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source fully resolves direction as clockwise and magnitude as 30 degrees, leaving no explicit unresolved choice, order, or relation.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": -30.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+        "usage": {
+          "input_tokens": 188,
+          "output_tokens": 1890,
+          "total_tokens": 3102
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 2,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.7645556000024953,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-cw-30",
+      "model": "deepseek-flash",
+      "normalized_length": 9,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-cw-30\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "28efde78c89ddca9ac8f8532110e4f52ef1d6528567ddf5e08076c7b43d8843b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_41e45a45-64bf-4de8-beca-750c8cc1e6cc",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.154916199997388,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 10.146658900001057,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"麻烦\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Polite request prefix meaning please; it adds no action, parameter, order, correction, repetition, reference, or temporal relation.\"\n    },\n    {\n      \"text\": \"顺时针\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Direction parameter for the turn action; under compilation semantics clockwise/顺时针 maps to a negative angle sign.\"\n    },\n    {\n      \"text\": \"转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Identifies exactly one turn action, with no additional actions, repetitions, or edits.\"\n    },\n    {\n      \"text\": \"三十度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the angle magnitude as 30 degrees; combined with clockwise direction, the turn parameter is angle_deg = -30.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly one action: 转. There is no coordination, repetition, or additional command.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so the execution order is exactly that single turn step.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No correction or replacement clause appears in the source.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition count or repeated span appears in the source.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no pronoun, ordinal reference, or omitted argument requiring external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No before, after, simultaneous, waiting, or completion relation appears; the single action has no temporal constraint.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source fully resolves direction as clockwise and magnitude as 30 degrees, leaving no explicit unresolved choice, order, or relation.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": -30.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+          "raw_response_sha256": "5b2a5f68adafe054e4f9823eccf3e1f539750ad5c2be8f65365f4c279a63f267",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_a7ffa221-22bd-417a-b492-aeefba61dc49",
+          "source_aware": true,
+          "source_sha256": "d713a2af0ffc364d4ce37969eeb1dbaaa32388f7a39467a57f7c6170a669cbaa",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 188,
+            "output_tokens": 1890,
+            "total_tokens": 3102
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": -30.0
+                },
+                "skill": "turn"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Polite request prefix meaning please; it adds no action, parameter, order, correction, repetition, reference, or temporal relation.",
+                "role": "CONTEXT",
+                "text": "麻烦"
+              },
+              {
+                "explanation": "Direction parameter for the turn action; under compilation semantics clockwise/顺时针 maps to a negative angle sign.",
+                "role": "QUANTITY",
+                "text": "顺时针"
+              },
+              {
+                "explanation": "Identifies exactly one turn action, with no additional actions, repetitions, or edits.",
+                "role": "ACTION",
+                "text": "转"
+              },
+              {
+                "explanation": "Specifies the angle magnitude as 30 degrees; combined with clockwise direction, the turn parameter is angle_deg = -30.0.",
+                "role": "QUANTITY",
+                "text": "三十度"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: 转. There is no coordination, repetition, or additional command.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so the execution order is exactly that single turn step.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or replacement clause appears in the source.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The source contains no pronoun, ordinal reference, or omitted argument requiring external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition count or repeated span appears in the source.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, simultaneous, waiting, or completion relation appears; the single action has no temporal constraint.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source fully resolves direction as clockwise and magnitude as 30 degrees, leaving no explicit unresolved choice, order, or relation.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 116,
+        "total_tokens": 1856
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-cw-30",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "麻烦顺时针转三十度",
+    "status": "SUCCESS"
+  }
+}

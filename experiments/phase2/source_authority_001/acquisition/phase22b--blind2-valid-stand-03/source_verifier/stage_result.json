@@ -1,0 +1,256 @@
+{
+  "added_wall_s": 10.52888349999921,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.52313630000208,
+        "provider_document": {
+          "created_at": 1791359847,
+          "id": "resp_ac128c39-6601-4a96-991d-06e87ae22396",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_ac128c39-6601-4a96-991d-06e87ae22396",
+              "reasoning_content": "We need answer JSON only. Need analyze source \"站立不动\" Chinese means \"stand still\" / \"stand motionless\". Need derive plan. Need inspect rules. Legal skills stand, walk_forward, turn, stop. stand parameters duration_s positive finite at most 60. When no duration specified default exactly 2.0. An explicitly vague duration is unresolved, not default.\n\nSource only \"站立不动\". This is ambiguous? It requests stand still, no duration. Is \"不动\" adverb manner, not vague duration. No duration specified. Default 2.0 for stand. But is action \"stand\" authorized? \"站立不动\" likely means stand still. Could be stand skill? Need decide if source uniquely authorizes one legal interpretation. Need consider \"站立不动\" maybe \"stand without moving\" i.e., stand. Duration unspecified, default 2.0. So plan s1 stand duration 2.0 depends_on [].\n\nBut need be careful: \"站立不动\" could mean \"stand still\" maybe an action of standing stationary, but no duration. The compiler default says when no duration specified default exactly 2.0. So unique. Candidate matches. Need output AUTHORIZED_UNIQUE if all dimensions unique.\n\nNeed produce coverage splitting entire source exactly. Source \"站立不动\" two Chinese tokens? Could split as \"站立\" and \"不动\" or whole. Need coverage text concatenated equals entire original exactly. Need meaningful spans every action relation edit clause. Source only action phrase. Could split into \"站立\" (ACTION stand) and \"不动\" (RELATION? manner/continuation \"motionless\"). Or whole \"站立不动\" as ACTION. But requirement split into meaningful spans so every action, relation, edit clause analyzed. We can have two objects: text \"站立\" role ACTION explanation; text \"不动\" role RELATION or CONTEXT? It specifies stationary manner, not a separate action, no duration. Need concatenate exactly \"站立不动\". If split \"站立\" and \"不动\", yes. But role for 不动: RELATION maybe. Explanation nonempty. Or one object whole text ACTION. Does \"every action, relation and edit clause\" require split? Source has action and modifier. Better split \"站立\" ACTION and \"不动\" RELATION. Need ensure role allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"不动\" is relation/manner. Good.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE. Exactly one action stand. \"站立\", \"不动\" is manner not second action.\n- action_order: UNIQUE? Only one action, order trivial. Explanation.\n- correction_scope: UNIQUE/inapplicable no corrections.\n- repetition_scope: UNIQUE/inapplicable no repetition.\n- reference_resolution: UNIQUE/inapplicable no pronouns/ordinals/shared args? Actually duration omitted, but default resolves. Stand has no object. Yes.\n- temporal_relations: UNIQUE? No before/after/wait; single action. Or maybe \"不动\" means no movement during stand, but no temporal relation. Unique/inapplicable.\n- unresolved_relations: UNIQUE? No explicit unresolved relation. Duration unspecified but default handles, not vague. Need mention \"不动\" doesn't specify duration but no explicit vague duration; default applies. Is no duration specified same as explicit unresolved? Rules: When no duration is specified default exactly 2.0. An explicitly vague duration is unresolved, not default. Here no duration specified, so default. Unique.\n\nNeed authorized_plan list one step:\n{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}\nNeed exactly keys? Each step has exactly id, skill, parameters, depends_on. Good.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty list objects exactly text, role, explanation. Need text values concatenate to source exactly. We'll use:\n[\n {\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The verb 站立 denotes the single requested action, which maps to the legal stand skill.\"},\n {\"text\":\"不动\",\"role\":\"RELATION\",\"explanation\":\"The modifier 不动 describes the standing as motionless/still. It does not add a second action, separate skill, duration, repetition, correction, or unresolved relation; it therefore leaves the single stand action unchanged.\"}\n]\nConcatenated \"站立不动\". Good.\n\nNeed dimensions object exactly seven names. Explanation nonempty. Each status.\n\nNeed perhaps mention \"站立不动\" could be interpreted as \"stop\"? Wait, \"站立不动\" = \"stand still\" not stop. \"不动\" could mean \"do not move\", maybe \"stop\" if context? But source alone \"站立不动\" contains 站立 = stand. \"stop\" skill is \"停止\" not \"站立不动\". So stand.\n\nNeed consider if \"站立不动\" maybe an imperative \"stand without moving\" could be a command to remain standing, but no duration. Default applies. Good.\n\nNeed be wary: The system says \"Do not use runtime capability to reject...\". Not relevant.\n\nPotential issue: \"站立不动\" could be Chinese \"stand still\" meaning \"stand\" plus \"not move\". \"不动\" might be interpreted as negative command \"do not move\" which is not a legal skill? But source is an action phrase \"站立不动\" not \"不要动\". The only legal action is stand. It doesn't explicitly mention \"stop\". \"不动\" as modifier doesn't authorize stop. If it were \"不要动\" alone, no legal skill? But here stand.\n\nNeed output JSON only, no markdown. Ensure valid JSON. Could include Chinese characters. Need no extra text.\n\nLet's craft final. Need exact keys. Dimensions names:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nFor each status and explanation.\n\nAction order: Since only one action, unique exact order s1. Explanation.\n\nCorrection scope: No edit/correction markers. Unique/inapplicable.\n\nRepetition: No repetition. Unique/inapplicable.\n\nReference: No pronouns/ordinals/shared/omitted? Omitted duration resolved by default. \"站立\" no object. \"不动\" refers to standing action; unique antecedent if considered. Good.\n\nTemporal: Single action no temporal relation. Unique.\n\nUnresolved: No explicit unresolved choice. Duration absence invokes default, not ambiguity. \"不动\" doesn't introduce unresolved relation. Unique.\n\nCoverage explanation should state role. Need \"every explanation nonempty and states span's meaning and effect on plan, including why nonexecuting text does not alter authorization.\" For \"不动\" role RELATION, explanation says does not add action etc. Good. For \"站立\", explanation says action maps stand and duration default. Good.\n\nCould include \"站立\" as ACTION and \"不动\" as RELATION. But does \"站立\" alone mean \"stand\" maybe action. Fine.\n\nPotential issue: The coverage text values must concatenate in order equal entire original source exactly. \"站立\" + \"不动\" = \"站立不动\". Good.\n\nNeed ensure no whitespace. Source has no whitespace. Good.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source \"站立不动\" Chinese means \"stand still\" / \"stand motionless\". Need derive plan. Need inspect rules. Legal skills stand, walk_forward, turn, stop. stand parameters duration_s positive finite at most 60. When no duration specified default exactly 2.0. An explicitly vague duration is unresolved, not default.\n\nSource only \"站立不动\". This is ambiguous? It requests stand still, no duration. Is \"不动\" adverb manner, not vague duration. No duration specified. Default 2.0 for stand. But is action \"stand\" authorized? \"站立不动\" likely means stand still. Could be stand skill? Need decide if source uniquely authorizes one legal interpretation. Need consider \"站立不动\" maybe \"stand without moving\" i.e., stand. Duration unspecified, default 2.0. So plan s1 stand duration 2.0 depends_on [].\n\nBut need be careful: \"站立不动\" could mean \"stand still\" maybe an action of standing stationary, but no duration. The compiler default says when no duration specified default exactly 2.0. So unique. Candidate matches. Need output AUTHORIZED_UNIQUE if all dimensions unique.\n\nNeed produce coverage splitting entire source exactly. Source \"站立不动\" two Chinese tokens? Could split as \"站立\" and \"不动\" or whole. Need coverage text concatenated equals entire original exactly. Need meaningful spans every action relation edit clause. Source only action phrase. Could split into \"站立\" (ACTION stand) and \"不动\" (RELATION? manner/continuation \"motionless\"). Or whole \"站立不动\" as ACTION. But requirement split into meaningful spans so every action, relation, edit clause analyzed. We can have two objects: text \"站立\" role ACTION explanation; text \"不动\" role RELATION or CONTEXT? It specifies stationary manner, not a separate action, no duration. Need concatenate exactly \"站立不动\". If split \"站立\" and \"不动\", yes. But role for 不动: RELATION maybe. Explanation nonempty. Or one object whole text ACTION. Does \"every action, relation and edit clause\" require split? Source has action and modifier. Better split \"站立\" ACTION and \"不动\" RELATION. Need ensure role allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"不动\" is relation/manner. Good.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE. Exactly one action stand. \"站立\", \"不动\" is manner not second action.\n- action_order: UNIQUE? Only one action, order trivial. Explanation.\n- correction_scope: UNIQUE/inapplicable no corrections.\n- repetition_scope: UNIQUE/inapplicable no repetition.\n- reference_resolution: UNIQUE/inapplicable no pronouns/ordinals/shared args? Actually duration omitted, but default resolves. Stand has no object. Yes.\n- temporal_relations: UNIQUE? No before/after/wait; single action. Or maybe \"不动\" means no movement during stand, but no temporal relation. Unique/inapplicable.\n- unresolved_relations: UNIQUE? No explicit unresolved relation. Duration unspecified but default handles, not vague. Need mention \"不动\" doesn't specify duration but no explicit vague duration; default applies. Is no duration specified same as explicit unresolved? Rules: When no duration is specified default exactly 2.0. An explicitly vague duration is unresolved, not default. Here no duration specified, so default. Unique.\n\nNeed authorized_plan list one step:\n{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}\nNeed exactly keys? Each step has exactly id, skill, parameters, depends_on. Good.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty list objects exactly text, role, explanation. Need text values concatenate to source exactly. We'll use:\n[\n {\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The verb 站立 denotes the single requested action, which maps to the legal stand skill.\"},\n {\"text\":\"不动\",\"role\":\"RELATION\",\"explanation\":\"The modifier 不动 describes the standing as motionless/still. It does not add a second action, separate skill, duration, repetition, correction, or unresolved relation; it therefore leaves the single stand action unchanged.\"}\n]\nConcatenated \"站立不动\". Good.\n\nNeed dimensions object exactly seven names. Explanation nonempty. Each status.\n\nNeed perhaps mention \"站立不动\" could be interpreted as \"stop\"? Wait, \"站立不动\" = \"stand still\" not stop. \"不动\" could mean \"do not move\", maybe \"stop\" if context? But source alone \"站立不动\" contains 站立 = stand. \"stop\" skill is \"停止\" not \"站立不动\". So stand.\n\nNeed consider if \"站立不动\" maybe an imperative \"stand without moving\" could be a command to remain standing, but no duration. Default applies. Good.\n\nNeed be wary: The system says \"Do not use runtime capability to reject...\". Not relevant.\n\nPotential issue: \"站立不动\" could be Chinese \"stand still\" meaning \"stand\" plus \"not move\". \"不动\" might be interpreted as negative command \"do not move\" which is not a legal skill? But source is an action phrase \"站立不动\" not \"不要动\". The only legal action is stand. It doesn't explicitly mention \"stop\". \"不动\" as modifier doesn't authorize stop. If it were \"不要动\" alone, no legal skill? But here stand.\n\nNeed output JSON only, no markdown. Ensure valid JSON. Could include Chinese characters. Need no extra text.\n\nLet's craft final. Need exact keys. Dimensions names:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nFor each status and explanation.\n\nAction order: Since only one action, unique exact order s1. Explanation.\n\nCorrection scope: No edit/correction markers. Unique/inapplicable.\n\nRepetition: No repetition. Unique/inapplicable.\n\nReference: No pronouns/ordinals/shared/omitted? Omitted duration resolved by default. \"站立\" no object. \"不动\" refers to standing action; unique antecedent if considered. Good.\n\nTemporal: Single action no temporal relation. Unique.\n\nUnresolved: No explicit unresolved choice. Duration absence invokes default, not ambiguity. \"不动\" doesn't introduce unresolved relation. Unique.\n\nCoverage explanation should state role. Need \"every explanation nonempty and states span's meaning and effect on plan, including why nonexecuting text does not alter authorization.\" For \"不动\" role RELATION, explanation says does not add action etc. Good. For \"站立\", explanation says action maps stand and duration default. Good.\n\nCould include \"站立\" as ACTION and \"不动\" as RELATION. But does \"站立\" alone mean \"stand\" maybe action. Fine.\n\nPotential issue: The coverage text values must concatenate in order equal entire original source exactly. \"站立\" + \"不动\" = \"站立不动\". Good.\n\nNeed ensure no whitespace. Source has no whitespace. Good.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The verb 站立 denotes the single requested action, which maps to the legal stand skill; no duration is specified here, so the stand duration uses the compilation default of 2.0 seconds.\"},{\"text\":\"不动\",\"role\":\"RELATION\",\"explanation\":\"The modifier 不动 describes the standing as motionless/still. It does not add a second action, skill, duration, repetition, correction, or unresolved relation, so it does not alter the single stand action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: standing still, mapped to stand. 不动 is a manner modifier, not an additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the exact execution order is uniquely s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition request and no span or count to resolve.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, shared arguments, or external referents requiring resolution. The omitted stand duration is handled by the specified compilation default.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; a single stand action has a single linear representation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, order, scope, or relationship unresolved. The absence of an explicit duration is not an explicitly vague duration, so the stand default of 2.0 seconds applies.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_ac128c39-6601-4a96-991d-06e87ae22396",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 309,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 1932,
+            "output_tokens_details": {
+              "reasoning_tokens": 1497
+            },
+            "total_tokens": 3137
+          }
+        },
+        "request_sha256": "0a1cf87c7de431ec3e9084836cbf6fc311b25d99bd92c9c687a4270af7275124",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.521621399999276,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_ac128c39-6601-4a96-991d-06e87ae22396",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The verb 站立 denotes the single requested action, which maps to the legal stand skill; no duration is specified here, so the stand duration uses the compilation default of 2.0 seconds.\"},{\"text\":\"不动\",\"role\":\"RELATION\",\"explanation\":\"The modifier 不动 describes the standing as motionless/still. It does not add a second action, skill, duration, repetition, correction, or unresolved relation, so it does not alter the single stand action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: standing still, mapped to stand. 不动 is a manner modifier, not an additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the exact execution order is uniquely s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition request and no span or count to resolve.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, shared arguments, or external referents requiring resolution. The omitted stand duration is handled by the specified compilation default.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; a single stand action has a single linear representation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, order, scope, or relationship unresolved. The absence of an explicit duration is not an explicitly vague duration, so the stand default of 2.0 seconds applies.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 309,
+          "output_tokens": 1932,
+          "total_tokens": 3137
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.3487112000002526,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-still",
+      "model": "deepseek-flash",
+      "normalized_length": 4,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"stand-still\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "9c67d0443470633cbbacf3593773c1ca76c4fc6744f7939ab25a4743c6508dfc",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_395513a9-1559-42e7-ac9f-2f1bc9f5ee58",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.528247599999304,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 10.521621399999276,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The verb 站立 denotes the single requested action, which maps to the legal stand skill; no duration is specified here, so the stand duration uses the compilation default of 2.0 seconds.\"},{\"text\":\"不动\",\"role\":\"RELATION\",\"explanation\":\"The modifier 不动 describes the standing as motionless/still. It does not add a second action, skill, duration, repetition, correction, or unresolved relation, so it does not alter the single stand action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: standing still, mapped to stand. 不动 is a manner modifier, not an additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the exact execution order is uniquely s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition request and no span or count to resolve.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, shared arguments, or external referents requiring resolution. The omitted stand duration is handled by the specified compilation default.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; a single stand action has a single linear representation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, order, scope, or relationship unresolved. The absence of an explicit duration is not an explicitly vague duration, so the stand default of 2.0 seconds applies.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "0a56b187ccf83fc8c64c4f2dc4f8bef8fa47ad6ab0dc4b5b4401ad2dabc91ae4",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ac128c39-6601-4a96-991d-06e87ae22396",
+          "source_aware": true,
+          "source_sha256": "954d69ee631c709986ad1903f75844a9942e29689f985da88948a5d2ca04a1f9",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 309,
+            "output_tokens": 1932,
+            "total_tokens": 3137
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 2.0
+                },
+                "skill": "stand"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "The verb 站立 denotes the single requested action, which maps to the legal stand skill; no duration is specified here, so the stand duration uses the compilation default of 2.0 seconds.",
+                "role": "ACTION",
+                "text": "站立"
+              },
+              {
+                "explanation": "The modifier 不动 describes the standing as motionless/still. It does not add a second action, skill, duration, repetition, correction, or unresolved relation, so it does not alter the single stand action.",
+                "role": "RELATION",
+                "text": "不动"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: standing still, mapped to stand. 不动 is a manner modifier, not an additional action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so the exact execution order is uniquely s1 with no ordering alternatives.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, edit, replacement, or scope-changing clause in the source.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, shared arguments, or external referents requiring resolution. The omitted stand duration is handled by the specified compilation default.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition request and no span or count to resolve.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, waiting, simultaneity, or completion relation is stated; a single stand action has a single linear representation.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, order, scope, or relationship unresolved. The absence of an explicit duration is not an explicitly vague duration, so the stand default of 2.0 seconds applies.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 201,
+        "output_tokens": 243,
+        "total_tokens": 1980
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-still",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        }
+      ]
+    },
+    "normalized_text": "站立不动",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 12.549611399997957,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_68b38ed5-4e2f-4c98-9091-6dd5fabb8c32",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies a forward walking action, compiled as walk_forward.\"},{\"text\":\"10m\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the first walk distance as 10 meters, so distance_m is 10.0.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the clockwise turn after the first walk; it does not add an action.\"},{\"text\":\"顺时针转\",\"role\":\"ACTION\",\"explanation\":\"Specifies a clockwise turn action, compiled as turn with a negative angle.\"},{\"text\":\"90度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 90 degrees, so angle_deg is -90.0 because clockwise is negative.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the second walk after the turn; it does not add an action.\"},{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies a second forward walking action, compiled as walk_forward.\"},{\"text\":\"6.0米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second walk distance as 6.0 meters, so distance_m is 6.0.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Orders the stop after the second walk as the final action; it does not add an action.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Specifies a stop action, compiled as stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four distinct actions: walk forward 10m, turn clockwise 90 degrees, walk forward 6.0m, and stop. There are no corrections, replacements, or repetitions that alter this count.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 然后, 接着, and 最后 establish one linear order: walk_forward 10m, then turn clockwise 90 degrees, then walk_forward 6.0m, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit term appears. Nothing in the source replaces or preserves a previous instruction, so this dimension introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span appears. Each requested action occurs once in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Each action has its own explicit verb and parameter: 10m attaches to the first forward movement, 90度 with 顺时针 attaches to the turn, and 6.0米 attaches to the second forward movement. No pronoun, ordinal, or omitted argument requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后, 接着, and 最后 provide a single before/after chain with no waiting, simultaneous, conditional, or completion relation beyond sequential execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves actions, parameters, and order. It leaves no unresolved choice, scope, or relationship.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+  "usage": {
+    "input_tokens": 155,
+    "output_tokens": 2694,
+    "total_tokens": 4001
+  }
+}

@@ -1,0 +1,357 @@
+{
+  "added_wall_s": 13.411614100001316,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 13.40763059999881,
+        "provider_document": {
+          "created_at": 1791360998,
+          "id": "resp_f957ebed-cbaf-4199-be2e-7a10e2f11eda",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_f957ebed-cbaf-4199-be2e-7a10e2f11eda",
+              "reasoning_content": "We need answer JSON only. Need analyze source. Need derive plan independently. Source Chinese: \"站立5秒然后前进六米接着向右转45度最后立即停止\"\n\nNeed parse. Actions:\n站立5秒 = stand 5 seconds.\n然后 = then.\n前进六米 = walk_forward 6 meters.\n接着 = then.\n向右转45度 = turn right 45 degrees. Semantics: right/clockwise negative. angle_deg -45. Left positive. max abs 180 ok.\n最后 = finally.\n立即停止 = immediately stop. Skill stop parameters {}. \"立即\" means immediately, likely order after turn, no wait. Does it introduce timing? stop parameters exactly {}, so no params. \"立即\" maybe relation immediate after previous, but execution in sequence already. Need temporal relation maybe \"最后立即停止\" final immediate stop. Is \"立即\" unresolved? It means immediately, not vague. Could be modifier on stop. Plan linear order.\n\nNeed consider \"站立5秒\" duration explicitly 5 sec <=60. fine.\n前进六米 = distance 6m.\n向右转45度 = angle -45.\nStop {}.\n\nCandidate matches exactly. Need output status AUTHORIZED_UNIQUE, coverage exact splitting whole source. Need ensure coverage concatenation equals entire original source exactly. Need split meaningful spans with exact text including punctuation? Source has no punctuation except Chinese chars. \"站立5秒然后前进六米接着向右转45度最后立即停止\". Need split into spans, concatenated exact. Roles maybe:\n\"站立5秒\" ACTION? Contains quantity. But object role one of. Could split \"站立\" ACTION, \"5秒\" QUANTITY, \"然后\" RELATION, \"前进\" ACTION, \"六米\" QUANTITY, \"接着\" RELATION, \"向右转\" ACTION? \"45度\" QUANTITY, \"最后\" RELATION, \"立即\" CONTEXT? \"停止\" ACTION. But role must analyze every action, relation, edit clause. Better split:\n1 \"站立\" role ACTION explanation...\n2 \"5秒\" role QUANTITY\n3 \"然后\" role RELATION\n4 \"前进\" role ACTION\n5 \"六米\" role QUANTITY\n6 \"接着\" role RELATION\n7 \"向右转\" role ACTION\n8 \"45度\" role QUANTITY\n9 \"最后\" role RELATION\n10 \"立即\" role CONTEXT? Or RELATION? It indicates immediate timing after prior step; but stop params no timing. Could role CONTEXT? The instructions roles: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"立即\" is temporal relation maybe RELATION. But it modifies stop. Since no waiting. Could be CONTEXT (non-executing emphasis) or RELATION. Need every action/relation. \"立即\" is relation to previous? It says final immediate stop. Since plan linear with depends_on previous, \"立即\" does not add separate wait. Could explain as relation: immediate execution after prior turn; consistent with sequential depends_on; no pause/wait. Role RELATION.\n11 \"停止\" ACTION.\n\nConcatenation: 站立5秒然后前进六米接着向右转45度最后立即停止. Let's concatenate:\n站立 +5秒 +然后 +前进 +六米 +接着 +向右转 +45度 +最后 +立即 +停止 = 站立5秒然后前进六米接着向右转45度最后立即停止. Yes.\n\nNeed dimensions. Each status UNIQUE. Explanation nonempty with source evidence.\n\nNeed authorized_plan list:\ns1 stand duration_s 5.0 depends_on []\ns2 walk_forward distance_m 6.0 depends_on [\"s1\"]\ns3 turn angle_deg -45.0 depends_on [\"s2\"]\ns4 stop parameters {} depends_on [\"s3\"]\n\nNeed ensure no mission_id. Schema no extra fields. Output exactly JSON. We can use numbers 5, 6, -45 maybe finite JSON numbers. Candidate uses floats but no matter. Better use 5.0? JSON number fine. Use 5.0, 6.0, -45.0. \"Numbers must be finite JSON numbers.\" Good.\n\nNeed be careful status AUTHORIZED_UNIQUE only if all seven UNIQUE. Check dimensions:\naction_multiplicity: four actions stand, walk, turn, stop exactly one each. \"然后\", \"接着\", \"最后\" sequence. \"立即\" not additional action.\naction_order: stand -> walk -> turn -> stop. Unique.\ncorrection_scope: no corrections/edits. UNIQUE inapplicable.\nrepetition_scope: no repetition. UNIQUE inapplicable.\nreference_resolution: no pronouns/ordinals? \"向右\" direction, \"最后\" ordinal final? \"最后立即停止\" references final position in order, resolved to stop action after turn. Shared args none. \"向右转45度\" turn direction. Unique.\ntemporal_relations: \"然后\"/\"接着\"/\"最后\" linear order. \"立即\" no wait. Unique. Is \"站立5秒\" duration. Sequential. No simultaneous.\nunresolved_relations: none explicit. Unique.\n\nPotential issue: \"立即停止\" might mean \"stop immediately\" after turning. Does \"立即\" imply no delay, but there is no timing param. Could it be an unresolved timing? In these tasks, \"immediately stop\" = stop next. Since stop has no params and sequence already. It doesn't require waiting. So unique.\n\nNeed maybe mention candidate matches but source-derived plan controls. But output only JSON. No extra. Coverage explanation can mention candidate? Probably not necessary. But ensure coverage represents source. \"candidate_ir is not evidence\"; coverage should not reference candidate. Fine.\n\nNeed include complete source evidence. The final answer needs exactly JSON object. No markdown.\n\nLet's construct JSON carefully. Need escape? Chinese characters okay. Use proper JSON UTF-8.\n\nCoverage list objects with exactly text, role, explanation. Every explanation nonempty.\nSpans:\n1 text \"站立\" role ACTION. Explanation: Requests stand skill as first action; no duration here, duration supplied by following \"5秒\".\n2 \"5秒\" QUANTITY. Explanation: Binds 5 seconds duration to stand; 5 <=60, legal explicit duration.\n3 \"然后\" RELATION. Explanation: Orders stand before next action; establishes linear transition to walk.\n4 \"前进\" ACTION. Explanation: Requests walk_forward as second action; distance supplied by \"六米\".\n5 \"六米\" QUANTITY. Explanation: Binds 6 meters to forward action; \"六\" = 6, 米 = meters, positive finite.\n6 \"接着\" RELATION. Explanation: Orders next action after walk; transition to turn.\n7 \"向右转\" ACTION. Explanation: Requests turn as third action; \"向右\" means clockwise/right, so negative angle; magnitude supplied by next quantity.\n8 \"45度\" QUANTITY. Explanation: Binds 45 degrees to turn; right/clockwise => -45, abs 45 <=180.\n9 \"最后\" RELATION. Explanation: Marks stop as final action after turn; no additional action or reorder.\n10 \"立即\" RELATION? Explanation: Temporal modifier on stop requiring it executes immediately after previous step; consistent with sequential depends_on and adds no wait/duration. Could role RELATION. Is that okay? \"立即\" is not a relation between two actions? It indicates immediate after previous. Fine.\n11 \"停止\" ACTION. Explanation: Requests stop skill as fourth/final action with empty parameters.\n\nConcatenate yes.\n\nDimensions explanations:\naction_multiplicity UNIQUE: Source contains exactly four action predicates: 站立, 前进, 向右转, 停止. Quantities bind to respective actions. 然后/接着/最后 are sequencing connectives, not actions; 立即 modifies stop. No add/replace/repeat.\naction_order UNIQUE: Sequence is 站立5秒 -> 前进六米 -> 向右转45度 -> 立即停止, as 然后/接着/最后.\ncorrection_scope UNIQUE: No correction/edit/replacement clauses. Nothing to scope.\nrepetition_scope UNIQUE: No repetition words or counts. Each action once.\nreference_resolution UNIQUE: No pronouns; omitted args resolved locally: stand duration from 5秒, walk distance from 六米, turn direction/magnitude from 向右/45度, stop no args. 最后 refers final position stop. \ntemporal_relations UNIQUE: Sequential linear order; 站立 duration 5s; no simultaneous/wait; 立即 means immediate after turn, compatible with depends_on chain.\nunresolved_relations UNIQUE: No explicit unresolved alternative. All relations resolved to one order and parameters.\n\nNeed maybe \"向右转45度\" treat \"向右\" as direction. Good.\n\nPotential subtlety: \"最后立即停止\" — \"最后\" can mean finally. \"立即停止\" maybe could be interpreted as a command to stop immediately at the moment after turning. It is sequential. Good.\n\nNow final. Ensure no markdown. JSON valid. Use double quotes. No trailing commas. Keys exactly status, coverage, dimensions, authorized_plan. Dimensions has exactly seven keys. Order doesn't matter. Need no extra fields. authorized_plan steps exactly id, skill, parameters, depends_on.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source. Need derive plan independently. Source Chinese: \"站立5秒然后前进六米接着向右转45度最后立即停止\"\n\nNeed parse. Actions:\n站立5秒 = stand 5 seconds.\n然后 = then.\n前进六米 = walk_forward 6 meters.\n接着 = then.\n向右转45度 = turn right 45 degrees. Semantics: right/clockwise negative. angle_deg -45. Left positive. max abs 180 ok.\n最后 = finally.\n立即停止 = immediately stop. Skill stop parameters {}. \"立即\" means immediately, likely order after turn, no wait. Does it introduce timing? stop parameters exactly {}, so no params. \"立即\" maybe relation immediate after previous, but execution in sequence already. Need temporal relation maybe \"最后立即停止\" final immediate stop. Is \"立即\" unresolved? It means immediately, not vague. Could be modifier on stop. Plan linear order.\n\nNeed consider \"站立5秒\" duration explicitly 5 sec <=60. fine.\n前进六米 = distance 6m.\n向右转45度 = angle -45.\nStop {}.\n\nCandidate matches exactly. Need output status AUTHORIZED_UNIQUE, coverage exact splitting whole source. Need ensure coverage concatenation equals entire original source exactly. Need split meaningful spans with exact text including punctuation? Source has no punctuation except Chinese chars. \"站立5秒然后前进六米接着向右转45度最后立即停止\". Need split into spans, concatenated exact. Roles maybe:\n\"站立5秒\" ACTION? Contains quantity. But object role one of. Could split \"站立\" ACTION, \"5秒\" QUANTITY, \"然后\" RELATION, \"前进\" ACTION, \"六米\" QUANTITY, \"接着\" RELATION, \"向右转\" ACTION? \"45度\" QUANTITY, \"最后\" RELATION, \"立即\" CONTEXT? \"停止\" ACTION. But role must analyze every action, relation, edit clause. Better split:\n1 \"站立\" role ACTION explanation...\n2 \"5秒\" role QUANTITY\n3 \"然后\" role RELATION\n4 \"前进\" role ACTION\n5 \"六米\" role QUANTITY\n6 \"接着\" role RELATION\n7 \"向右转\" role ACTION\n8 \"45度\" role QUANTITY\n9 \"最后\" role RELATION\n10 \"立即\" role CONTEXT? Or RELATION? It indicates immediate timing after prior step; but stop params no timing. Could role CONTEXT? The instructions roles: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"立即\" is temporal relation maybe RELATION. But it modifies stop. Since no waiting. Could be CONTEXT (non-executing emphasis) or RELATION. Need every action/relation. \"立即\" is relation to previous? It says final immediate stop. Since plan linear with depends_on previous, \"立即\" does not add separate wait. Could explain as relation: immediate execution after prior turn; consistent with sequential depends_on; no pause/wait. Role RELATION.\n11 \"停止\" ACTION.\n\nConcatenation: 站立5秒然后前进六米接着向右转45度最后立即停止. Let's concatenate:\n站立 +5秒 +然后 +前进 +六米 +接着 +向右转 +45度 +最后 +立即 +停止 = 站立5秒然后前进六米接着向右转45度最后立即停止. Yes.\n\nNeed dimensions. Each status UNIQUE. Explanation nonempty with source evidence.\n\nNeed authorized_plan list:\ns1 stand duration_s 5.0 depends_on []\ns2 walk_forward distance_m 6.0 depends_on [\"s1\"]\ns3 turn angle_deg -45.0 depends_on [\"s2\"]\ns4 stop parameters {} depends_on [\"s3\"]\n\nNeed ensure no mission_id. Schema no extra fields. Output exactly JSON. We can use numbers 5, 6, -45 maybe finite JSON numbers. Candidate uses floats but no matter. Better use 5.0? JSON number fine. Use 5.0, 6.0, -45.0. \"Numbers must be finite JSON numbers.\" Good.\n\nNeed be careful status AUTHORIZED_UNIQUE only if all seven UNIQUE. Check dimensions:\naction_multiplicity: four actions stand, walk, turn, stop exactly one each. \"然后\", \"接着\", \"最后\" sequence. \"立即\" not additional action.\naction_order: stand -> walk -> turn -> stop. Unique.\ncorrection_scope: no corrections/edits. UNIQUE inapplicable.\nrepetition_scope: no repetition. UNIQUE inapplicable.\nreference_resolution: no pronouns/ordinals? \"向右\" direction, \"最后\" ordinal final? \"最后立即停止\" references final position in order, resolved to stop action after turn. Shared args none. \"向右转45度\" turn direction. Unique.\ntemporal_relations: \"然后\"/\"接着\"/\"最后\" linear order. \"立即\" no wait. Unique. Is \"站立5秒\" duration. Sequential. No simultaneous.\nunresolved_relations: none explicit. Unique.\n\nPotential issue: \"立即停止\" might mean \"stop immediately\" after turning. Does \"立即\" imply no delay, but there is no timing param. Could it be an unresolved timing? In these tasks, \"immediately stop\" = stop next. Since stop has no params and sequence already. It doesn't require waiting. So unique.\n\nNeed maybe mention candidate matches but source-derived plan controls. But output only JSON. No extra. Coverage explanation can mention candidate? Probably not necessary. But ensure coverage represents source. \"candidate_ir is not evidence\"; coverage should not reference candidate. Fine.\n\nNeed include complete source evidence. The final answer needs exactly JSON object. No markdown.\n\nLet's construct JSON carefully. Need escape? Chinese characters okay. Use proper JSON UTF-8.\n\nCoverage list objects with exactly text, role, explanation. Every explanation nonempty.\nSpans:\n1 text \"站立\" role ACTION. Explanation: Requests stand skill as first action; no duration here, duration supplied by following \"5秒\".\n2 \"5秒\" QUANTITY. Explanation: Binds 5 seconds duration to stand; 5 <=60, legal explicit duration.\n3 \"然后\" RELATION. Explanation: Orders stand before next action; establishes linear transition to walk.\n4 \"前进\" ACTION. Explanation: Requests walk_forward as second action; distance supplied by \"六米\".\n5 \"六米\" QUANTITY. Explanation: Binds 6 meters to forward action; \"六\" = 6, 米 = meters, positive finite.\n6 \"接着\" RELATION. Explanation: Orders next action after walk; transition to turn.\n7 \"向右转\" ACTION. Explanation: Requests turn as third action; \"向右\" means clockwise/right, so negative angle; magnitude supplied by next quantity.\n8 \"45度\" QUANTITY. Explanation: Binds 45 degrees to turn; right/clockwise => -45, abs 45 <=180.\n9 \"最后\" RELATION. Explanation: Marks stop as final action after turn; no additional action or reorder.\n10 \"立即\" RELATION? Explanation: Temporal modifier on stop requiring it executes immediately after previous step; consistent with sequential depends_on and adds no wait/duration. Could role RELATION. Is that okay? \"立即\" is not a relation between two actions? It indicates immediate after previous. Fine.\n11 \"停止\" ACTION. Explanation: Requests stop skill as fourth/final action with empty parameters.\n\nConcatenate yes.\n\nDimensions explanations:\naction_multiplicity UNIQUE: Source contains exactly four action predicates: 站立, 前进, 向右转, 停止. Quantities bind to respective actions. 然后/接着/最后 are sequencing connectives, not actions; 立即 modifies stop. No add/replace/repeat.\naction_order UNIQUE: Sequence is 站立5秒 -> 前进六米 -> 向右转45度 -> 立即停止, as 然后/接着/最后.\ncorrection_scope UNIQUE: No correction/edit/replacement clauses. Nothing to scope.\nrepetition_scope UNIQUE: No repetition words or counts. Each action once.\nreference_resolution UNIQUE: No pronouns; omitted args resolved locally: stand duration from 5秒, walk distance from 六米, turn direction/magnitude from 向右/45度, stop no args. 最后 refers final position stop. \ntemporal_relations UNIQUE: Sequential linear order; 站立 duration 5s; no simultaneous/wait; 立即 means immediate after turn, compatible with depends_on chain.\nunresolved_relations UNIQUE: No explicit unresolved alternative. All relations resolved to one order and parameters.\n\nNeed maybe \"向右转45度\" treat \"向右\" as direction. Good.\n\nPotential subtlety: \"最后立即停止\" — \"最后\" can mean finally. \"立即停止\" maybe could be interpreted as a command to stop immediately at the moment after turning. It is sequential. Good.\n\nNow final. Ensure no markdown. JSON valid. Use double quotes. No trailing commas. Keys exactly status, coverage, dimensions, authorized_plan. Dimensions has exactly seven keys. Order doesn't matter. Need no extra fields. authorized_plan steps exactly id, skill, parameters, depends_on.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand skill as the first action; its duration is supplied by the following quantity span.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Binds an explicit duration of 5 seconds to the stand action; 5 is positive finite and within the 60-second limit.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the stand action before the next action and establishes the first transition in the linear sequence.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward skill as the second action; its distance is supplied by the following quantity span.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Binds a distance of 6 meters to the forward action; 六 means 6 and 米 means meters, so the parameter is positive finite meters.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the forward action before the next action and establishes the next transition in the linear sequence.\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests the turn skill as the third action; 向右 means right/clockwise, so the angle will be negative.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Binds a magnitude of 45 degrees to the turn action; with 向右 this becomes -45 degrees, and its absolute value is within 180 degrees.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stop action as final in the sequence, after the turn action.\"},{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Requires the stop action to occur immediately after the prior action; this is consistent with the sequential depends_on chain and adds no wait or separate timing parameter.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop skill as the fourth and final action with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four requested actions: 站立, 前进, 向右转, and 停止. The quantities 5秒, 六米, and 45度 bind to their respective actions; 然后, 接着, 最后, and 立即 are sequencing or temporal modifiers, not additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source uniquely orders the actions as 站立5秒, then 前进六米, then 向右转45度, then 立即停止, using 然后, 接着, and 最后 as explicit sequence markers.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or revision clause in the source. No earlier instruction is replaced or preserved by an edit operation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition word, count, or repeated-action construction in the source. Each of the four actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronouns or ambiguous shared arguments appear. The stand duration is resolved from 5秒, the forward distance from 六米, the turn direction and magnitude from 向右 and 45度, and stop has no parameters. 最后 resolves to the stop action as the final step.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies one linear sequence: stand for 5 seconds, then walk, then turn, then stop immediately. 然后 and 接着 advance to the next action, 最后 makes stop final, and 立即 requires no pause before stop. No simultaneous, waiting, or branching relation is stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action count, order, parameter, reference, repetition, or timing relation unresolved. All required parameters are supplied or defaulted by explicit semantics, and the sequence is fully determined.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_f957ebed-cbaf-4199-be2e-7a10e2f11eda",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 152,
+            "input_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "output_tokens": 2904,
+            "output_tokens_details": {
+              "reasoning_tokens": 1948
+            },
+            "total_tokens": 4208
+          }
+        },
+        "request_sha256": "623f4e6cf61d4c8d3b9ac57751bf72f9a6ca6f7a820b3d94c68bc3820a7419cf",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 13.406192499998724,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_f957ebed-cbaf-4199-be2e-7a10e2f11eda",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand skill as the first action; its duration is supplied by the following quantity span.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Binds an explicit duration of 5 seconds to the stand action; 5 is positive finite and within the 60-second limit.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the stand action before the next action and establishes the first transition in the linear sequence.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward skill as the second action; its distance is supplied by the following quantity span.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Binds a distance of 6 meters to the forward action; 六 means 6 and 米 means meters, so the parameter is positive finite meters.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the forward action before the next action and establishes the next transition in the linear sequence.\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests the turn skill as the third action; 向右 means right/clockwise, so the angle will be negative.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Binds a magnitude of 45 degrees to the turn action; with 向右 this becomes -45 degrees, and its absolute value is within 180 degrees.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stop action as final in the sequence, after the turn action.\"},{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Requires the stop action to occur immediately after the prior action; this is consistent with the sequential depends_on chain and adds no wait or separate timing parameter.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop skill as the fourth and final action with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four requested actions: 站立, 前进, 向右转, and 停止. The quantities 5秒, 六米, and 45度 bind to their respective actions; 然后, 接着, 最后, and 立即 are sequencing or temporal modifiers, not additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source uniquely orders the actions as 站立5秒, then 前进六米, then 向右转45度, then 立即停止, using 然后, 接着, and 最后 as explicit sequence markers.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or revision clause in the source. No earlier instruction is replaced or preserved by an edit operation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition word, count, or repeated-action construction in the source. Each of the four actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronouns or ambiguous shared arguments appear. The stand duration is resolved from 5秒, the forward distance from 六米, the turn direction and magnitude from 向右 and 45度, and stop has no parameters. 最后 resolves to the stop action as the final step.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies one linear sequence: stand for 5 seconds, then walk, then turn, then stop immediately. 然后 and 接着 advance to the next action, 最后 makes stop final, and 立即 requires no pause before stop. No simultaneous, waiting, or branching relation is stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action count, order, parameter, reference, repetition, or timing relation unresolved. All required parameters are supplied or defaulted by explicit semantics, and the sequence is fully determined.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+        "usage": {
+          "input_tokens": 152,
+          "output_tokens": 2904,
+          "total_tokens": 4208
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.408296000001428,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 24,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "f94968dc501ee24000dce94bc5b2fbb89daed5ee08d2d55e45d895e16a19b623",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 13.410942400001659,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 13.406192499998724,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand skill as the first action; its duration is supplied by the following quantity span.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Binds an explicit duration of 5 seconds to the stand action; 5 is positive finite and within the 60-second limit.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the stand action before the next action and establishes the first transition in the linear sequence.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Requests the walk_forward skill as the second action; its distance is supplied by the following quantity span.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Binds a distance of 6 meters to the forward action; 六 means 6 and 米 means meters, so the parameter is positive finite meters.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the forward action before the next action and establishes the next transition in the linear sequence.\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests the turn skill as the third action; 向右 means right/clockwise, so the angle will be negative.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Binds a magnitude of 45 degrees to the turn action; with 向右 this becomes -45 degrees, and its absolute value is within 180 degrees.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stop action as final in the sequence, after the turn action.\"},{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Requires the stop action to occur immediately after the prior action; this is consistent with the sequential depends_on chain and adds no wait or separate timing parameter.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop skill as the fourth and final action with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four requested actions: 站立, 前进, 向右转, and 停止. The quantities 5秒, 六米, and 45度 bind to their respective actions; 然后, 接着, 最后, and 立即 are sequencing or temporal modifiers, not additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source uniquely orders the actions as 站立5秒, then 前进六米, then 向右转45度, then 立即停止, using 然后, 接着, and 最后 as explicit sequence markers.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or revision clause in the source. No earlier instruction is replaced or preserved by an edit operation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition word, count, or repeated-action construction in the source. Each of the four actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronouns or ambiguous shared arguments appear. The stand duration is resolved from 5秒, the forward distance from 六米, the turn direction and magnitude from 向右 and 45度, and stop has no parameters. 最后 resolves to the stop action as the final step.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies one linear sequence: stand for 5 seconds, then walk, then turn, then stop immediately. 然后 and 接着 advance to the next action, 最后 makes stop final, and 立即 requires no pause before stop. No simultaneous, waiting, or branching relation is stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action count, order, parameter, reference, repetition, or timing relation unresolved. All required parameters are supplied or defaulted by explicit semantics, and the sequence is fully determined.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+          "raw_response_sha256": "6ff8435c3f0c3bff80d8b493823303031bcb8b5d8343c5e050716cbfd073ffd6",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_f957ebed-cbaf-4199-be2e-7a10e2f11eda",
+          "source_aware": true,
+          "source_sha256": "05b242103a91a41a37d6fd8db2c8b0904d172eeded44c391c2883c2d67a7ca79",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 152,
+            "output_tokens": 2904,
+            "total_tokens": 4208
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 5.0
+                },
+                "skill": "stand"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "distance_m": 6.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {
+                  "angle_deg": -45.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s3"
+                ],
+                "id": "s4",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Requests the stand skill as the first action; its duration is supplied by the following quantity span.",
+                "role": "ACTION",
+                "text": "站立"
+              },
+              {
+                "explanation": "Binds an explicit duration of 5 seconds to the stand action; 5 is positive finite and within the 60-second limit.",
+                "role": "QUANTITY",
+                "text": "5秒"
+              },
+              {
+                "explanation": "Orders the stand action before the next action and establishes the first transition in the linear sequence.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Requests the walk_forward skill as the second action; its distance is supplied by the following quantity span.",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "Binds a distance of 6 meters to the forward action; 六 means 6 and 米 means meters, so the parameter is positive finite meters.",
+                "role": "QUANTITY",
+                "text": "六米"
+              },
+              {
+                "explanation": "Orders the forward action before the next action and establishes the next transition in the linear sequence.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Requests the turn skill as the third action; 向右 means right/clockwise, so the angle will be negative.",
+                "role": "ACTION",
+                "text": "向右转"
+              },
+              {
+                "explanation": "Binds a magnitude of 45 degrees to the turn action; with 向右 this becomes -45 degrees, and its absolute value is within 180 degrees.",
+                "role": "QUANTITY",
+                "text": "45度"
+              },
+              {
+                "explanation": "Marks the following stop action as final in the sequence, after the turn action.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Requires the stop action to occur immediately after the prior action; this is consistent with the sequential depends_on chain and adds no wait or separate timing parameter.",
+                "role": "RELATION",
+                "text": "立即"
+              },
+              {
+                "explanation": "Requests the stop skill as the fourth and final action with empty parameters.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly four requested actions: 站立, 前进, 向右转, and 停止. The quantities 5秒, 六米, and 45度 bind to their respective actions; 然后, 接着, 最后, and 立即 are sequencing or temporal modifiers, not additional actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The source uniquely orders the actions as 站立5秒, then 前进六米, then 向右转45度, then 立即停止, using 然后, 接着, and 最后 as explicit sequence markers.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, edit, replacement, or revision clause in the source. No earlier instruction is replaced or preserved by an edit operation.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "No pronouns or ambiguous shared arguments appear. The stand duration is resolved from 5秒, the forward distance from 六米, the turn direction and magnitude from 向右 and 45度, and stop has no parameters. 最后 resolves to the stop action as the final step.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition word, count, or repeated-action construction in the source. Each of the four actions is requested exactly once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies one linear sequence: stand for 5 seconds, then walk, then turn, then stop immediately. 然后 and 接着 advance to the next action, 最后 makes stop final, and 立即 requires no pause before stop. No simultaneous, waiting, or branching relation is stated.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any action count, order, parameter, reference, repetition, or timing relation unresolved. All required parameters are supplied or defaulted by explicit semantics, and the sequence is fully determined.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 214,
+        "output_tokens": 288,
+        "total_tokens": 2038
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "站立5秒然后前进六米接着向右转45度最后立即停止",
+    "status": "SUCCESS"
+  }
+}

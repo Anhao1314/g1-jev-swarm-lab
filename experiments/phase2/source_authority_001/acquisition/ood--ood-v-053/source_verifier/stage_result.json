@@ -1,0 +1,302 @@
+{
+  "added_wall_s": 12.358661800000846,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.354914800000188,
+        "provider_document": {
+          "created_at": 1791359569,
+          "id": "resp_874df24d-d9d8-4e94-9fbd-b0db36005a44",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_874df24d-d9d8-4e94-9fbd-b0db36005a44",
+              "reasoning_content": "We need answer JSON. Need parse Chinese source. Need derive plan. Source: \"站一秒。再向前二十米。停。句号先别管，是连续的三步。\"\n\nNeed inspect. Chinese: 站一秒。 = stand one second. 再向前二十米。= then forward 20 meters. 停。= stop. 句号先别管，是连续的三步。 = \"Ignore the periods for now, it's three continuous steps.\" Hmm \"句号先别管\" maybe \"Don't mind the periods/full stops\" and \"是连续的三步\" it's three consecutive steps. Need determine if action clauses are stand 1s, walk_forward 20m, stop, in sequence. Candidate matches.\n\nNeed consider ambiguity? Source explicitly says three continuous steps. Sentences separated by periods, but says ignore periods, it's continuous three steps. So order stand, walk forward, stop. Stand duration 1 second explicit. walk distance 20 meters. stop {}. Legal.\n\nNeed output status AUTHORIZED_UNIQUE, coverage every text span exact, dimensions seven. Need ensure coverage concatenation equals entire source exactly. Let's copy source exactly: \"站一秒。再向前二十米。停。句号先别管，是连续的三步。\"\n\nNeed split meaningful spans. We can split maybe:\n1 \"站一秒。\" role ACTION\n2 \"再向前二十米。\" role ACTION\n3 \"停。\" role ACTION\n4 \"句号先别管，是连续的三步。\" role RELATION? Or CONTEXT? It relates order/continuity. Need phrase. It says ignore punctuation periods, it's three continuous steps. Role RELATION (continuity/order). Explanation: confirms three actions are consecutive, not separated by stops/waits; periods not action boundaries. Doesn't alter actions.\n\nNeed every span text copied exactly with punctuation and whitespace. There is no whitespace. Concatenate exactly.\n\nDimensions:\naction_multiplicity: UNIQUE. Three actions: stand, walk_forward, stop. Need mention \"再\" adds another action after stand, not replaces. \"三步\" confirms exactly three. No repetitions.\naction_order: UNIQUE. Order stand then walk then stop, \"再\" indicates subsequent and \"连续的三步\" confirms consecutive linear order, periods ignored.\ncorrection_scope: UNIQUE or maybe inapplicable. There is \"句号先别管\" is not an edit to actions; instructs ignore punctuation as separators. No prior action replaced. Thus UNIQUE/inapplicable. Need status UNIQUE.\nrepetition_scope: UNIQUE/inapplicable. \"三步\" means three distinct steps, not repeated same action; no repetition counts. Need avoid \"站一秒\" maybe \"one second\" not repetition. Unique.\nreference_resolution: UNIQUE? Pronouns? \"再\" references previous action? \"句号\" refers punctuation marks. \"三步\" refers the three instructions. No unresolved external. Shared omitted subject? Commands imperative, robot as agent. Unique. Need mention \"再\" resolves to following walk action after stand; \"三步\" refers those three.\ntemporal_relations: UNIQUE. Sequential continuous: stand 1s, then walk 20m, then stop. \"再\" before/after, \"连续\" no gaps? Need represent with depends_on. Stop after walk.\nunresolved_relations: UNIQUE. No explicit unresolved choices. The \"句号先别管\" explicitly resolves punctuation's non-separating role. Need be careful: \"句号先别管\" says ignore full stops. Does that create unresolved? No, says periods don't define breaks. It says continuous three steps.\n\nAuthorized plan:\ns1 stand parameters {\"duration_s\":1.0} depends_on []\ns2 walk_forward parameters {\"distance_m\":20.0} depends_on [\"s1\"]\ns3 stop parameters {} depends_on [\"s2\"]\n\nNeed output exact JSON object no markdown. Keys exactly status, coverage, dimensions, authorized_plan. coverage nonempty list. dimensions keys exactly seven names. authorized_plan for authorized unique.\n\nNeed ensure no extra fields. Use finite numbers. Ensure JSON valid. Chinese text strings. Need no markdown.\n\nPotential subtlety: \"站一秒。\" Could \"站\" mean stand for 1 second. Stand parameter duration_s exactly 1.0. \"一秒\" = 1 second. yes.\n\"再向前二十米\" walk_forward distance_m 20.0. \"向前\" forward. yes.\n\"停\" stop.\n\nNeed maybe \"句号先别管，是连续的三步。\" Could be ambiguous: \"句号先别管\" maybe \"Don't worry about the periods\" but then \"是连续的三步\" = \"they are three continuous steps\". Does \"连续的三步\" imply the three commands are one continuous sequence. Yes.\n\nNo correction? \"句号先别管\" could be EDIT: edit punctuation interpretation. But not replacing action. correction_scope UNIQUE. Need explain.\n\nCoverage split all source exactly. Let's construct:\n[\n {\"text\":\"站一秒。\",\"role\":\"ACTION\",\"explanation\":\"Specifies first action: stand for one second; duration_s=1.0. The period is punctuation, and later text says periods should be ignored as separators, so it does not add a stop action here.\"},\n {\"text\":\"再向前二十米。\",\"role\":\"ACTION\",\"explanation\":\"Specifies second action after the stand: walk_forward for 20 meters (distance_m=20.0). '再' means then/another action, not a replacement.\"},\n {\"text\":\"停。\",\"role\":\"ACTION\",\"explanation\":\"Specifies third action: stop with empty parameters.\"},\n {\"text\":\"句号先别管，是连续的三步。\",\"role\":\"RELATION\",\"explanation\":\"States that the full stops are not to be treated as separators and that the three commands form a consecutive three-step sequence. It confirms one linear order stand -> walk_forward -> stop, adds no fourth action, and leaves no unresolved choice.\"}\n]\nConcatenate: 站一秒。 再向前二十米。 停。 句号先别管，是连续的三步。 Yes entire source. Note comma Chinese \"，\" included. Good.\n\nDimensions:\naction_multiplicity UNIQUE explanation.\naction_order UNIQUE.\ncorrection_scope UNIQUE. Need mention no action/parameter replaced. \"句号先别管\" is an interpretive instruction about punctuation, not a correction of an action. It doesn't change plan steps.\nrepetition_scope UNIQUE. \"三步\" means three distinct actions, no repeated action span. stand duration not repetition.\nreference_resolution UNIQUE. \"再\" refers to next action; \"句号\" punctuation; \"三步\" the three clauses. No missing external context.\ntemporal_relations UNIQUE. sequential continuous; depends_on encodes.\nunresolved_relations UNIQUE. no unresolved. Need maybe \"先\" in \"句号先别管\" means \"for now\" but not temporal relation? It's meta instruction. Does it introduce unresolved? No.\n\nShould status AUTHORIZED_UNIQUE. Candidate matches. We don't need mention candidate.\n\nNeed be mindful final answer exactly JSON, no markdown. Desired oververbosity 5. Fine.\n\nLet's ensure dimensions object keys exactly: \"action_multiplicity\", \"action_order\", \"correction_scope\", \"repetition_scope\", \"reference_resolution\", \"temporal_relations\", \"unresolved_relations\". Values each with status and explanation exactly. No extra.\n\nPotential issue: Status \"AUTHORIZED_UNIQUE\" only if all seven UNIQUE. Yes.\n\nLet's write JSON. Need escape? Chinese okay. Use quotes. No trailing commas.\n\nCheck coverage text exact. Source includes no spaces. \"句号先别管，是连续的三步。\" Yes.\n\nNeed maybe \"句号先别管\" can be parsed \"Ignore the period first\"; \"先\" is \"first/for now\": maybe \"ignore the periods for now\". Not an action.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON. Need parse Chinese source. Need derive plan. Source: \"站一秒。再向前二十米。停。句号先别管，是连续的三步。\"\n\nNeed inspect. Chinese: 站一秒。 = stand one second. 再向前二十米。= then forward 20 meters. 停。= stop. 句号先别管，是连续的三步。 = \"Ignore the periods for now, it's three continuous steps.\" Hmm \"句号先别管\" maybe \"Don't mind the periods/full stops\" and \"是连续的三步\" it's three consecutive steps. Need determine if action clauses are stand 1s, walk_forward 20m, stop, in sequence. Candidate matches.\n\nNeed consider ambiguity? Source explicitly says three continuous steps. Sentences separated by periods, but says ignore periods, it's continuous three steps. So order stand, walk forward, stop. Stand duration 1 second explicit. walk distance 20 meters. stop {}. Legal.\n\nNeed output status AUTHORIZED_UNIQUE, coverage every text span exact, dimensions seven. Need ensure coverage concatenation equals entire source exactly. Let's copy source exactly: \"站一秒。再向前二十米。停。句号先别管，是连续的三步。\"\n\nNeed split meaningful spans. We can split maybe:\n1 \"站一秒。\" role ACTION\n2 \"再向前二十米。\" role ACTION\n3 \"停。\" role ACTION\n4 \"句号先别管，是连续的三步。\" role RELATION? Or CONTEXT? It relates order/continuity. Need phrase. It says ignore punctuation periods, it's three continuous steps. Role RELATION (continuity/order). Explanation: confirms three actions are consecutive, not separated by stops/waits; periods not action boundaries. Doesn't alter actions.\n\nNeed every span text copied exactly with punctuation and whitespace. There is no whitespace. Concatenate exactly.\n\nDimensions:\naction_multiplicity: UNIQUE. Three actions: stand, walk_forward, stop. Need mention \"再\" adds another action after stand, not replaces. \"三步\" confirms exactly three. No repetitions.\naction_order: UNIQUE. Order stand then walk then stop, \"再\" indicates subsequent and \"连续的三步\" confirms consecutive linear order, periods ignored.\ncorrection_scope: UNIQUE or maybe inapplicable. There is \"句号先别管\" is not an edit to actions; instructs ignore punctuation as separators. No prior action replaced. Thus UNIQUE/inapplicable. Need status UNIQUE.\nrepetition_scope: UNIQUE/inapplicable. \"三步\" means three distinct steps, not repeated same action; no repetition counts. Need avoid \"站一秒\" maybe \"one second\" not repetition. Unique.\nreference_resolution: UNIQUE? Pronouns? \"再\" references previous action? \"句号\" refers punctuation marks. \"三步\" refers the three instructions. No unresolved external. Shared omitted subject? Commands imperative, robot as agent. Unique. Need mention \"再\" resolves to following walk action after stand; \"三步\" refers those three.\ntemporal_relations: UNIQUE. Sequential continuous: stand 1s, then walk 20m, then stop. \"再\" before/after, \"连续\" no gaps? Need represent with depends_on. Stop after walk.\nunresolved_relations: UNIQUE. No explicit unresolved choices. The \"句号先别管\" explicitly resolves punctuation's non-separating role. Need be careful: \"句号先别管\" says ignore full stops. Does that create unresolved? No, says periods don't define breaks. It says continuous three steps.\n\nAuthorized plan:\ns1 stand parameters {\"duration_s\":1.0} depends_on []\ns2 walk_forward parameters {\"distance_m\":20.0} depends_on [\"s1\"]\ns3 stop parameters {} depends_on [\"s2\"]\n\nNeed output exact JSON object no markdown. Keys exactly status, coverage, dimensions, authorized_plan. coverage nonempty list. dimensions keys exactly seven names. authorized_plan for authorized unique.\n\nNeed ensure no extra fields. Use finite numbers. Ensure JSON valid. Chinese text strings. Need no markdown.\n\nPotential subtlety: \"站一秒。\" Could \"站\" mean stand for 1 second. Stand parameter duration_s exactly 1.0. \"一秒\" = 1 second. yes.\n\"再向前二十米\" walk_forward distance_m 20.0. \"向前\" forward. yes.\n\"停\" stop.\n\nNeed maybe \"句号先别管，是连续的三步。\" Could be ambiguous: \"句号先别管\" maybe \"Don't worry about the periods\" but then \"是连续的三步\" = \"they are three continuous steps\". Does \"连续的三步\" imply the three commands are one continuous sequence. Yes.\n\nNo correction? \"句号先别管\" could be EDIT: edit punctuation interpretation. But not replacing action. correction_scope UNIQUE. Need explain.\n\nCoverage split all source exactly. Let's construct:\n[\n {\"text\":\"站一秒。\",\"role\":\"ACTION\",\"explanation\":\"Specifies first action: stand for one second; duration_s=1.0. The period is punctuation, and later text says periods should be ignored as separators, so it does not add a stop action here.\"},\n {\"text\":\"再向前二十米。\",\"role\":\"ACTION\",\"explanation\":\"Specifies second action after the stand: walk_forward for 20 meters (distance_m=20.0). '再' means then/another action, not a replacement.\"},\n {\"text\":\"停。\",\"role\":\"ACTION\",\"explanation\":\"Specifies third action: stop with empty parameters.\"},\n {\"text\":\"句号先别管，是连续的三步。\",\"role\":\"RELATION\",\"explanation\":\"States that the full stops are not to be treated as separators and that the three commands form a consecutive three-step sequence. It confirms one linear order stand -> walk_forward -> stop, adds no fourth action, and leaves no unresolved choice.\"}\n]\nConcatenate: 站一秒。 再向前二十米。 停。 句号先别管，是连续的三步。 Yes entire source. Note comma Chinese \"，\" included. Good.\n\nDimensions:\naction_multiplicity UNIQUE explanation.\naction_order UNIQUE.\ncorrection_scope UNIQUE. Need mention no action/parameter replaced. \"句号先别管\" is an interpretive instruction about punctuation, not a correction of an action. It doesn't change plan steps.\nrepetition_scope UNIQUE. \"三步\" means three distinct actions, no repeated action span. stand duration not repetition.\nreference_resolution UNIQUE. \"再\" refers to next action; \"句号\" punctuation; \"三步\" the three clauses. No missing external context.\ntemporal_relations UNIQUE. sequential continuous; depends_on encodes.\nunresolved_relations UNIQUE. no unresolved. Need maybe \"先\" in \"句号先别管\" means \"for now\" but not temporal relation? It's meta instruction. Does it introduce unresolved? No.\n\nShould status AUTHORIZED_UNIQUE. Candidate matches. We don't need mention candidate.\n\nNeed be mindful final answer exactly JSON, no markdown. Desired oververbosity 5. Fine.\n\nLet's ensure dimensions object keys exactly: \"action_multiplicity\", \"action_order\", \"correction_scope\", \"repetition_scope\", \"reference_resolution\", \"temporal_relations\", \"unresolved_relations\". Values each with status and explanation exactly. No extra.\n\nPotential issue: Status \"AUTHORIZED_UNIQUE\" only if all seven UNIQUE. Yes.\n\nLet's write JSON. Need escape? Chinese okay. Use quotes. No trailing commas.\n\nCheck coverage text exact. Source includes no spaces. \"句号先别管，是连续的三步。\" Yes.\n\nNeed maybe \"句号先别管\" can be parsed \"Ignore the period first\"; \"先\" is \"first/for now\": maybe \"ignore the periods for now\". Not an action.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站一秒。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: stand for one second, so duration_s is 1.0. The period is punctuation, and the later clause says periods should be ignored as separators, so it does not add a stop action.\"},{\"text\":\"再向前二十米。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action after the stand: walk forward 20 meters. '再' indicates another action following the previous one, not a replacement of it, so distance_m is 20.0.\"},{\"text\":\"停。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the third action: stop with empty parameters. The period is punctuation and, per the later clause, is not to be treated as a separator.\"},{\"text\":\"句号先别管，是连续的三步。\",\"role\":\"RELATION\",\"explanation\":\"States that the full stops are not to be treated as separators and that the three commands form a consecutive three-step sequence. It confirms a single linear order stand, walk_forward, stop, adds no fourth action, and leaves no unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly three action clauses: stand one second, walk forward twenty meters, and stop. '再' adds a following action rather than replacing the stand, and '三步' confirms exactly three steps.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is uniquely stand, then walk_forward, then stop. '再' marks the walk as following the stand, the stop follows the walk by sentence sequence, and '连续的三步' confirms the three actions are consecutive in that order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No action or parameter is corrected or replaced. '句号先别管' only instructs that punctuation periods are not to be treated as separators; it does not edit the stand, walk_forward, or stop actions.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repeated action span or repetition count. '一秒' is a duration for stand, '二十米' is a distance for walk_forward, and '三步' means three distinct sequential actions, not the same action repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' refers to the next action after the stand, namely walk_forward. '句号' refers to the punctuation marks just used, and '三步' refers to the three action clauses. No external referent or missing context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires one linear consecutive sequence without invented waits or events: stand for 1 second, then walk_forward 20 meters, then stop. This is representable by the specified depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not leave order, scope, repetition, or choice unresolved. It explicitly resolves the punctuation interpretation by saying to ignore the periods and confirms the three actions are continuous steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":1.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_874df24d-d9d8-4e94-9fbd-b0db36005a44",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 254,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 2439,
+            "output_tokens_details": {
+              "reasoning_tokens": 1686
+            },
+            "total_tokens": 3717
+          }
+        },
+        "request_sha256": "676d8b87f8eec19c1bb74994fc6336aca4502c75f3558cbb46a43602886fd8d3",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.35322079999969,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_874df24d-d9d8-4e94-9fbd-b0db36005a44",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站一秒。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: stand for one second, so duration_s is 1.0. The period is punctuation, and the later clause says periods should be ignored as separators, so it does not add a stop action.\"},{\"text\":\"再向前二十米。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action after the stand: walk forward 20 meters. '再' indicates another action following the previous one, not a replacement of it, so distance_m is 20.0.\"},{\"text\":\"停。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the third action: stop with empty parameters. The period is punctuation and, per the later clause, is not to be treated as a separator.\"},{\"text\":\"句号先别管，是连续的三步。\",\"role\":\"RELATION\",\"explanation\":\"States that the full stops are not to be treated as separators and that the three commands form a consecutive three-step sequence. It confirms a single linear order stand, walk_forward, stop, adds no fourth action, and leaves no unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly three action clauses: stand one second, walk forward twenty meters, and stop. '再' adds a following action rather than replacing the stand, and '三步' confirms exactly three steps.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is uniquely stand, then walk_forward, then stop. '再' marks the walk as following the stand, the stop follows the walk by sentence sequence, and '连续的三步' confirms the three actions are consecutive in that order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No action or parameter is corrected or replaced. '句号先别管' only instructs that punctuation periods are not to be treated as separators; it does not edit the stand, walk_forward, or stop actions.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repeated action span or repetition count. '一秒' is a duration for stand, '二十米' is a distance for walk_forward, and '三步' means three distinct sequential actions, not the same action repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' refers to the next action after the stand, namely walk_forward. '句号' refers to the punctuation marks just used, and '三步' refers to the three action clauses. No external referent or missing context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires one linear consecutive sequence without invented waits or events: stand for 1 second, then walk_forward 20 meters, then stop. This is representable by the specified depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not leave order, scope, repetition, or choice unresolved. It explicitly resolves the punctuation interpretation by saying to ignore the periods and confirms the three actions are continuous steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":1.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+        "usage": {
+          "input_tokens": 254,
+          "output_tokens": 2439,
+          "total_tokens": 3717
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 4.372984900001029,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-walk20-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 24,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 345,
+      "raw_response_sha256": "c0890d3517569fe02c32c5e05225501e6d5b011edcbf7090f0d7dcf6fbd362a8",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_2a5a4a9a-0a6d-473d-b70c-b6a665947cf8",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 12.357776899998498,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 12.35322079999969,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站一秒。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: stand for one second, so duration_s is 1.0. The period is punctuation, and the later clause says periods should be ignored as separators, so it does not add a stop action.\"},{\"text\":\"再向前二十米。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action after the stand: walk forward 20 meters. '再' indicates another action following the previous one, not a replacement of it, so distance_m is 20.0.\"},{\"text\":\"停。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the third action: stop with empty parameters. The period is punctuation and, per the later clause, is not to be treated as a separator.\"},{\"text\":\"句号先别管，是连续的三步。\",\"role\":\"RELATION\",\"explanation\":\"States that the full stops are not to be treated as separators and that the three commands form a consecutive three-step sequence. It confirms a single linear order stand, walk_forward, stop, adds no fourth action, and leaves no unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly three action clauses: stand one second, walk forward twenty meters, and stop. '再' adds a following action rather than replacing the stand, and '三步' confirms exactly three steps.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is uniquely stand, then walk_forward, then stop. '再' marks the walk as following the stand, the stop follows the walk by sentence sequence, and '连续的三步' confirms the three actions are consecutive in that order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No action or parameter is corrected or replaced. '句号先别管' only instructs that punctuation periods are not to be treated as separators; it does not edit the stand, walk_forward, or stop actions.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repeated action span or repetition count. '一秒' is a duration for stand, '二十米' is a distance for walk_forward, and '三步' means three distinct sequential actions, not the same action repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' refers to the next action after the stand, namely walk_forward. '句号' refers to the punctuation marks just used, and '三步' refers to the three action clauses. No external referent or missing context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires one linear consecutive sequence without invented waits or events: stand for 1 second, then walk_forward 20 meters, then stop. This is representable by the specified depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not leave order, scope, repetition, or choice unresolved. It explicitly resolves the punctuation interpretation by saying to ignore the periods and confirms the three actions are continuous steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":1.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+          "raw_response_sha256": "88524f7d53497607e7dccfed2fbbd87cfa246017655b18494da7e44cbeed5ba1",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_874df24d-d9d8-4e94-9fbd-b0db36005a44",
+          "source_aware": true,
+          "source_sha256": "fb153d7d194788f928d19ed5e348b49e5bdb9502e8bf4423497bb8fb1e86d761",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 254,
+            "output_tokens": 2439,
+            "total_tokens": 3717
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 1.0
+                },
+                "skill": "stand"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "distance_m": 20.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the first action: stand for one second, so duration_s is 1.0. The period is punctuation, and the later clause says periods should be ignored as separators, so it does not add a stop action.",
+                "role": "ACTION",
+                "text": "站一秒。"
+              },
+              {
+                "explanation": "Specifies the second action after the stand: walk forward 20 meters. '再' indicates another action following the previous one, not a replacement of it, so distance_m is 20.0.",
+                "role": "ACTION",
+                "text": "再向前二十米。"
+              },
+              {
+                "explanation": "Specifies the third action: stop with empty parameters. The period is punctuation and, per the later clause, is not to be treated as a separator.",
+                "role": "ACTION",
+                "text": "停。"
+              },
+              {
+                "explanation": "States that the full stops are not to be treated as separators and that the three commands form a consecutive three-step sequence. It confirms a single linear order stand, walk_forward, stop, adds no fourth action, and leaves no unresolved choice.",
+                "role": "RELATION",
+                "text": "句号先别管，是连续的三步。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly three action clauses: stand one second, walk forward twenty meters, and stop. '再' adds a following action rather than replacing the stand, and '三步' confirms exactly three steps.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The order is uniquely stand, then walk_forward, then stop. '再' marks the walk as following the stand, the stop follows the walk by sentence sequence, and '连续的三步' confirms the three actions are consecutive in that order.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No action or parameter is corrected or replaced. '句号先别管' only instructs that punctuation periods are not to be treated as separators; it does not edit the stand, walk_forward, or stop actions.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "'再' refers to the next action after the stand, namely walk_forward. '句号' refers to the punctuation marks just used, and '三步' refers to the three action clauses. No external referent or missing context is required.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repeated action span or repetition count. '一秒' is a duration for stand, '二十米' is a distance for walk_forward, and '三步' means three distinct sequential actions, not the same action repeated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source requires one linear consecutive sequence without invented waits or events: stand for 1 second, then walk_forward 20 meters, then stop. This is representable by the specified depends_on chain.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not leave order, scope, repetition, or choice unresolved. It explicitly resolves the punctuation interpretation by saying to ignore the periods and confirms the three actions are continuous steps.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 220,
+        "output_tokens": 710,
+        "total_tokens": 2466
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-walk20-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 1.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 20.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "站一秒再向前二十米,停,句号先别管,是连续的三步",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.841727799997898,
+  "provider_document": {
+    "created_at": 1791360410,
+    "id": "resp_cd8cdb9a-4df6-4427-8939-ef5aed7d8ceb",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_cd8cdb9a-4df6-4427-8939-ef5aed7d8ceb",
+        "reasoning_content": "We need answer JSON only. Need analyze source Chinese \"往前走4.0米\". Candidate. Need derive authorized plan. Source: 往前走4.0米 = walk forward 4.0 meters. Legal walk_forward distance_m 4.0. One action. Need coverage exact spans concatenated equal source. Need split meaningful spans. Text exact, no omission. Source length: 往前走4.0米. Can split e.g. \"往前走\" ACTION? \"4.0\" QUANTITY, \"米\" QUANTITY? Need concatenate exactly. Could do \"往前走\" role ACTION explanation direction; \"4.0\" QUANTITY; \"米\" QUANTITY. But role for 米 as unit. Or single span \"往前走4.0米\" role ACTION. The requirement split into meaningful spans so every action, relation, edit clause. Could single span action. But maybe better with three spans. Text exact. Ensure concatenation equals original: \"往前走\" + \"4.0\" + \"米\" = \"往前走4.0米\". All nonempty explanations. No separators. Dimensions all UNIQUE. authorized_plan with s1 walk_forward distance_m 4.0 depends_on []. status AUTHORIZED_UNIQUE. Need exactly keys. Candidate matches but candidate not oracle. Need no extra. JSON valid.\n\nNeed be careful with action_multiplicity: one action. action_order: single step order trivial. correction_scope: no edits. repetition_scope: none. reference_resolution: no pronoun? \"往前\" indicates forward direction, not reference. Maybe resolved. temporal_relations: no temporal relations, single action. unresolved_relations: none.\n\nCoverage objects exactly text, role, explanation. We can split:\n1. text \"往前走\", role ACTION, explanation: 表示向前行走的唯一动作；对应急动作为 walk_forward。\n2. text \"4.0\", role QUANTITY, explanation: 指定距离数值 4.0，单位由后续“米”确定，因此 distance_m=4.0。\n3. text \"米\", role QUANTITY, explanation: 距离单位米，按编译语义直接为米，不改变 4.0 的数值；与前一数量跨度共同授权 distance_m=4.0。\nThis is okay. But role QUANTITY for unit maybe okay. It says role ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. Unit part of quantity. Explanation nonempty.\n\nAlternatively single span \"往前走4.0米\" role ACTION. But then coverage not granular? It says split into meaningful spans so every action, relation and edit clause analyzed. Single span can analyze entire action. But maybe better multiple.\n\nNeed decide if \"往前走4.0米\" includes no explicit duration. walk_forward only distance. Good.\n\nNeed output exactly JSON no markdown. Ensure numbers finite JSON. 4.0 okay. Could use 4.0. candidate has mission_id irrelevant. No mission_id in our plan.\n\nLet's craft final JSON. Need status, coverage, dimensions, authorized_plan. Dimensions exactly seven names. Explanations nonempty.\n\nUse Chinese? English okay. Ensure valid JSON escapes. No newlines? Can be formatted. It's okay.\n\nDouble-check \"往前走\" includes \"走\" walk, \"往前\" forward. Distance 4.0米. Yes.\n\nPotential issue: \"往前\" could mean \"move forward\" not necessarily walk_forward? Legal skills only stand, walk_forward, turn, stop. \"走\" = walk, so walk_forward. Good.\n\nNo ambiguity.\n\nFinal.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source Chinese \"往前走4.0米\". Candidate. Need derive authorized plan. Source: 往前走4.0米 = walk forward 4.0 meters. Legal walk_forward distance_m 4.0. One action. Need coverage exact spans concatenated equal source. Need split meaningful spans. Text exact, no omission. Source length: 往前走4.0米. Can split e.g. \"往前走\" ACTION? \"4.0\" QUANTITY, \"米\" QUANTITY? Need concatenate exactly. Could do \"往前走\" role ACTION explanation direction; \"4.0\" QUANTITY; \"米\" QUANTITY. But role for 米 as unit. Or single span \"往前走4.0米\" role ACTION. The requirement split into meaningful spans so every action, relation, edit clause. Could single span action. But maybe better with three spans. Text exact. Ensure concatenation equals original: \"往前走\" + \"4.0\" + \"米\" = \"往前走4.0米\". All nonempty explanations. No separators. Dimensions all UNIQUE. authorized_plan with s1 walk_forward distance_m 4.0 depends_on []. status AUTHORIZED_UNIQUE. Need exactly keys. Candidate matches but candidate not oracle. Need no extra. JSON valid.\n\nNeed be careful with action_multiplicity: one action. action_order: single step order trivial. correction_scope: no edits. repetition_scope: none. reference_resolution: no pronoun? \"往前\" indicates forward direction, not reference. Maybe resolved. temporal_relations: no temporal relations, single action. unresolved_relations: none.\n\nCoverage objects exactly text, role, explanation. We can split:\n1. text \"往前走\", role ACTION, explanation: 表示向前行走的唯一动作；对应急动作为 walk_forward。\n2. text \"4.0\", role QUANTITY, explanation: 指定距离数值 4.0，单位由后续“米”确定，因此 distance_m=4.0。\n3. text \"米\", role QUANTITY, explanation: 距离单位米，按编译语义直接为米，不改变 4.0 的数值；与前一数量跨度共同授权 distance_m=4.0。\nThis is okay. But role QUANTITY for unit maybe okay. It says role ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. Unit part of quantity. Explanation nonempty.\n\nAlternatively single span \"往前走4.0米\" role ACTION. But then coverage not granular? It says split into meaningful spans so every action, relation and edit clause analyzed. Single span can analyze entire action. But maybe better multiple.\n\nNeed decide if \"往前走4.0米\" includes no explicit duration. walk_forward only distance. Good.\n\nNeed output exactly JSON no markdown. Ensure numbers finite JSON. 4.0 okay. Could use 4.0. candidate has mission_id irrelevant. No mission_id in our plan.\n\nLet's craft final JSON. Need status, coverage, dimensions, authorized_plan. Dimensions exactly seven names. Explanations nonempty.\n\nUse Chinese? English okay. Ensure valid JSON escapes. No newlines? Can be formatted. It's okay.\n\nDouble-check \"往前走\" includes \"走\" walk, \"往前\" forward. Distance 4.0米. Yes.\n\nPotential issue: \"往前\" could mean \"move forward\" not necessarily walk_forward? Legal skills only stand, walk_forward, turn, stop. \"走\" = walk, so walk_forward. Good.\n\nNo ambiguity.\n\nFinal.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"这是源中唯一的动作指令，表示向前行走；在合法技能中对应 walk_forward。\"},{\"text\":\"4.0\",\"role\":\"QUANTITY\",\"explanation\":\"这是行走距离的数值部分，指定 distance_m 为 4.0。\"},{\"text\":\"米\",\"role\":\"QUANTITY\",\"explanation\":\"这是距离单位，按编译语义米直接表示 meters；它与前面的数值共同授权 distance_m=4.0，且不引入额外动作、修正、重复或时间关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中只有一个动作“往前走”，没有并列、重复或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，因此执行顺序唯一，即先且仅执行该 walk_forward 步骤。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、纠正或替换词，不涉及修正范围。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复、次数或循环表达，因此只执行一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“往前”明确表示向前方向，不依赖外部指代；没有省略参数需要外部上下文解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有 before、after、等待或完成关系；单个动作可表示为单一线性步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源中所有可执行内容均已确定：唯一动作 walk_forward，距离为 4.0 米，没有显式未决选择、顺序或范围。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_cd8cdb9a-4df6-4427-8939-ef5aed7d8ceb",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 187,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1163,
+      "output_tokens_details": {
+        "reasoning_tokens": 752
+      },
+      "total_tokens": 2374
+    }
+  },
+  "request_sha256": "899ce08aab9b3a88dbfa52db622b7d60ff6d313c5f6cf700997aeaa4f27f99b6",
+  "status": "SUCCESS"
+}

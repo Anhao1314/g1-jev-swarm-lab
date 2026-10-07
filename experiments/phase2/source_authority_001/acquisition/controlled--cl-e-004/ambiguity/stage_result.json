@@ -1,0 +1,334 @@
+{
+  "added_wall_s": 10.441280099999858,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.435984899999312,
+        "provider_document": {
+          "created_at": 1791360655,
+          "id": "resp_d9471562-b15a-4276-b2f6-f946048dbd63",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_d9471562-b15a-4276-b2f6-f946048dbd63",
+              "reasoning_content": "We need answer JSON only. Need analyze Chinese source: \"先前进10米，再右转90度，然后前进4米，最后停止。\"\n\nWe need determine dimensions. Let's parse.\n\nSource: 先前进10米，再右转90度，然后前进4米，最后停止。\n\nActions:\n1 walk_forward distance 10 m\n2 turn right 90 deg => angle -90\n3 walk_forward distance 4 m\n4 stop\n\nOrder: 先 ... 再 ... 然后 ... 最后. Clearly sequential. No ambiguity. All legal: distances positive finite, turn nonzero finite 90, stop no params. Steps 4 <=32. Angle max 180, 90 okay. Need check stand none. Corrections none. Repetition none. References? \"然后前进4米\" has omitted subject but same agent; \"最后停止\" same subject. Unique. Temporal relations sequential. Unresolved none.\n\nThus AUTHORIZED_UNIQUE. Need coverage spans exact concatenation equals entire source. Need split meaningful spans. We can include punctuation. Entire source exactly. Need ensure text values concatenated in list order equal source. Source string is: \"先前进10米，再右转90度，然后前进4米，最后停止。\" It includes Chinese punctuation comma \"，\" and period \"。\". We can split:\n\n- \"先\" maybe SEPARATOR or CONTEXT? It indicates first/order. Then \"前进10米\" ACTION. \"，\" SEPARATOR. \"再\" RELATION/SEPARATOR? Then \"右转90度\" ACTION. \"，\" SEPARATOR. \"然后\" RELATION. \"前进4米\" ACTION. \"，\" SEPARATOR. \"最后\" RELATION. \"停止\" ACTION. \"。\" SEPARATOR.\n\nNeed coverage every action relation editing clause. We can have each word separate. Need explanations nonempty.\n\nNeed role for \"先\": It's ordering marker (temporal relation) maybe RELATION. \"再\" RELATION. \"然后\" RELATION. \"最后\" RELATION. Punctuation SEPARATOR. Actions ACTION. Quantities? The quantities are embedded in action spans. Could split \"10米\" as QUANTITY but then action span \"前进\" and quantity \"10米\". Need every action and quantity considered. Better split \"先\" RELATION, \"前进\" ACTION? But action needs parameter. If separate quantity, explanation can explain. But text concatenation exact. Need role exactly one of list. Quantity role for \"10米\" etc. Action role for \"前进\"/\"右转\"/\"停止\". But \"右转90度\" action turn with angle. Could split \"右转\" ACTION, \"90度\" QUANTITY. Then relations.\n\nNeed ensure no omitted punctuation. Let's formulate coverage list. Need every text value copied exactly. We can split as:\n\n1 \"先\" role RELATION\n2 \"前进\" role ACTION\n3 \"10米\" role QUANTITY\n4 \"，\" role SEPARATOR\n5 \"再\" role RELATION\n6 \"右转\" role ACTION\n7 \"90度\" role QUANTITY\n8 \"，\" role SEPARATOR\n9 \"然后\" role RELATION\n10 \"前进\" role ACTION\n11 \"4米\" role QUANTITY\n12 \"，\" role SEPARATOR\n13 \"最后\" role RELATION\n14 \"停止\" role ACTION\n15 \"。\" role SEPARATOR\n\nConcatenation:\n先 + 前进 + 10米 + ， + 再 + 右转 + 90度 + ， + 然后 + 前进 + 4米 + ， + 最后 + 停止 + 。 = 先前进10米，再右转90度，然后前进4米，最后停止。 Yes.\n\nExplanations:\n- 先: \"Ordering marker establishing that the following walk_forward action is first.\" It is relation, not command.\n- 前进: \"Action verb meaning walk_forward; paired with the immediately following quantity 10米.\" \n- 10米: \"Distance parameter 10 meters; positive finite, legal for walk_forward.\"\n- comma separator.\n- 再: \"Sequential connector indicating next action after previous completion; establishes second action follows first.\" \n- 右转: \"Action verb meaning turn to the right; paired with following quantity 90度, mapping to angle -90 degrees because right/clockwise is negative.\"\n- 90度: \"Angle parameter 90 degrees; nonzero finite and within max absolute 180.\"\n- comma.\n- 然后: \"Sequential connector indicating the next action after the turn; third action follows second.\"\n- 前进: \"Second walk_forward action, paired with following 4米; distinct from earlier 前进10米 and not a repetition or replacement.\"\n- 4米: \"Distance parameter 4 meters; positive finite.\"\n- comma.\n- 最后: \"Sequential connector marking the final action; stop follows previous walk_forward.\"\n- 停止: \"Action meaning stop with no parameters; final step.\"\n- period: \"Terminal punctuation; ends source, no additional action.\"\n\nDimensions:\naction_multiplicity UNIQUE explanation: Four actions: walk_forward 10m, turn right 90, walk_forward 4m, stop. No edits/repetitions. \"前进\" appears twice but sequence connectors and distinct quantities make them separate actions. \naction_order UNIQUE: 先, 再, 然后, 最后 establish exactly order.\ncorrection_scope UNIQUE: no edits/corrections. Nothing to change.\nrepetition_scope UNIQUE: no repetition markers or repeated span; repeated verb 前进 expresses distinct actions with different distances, not repetition.\nreference_resolution UNIQUE: omitted subjects resolve to same agent; \"然后前进4米\" and \"最后停止\" refer to sequence not ambiguous. No external context needed.\ntemporal_relations UNIQUE: Strict sequential order, each next after previous. No simultaneity/waiting beyond completion.\nunresolved_relations UNIQUE: none.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed exactly JSON object, no markdown. Ensure valid JSON, Chinese characters okay. Use double quotes. No trailing. coverage nonempty. Dimensions exactly seven names. status. Need no extra keys. Explanations nonempty.\n\nLet's craft. Need be careful with coverage text values exactly, including full-width comma. JSON strings can contain Chinese comma. Need preserve whitespace: there is none except source. Source has no spaces. Good.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze Chinese source: \"先前进10米，再右转90度，然后前进4米，最后停止。\"\n\nWe need determine dimensions. Let's parse.\n\nSource: 先前进10米，再右转90度，然后前进4米，最后停止。\n\nActions:\n1 walk_forward distance 10 m\n2 turn right 90 deg => angle -90\n3 walk_forward distance 4 m\n4 stop\n\nOrder: 先 ... 再 ... 然后 ... 最后. Clearly sequential. No ambiguity. All legal: distances positive finite, turn nonzero finite 90, stop no params. Steps 4 <=32. Angle max 180, 90 okay. Need check stand none. Corrections none. Repetition none. References? \"然后前进4米\" has omitted subject but same agent; \"最后停止\" same subject. Unique. Temporal relations sequential. Unresolved none.\n\nThus AUTHORIZED_UNIQUE. Need coverage spans exact concatenation equals entire source. Need split meaningful spans. We can include punctuation. Entire source exactly. Need ensure text values concatenated in list order equal source. Source string is: \"先前进10米，再右转90度，然后前进4米，最后停止。\" It includes Chinese punctuation comma \"，\" and period \"。\". We can split:\n\n- \"先\" maybe SEPARATOR or CONTEXT? It indicates first/order. Then \"前进10米\" ACTION. \"，\" SEPARATOR. \"再\" RELATION/SEPARATOR? Then \"右转90度\" ACTION. \"，\" SEPARATOR. \"然后\" RELATION. \"前进4米\" ACTION. \"，\" SEPARATOR. \"最后\" RELATION. \"停止\" ACTION. \"。\" SEPARATOR.\n\nNeed coverage every action relation editing clause. We can have each word separate. Need explanations nonempty.\n\nNeed role for \"先\": It's ordering marker (temporal relation) maybe RELATION. \"再\" RELATION. \"然后\" RELATION. \"最后\" RELATION. Punctuation SEPARATOR. Actions ACTION. Quantities? The quantities are embedded in action spans. Could split \"10米\" as QUANTITY but then action span \"前进\" and quantity \"10米\". Need every action and quantity considered. Better split \"先\" RELATION, \"前进\" ACTION? But action needs parameter. If separate quantity, explanation can explain. But text concatenation exact. Need role exactly one of list. Quantity role for \"10米\" etc. Action role for \"前进\"/\"右转\"/\"停止\". But \"右转90度\" action turn with angle. Could split \"右转\" ACTION, \"90度\" QUANTITY. Then relations.\n\nNeed ensure no omitted punctuation. Let's formulate coverage list. Need every text value copied exactly. We can split as:\n\n1 \"先\" role RELATION\n2 \"前进\" role ACTION\n3 \"10米\" role QUANTITY\n4 \"，\" role SEPARATOR\n5 \"再\" role RELATION\n6 \"右转\" role ACTION\n7 \"90度\" role QUANTITY\n8 \"，\" role SEPARATOR\n9 \"然后\" role RELATION\n10 \"前进\" role ACTION\n11 \"4米\" role QUANTITY\n12 \"，\" role SEPARATOR\n13 \"最后\" role RELATION\n14 \"停止\" role ACTION\n15 \"。\" role SEPARATOR\n\nConcatenation:\n先 + 前进 + 10米 + ， + 再 + 右转 + 90度 + ， + 然后 + 前进 + 4米 + ， + 最后 + 停止 + 。 = 先前进10米，再右转90度，然后前进4米，最后停止。 Yes.\n\nExplanations:\n- 先: \"Ordering marker establishing that the following walk_forward action is first.\" It is relation, not command.\n- 前进: \"Action verb meaning walk_forward; paired with the immediately following quantity 10米.\" \n- 10米: \"Distance parameter 10 meters; positive finite, legal for walk_forward.\"\n- comma separator.\n- 再: \"Sequential connector indicating next action after previous completion; establishes second action follows first.\" \n- 右转: \"Action verb meaning turn to the right; paired with following quantity 90度, mapping to angle -90 degrees because right/clockwise is negative.\"\n- 90度: \"Angle parameter 90 degrees; nonzero finite and within max absolute 180.\"\n- comma.\n- 然后: \"Sequential connector indicating the next action after the turn; third action follows second.\"\n- 前进: \"Second walk_forward action, paired with following 4米; distinct from earlier 前进10米 and not a repetition or replacement.\"\n- 4米: \"Distance parameter 4 meters; positive finite.\"\n- comma.\n- 最后: \"Sequential connector marking the final action; stop follows previous walk_forward.\"\n- 停止: \"Action meaning stop with no parameters; final step.\"\n- period: \"Terminal punctuation; ends source, no additional action.\"\n\nDimensions:\naction_multiplicity UNIQUE explanation: Four actions: walk_forward 10m, turn right 90, walk_forward 4m, stop. No edits/repetitions. \"前进\" appears twice but sequence connectors and distinct quantities make them separate actions. \naction_order UNIQUE: 先, 再, 然后, 最后 establish exactly order.\ncorrection_scope UNIQUE: no edits/corrections. Nothing to change.\nrepetition_scope UNIQUE: no repetition markers or repeated span; repeated verb 前进 expresses distinct actions with different distances, not repetition.\nreference_resolution UNIQUE: omitted subjects resolve to same agent; \"然后前进4米\" and \"最后停止\" refer to sequence not ambiguous. No external context needed.\ntemporal_relations UNIQUE: Strict sequential order, each next after previous. No simultaneity/waiting beyond completion.\nunresolved_relations UNIQUE: none.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed exactly JSON object, no markdown. Ensure valid JSON, Chinese characters okay. Use double quotes. No trailing. coverage nonempty. Dimensions exactly seven names. status. Need no extra keys. Explanations nonempty.\n\nLet's craft. Need be careful with coverage text values exactly, including full-width comma. JSON strings can contain Chinese comma. Need preserve whitespace: there is none except source. Source has no spaces. Good.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker establishing that the following walk_forward action is first in the sequence.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning walk_forward; it is paired with the immediately following distance quantity 10米.\"},{\"text\":\"10米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance parameter of 10 meters for the preceding walk_forward action; positive and finite, so legal for walk_forward.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the first and second actions; it does not add or alter any command.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector indicating that the next action follows the first action.\"},{\"text\":\"右转\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning turn to the right; paired with 90度, it maps to a turn angle of -90 degrees.\"},{\"text\":\"90度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle parameter of 90 degrees for the preceding right turn; nonzero, finite, and within the 180-degree absolute bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the turn and the next walk_forward action; it adds no command.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector indicating that the next action follows the preceding turn.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Second walk_forward action, paired with 4米; it is distinct from the earlier 前进10米 and is not a repetition or replacement.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance parameter of 4 meters for this walk_forward action; positive and finite, so legal.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the second walk_forward action and the final action; it adds no command.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector marking the following stop as the final action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Action meaning stop with no parameters; it is the final step after the preceding walk_forward.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Terminal punctuation closing the source; no further action, relation, or edit is introduced.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: walk_forward 10 meters, turn right 90 degrees, walk_forward 4 meters, and stop. The repeated verb 前进 occurs with different distances and is separated by connectors, so it denotes two distinct actions rather than an edit or repeated single action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 然后, and 最后 establish one exact linear order: first walk_forward 10米, second right turn 90度, third walk_forward 4米, fourth stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or editing clause appears in the source. There is no prior action, parameter, group, or relation that is changed by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition construct or repetition count appears. The two occurrences of 前进 are separate actions with different distances, not a repeated span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The omitted subject of each action is unambiguously the same commanded agent. 然后前进4米 refers to the next action after the turn, and 最后停止 refers to the final action; no external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence connectors 先, 再, 然后, and 最后 require strict sequential execution, with each step following the completion of its predecessor. No simultaneous, waiting, or alternative timing relation is stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved. Every action and parameter is specified sufficiently for one legal linear interpretation.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_d9471562-b15a-4276-b2f6-f946048dbd63",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 155,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2254,
+            "output_tokens_details": {
+              "reasoning_tokens": 1357
+            },
+            "total_tokens": 3177
+          }
+        },
+        "request_sha256": "8eefdb8261dd587f6ede03d70e7dcdff509e5e7077b6061539a4d48103329104",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.434495699999388,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_d9471562-b15a-4276-b2f6-f946048dbd63",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker establishing that the following walk_forward action is first in the sequence.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning walk_forward; it is paired with the immediately following distance quantity 10米.\"},{\"text\":\"10米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance parameter of 10 meters for the preceding walk_forward action; positive and finite, so legal for walk_forward.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the first and second actions; it does not add or alter any command.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector indicating that the next action follows the first action.\"},{\"text\":\"右转\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning turn to the right; paired with 90度, it maps to a turn angle of -90 degrees.\"},{\"text\":\"90度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle parameter of 90 degrees for the preceding right turn; nonzero, finite, and within the 180-degree absolute bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the turn and the next walk_forward action; it adds no command.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector indicating that the next action follows the preceding turn.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Second walk_forward action, paired with 4米; it is distinct from the earlier 前进10米 and is not a repetition or replacement.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance parameter of 4 meters for this walk_forward action; positive and finite, so legal.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the second walk_forward action and the final action; it adds no command.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector marking the following stop as the final action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Action meaning stop with no parameters; it is the final step after the preceding walk_forward.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Terminal punctuation closing the source; no further action, relation, or edit is introduced.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: walk_forward 10 meters, turn right 90 degrees, walk_forward 4 meters, and stop. The repeated verb 前进 occurs with different distances and is separated by connectors, so it denotes two distinct actions rather than an edit or repeated single action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 然后, and 最后 establish one exact linear order: first walk_forward 10米, second right turn 90度, third walk_forward 4米, fourth stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or editing clause appears in the source. There is no prior action, parameter, group, or relation that is changed by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition construct or repetition count appears. The two occurrences of 前进 are separate actions with different distances, not a repeated span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The omitted subject of each action is unambiguously the same commanded agent. 然后前进4米 refers to the next action after the turn, and 最后停止 refers to the final action; no external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence connectors 先, 再, 然后, and 最后 require strict sequential execution, with each step following the completion of its predecessor. No simultaneous, waiting, or alternative timing relation is stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved. Every action and parameter is specified sufficiently for one legal linear interpretation.\"}}}",
+        "usage": {
+          "input_tokens": 155,
+          "output_tokens": 2254,
+          "total_tokens": 3177
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.6594781999992847,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 22,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "1fff9b67899a1e4e5e6cc8968dfe49fa72f9ba2b1090751734a6ef9ea17a108f",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_0e64bb2e-c703-4952-bfa1-f1e23885d618",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.438931100001355,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 10.434495699999388,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker establishing that the following walk_forward action is first in the sequence.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning walk_forward; it is paired with the immediately following distance quantity 10米.\"},{\"text\":\"10米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance parameter of 10 meters for the preceding walk_forward action; positive and finite, so legal for walk_forward.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the first and second actions; it does not add or alter any command.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector indicating that the next action follows the first action.\"},{\"text\":\"右转\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning turn to the right; paired with 90度, it maps to a turn angle of -90 degrees.\"},{\"text\":\"90度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle parameter of 90 degrees for the preceding right turn; nonzero, finite, and within the 180-degree absolute bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the turn and the next walk_forward action; it adds no command.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector indicating that the next action follows the preceding turn.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Second walk_forward action, paired with 4米; it is distinct from the earlier 前进10米 and is not a repetition or replacement.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance parameter of 4 meters for this walk_forward action; positive and finite, so legal.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator between the second walk_forward action and the final action; it adds no command.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector marking the following stop as the final action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Action meaning stop with no parameters; it is the final step after the preceding walk_forward.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Terminal punctuation closing the source; no further action, relation, or edit is introduced.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: walk_forward 10 meters, turn right 90 degrees, walk_forward 4 meters, and stop. The repeated verb 前进 occurs with different distances and is separated by connectors, so it denotes two distinct actions rather than an edit or repeated single action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 然后, and 最后 establish one exact linear order: first walk_forward 10米, second right turn 90度, third walk_forward 4米, fourth stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or editing clause appears in the source. There is no prior action, parameter, group, or relation that is changed by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition construct or repetition count appears. The two occurrences of 前进 are separate actions with different distances, not a repeated span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The omitted subject of each action is unambiguously the same commanded agent. 然后前进4米 refers to the next action after the turn, and 最后停止 refers to the final action; no external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence connectors 先, 再, 然后, and 最后 require strict sequential execution, with each step following the completion of its predecessor. No simultaneous, waiting, or alternative timing relation is stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved. Every action and parameter is specified sufficiently for one legal linear interpretation.\"}}}",
+          "raw_response_sha256": "8fa7c92cea47f11640cad75ffe7fcf7c90b957976f6125e31cb56ba5c4e3ecd5",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_d9471562-b15a-4276-b2f6-f946048dbd63",
+          "source_aware": false,
+          "source_sha256": "63425052f9cbbd382a7efef2e4e062aac9c5b04687a87421b52c0e690facc804",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 155,
+            "output_tokens": 2254,
+            "total_tokens": 3177
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Ordering marker establishing that the following walk_forward action is first in the sequence.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Action verb meaning walk_forward; it is paired with the immediately following distance quantity 10米.",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "Distance parameter of 10 meters for the preceding walk_forward action; positive and finite, so legal for walk_forward.",
+                "role": "QUANTITY",
+                "text": "10米"
+              },
+              {
+                "explanation": "Clause separator between the first and second actions; it does not add or alter any command.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Sequential connector indicating that the next action follows the first action.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Action verb meaning turn to the right; paired with 90度, it maps to a turn angle of -90 degrees.",
+                "role": "ACTION",
+                "text": "右转"
+              },
+              {
+                "explanation": "Angle parameter of 90 degrees for the preceding right turn; nonzero, finite, and within the 180-degree absolute bound.",
+                "role": "QUANTITY",
+                "text": "90度"
+              },
+              {
+                "explanation": "Clause separator between the turn and the next walk_forward action; it adds no command.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Sequential connector indicating that the next action follows the preceding turn.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Second walk_forward action, paired with 4米; it is distinct from the earlier 前进10米 and is not a repetition or replacement.",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "Distance parameter of 4 meters for this walk_forward action; positive and finite, so legal.",
+                "role": "QUANTITY",
+                "text": "4米"
+              },
+              {
+                "explanation": "Clause separator between the second walk_forward action and the final action; it adds no command.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Sequential connector marking the following stop as the final action.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Action meaning stop with no parameters; it is the final step after the preceding walk_forward.",
+                "role": "ACTION",
+                "text": "停止"
+              },
+              {
+                "explanation": "Terminal punctuation closing the source; no further action, relation, or edit is introduced.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly four actions: walk_forward 10 meters, turn right 90 degrees, walk_forward 4 meters, and stop. The repeated verb 前进 occurs with different distances and is separated by connectors, so it denotes two distinct actions rather than an edit or repeated single action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The markers 先, 再, 然后, and 最后 establish one exact linear order: first walk_forward 10米, second right turn 90度, third walk_forward 4米, fourth stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction, replacement, or editing clause appears in the source. There is no prior action, parameter, group, or relation that is changed by an edit.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The omitted subject of each action is unambiguously the same commanded agent. 然后前进4米 refers to the next action after the turn, and 最后停止 refers to the final action; no external referent is needed.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition construct or repetition count appears. The two occurrences of 前进 are separate actions with different distances, not a repeated span.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The sequence connectors 先, 再, 然后, and 最后 require strict sequential execution, with each step following the completion of its predecessor. No simultaneous, waiting, or alternative timing relation is stated.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no choice, scope, ordering, or relationship unresolved. Every action and parameter is specified sufficiently for one legal linear interpretation.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 218,
+        "output_tokens": 326,
+        "total_tokens": 2080
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 10.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先前进10米再右转90度然后前进4米最后停止",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "added_wall_s": 8.086160400001972,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.080042500001582,
+        "provider_document": {
+          "created_at": 1791360573,
+          "id": "resp_ce8a3f5e-367c-4c9a-9de9-20fafb2ee18d",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_ce8a3f5e-367c-4c9a-9de9-20fafb2ee18d",
+              "reasoning_content": "We need answer exactly JSON object. Need derive source plan. Source Chinese: \"左转四十五度，之后停止\" = \"Turn left 45 degrees, then stop\". Legal skills. Need dimensions. Need coverage split exact text spans concatenated equal source. Need consider punctuation. Source: 左转四十五度，之后停止. No whitespace. Need coverage spans meaningful. Could split: \"左转四十五度\" ACTION/QUANTITY, \"，\" SEPARATOR, \"之后\" RELATION, \"停止\" ACTION. Need ensure concat exactly. Maybe \"左转\" ACTION, \"四十五度\" QUANTITY, \"，\" SEPARATOR, \"之后\" RELATION, \"停止\" ACTION. But text values concatenated must equal entire original. That yields 左转 + 四十五度 + ， + 之后 + 停止 = exact. Good. Explanations nonempty.\n\nNeed dimensions:\n- action_multiplicity: two actions turn, stop. Unique.\n- action_order: turn then stop due 之后 after. Unique.\n- correction_scope: none. Unique/inapplicable.\n- repetition_scope: none. Unique/inapplicable.\n- reference_resolution: \"之后\" refers to after the preceding action? \"之后停止\" means after (that), stop. Pronoun omitted subject? Need resolve to exactly one source referent: the preceding action \"左转四十五度\". Unique. \"左转\" no object. Stop no params. Unique. \n- temporal_relations: \"之后\" = after turn, then stop. Single linear order turn then stop. No timing. Unique.\n- unresolved_relations: none. Unique.\n\nPlan steps: s1 turn angle_deg 45? Need convert Chinese \"四十五\" = 45. Left positive. Maximum abs <=180 okay. s2 stop {} depends_on [\"s1\"]. status AUTHORIZED_UNIQUE. Candidate matches. Need output no markdown. Ensure JSON only. Need include dimensions exactly names. Each value exactly status and explanation. coverage list nonempty objects exactly text, role, explanation. The text values concatenated in order equal original source exactly. Original source string: include punctuation: 左转四十五度，之后停止. Need no quotes in text except JSON escaping. Let's produce.\n\nNeed maybe \"，之后\" relation includes comma? If split \"，\" SEPARATOR and \"之后\" RELATION. Good.\n\nNeed think if \"之后\" could mean after stopping? No, phrase \"A，之后B\" means after A, B. \"左转四十五度，之后停止\" = turn left 45°, then stop. Unique.\n\nPotential issue \"左转\" skill turn, \"左转四十五度\" action. The angle parameter is \"四十五度\"; \"度\" unit degree? Source uses 度 for degrees. Yes angle_deg. \"左转\" = left turn positive. Need maybe \"四十五\" could be 45. Good.\n\nNeed maybe stand default? No.\n\nCandidate has schema_version mission_id extra in candidate but irrelevant. Our authorized_plan no mission_id. Status authorized. Since candidate matches, host accepts.\n\nNeed final exactly JSON. Let's craft concise explanations. Ensure all keys exact: status, coverage, dimensions, authorized_plan. dimensions object keys exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each explanation nonempty.\n\nCoverage role types: ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. For \"左转\" ACTION. \"四十五度\" QUANTITY. \"，\" SEPARATOR. \"之后\" RELATION. \"停止\" ACTION. Is \"四十五度\" quantity contains unit. Explanation: specifies angle magnitude 45 degrees for left turn; no ambiguity.\n\nNeed mention no correction/repetition etc. For separators \"，\" separates clauses but doesn't alter actions. Good.\n\nPotential subtlety: \"停止\" is stop skill, parameters exactly {}. \"之后\" as temporal relation. depends_on s1. Good.\n\nNeed maybe include \"左转\" as action with parameter from following quantity. Explanation says combined with following quantity. That is okay.\n\nOutput JSON with no markdown. Ensure text values exact. Use Chinese punctuation. The JSON string source: \"左转四十五度，之后停止\" no spaces.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON object. Need derive source plan. Source Chinese: \"左转四十五度，之后停止\" = \"Turn left 45 degrees, then stop\". Legal skills. Need dimensions. Need coverage split exact text spans concatenated equal source. Need consider punctuation. Source: 左转四十五度，之后停止. No whitespace. Need coverage spans meaningful. Could split: \"左转四十五度\" ACTION/QUANTITY, \"，\" SEPARATOR, \"之后\" RELATION, \"停止\" ACTION. Need ensure concat exactly. Maybe \"左转\" ACTION, \"四十五度\" QUANTITY, \"，\" SEPARATOR, \"之后\" RELATION, \"停止\" ACTION. But text values concatenated must equal entire original. That yields 左转 + 四十五度 + ， + 之后 + 停止 = exact. Good. Explanations nonempty.\n\nNeed dimensions:\n- action_multiplicity: two actions turn, stop. Unique.\n- action_order: turn then stop due 之后 after. Unique.\n- correction_scope: none. Unique/inapplicable.\n- repetition_scope: none. Unique/inapplicable.\n- reference_resolution: \"之后\" refers to after the preceding action? \"之后停止\" means after (that), stop. Pronoun omitted subject? Need resolve to exactly one source referent: the preceding action \"左转四十五度\". Unique. \"左转\" no object. Stop no params. Unique. \n- temporal_relations: \"之后\" = after turn, then stop. Single linear order turn then stop. No timing. Unique.\n- unresolved_relations: none. Unique.\n\nPlan steps: s1 turn angle_deg 45? Need convert Chinese \"四十五\" = 45. Left positive. Maximum abs <=180 okay. s2 stop {} depends_on [\"s1\"]. status AUTHORIZED_UNIQUE. Candidate matches. Need output no markdown. Ensure JSON only. Need include dimensions exactly names. Each value exactly status and explanation. coverage list nonempty objects exactly text, role, explanation. The text values concatenated in order equal original source exactly. Original source string: include punctuation: 左转四十五度，之后停止. Need no quotes in text except JSON escaping. Let's produce.\n\nNeed maybe \"，之后\" relation includes comma? If split \"，\" SEPARATOR and \"之后\" RELATION. Good.\n\nNeed think if \"之后\" could mean after stopping? No, phrase \"A，之后B\" means after A, B. \"左转四十五度，之后停止\" = turn left 45°, then stop. Unique.\n\nPotential issue \"左转\" skill turn, \"左转四十五度\" action. The angle parameter is \"四十五度\"; \"度\" unit degree? Source uses 度 for degrees. Yes angle_deg. \"左转\" = left turn positive. Need maybe \"四十五\" could be 45. Good.\n\nNeed maybe stand default? No.\n\nCandidate has schema_version mission_id extra in candidate but irrelevant. Our authorized_plan no mission_id. Status authorized. Since candidate matches, host accepts.\n\nNeed final exactly JSON. Let's craft concise explanations. Ensure all keys exact: status, coverage, dimensions, authorized_plan. dimensions object keys exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each explanation nonempty.\n\nCoverage role types: ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. For \"左转\" ACTION. \"四十五度\" QUANTITY. \"，\" SEPARATOR. \"之后\" RELATION. \"停止\" ACTION. Is \"四十五度\" quantity contains unit. Explanation: specifies angle magnitude 45 degrees for left turn; no ambiguity.\n\nNeed mention no correction/repetition etc. For separators \"，\" separates clauses but doesn't alter actions. Good.\n\nPotential subtlety: \"停止\" is stop skill, parameters exactly {}. \"之后\" as temporal relation. depends_on s1. Good.\n\nNeed maybe include \"左转\" as action with parameter from following quantity. Explanation says combined with following quantity. That is okay.\n\nOutput JSON with no markdown. Ensure text values exact. Use Chinese punctuation. The JSON string source: \"左转四十五度，之后停止\" no spaces.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: a turn to the left. Left turn compiles to a positive turn angle, so this action is the turn skill with the angle supplied by the following quantity span.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as forty-five degrees. It uniquely parameterizes the preceding left turn as angle_deg = 45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following temporal clause. It adds no action, parameter, repetition, or correction.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Specifies that the next action occurs after the preceding action. It uniquely places the stop action after the turn action, with no simultaneous or alternate order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action: stop. The stop skill takes exactly empty parameters and depends on the preceding turn step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one left turn and one stop. No action is repeated, added as an alternative, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 之后 establishes that stopping occurs after the left turn, yielding the linear execution order: turn left 45 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, edit, reversal, or replacement clause, so no earlier action or parameter is changed.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so both actions occur exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"之后 refers to the immediately preceding action, the left turn of 45 degrees. The omitted subject of 停止 is resolved as the same sequence continuing after that turn, and stop has no arguments needing further resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 之后, meaning after the preceding turn. This gives one single linear order with no waiting, duration, simultaneity, or completion ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any order, scope, reference, repetition, correction, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_ce8a3f5e-367c-4c9a-9de9-20fafb2ee18d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 212,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1489,
+            "output_tokens_details": {
+              "reasoning_tokens": 911
+            },
+            "total_tokens": 2725
+          }
+        },
+        "request_sha256": "c7cedca40d864837a023cf5812621fb5c90b9707406d995fdb3192555f440a82",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.078550900001574,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_ce8a3f5e-367c-4c9a-9de9-20fafb2ee18d",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: a turn to the left. Left turn compiles to a positive turn angle, so this action is the turn skill with the angle supplied by the following quantity span.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as forty-five degrees. It uniquely parameterizes the preceding left turn as angle_deg = 45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following temporal clause. It adds no action, parameter, repetition, or correction.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Specifies that the next action occurs after the preceding action. It uniquely places the stop action after the turn action, with no simultaneous or alternate order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action: stop. The stop skill takes exactly empty parameters and depends on the preceding turn step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one left turn and one stop. No action is repeated, added as an alternative, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 之后 establishes that stopping occurs after the left turn, yielding the linear execution order: turn left 45 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, edit, reversal, or replacement clause, so no earlier action or parameter is changed.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so both actions occur exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"之后 refers to the immediately preceding action, the left turn of 45 degrees. The omitted subject of 停止 is resolved as the same sequence continuing after that turn, and stop has no arguments needing further resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 之后, meaning after the preceding turn. This gives one single linear order with no waiting, duration, simultaneity, or completion ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any order, scope, reference, repetition, correction, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+        "usage": {
+          "input_tokens": 212,
+          "output_tokens": 1489,
+          "total_tokens": 2725
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.2897944999967876,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-left-45-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 10,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-left-45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "764bb83200a7476b1fdb8db30d1293c2f6be92ca5380d2cfe509f021018c0917",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_32e4c56f-e350-47a7-9053-094aed2a30c7",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.085495999999694,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 8.078550900001574,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: a turn to the left. Left turn compiles to a positive turn angle, so this action is the turn skill with the angle supplied by the following quantity span.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as forty-five degrees. It uniquely parameterizes the preceding left turn as angle_deg = 45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following temporal clause. It adds no action, parameter, repetition, or correction.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Specifies that the next action occurs after the preceding action. It uniquely places the stop action after the turn action, with no simultaneous or alternate order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action: stop. The stop skill takes exactly empty parameters and depends on the preceding turn step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one left turn and one stop. No action is repeated, added as an alternative, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 之后 establishes that stopping occurs after the left turn, yielding the linear execution order: turn left 45 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, edit, reversal, or replacement clause, so no earlier action or parameter is changed.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so both actions occur exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"之后 refers to the immediately preceding action, the left turn of 45 degrees. The omitted subject of 停止 is resolved as the same sequence continuing after that turn, and stop has no arguments needing further resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 之后, meaning after the preceding turn. This gives one single linear order with no waiting, duration, simultaneity, or completion ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any order, scope, reference, repetition, correction, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+          "raw_response_sha256": "0f39940bfc797ec0b501710ba94174dea048cc4a260ea15a09e17f1e1a294448",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ce8a3f5e-367c-4c9a-9de9-20fafb2ee18d",
+          "source_aware": true,
+          "source_sha256": "853a7529f44eee42102b716ea561a12b4ff33489f6cbaf22027b4bd361d38c30",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 212,
+            "output_tokens": 1489,
+            "total_tokens": 2725
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": 45.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the first action: a turn to the left. Left turn compiles to a positive turn angle, so this action is the turn skill with the angle supplied by the following quantity span.",
+                "role": "ACTION",
+                "text": "左转"
+              },
+              {
+                "explanation": "Specifies the turn angle as forty-five degrees. It uniquely parameterizes the preceding left turn as angle_deg = 45.0.",
+                "role": "QUANTITY",
+                "text": "四十五度"
+              },
+              {
+                "explanation": "Separates the turn clause from the following temporal clause. It adds no action, parameter, repetition, or correction.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Specifies that the next action occurs after the preceding action. It uniquely places the stop action after the turn action, with no simultaneous or alternate order.",
+                "role": "RELATION",
+                "text": "之后"
+              },
+              {
+                "explanation": "Specifies the second action: stop. The stop skill takes exactly empty parameters and depends on the preceding turn step.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly two actions: one left turn and one stop. No action is repeated, added as an alternative, or replaced.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The word 之后 establishes that stopping occurs after the left turn, yielding the linear execution order: turn left 45 degrees, then stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no correction, edit, reversal, or replacement clause, so no earlier action or parameter is changed.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "之后 refers to the immediately preceding action, the left turn of 45 degrees. The omitted subject of 停止 is resolved as the same sequence continuing after that turn, and stop has no arguments needing further resolution.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker or count, so both actions occur exactly once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The only temporal relation is 之后, meaning after the preceding turn. This gives one single linear order with no waiting, duration, simultaneity, or completion ambiguity.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any order, scope, reference, repetition, correction, or relation unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 207,
+        "output_tokens": 85,
+        "total_tokens": 1828
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-left-45-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "左转四十五度之后停止",
+    "status": "SUCCESS"
+  }
+}

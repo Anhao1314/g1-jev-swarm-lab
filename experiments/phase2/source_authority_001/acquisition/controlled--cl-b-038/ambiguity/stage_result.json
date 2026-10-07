@@ -1,0 +1,269 @@
+{
+  "added_wall_s": 11.717788999998447,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 11.711311899998691,
+        "provider_document": {
+          "created_at": 1791360568,
+          "id": "resp_856c08d8-bee4-45d4-bab5-515e26a49827",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_856c08d8-bee4-45d4-bab5-515e26a49827",
+              "reasoning_content": "We need answer only JSON. Need inspect source Chinese: \"逆时针转45度，接着立即停止\" Means turn counterclockwise 45 degrees, then immediately stop.\n\nNeed decide dimensions. Action multiplicity: turn and stop. order: turn then stop (\"接着立即\" then immediately). correction none. repetition none. reference none. temporal: turn then stop, immediate. Is \"立即停止\" after turn? \"接着立即停止\" means then immediately stop. Linear order turn -> stop. stop no params. Legal? turn requires nonzero finite angle_deg. Counterclockwise positive. 45. stop no params. Max steps 2. Good.\n\nNeed output AUTHORIZED_UNIQUE? Check all seven Unique. action_multiplicity unique. action_order unique. correction_scope inapplicable unique. repetition_scope inapplicable unique. reference_resolution none. temporal unique. unresolved none. So AUTHORIZED_UNIQUE.\n\nNeed coverage split entire source exactly. Source string: \"逆时针转45度，接着立即停止\". Need split meaningful spans preserving whitespace and punctuation. Could split:\n\"逆时针转45度\" ACTION? Actually includes direction action quantity. Maybe split:\n- \"逆时针\" CONTEXT or QUANTITY? role maybe CONTEXT/RELATION? It modifies turn direction. Need every action relation editing clause considered. We can split into:\n1 \"逆时针\" CONTEXT? direction for turn. explanation: specifies counterclockwise direction, making angle positive.\n2 \"转45度\" ACTION: turn 45 degrees. But \"转45度\" action includes quantity.\n3 \"，\" SEPARATOR\n4 \"接着立即停止\" ACTION? stop, with \"接着立即\" temporal. Could split \"接着立即\" RELATION and \"停止\" ACTION.\nNeed concatenate exact: \"逆时针\" + \"转45度\" + \"，\" + \"接着立即\" + \"停止\" = original. That works.\n\nBut role definitions: ACTION for action words; QUANTITY for numeric? \"45度\" is quantity embedded in \"转45度\". If split \"转\" ACTION, \"45度\" QUANTITY, then \"逆时针\" CONTEXT? \"转\" alone weird but okay. Need preserve exact: \"逆时针\" + \"转\" + \"45度\" + \"，\" + \"接着立即\" + \"停止\". This is more granular. But coverage text concatenated equals source. Explanations nonempty.\n\nLet's ensure action multiplicity: \"转\" and \"停止\". \"逆时针\" direction, \"45度\" angle. \"接着立即\" relation. Comma separator.\n\nDimensions:\n- action_multiplicity UNIQUE: Source requests two actions: turn (counterclockwise 45°) and stop; no repeated/edited actions. Maybe \"接着立即停止\" stop.\n- action_order UNIQUE: \"接着\" indicates turn then stop; only one order.\n- correction_scope UNIQUE: no edit/correction; nothing changes prior instruction.\n- repetition_scope UNIQUE: no repetition; execute each once.\n- reference_resolution UNIQUE: no pronouns/ordinals/omitted arguments requiring external referent. \"逆时针\" modifies following turn; \"接着\" refers to sequence after turn but resolved. Any omitted shared args? stop no params. turn angle/direction explicit. Unique.\n- temporal_relations UNIQUE: \"接着立即\" imposes stop immediately after completion? Need be precise: \"接着立即停止\" could be interpreted as stop immediately after the turn. Does that require waiting for turn completion? It means after turning, immediately stop. Linear order no invented timing. Unique. Is \"立即\" maybe ambiguous whether stop before turn fully completes? Actually \"接着立即停止\": then immediately stop. It might imply stop right after turn. Does it create simultaneity? No, linear order. We can represent turn then stop. \"立即\" is immediate after predecessor. IR each step after first depends on precisely predecessor, so immediate after completion. Unique.\n- unresolved_relations UNIQUE: no explicit unresolved choices.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object with keys status, coverage, dimensions. No extra. Need ensure JSON valid, no markdown. Explanation strings in Chinese/English. Need use exact source in coverage.\n\nPotential issue: \"立即停止\" might be considered \"immediately stop\" temporal relation relative to turn. Could there be ambiguity: stop immediately after turn vs stop immediately instead of completing? But phrase 接着 means following after. Not ambiguous. Good.\n\nNeed not mention compiler.\n\nLet's craft coverage. Use text values exact. Source no spaces. Split:\ntext \"逆时针\" role CONTEXT? explanation direction for turn; not separate action, modifies turn so angle positive. Role maybe QUANTITY? Direction not quantity. CONTEXT okay.\ntext \"转\" role ACTION. explanation turn action.\ntext \"45度\" role QUANTITY. explanation angle 45 degrees positive finite legal.\ntext \"，\" role SEPARATOR. comma separates clauses.\ntext \"接着立即\" role RELATION. explanation temporal relation: stop follows turn immediately.\ntext \"停止\" role ACTION. explanation stop action no params.\n\nConcatenate: 逆时针转45度，接着立即停止 yes.\n\nBut role for \"转\" as ACTION and \"45度\" QUANTITY. The source span \"转45度\" is the action, but splitting action word and quantity okay. Explanation for \"转\": requests turn action; angle provided next. \"45度\" quantity: provides required nonzero finite angle 45 degrees, with preceding counterclockwise making positive. Good.\n\nMaybe \"逆时针\" could be QUANTITY? It's direction, but role CONTEXT. Fine.\n\nNeed dimensions object exactly seven. Status values. Explanations nonempty. Should mention no legal compiler candidate verification? Not necessary. Could mention source-only.\n\nNeed ensure all dimension names exactly:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nNeed final JSON only. Use double quotes. Good.\n\nLet's compose.\n\nNeed be careful: status if any dimension UNKNOWN? None. All unique. AUTHORIZED_UNIQUE.\n\nPotential subtlety: \"立即\" (immediately) could be considered an explicit vague temporal relation? The IR only supports linear order, no timing. Does \"immediately\" require timing not representable? The instructions: temporal_relations: honor before/after, simultaneity, waiting and completion relations; require a single linear order representable without inventing timing or events. \"立即\" means immediate after predecessor, which IR linear dependency can represent? It says each step after first depending on exactly predecessor. Immediate stop after turn completion is representable. No need invent timing. Unique.\n\nAnother subtlety: \"接着立即停止\" could be interpreted as \"then immediately stop\" with stop as part of same action? No, separate action. Good.\n\nPotential issue: action_multiplicity: \"停止\" after turn; no prior \"停止\" to replace. Unique.\n\nNeed no markdown.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source Chinese: \"逆时针转45度，接着立即停止\" Means turn counterclockwise 45 degrees, then immediately stop.\n\nNeed decide dimensions. Action multiplicity: turn and stop. order: turn then stop (\"接着立即\" then immediately). correction none. repetition none. reference none. temporal: turn then stop, immediate. Is \"立即停止\" after turn? \"接着立即停止\" means then immediately stop. Linear order turn -> stop. stop no params. Legal? turn requires nonzero finite angle_deg. Counterclockwise positive. 45. stop no params. Max steps 2. Good.\n\nNeed output AUTHORIZED_UNIQUE? Check all seven Unique. action_multiplicity unique. action_order unique. correction_scope inapplicable unique. repetition_scope inapplicable unique. reference_resolution none. temporal unique. unresolved none. So AUTHORIZED_UNIQUE.\n\nNeed coverage split entire source exactly. Source string: \"逆时针转45度，接着立即停止\". Need split meaningful spans preserving whitespace and punctuation. Could split:\n\"逆时针转45度\" ACTION? Actually includes direction action quantity. Maybe split:\n- \"逆时针\" CONTEXT or QUANTITY? role maybe CONTEXT/RELATION? It modifies turn direction. Need every action relation editing clause considered. We can split into:\n1 \"逆时针\" CONTEXT? direction for turn. explanation: specifies counterclockwise direction, making angle positive.\n2 \"转45度\" ACTION: turn 45 degrees. But \"转45度\" action includes quantity.\n3 \"，\" SEPARATOR\n4 \"接着立即停止\" ACTION? stop, with \"接着立即\" temporal. Could split \"接着立即\" RELATION and \"停止\" ACTION.\nNeed concatenate exact: \"逆时针\" + \"转45度\" + \"，\" + \"接着立即\" + \"停止\" = original. That works.\n\nBut role definitions: ACTION for action words; QUANTITY for numeric? \"45度\" is quantity embedded in \"转45度\". If split \"转\" ACTION, \"45度\" QUANTITY, then \"逆时针\" CONTEXT? \"转\" alone weird but okay. Need preserve exact: \"逆时针\" + \"转\" + \"45度\" + \"，\" + \"接着立即\" + \"停止\". This is more granular. But coverage text concatenated equals source. Explanations nonempty.\n\nLet's ensure action multiplicity: \"转\" and \"停止\". \"逆时针\" direction, \"45度\" angle. \"接着立即\" relation. Comma separator.\n\nDimensions:\n- action_multiplicity UNIQUE: Source requests two actions: turn (counterclockwise 45°) and stop; no repeated/edited actions. Maybe \"接着立即停止\" stop.\n- action_order UNIQUE: \"接着\" indicates turn then stop; only one order.\n- correction_scope UNIQUE: no edit/correction; nothing changes prior instruction.\n- repetition_scope UNIQUE: no repetition; execute each once.\n- reference_resolution UNIQUE: no pronouns/ordinals/omitted arguments requiring external referent. \"逆时针\" modifies following turn; \"接着\" refers to sequence after turn but resolved. Any omitted shared args? stop no params. turn angle/direction explicit. Unique.\n- temporal_relations UNIQUE: \"接着立即\" imposes stop immediately after completion? Need be precise: \"接着立即停止\" could be interpreted as stop immediately after the turn. Does that require waiting for turn completion? It means after turning, immediately stop. Linear order no invented timing. Unique. Is \"立即\" maybe ambiguous whether stop before turn fully completes? Actually \"接着立即停止\": then immediately stop. It might imply stop right after turn. Does it create simultaneity? No, linear order. We can represent turn then stop. \"立即\" is immediate after predecessor. IR each step after first depends on precisely predecessor, so immediate after completion. Unique.\n- unresolved_relations UNIQUE: no explicit unresolved choices.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object with keys status, coverage, dimensions. No extra. Need ensure JSON valid, no markdown. Explanation strings in Chinese/English. Need use exact source in coverage.\n\nPotential issue: \"立即停止\" might be considered \"immediately stop\" temporal relation relative to turn. Could there be ambiguity: stop immediately after turn vs stop immediately instead of completing? But phrase 接着 means following after. Not ambiguous. Good.\n\nNeed not mention compiler.\n\nLet's craft coverage. Use text values exact. Source no spaces. Split:\ntext \"逆时针\" role CONTEXT? explanation direction for turn; not separate action, modifies turn so angle positive. Role maybe QUANTITY? Direction not quantity. CONTEXT okay.\ntext \"转\" role ACTION. explanation turn action.\ntext \"45度\" role QUANTITY. explanation angle 45 degrees positive finite legal.\ntext \"，\" role SEPARATOR. comma separates clauses.\ntext \"接着立即\" role RELATION. explanation temporal relation: stop follows turn immediately.\ntext \"停止\" role ACTION. explanation stop action no params.\n\nConcatenate: 逆时针转45度，接着立即停止 yes.\n\nBut role for \"转\" as ACTION and \"45度\" QUANTITY. The source span \"转45度\" is the action, but splitting action word and quantity okay. Explanation for \"转\": requests turn action; angle provided next. \"45度\" quantity: provides required nonzero finite angle 45 degrees, with preceding counterclockwise making positive. Good.\n\nMaybe \"逆时针\" could be QUANTITY? It's direction, but role CONTEXT. Fine.\n\nNeed dimensions object exactly seven. Status values. Explanations nonempty. Should mention no legal compiler candidate verification? Not necessary. Could mention source-only.\n\nNeed ensure all dimension names exactly:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nNeed final JSON only. Use double quotes. Good.\n\nLet's compose.\n\nNeed be careful: status if any dimension UNKNOWN? None. All unique. AUTHORIZED_UNIQUE.\n\nPotential subtlety: \"立即\" (immediately) could be considered an explicit vague temporal relation? The IR only supports linear order, no timing. Does \"immediately\" require timing not representable? The instructions: temporal_relations: honor before/after, simultaneity, waiting and completion relations; require a single linear order representable without inventing timing or events. \"立即\" means immediate after predecessor, which IR linear dependency can represent? It says each step after first depending on exactly predecessor. Immediate stop after turn completion is representable. No need invent timing. Unique.\n\nAnother subtlety: \"接着立即停止\" could be interpreted as \"then immediately stop\" with stop as part of same action? No, separate action. Good.\n\nPotential issue: action_multiplicity: \"停止\" after turn; no prior \"停止\" to replace. Unique.\n\nNeed no markdown.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the following turn action as counterclockwise; it does not create an independent action and makes the turn angle positive under the stated convention.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests the turn action. Its required angle argument is supplied by the following quantity span, so this is one complete turn instruction in combination with that quantity.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the turn angle as 45 degrees. This is a nonzero finite angle, legal for turn, and the preceding counterclockwise direction makes it a positive angle_deg value.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following stop clause. It does not add, remove or modify any action by itself.\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"Orders the following stop action after the turn action and marks it as immediate after that predecessor, yielding a single linear turn-then-stop sequence without simultaneity or extra events.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action. Stop has no parameters and is executed once after the preceding turn instruction.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one turn and one stop. There are no edited, repeated or replaced actions, so no additional action or substitution reading is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The connector 接着 followed by 立即停止 establishes one order: first 逆时针转45度, then 停止. No alternative ordering is expressed or left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. Nothing modifies, replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not contain repetition words or spans. Each of the two actions is requested once; there is no repeated sequence or action to narrow or broaden.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source uses no pronouns, ordinals or external references. 逆时针 directly modifies the following turn, and the turn angle is explicit as 45度; 停止 has no omitted parameters, so no external context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 接着立即, which places 停止 immediately after the turn. This is representable as a single linear order with stop depending on the preceding turn, without inventing timing or simultaneous events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering or relationship unresolved. All requested actions, their order and their parameters are fixed by the wording.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_856c08d8-bee4-45d4-bab5-515e26a49827",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 145,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2081,
+            "output_tokens_details": {
+              "reasoning_tokens": 1454
+            },
+            "total_tokens": 2994
+          }
+        },
+        "request_sha256": "6f08b375acf7daa51b30d2d9d432be414c8e4e5046d3c9a8ff833fc15ed14689",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 11.709845400000631,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_856c08d8-bee4-45d4-bab5-515e26a49827",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the following turn action as counterclockwise; it does not create an independent action and makes the turn angle positive under the stated convention.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests the turn action. Its required angle argument is supplied by the following quantity span, so this is one complete turn instruction in combination with that quantity.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the turn angle as 45 degrees. This is a nonzero finite angle, legal for turn, and the preceding counterclockwise direction makes it a positive angle_deg value.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following stop clause. It does not add, remove or modify any action by itself.\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"Orders the following stop action after the turn action and marks it as immediate after that predecessor, yielding a single linear turn-then-stop sequence without simultaneity or extra events.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action. Stop has no parameters and is executed once after the preceding turn instruction.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one turn and one stop. There are no edited, repeated or replaced actions, so no additional action or substitution reading is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The connector 接着 followed by 立即停止 establishes one order: first 逆时针转45度, then 停止. No alternative ordering is expressed or left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. Nothing modifies, replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not contain repetition words or spans. Each of the two actions is requested once; there is no repeated sequence or action to narrow or broaden.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source uses no pronouns, ordinals or external references. 逆时针 directly modifies the following turn, and the turn angle is explicit as 45度; 停止 has no omitted parameters, so no external context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 接着立即, which places 停止 immediately after the turn. This is representable as a single linear order with stop depending on the preceding turn, without inventing timing or simultaneous events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering or relationship unresolved. All requested actions, their order and their parameters are fixed by the wording.\"}}}",
+        "usage": {
+          "input_tokens": 145,
+          "output_tokens": 2081,
+          "total_tokens": 2994
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.1140826999981073,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn45-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 13,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "581b37560542ce94c982e134e9743d897230d4bf9ac7dfaccc341df5fc2af31a",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b847710a-62d2-48d1-9ff6-134836e9ebea",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 11.717130300003191,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 11.709845400000631,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the following turn action as counterclockwise; it does not create an independent action and makes the turn angle positive under the stated convention.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests the turn action. Its required angle argument is supplied by the following quantity span, so this is one complete turn instruction in combination with that quantity.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the turn angle as 45 degrees. This is a nonzero finite angle, legal for turn, and the preceding counterclockwise direction makes it a positive angle_deg value.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following stop clause. It does not add, remove or modify any action by itself.\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"Orders the following stop action after the turn action and marks it as immediate after that predecessor, yielding a single linear turn-then-stop sequence without simultaneity or extra events.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action. Stop has no parameters and is executed once after the preceding turn instruction.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one turn and one stop. There are no edited, repeated or replaced actions, so no additional action or substitution reading is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The connector 接着 followed by 立即停止 establishes one order: first 逆时针转45度, then 停止. No alternative ordering is expressed or left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. Nothing modifies, replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not contain repetition words or spans. Each of the two actions is requested once; there is no repeated sequence or action to narrow or broaden.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source uses no pronouns, ordinals or external references. 逆时针 directly modifies the following turn, and the turn angle is explicit as 45度; 停止 has no omitted parameters, so no external context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 接着立即, which places 停止 immediately after the turn. This is representable as a single linear order with stop depending on the preceding turn, without inventing timing or simultaneous events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering or relationship unresolved. All requested actions, their order and their parameters are fixed by the wording.\"}}}",
+          "raw_response_sha256": "9d3536268b8f32aca037a38893b3c8a7a002a9dc19416238e72143e7d4c2c4e6",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_856c08d8-bee4-45d4-bab5-515e26a49827",
+          "source_aware": false,
+          "source_sha256": "b27120e853799caff769c6c00ab42262b2362a85d30f5d16293f76b3657f821e",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 145,
+            "output_tokens": 2081,
+            "total_tokens": 2994
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Specifies the direction of the following turn action as counterclockwise; it does not create an independent action and makes the turn angle positive under the stated convention.",
+                "role": "CONTEXT",
+                "text": "逆时针"
+              },
+              {
+                "explanation": "Requests the turn action. Its required angle argument is supplied by the following quantity span, so this is one complete turn instruction in combination with that quantity.",
+                "role": "ACTION",
+                "text": "转"
+              },
+              {
+                "explanation": "Supplies the turn angle as 45 degrees. This is a nonzero finite angle, legal for turn, and the preceding counterclockwise direction makes it a positive angle_deg value.",
+                "role": "QUANTITY",
+                "text": "45度"
+              },
+              {
+                "explanation": "Separates the turn clause from the following stop clause. It does not add, remove or modify any action by itself.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Orders the following stop action after the turn action and marks it as immediate after that predecessor, yielding a single linear turn-then-stop sequence without simultaneity or extra events.",
+                "role": "RELATION",
+                "text": "接着立即"
+              },
+              {
+                "explanation": "Requests the stop action. Stop has no parameters and is executed once after the preceding turn instruction.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly two actions: one turn and one stop. There are no edited, repeated or replaced actions, so no additional action or substitution reading is present.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The connector 接着 followed by 立即停止 establishes one order: first 逆时针转45度, then 停止. No alternative ordering is expressed or left unresolved.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction or edit clause in the source. Nothing modifies, replaces or preserves a prior instruction, so correction scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The source uses no pronouns, ordinals or external references. 逆时针 directly modifies the following turn, and the turn angle is explicit as 45度; 停止 has no omitted parameters, so no external context is required.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source does not contain repetition words or spans. Each of the two actions is requested once; there is no repeated sequence or action to narrow or broaden.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The only temporal relation is 接着立即, which places 停止 immediately after the turn. This is representable as a single linear order with stop depending on the preceding turn, without inventing timing or simultaneous events.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering or relationship unresolved. All requested actions, their order and their parameters are fixed by the wording.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 208,
+        "output_tokens": 185,
+        "total_tokens": 1929
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn45-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "逆时针转45度接着立即停止",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "added_wall_s": 10.777667199999996,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.774396899998465,
+        "provider_document": {
+          "created_at": 1791359239,
+          "id": "resp_a660ae98-6b32-4db0-9874-cfabfef705c7",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_a660ae98-6b32-4db0-9874-cfabfef705c7",
+              "reasoning_content": "We need answer JSON only. Need parse source. Need decide status. Source Chinese: \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\"\n\nTranslation: First move forward 6 meters, then right turn 60 degrees, then move forward 8 meters, finally stop; I wrote it in one line, order according to this line.\n\nNeed assess seven dimensions. Actions: walk_forward 6m, turn right 60 deg, walk_forward 8m, stop. Sequence clear. \"先...再...接着...最后\" order. \"我写成一行了，顺序照这行\" reinforces order. Quantities explicit. Turn right 60 degrees -> angle_deg -60? Legal. stand not present. stop no params. Max steps 4. Legal. Need check \"right turn\" maybe \"right turn 六十度\" is turn right 60. Unique. No ambiguity. Dimensions all UNIQUE? Need consider action_multiplicity: all four actions accounted. The phrase \"我写成一行了，顺序照这行。\" is context/relation clarifying order. No unresolved. Reference resolution: \"这行\" refers to the line? external? It's self-referential to the written line containing commands, within source. Resolves order as written. Unique. Temporal: linear. correction_scope: none. repetition_scope: none inapplicable. action_order: unique. unresolved_relations: none.\n\nNeed produce coverage list exactly concatenates entire source. Need split into spans meaningful. Must copy exact source including punctuation. Chinese punctuation. Let's carefully copy source: 先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\n\nNeed text values concatenated equal original. We can split:\n\"先前进六米，\" \n\"再 right turn 六十度，\"\n\"接着前进八米，\"\n\"最后停；\"\n\"我写成一行了，\"\n\"顺序照这行。\"\n\nCheck original: 先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\nYes. Need roles:\n- first ACTION (walk_forward 6m) maybe includes \"先\" sequence marker; role ACTION? Contains order marker. Could be ACTION or RELATION. We can assign ACTION with explanation includes \"先\" marks first action and 前进六米. Or split into SEPARATOR? But coverage must be exact. We can assign role ACTION for whole span; explanation note \"先\" indicates first. That's fine.\n- second ACTION (turn -60)\n- third ACTION (walk_forward 8m)\n- fourth ACTION (stop)\n- fifth CONTEXT (meta statement wrote in one line)\n- sixth RELATION or CONTEXT (order according to this line). \"顺序照这行\" is relation/context. It references line and clarifies order. Role RELATION perhaps. Explanation.\n\nNeed status AUTHORIZED_UNIQUE. dimensions all UNIQUE.\n\nNeed be careful \"right turn 六十度\" explicitly right/clockwise negative. Unique.\n\nPotential issue: \"我写成一行了，顺序照这行。\" Could \"这行\" refer to line as a whole; order according to this line. It doesn't introduce ambiguity, just confirms order. Unique.\n\nPotential issue: action_order: \"先...再...接着...最后\" clear. Unique.\n\nPotential issue: action_multiplicity: \"我写成一行了\" maybe I wrote it as one line, not additional action. No.\n\nPotential issue: \"right turn\" in English and \"六十度\" Chinese. Legal.\n\nNo stand. stop no parameters.\n\nNeed output exactly JSON object. No markdown. Ensure JSON valid. Chinese characters okay.\n\nNeed include dimensions exactly keys. Could include explanations. Need perhaps mention no explicit unresolved relations. For repetition_scope inapplicable.\n\nLet's craft.\n\nCoverage:\n[\n {\"text\":\"先前进六米，\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: walk forward 6 meters. The leading 先 fixes this as the first action in the sequence; it is not an additional action.\"},\n {\"text\":\"再 right turn 六十度，\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: turn right by 60 degrees, which maps to a negative angle of -60 degrees. 再 places it after the preceding forward action and before the next.\"},\n {\"text\":\"接着前进八米，\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: walk forward 8 meters. 接着 places it after the turn and before the final stop.\"},\n {\"text\":\"最后停；\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: stop. 最后 fixes it as the final action and it has no parameters.\"},\n {\"text\":\"我写成一行了，\",\"role\":\"CONTEXT\",\"explanation\":\"This is a meta statement that the user wrote the commands on one line. It does not add, remove, or alter an action.\"},\n {\"text\":\"顺序照这行。\",\"role\":\"RELATION\",\"explanation\":\"This clause instructs that the order follows the line just written. It confirms the order already expressed by 先, 再, 接着, 最后 and does not introduce an alternative unresolved order.\"}\n]\n\nCheck concatenation: first+second+... = original. Yes.\n\nDimensions:\naction_multiplicity UNIQUE: exactly four actions: walk 6, turn right 60, walk 8, stop. Meta line not action.\naction_order UNIQUE: 先, 再, 接着, 最后 and 顺序照这行 give s1 walk6, s2 turn -60, s3 walk8, s4 stop.\ncorrection_scope UNIQUE: no edit/correction; none inapplicable.\nrepetition_scope UNIQUE: no repetition; none.\nreference_resolution UNIQUE: \"这行\" resolves to the line containing the commands, within source; no external missing context needed. \"right turn\" self-contained.\ntemporal_relations UNIQUE: sequential, no simultaneity/wait/completion beyond linear order; representable as linear plan with predecessor dependency.\nunresolved_relations UNIQUE: no explicit unresolved choice/scope/order.\n\nNeed final answer only JSON. Ensure \"status\" is \"AUTHORIZED_UNIQUE\". coverage nonempty. No extra fields.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need parse source. Need decide status. Source Chinese: \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\"\n\nTranslation: First move forward 6 meters, then right turn 60 degrees, then move forward 8 meters, finally stop; I wrote it in one line, order according to this line.\n\nNeed assess seven dimensions. Actions: walk_forward 6m, turn right 60 deg, walk_forward 8m, stop. Sequence clear. \"先...再...接着...最后\" order. \"我写成一行了，顺序照这行\" reinforces order. Quantities explicit. Turn right 60 degrees -> angle_deg -60? Legal. stand not present. stop no params. Max steps 4. Legal. Need check \"right turn\" maybe \"right turn 六十度\" is turn right 60. Unique. No ambiguity. Dimensions all UNIQUE? Need consider action_multiplicity: all four actions accounted. The phrase \"我写成一行了，顺序照这行。\" is context/relation clarifying order. No unresolved. Reference resolution: \"这行\" refers to the line? external? It's self-referential to the written line containing commands, within source. Resolves order as written. Unique. Temporal: linear. correction_scope: none. repetition_scope: none inapplicable. action_order: unique. unresolved_relations: none.\n\nNeed produce coverage list exactly concatenates entire source. Need split into spans meaningful. Must copy exact source including punctuation. Chinese punctuation. Let's carefully copy source: 先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\n\nNeed text values concatenated equal original. We can split:\n\"先前进六米，\" \n\"再 right turn 六十度，\"\n\"接着前进八米，\"\n\"最后停；\"\n\"我写成一行了，\"\n\"顺序照这行。\"\n\nCheck original: 先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\nYes. Need roles:\n- first ACTION (walk_forward 6m) maybe includes \"先\" sequence marker; role ACTION? Contains order marker. Could be ACTION or RELATION. We can assign ACTION with explanation includes \"先\" marks first action and 前进六米. Or split into SEPARATOR? But coverage must be exact. We can assign role ACTION for whole span; explanation note \"先\" indicates first. That's fine.\n- second ACTION (turn -60)\n- third ACTION (walk_forward 8m)\n- fourth ACTION (stop)\n- fifth CONTEXT (meta statement wrote in one line)\n- sixth RELATION or CONTEXT (order according to this line). \"顺序照这行\" is relation/context. It references line and clarifies order. Role RELATION perhaps. Explanation.\n\nNeed status AUTHORIZED_UNIQUE. dimensions all UNIQUE.\n\nNeed be careful \"right turn 六十度\" explicitly right/clockwise negative. Unique.\n\nPotential issue: \"我写成一行了，顺序照这行。\" Could \"这行\" refer to line as a whole; order according to this line. It doesn't introduce ambiguity, just confirms order. Unique.\n\nPotential issue: action_order: \"先...再...接着...最后\" clear. Unique.\n\nPotential issue: action_multiplicity: \"我写成一行了\" maybe I wrote it as one line, not additional action. No.\n\nPotential issue: \"right turn\" in English and \"六十度\" Chinese. Legal.\n\nNo stand. stop no parameters.\n\nNeed output exactly JSON object. No markdown. Ensure JSON valid. Chinese characters okay.\n\nNeed include dimensions exactly keys. Could include explanations. Need perhaps mention no explicit unresolved relations. For repetition_scope inapplicable.\n\nLet's craft.\n\nCoverage:\n[\n {\"text\":\"先前进六米，\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: walk forward 6 meters. The leading 先 fixes this as the first action in the sequence; it is not an additional action.\"},\n {\"text\":\"再 right turn 六十度，\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: turn right by 60 degrees, which maps to a negative angle of -60 degrees. 再 places it after the preceding forward action and before the next.\"},\n {\"text\":\"接着前进八米，\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: walk forward 8 meters. 接着 places it after the turn and before the final stop.\"},\n {\"text\":\"最后停；\",\"role\":\"ACTION\",\"explanation\":\"The span requests one action: stop. 最后 fixes it as the final action and it has no parameters.\"},\n {\"text\":\"我写成一行了，\",\"role\":\"CONTEXT\",\"explanation\":\"This is a meta statement that the user wrote the commands on one line. It does not add, remove, or alter an action.\"},\n {\"text\":\"顺序照这行。\",\"role\":\"RELATION\",\"explanation\":\"This clause instructs that the order follows the line just written. It confirms the order already expressed by 先, 再, 接着, 最后 and does not introduce an alternative unresolved order.\"}\n]\n\nCheck concatenation: first+second+... = original. Yes.\n\nDimensions:\naction_multiplicity UNIQUE: exactly four actions: walk 6, turn right 60, walk 8, stop. Meta line not action.\naction_order UNIQUE: 先, 再, 接着, 最后 and 顺序照这行 give s1 walk6, s2 turn -60, s3 walk8, s4 stop.\ncorrection_scope UNIQUE: no edit/correction; none inapplicable.\nrepetition_scope UNIQUE: no repetition; none.\nreference_resolution UNIQUE: \"这行\" resolves to the line containing the commands, within source; no external missing context needed. \"right turn\" self-contained.\ntemporal_relations UNIQUE: sequential, no simultaneity/wait/completion beyond linear order; representable as linear plan with predecessor dependency.\nunresolved_relations UNIQUE: no explicit unresolved choice/scope/order.\n\nNeed final answer only JSON. Ensure \"status\" is \"AUTHORIZED_UNIQUE\". coverage nonempty. No extra fields.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先前进六米，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: walk forward 6 meters. The leading 先 marks it as the first action in the sequence; it is not an additional action.\"},{\"text\":\"再 right turn 六十度，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: turn right by 60 degrees, legally represented as a negative 60-degree turn. 再 places it after the preceding forward action and before the next action.\"},{\"text\":\"接着前进八米，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: walk forward 8 meters. 接着 places it after the turn and before the final stop.\"},{\"text\":\"最后停；\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: stop. 最后 fixes it as the final action, and stop has no parameters.\"},{\"text\":\"我写成一行了，\",\"role\":\"CONTEXT\",\"explanation\":\"This is a meta statement that the user wrote the commands on one line. It does not add, remove, or alter any action.\"},{\"text\":\"顺序照这行。\",\"role\":\"RELATION\",\"explanation\":\"This clause says the order follows the line just written. It confirms the order already expressed by 先, 再, 接着, 最后 and does not create an alternative unresolved ordering.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: forward 6 meters, right turn 60 degrees, forward 8 meters, and stop. The meta statement about writing one line is not an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 接着, 最后, together with 顺序照这行, establish exactly one order: walk 6 m, turn right 60 degrees, walk 8 m, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, or replacement clause in the source, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition instruction, so repetition scope is inapplicable and does not broaden or narrow any action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这行 refers to the single written command line itself, which is present in the source. No external missing context is needed to resolve it, and right turn is self-contained.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires a single sequential linear order with no simultaneity, waiting, or separate completion condition beyond the stated order. It is representable as successive steps each depending on the prior step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The phrase 顺序照这行 confirms rather than leaves open the order.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_a660ae98-6b32-4db0-9874-cfabfef705c7",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 166,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1985,
+            "output_tokens_details": {
+              "reasoning_tokens": 1345
+            },
+            "total_tokens": 2919
+          }
+        },
+        "request_sha256": "2410eba12cfc7ef1ebfb2855f15fd4f566c8bebf5c36c619f7ee0a6a5f88acf6",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.772992800000793,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_a660ae98-6b32-4db0-9874-cfabfef705c7",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先前进六米，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: walk forward 6 meters. The leading 先 marks it as the first action in the sequence; it is not an additional action.\"},{\"text\":\"再 right turn 六十度，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: turn right by 60 degrees, legally represented as a negative 60-degree turn. 再 places it after the preceding forward action and before the next action.\"},{\"text\":\"接着前进八米，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: walk forward 8 meters. 接着 places it after the turn and before the final stop.\"},{\"text\":\"最后停；\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: stop. 最后 fixes it as the final action, and stop has no parameters.\"},{\"text\":\"我写成一行了，\",\"role\":\"CONTEXT\",\"explanation\":\"This is a meta statement that the user wrote the commands on one line. It does not add, remove, or alter any action.\"},{\"text\":\"顺序照这行。\",\"role\":\"RELATION\",\"explanation\":\"This clause says the order follows the line just written. It confirms the order already expressed by 先, 再, 接着, 最后 and does not create an alternative unresolved ordering.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: forward 6 meters, right turn 60 degrees, forward 8 meters, and stop. The meta statement about writing one line is not an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 接着, 最后, together with 顺序照这行, establish exactly one order: walk 6 m, turn right 60 degrees, walk 8 m, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, or replacement clause in the source, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition instruction, so repetition scope is inapplicable and does not broaden or narrow any action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这行 refers to the single written command line itself, which is present in the source. No external missing context is needed to resolve it, and right turn is self-contained.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires a single sequential linear order with no simultaneity, waiting, or separate completion condition beyond the stated order. It is representable as successive steps each depending on the prior step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The phrase 顺序照这行 confirms rather than leaves open the order.\"}}}",
+        "usage": {
+          "input_tokens": 166,
+          "output_tokens": 1985,
+          "total_tokens": 2919
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.9640407000006235,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-6m-right60-8m-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 40,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 440,
+      "raw_response_sha256": "febd70a2b85b0297aef302e99d32df9929f446076ea7d4cac2c926650c110b3e",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_934a80cf-6cf6-4161-953e-4f41e2ac76f9",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.77697050000097,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 10.772992800000793,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先前进六米，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: walk forward 6 meters. The leading 先 marks it as the first action in the sequence; it is not an additional action.\"},{\"text\":\"再 right turn 六十度，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: turn right by 60 degrees, legally represented as a negative 60-degree turn. 再 places it after the preceding forward action and before the next action.\"},{\"text\":\"接着前进八米，\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: walk forward 8 meters. 接着 places it after the turn and before the final stop.\"},{\"text\":\"最后停；\",\"role\":\"ACTION\",\"explanation\":\"This span requests one action: stop. 最后 fixes it as the final action, and stop has no parameters.\"},{\"text\":\"我写成一行了，\",\"role\":\"CONTEXT\",\"explanation\":\"This is a meta statement that the user wrote the commands on one line. It does not add, remove, or alter any action.\"},{\"text\":\"顺序照这行。\",\"role\":\"RELATION\",\"explanation\":\"This clause says the order follows the line just written. It confirms the order already expressed by 先, 再, 接着, 最后 and does not create an alternative unresolved ordering.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: forward 6 meters, right turn 60 degrees, forward 8 meters, and stop. The meta statement about writing one line is not an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 接着, 最后, together with 顺序照这行, establish exactly one order: walk 6 m, turn right 60 degrees, walk 8 m, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, or replacement clause in the source, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition instruction, so repetition scope is inapplicable and does not broaden or narrow any action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这行 refers to the single written command line itself, which is present in the source. No external missing context is needed to resolve it, and right turn is self-contained.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires a single sequential linear order with no simultaneity, waiting, or separate completion condition beyond the stated order. It is representable as successive steps each depending on the prior step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The phrase 顺序照这行 confirms rather than leaves open the order.\"}}}",
+          "raw_response_sha256": "d470161e6cbbca35a7dbad7944cc63232fec85bcc38a3e56731e554b311c6384",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_a660ae98-6b32-4db0-9874-cfabfef705c7",
+          "source_aware": false,
+          "source_sha256": "f9daf1347fe6b7718f37282e5e05e154d3e95b924abc84e8367d143da3710c84",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 166,
+            "output_tokens": 1985,
+            "total_tokens": 2919
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "This span requests one action: walk forward 6 meters. The leading 先 marks it as the first action in the sequence; it is not an additional action.",
+                "role": "ACTION",
+                "text": "先前进六米，"
+              },
+              {
+                "explanation": "This span requests one action: turn right by 60 degrees, legally represented as a negative 60-degree turn. 再 places it after the preceding forward action and before the next action.",
+                "role": "ACTION",
+                "text": "再 right turn 六十度，"
+              },
+              {
+                "explanation": "This span requests one action: walk forward 8 meters. 接着 places it after the turn and before the final stop.",
+                "role": "ACTION",
+                "text": "接着前进八米，"
+              },
+              {
+                "explanation": "This span requests one action: stop. 最后 fixes it as the final action, and stop has no parameters.",
+                "role": "ACTION",
+                "text": "最后停；"
+              },
+              {
+                "explanation": "This is a meta statement that the user wrote the commands on one line. It does not add, remove, or alter any action.",
+                "role": "CONTEXT",
+                "text": "我写成一行了，"
+              },
+              {
+                "explanation": "This clause says the order follows the line just written. It confirms the order already expressed by 先, 再, 接着, 最后 and does not create an alternative unresolved ordering.",
+                "role": "RELATION",
+                "text": "顺序照这行。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly four actions: forward 6 meters, right turn 60 degrees, forward 8 meters, and stop. The meta statement about writing one line is not an action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The markers 先, 再, 接着, 最后, together with 顺序照这行, establish exactly one order: walk 6 m, turn right 60 degrees, walk 8 m, stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no edit, correction, or replacement clause in the source, so correction scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "这行 refers to the single written command line itself, which is present in the source. No external missing context is needed to resolve it, and right turn is self-contained.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition instruction, so repetition scope is inapplicable and does not broaden or narrow any action.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source requires a single sequential linear order with no simultaneity, waiting, or separate completion condition beyond the stated order. It is representable as successive steps each depending on the prior step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The phrase 顺序照这行 confirms rather than leaves open the order.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 229,
+        "output_tokens": 576,
+        "total_tokens": 2341
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-6m-right60-8m-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先前进六米再rightturn六十度接着前进八米最后停,我写成一行了,顺序照这行",
+    "status": "SUCCESS"
+  }
+}

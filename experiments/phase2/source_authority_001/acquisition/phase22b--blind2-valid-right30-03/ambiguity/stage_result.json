@@ -1,0 +1,251 @@
+{
+  "added_wall_s": 6.815482599999086,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.810234600001422,
+        "provider_document": {
+          "created_at": 1791360001,
+          "id": "resp_7ace0707-a066-479f-a129-66b53161ea48",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_7ace0707-a066-479f-a129-66b53161ea48",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"请往右边转30°\". Chinese: \"please turn right 30°\". Need decide dimensions.\n\nWe need parse legal IR actions: turn requires nonzero finite angle_deg, left/counterclockwise positive, right/clockwise negative. Source asks turn right 30°. Is \"右边\" right side. \"往右边转30°\" = turn 30 degrees to the right. This likely uniquely authorizes one action: turn angle -30 degrees? Need check dimensions.\n\nAction multiplicity: one action turn. Unique.\n\nAction order: single action, unique/inapplicable.\n\nCorrection scope: no edits, unique/inapplicable.\n\nRepetition scope: none, unique/inapplicable.\n\nReference resolution: no pronouns? \"右边\" is direction, not referent. Unique.\n\nTemporal relations: no before/after, single action, unique.\n\nUnresolved relations: none explicitly unresolved. Unique.\n\nThus AUTHORIZED_UNIQUE. Need coverage list with exact text concatenated equals entire source. Need split into meaningful spans. Source: \"请往右边转30°\". Could split:\n- \"请\" CONTEXT/SEPARATOR? Politeness, no action.\n- \"往右边\" maybe RELATION/ACTION? It indicates direction.\n- \"转\" ACTION\n- \"30°\" QUANTITY\n\nBut coverage should every action/relation. Need exact concat. Maybe [{\"text\":\"请\",\"role\":\"CONTEXT\",...},{\"text\":\"往右边\",\"role\":\"RELATION\",...},{\"text\":\"转\",\"role\":\"ACTION\",...},{\"text\":\"30°\",\"role\":\"QUANTITY\",...}]. That concatenates exactly \"请往右边转30°\". Good.\n\nBut is \"转\" action and \"往右边\" relation direction. Need explain \"转\" means turn; \"30°\" angle. Combined action: turn right 30 degrees. Legal angle finite nonzero, max abs 180, so -30 deg. Need mention right maps to negative per convention.\n\nNeed ensure no markdown, JSON object exactly keys status, coverage, dimensions. Dimensions exactly seven names. Need explanations nonempty. Status AUTHORIZED_UNIQUE.\n\nPotential issue: Does \"往右边转30°\" mean turn 30° to the right; in Chinese \"右边\" could mean right side, but direction clear. Legal semantics define right/clockwise negative. So unique. No ambiguity.\n\nNeed output JSON. Ensure coverage text values concatenated exactly original source. The original source in JSON has \"请往右边转30°\". We must include degree symbol maybe \"°\". Yes.\n\nLet's craft. Need coverage roles. Could include separators? Source has no whitespace. \"请\" is context (polite). \"往右边\" relation. \"转\" action. \"30°\" quantity. Fine.\n\nNeed dimensions. action_multiplicity UNIQUE: single turn action, no other verbs. action_order UNIQUE: only one action, no ordering. correction_scope UNIQUE: no correction/edit. repetition_scope UNIQUE: no repetition. reference_resolution UNIQUE: no pronoun/ordinal; \"右边\" direction resolved by standard convention. temporal_relations UNIQUE: single action no temporal relation. unresolved_relations UNIQUE: no explicit unresolved relation.\n\nNeed be careful: \"往右边\" maybe relation/direction to right. \"转\" action. Quantity 30 degrees. Combined: turn right 30 degrees => angle_deg = -30. But if IR interpretation includes sign? Legal semantics says left/counterclockwise positive, right/clockwise negative. Unique. Good.\n\nNeed no extra fields. Explanations nonempty.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"请往右边转30°\". Chinese: \"please turn right 30°\". Need decide dimensions.\n\nWe need parse legal IR actions: turn requires nonzero finite angle_deg, left/counterclockwise positive, right/clockwise negative. Source asks turn right 30°. Is \"右边\" right side. \"往右边转30°\" = turn 30 degrees to the right. This likely uniquely authorizes one action: turn angle -30 degrees? Need check dimensions.\n\nAction multiplicity: one action turn. Unique.\n\nAction order: single action, unique/inapplicable.\n\nCorrection scope: no edits, unique/inapplicable.\n\nRepetition scope: none, unique/inapplicable.\n\nReference resolution: no pronouns? \"右边\" is direction, not referent. Unique.\n\nTemporal relations: no before/after, single action, unique.\n\nUnresolved relations: none explicitly unresolved. Unique.\n\nThus AUTHORIZED_UNIQUE. Need coverage list with exact text concatenated equals entire source. Need split into meaningful spans. Source: \"请往右边转30°\". Could split:\n- \"请\" CONTEXT/SEPARATOR? Politeness, no action.\n- \"往右边\" maybe RELATION/ACTION? It indicates direction.\n- \"转\" ACTION\n- \"30°\" QUANTITY\n\nBut coverage should every action/relation. Need exact concat. Maybe [{\"text\":\"请\",\"role\":\"CONTEXT\",...},{\"text\":\"往右边\",\"role\":\"RELATION\",...},{\"text\":\"转\",\"role\":\"ACTION\",...},{\"text\":\"30°\",\"role\":\"QUANTITY\",...}]. That concatenates exactly \"请往右边转30°\". Good.\n\nBut is \"转\" action and \"往右边\" relation direction. Need explain \"转\" means turn; \"30°\" angle. Combined action: turn right 30 degrees. Legal angle finite nonzero, max abs 180, so -30 deg. Need mention right maps to negative per convention.\n\nNeed ensure no markdown, JSON object exactly keys status, coverage, dimensions. Dimensions exactly seven names. Need explanations nonempty. Status AUTHORIZED_UNIQUE.\n\nPotential issue: Does \"往右边转30°\" mean turn 30° to the right; in Chinese \"右边\" could mean right side, but direction clear. Legal semantics define right/clockwise negative. So unique. No ambiguity.\n\nNeed output JSON. Ensure coverage text values concatenated exactly original source. The original source in JSON has \"请往右边转30°\". We must include degree symbol maybe \"°\". Yes.\n\nLet's craft. Need coverage roles. Could include separators? Source has no whitespace. \"请\" is context (polite). \"往右边\" relation. \"转\" action. \"30°\" quantity. Fine.\n\nNeed dimensions. action_multiplicity UNIQUE: single turn action, no other verbs. action_order UNIQUE: only one action, no ordering. correction_scope UNIQUE: no correction/edit. repetition_scope UNIQUE: no repetition. reference_resolution UNIQUE: no pronoun/ordinal; \"右边\" direction resolved by standard convention. temporal_relations UNIQUE: single action no temporal relation. unresolved_relations UNIQUE: no explicit unresolved relation.\n\nNeed be careful: \"往右边\" maybe relation/direction to right. \"转\" action. Quantity 30 degrees. Combined: turn right 30 degrees => angle_deg = -30. But if IR interpretation includes sign? Legal semantics says left/counterclockwise positive, right/clockwise negative. Unique. Good.\n\nNeed no extra fields. Explanations nonempty.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"请\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Politeness marker; it does not introduce, modify, or authorize any executable action and does not change the requested turn.\"\n    },\n    {\n      \"text\": \"往右边\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Specifies the direction of the turn as rightward. Under the stated IR semantics, right/clockwise is represented by a negative angle.\"\n    },\n    {\n      \"text\": \"转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the single legal action turn; it is the only verb of action in the source.\"\n    },\n    {\n      \"text\": \"30°\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies a nonzero finite turn magnitude of 30 degrees. Combined with the rightward direction, this uniquely yields turn with angle_deg = -30.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one requested action: turn. No other action is requested, repeated, or edited.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so no competing execution order exists and no ordering relation is required.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction, edit, replacement, or scope-changing clause.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition instruction; the turn is requested once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns, ordinals, or omitted shared arguments needing resolution. The direction term 右边 resolves directly to rightward.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source specifies no before/after, waiting, simultaneity, or completion relation; a single-step linear plan is sufficient.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any choice, scope, order, or relation unresolved. The single turn direction and magnitude are fully specified.\"\n    }\n  }\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_7ace0707-a066-479f-a129-66b53161ea48",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 142,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1298,
+            "output_tokens_details": {
+              "reasoning_tokens": 752
+            },
+            "total_tokens": 2208
+          }
+        },
+        "request_sha256": "610f1b825b86ed55d3f0b9ebf7006135f0985f2471ab688365a9d867bf836d92",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.807610600000771,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_7ace0707-a066-479f-a129-66b53161ea48",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"请\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Politeness marker; it does not introduce, modify, or authorize any executable action and does not change the requested turn.\"\n    },\n    {\n      \"text\": \"往右边\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Specifies the direction of the turn as rightward. Under the stated IR semantics, right/clockwise is represented by a negative angle.\"\n    },\n    {\n      \"text\": \"转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the single legal action turn; it is the only verb of action in the source.\"\n    },\n    {\n      \"text\": \"30°\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies a nonzero finite turn magnitude of 30 degrees. Combined with the rightward direction, this uniquely yields turn with angle_deg = -30.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one requested action: turn. No other action is requested, repeated, or edited.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so no competing execution order exists and no ordering relation is required.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction, edit, replacement, or scope-changing clause.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition instruction; the turn is requested once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns, ordinals, or omitted shared arguments needing resolution. The direction term 右边 resolves directly to rightward.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source specifies no before/after, waiting, simultaneity, or completion relation; a single-step linear plan is sufficient.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any choice, scope, order, or relation unresolved. The single turn direction and magnitude are fully specified.\"\n    }\n  }\n}",
+        "usage": {
+          "input_tokens": 142,
+          "output_tokens": 1298,
+          "total_tokens": 2208
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.6506894000012835,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-right-30",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-right-30\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "cea4360c3971b4bc1c5c7a8411c02a25a7853b9682f9948a77baf78761537ce8",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_646d9a50-aff6-4a79-91b4-3f348d9931e7",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 6.814734100000351,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 6.807610600000771,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"请\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Politeness marker; it does not introduce, modify, or authorize any executable action and does not change the requested turn.\"\n    },\n    {\n      \"text\": \"往右边\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Specifies the direction of the turn as rightward. Under the stated IR semantics, right/clockwise is represented by a negative angle.\"\n    },\n    {\n      \"text\": \"转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the single legal action turn; it is the only verb of action in the source.\"\n    },\n    {\n      \"text\": \"30°\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies a nonzero finite turn magnitude of 30 degrees. Combined with the rightward direction, this uniquely yields turn with angle_deg = -30.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one requested action: turn. No other action is requested, repeated, or edited.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so no competing execution order exists and no ordering relation is required.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction, edit, replacement, or scope-changing clause.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition instruction; the turn is requested once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns, ordinals, or omitted shared arguments needing resolution. The direction term 右边 resolves directly to rightward.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source specifies no before/after, waiting, simultaneity, or completion relation; a single-step linear plan is sufficient.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any choice, scope, order, or relation unresolved. The single turn direction and magnitude are fully specified.\"\n    }\n  }\n}",
+          "raw_response_sha256": "0c9d7addd9624e02a017406fb9dafef295207ac031c33e12b046c14a58c4c42a",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_7ace0707-a066-479f-a129-66b53161ea48",
+          "source_aware": false,
+          "source_sha256": "73fba482b801495c63ccb13d6e8f86cdc55349a6ca82688c497f7bbb592d2f8f",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 142,
+            "output_tokens": 1298,
+            "total_tokens": 2208
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Politeness marker; it does not introduce, modify, or authorize any executable action and does not change the requested turn.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Specifies the direction of the turn as rightward. Under the stated IR semantics, right/clockwise is represented by a negative angle.",
+                "role": "RELATION",
+                "text": "往右边"
+              },
+              {
+                "explanation": "Requests the single legal action turn; it is the only verb of action in the source.",
+                "role": "ACTION",
+                "text": "转"
+              },
+              {
+                "explanation": "Specifies a nonzero finite turn magnitude of 30 degrees. Combined with the rightward direction, this uniquely yields turn with angle_deg = -30.",
+                "role": "QUANTITY",
+                "text": "30°"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one requested action: turn. No other action is requested, repeated, or edited.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so no competing execution order exists and no ordering relation is required.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no correction, edit, replacement, or scope-changing clause.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, or omitted shared arguments needing resolution. The direction term 右边 resolves directly to rightward.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition instruction; the turn is requested once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies no before/after, waiting, simultaneity, or completion relation; a single-step linear plan is sufficient.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, order, or relation unresolved. The single turn direction and magnitude are fully specified.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 205,
+        "output_tokens": 139,
+        "total_tokens": 1880
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-right-30",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "请往右边转30°",
+    "status": "SUCCESS"
+  }
+}

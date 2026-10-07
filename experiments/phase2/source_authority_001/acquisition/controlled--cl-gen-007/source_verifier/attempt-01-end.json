@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.386404200002289,
+  "provider_document": {
+    "created_at": 1791360819,
+    "id": "resp_5f8d8b2c-edba-4295-ac51-a98fbe3b9799",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_5f8d8b2c-edba-4295-ac51-a98fbe3b9799",
+        "reasoning_content": "We need answer only JSON per instruction. Need analyze source Chinese \"往前走8米\". Need derive plan. Candidate. Need dimensions.\n\nSource: \"往前走8米\" = walk forward 8 meters. Legal walk_forward distance_m 8.0. One action. No ambiguity? Chinese \"往前\" forward, \"走\" walk, \"8米\" distance. likely unique. Need coverage split meaningful spans; text concatenated exactly entire source. Could split \"往前\", \"走\", \"8米\". But roles. Need ensure every action relation edit clause analyzed. There are no relations/edit. coverage nonempty. Text values concatenated equal original. Maybe \"往前\" role RELATION? direction relation for action. \"走\" ACTION. \"8米\" QUANTITY. Or \"往前走\" ACTION and \"8米\" QUANTITY? Need cover entire. Since action phrase is 往前走. We can do text \"往前走\" ACTION explanation denotes forward walking action. \"8米\" QUANTITY. But action includes direction. That's fine. Need maybe \"往前\" RELATION and \"走\" ACTION separately. Either acceptable. We need no omissions. Let's decide.\n\nNeed dimensions:\naction_multiplicity UNIQUE: exactly one action walk forward.\naction_order UNIQUE: single action, order trivially.\ncorrection_scope UNIQUE inapplicable no correction.\nrepetition_scope UNIQUE no repetition.\nreference_resolution UNIQUE: direction \"往前\" self-contained, no pronouns/ordinals; distance 8 meters explicit.\ntemporal_relations UNIQUE: single immediate action, no before/after.\nunresolved_relations UNIQUE: no explicit unresolved relation.\nstatus AUTHORIZED_UNIQUE. authorized_plan list one step s1 skill walk_forward params distance_m 8.0 depends_on [].\n\nNeed output JSON exactly. Ensure keys exactly. coverage list objects exactly text role explanation. No extra. Use JSON numbers.\n\nNeed be careful if \"往前\" could imply forward direction, not \"walk_forward\"? Legal skills include walk_forward. Yes.\n\nNeed mention \"走\" = walk, \"往前\" = forward. Could split \"往前\" and \"走\" and \"8米\". Let's craft coverage with text exact:\n1. \"往前\" role RELATION explanation: specifies forward direction for walking action, maps to walk_forward orientation; no independent step.\n2. \"走\" role ACTION explanation: denotes a single walking action. Combined with direction and distance, authorizes one walk_forward.\n3. \"8米\" role QUANTITY explanation: specifies distance 8 meters; 米 is meters, set distance_m=8.0.\nConcatenation \"往前走8米\". Good.\n\nDimensions explanations complete. Need mention no corrections etc. \"candidate_ir not considered evidence; it matches\". Maybe dimensions should not rely on candidate. Could mention source uniquely authorizes. The final answer maybe no markdown. Ensure valid JSON. The \"coverage\" text values copied exactly. \"往前走8米\" no whitespace. Good.\n\nNeed status AUTHORIZED_UNIQUE.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer only JSON per instruction. Need analyze source Chinese \"往前走8米\". Need derive plan. Candidate. Need dimensions.\n\nSource: \"往前走8米\" = walk forward 8 meters. Legal walk_forward distance_m 8.0. One action. No ambiguity? Chinese \"往前\" forward, \"走\" walk, \"8米\" distance. likely unique. Need coverage split meaningful spans; text concatenated exactly entire source. Could split \"往前\", \"走\", \"8米\". But roles. Need ensure every action relation edit clause analyzed. There are no relations/edit. coverage nonempty. Text values concatenated equal original. Maybe \"往前\" role RELATION? direction relation for action. \"走\" ACTION. \"8米\" QUANTITY. Or \"往前走\" ACTION and \"8米\" QUANTITY? Need cover entire. Since action phrase is 往前走. We can do text \"往前走\" ACTION explanation denotes forward walking action. \"8米\" QUANTITY. But action includes direction. That's fine. Need maybe \"往前\" RELATION and \"走\" ACTION separately. Either acceptable. We need no omissions. Let's decide.\n\nNeed dimensions:\naction_multiplicity UNIQUE: exactly one action walk forward.\naction_order UNIQUE: single action, order trivially.\ncorrection_scope UNIQUE inapplicable no correction.\nrepetition_scope UNIQUE no repetition.\nreference_resolution UNIQUE: direction \"往前\" self-contained, no pronouns/ordinals; distance 8 meters explicit.\ntemporal_relations UNIQUE: single immediate action, no before/after.\nunresolved_relations UNIQUE: no explicit unresolved relation.\nstatus AUTHORIZED_UNIQUE. authorized_plan list one step s1 skill walk_forward params distance_m 8.0 depends_on [].\n\nNeed output JSON exactly. Ensure keys exactly. coverage list objects exactly text role explanation. No extra. Use JSON numbers.\n\nNeed be careful if \"往前\" could imply forward direction, not \"walk_forward\"? Legal skills include walk_forward. Yes.\n\nNeed mention \"走\" = walk, \"往前\" = forward. Could split \"往前\" and \"走\" and \"8米\". Let's craft coverage with text exact:\n1. \"往前\" role RELATION explanation: specifies forward direction for walking action, maps to walk_forward orientation; no independent step.\n2. \"走\" role ACTION explanation: denotes a single walking action. Combined with direction and distance, authorizes one walk_forward.\n3. \"8米\" role QUANTITY explanation: specifies distance 8 meters; 米 is meters, set distance_m=8.0.\nConcatenation \"往前走8米\". Good.\n\nDimensions explanations complete. Need mention no corrections etc. \"candidate_ir not considered evidence; it matches\". Maybe dimensions should not rely on candidate. Could mention source uniquely authorizes. The final answer maybe no markdown. Ensure valid JSON. The \"coverage\" text values copied exactly. \"往前走8米\" no whitespace. Good.\n\nNeed status AUTHORIZED_UNIQUE.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前\",\"role\":\"RELATION\",\"explanation\":\"Specifies the forward direction of the walking action, which corresponds to the legal walk_forward skill; it does not create a separate step or unresolved choice.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Denotes one walking action. Together with the direction and distance, this authorizes exactly one walk_forward step.\"},{\"text\":\"8米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the walking distance as 8 meters. Since 米 is meters, this sets distance_m to 8.0 and does not introduce any correction, repetition, or alternative quantity.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: walking forward. No additional action, replacement action, or repeated action is expressed.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the execution order is trivially the single walk_forward step; no ordering relation among multiple actions exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit clause is present, so no action, parameter, group, or relation is being replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is expressed. The single walking action occurs exactly once and must not be compressed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction '往前' and distance '8米' are explicit and self-contained. There are no pronouns, ordinals, or omitted arguments requiring external referents.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action is immediately representable as one step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, order, scope, or relation unresolved. It fully specifies one forward walk of 8 meters.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_5f8d8b2c-edba-4295-ac51-a98fbe3b9799",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 186,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1115,
+      "output_tokens_details": {
+        "reasoning_tokens": 638
+      },
+      "total_tokens": 2325
+    }
+  },
+  "request_sha256": "9517355ff084ece489aecb133442eaf9206da71798350dd633a75c427ce87ce4",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,281 @@
+{
+  "added_wall_s": 10.282367400001021,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.276580399999148,
+        "provider_document": {
+          "created_at": 1791359189,
+          "id": "resp_2033ecec-93fa-4e6a-9324-46815e8375e0",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_2033ecec-93fa-4e6a-9324-46815e8375e0",
+              "reasoning_content": "We need output JSON only. Need inspect source: \"站着，两秒钟；然后左转六十度。\"\n\nNeed decide dimensions. Source Chinese: stand, two seconds; then turn left sixty degrees. Need parse.\n\nActions: stand with duration 2 seconds, then turn left 60 degrees.\n\nDimension action_multiplicity: two actions: stand, turn. Unique.\n\naction_order: \"然后\" then -> stand first then turn. Unique.\n\ncorrection_scope: no correction/edit. Inapplicable, UNIQUE.\n\nrepetition_scope: no repetition, UNIQUE.\n\nreference_resolution: no pronouns? \"站着\" implies stand, \"左转六十度\" turn left 60. No unresolved. Note omitted shared arguments? Stand duration 2s explicit. Turn angle 60 deg. Unique.\n\ntemporal_relations: \"然后\" before/after, stand then turn. Unique.\n\nunresolved_relations: none vague? \"两秒钟\" explicit duration. \"六十度\" explicit. No unresolved. Unique.\n\nNeed check legal: stand duration positive finite 2 <=60. turn left 60 positive, <=180. Max 2 steps. So authorized unique.\n\nNeed coverage list split source into meaningful spans so every action, relation, editing clause considered. Text values concatenated in list order equal entire original source exactly. Source: \"站着，两秒钟；然后左转六十度。\"\n\nWe can split:\n\"站着\" ACTION\n\"，\" SEPARATOR\n\"两秒钟\" QUANTITY\n\"；\" SEPARATOR\n\"然后\" RELATION\n\"左转\" ACTION\n\"六十度\" QUANTITY\n\"。\" SEPARATOR? Or punctuation. Need concatenated exactly. Roles exact. Could include context? No. Need every action, relation considered.\n\nBut \"左转六十度\" could be one action with angle? We split action and quantity. Fine. \"站着\" action, \"两秒钟\" quantity modifies stand. \"然后\" relation. \"左转\" action, \"六十度\" quantity modifies turn. Punctuation separators.\n\nNeed explanations nonempty.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure JSON keys exactly status, coverage, dimensions. Each coverage object exactly text, role, explanation. Explanation nonempty. dimensions object exactly seven names. Each value exactly status, explanation. No extra.\n\nNeed consider if \"站着，两秒钟\" Chinese \"站着\" means standing; stand. Duration \"两秒钟\" = 2 seconds. Legal accepts positive finite duration_s. Good.\n\nPotential ambiguity: \"左转六十度\" could be interpreted as turn left 60 degrees. In Chinese, left/counterclockwise positive. unique.\n\nPotential issue: \"站着，两秒钟；然后左转六十度。\" The comma between stand and duration: duration attaches to stand. Unique. No other readings? Could be \"stand, two seconds; then turn left 60 degrees.\" Exactly.\n\nNeed output valid JSON. We can include Chinese exact.\n\nLet's craft.\n\nCoverage:\n1 text \"站着\" role ACTION explanation \"请求执行 stand 动作；没有参数，持续时间由后续量词'两秒钟'指定。\"\n2 text \"，\" role SEPARATOR explanation \"分隔 stand 动作与其持续时间量；不引入额外动作或顺序。\"\n3 text \"两秒钟\" role QUANTITY explanation \"为前一个 stand 动作指定持续时间为 2 秒；是明确有限正数，不触发默认持续时间，也不表示模糊时长。\"\n4 text \"；\" role SEPARATOR explanation \"分隔第一个动作-参数组与后续时序从句；不改变动作语义。\"\n5 text \"然后\" role RELATION explanation \"规定后一动作在前一动作之后执行，给出唯一线性顺序：先 stand，后 turn。\"\n6 text \"左转\" role ACTION explanation \"请求执行 turn 动作，方向为左转；角度由后续量词'六十度'指定。\"\n7 text \"六十度\" role QUANTITY explanation \"为 turn 动作指定角度 60 度；按左转为正，等价于正 60 度，是明确有限非零角度。\"\n8 text \"。\" role SEPARATOR explanation \"结束句子；不引入额外动作、顺序或未决关系。\"\n\nCheck concatenation equals original: 站着 + ， + 两秒钟 + ； + 然后 + 左转 + 六十度 + 。 = exactly. Good.\n\nDimensions:\naction_multiplicity status UNIQUE explanation: Source names exactly two actions: stand with duration, turn with angle. No repeated/edited/alternative actions. The comma and semicolon are separators not actions.\naction_order: UNIQUE: \"然后\" explicitly orders stand before turn. One linear plan.\ncorrection_scope: UNIQUE: no edit/correction/replacement clause; no prior instruction to modify. Inapplicable.\nrepetition_scope: UNIQUE: no repetition marker; neither action is repeated, and repetition cannot be inferred.\nreference_resolution: UNIQUE: \"两秒钟\" resolves to stand, \"六十度\" resolves to immediately following? Actually \"左转六十度\" angle resolves to left turn. No pronouns/ordinals/omitted shared args unresolved. \"然后\" refers to next action? Not pronoun. Unique.\ntemporal_relations: UNIQUE: \"然后\" yields strict precedence stand then turn; no waiting/simultaneity conflicts; representable as s1 stand duration_s=2.0, s2 turn angle_deg=60.\nunresolved_relations: UNIQUE: no explicit unresolved choice/scope/order. All quantities explicit and bounded legal. No vague duration.\n\nNeed mention legal. No issue.\n\nPotential concern: \"left/counterclockwise positive\" in prompt means left turn positive. Yes.\n\nNeed no markdown. Output exactly JSON.\n\nDouble check \"coverage is a nonempty list of objects with exactly text, role, explanation.\" Yes.\n\nDimensions names exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nStatus: AUTHORIZED_UNIQUE.\n\nNo extra fields.\n\nNeed ensure JSON escapes Chinese? Can output UTF-8. Valid. Use quotes. Commas. No trailing.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need output JSON only. Need inspect source: \"站着，两秒钟；然后左转六十度。\"\n\nNeed decide dimensions. Source Chinese: stand, two seconds; then turn left sixty degrees. Need parse.\n\nActions: stand with duration 2 seconds, then turn left 60 degrees.\n\nDimension action_multiplicity: two actions: stand, turn. Unique.\n\naction_order: \"然后\" then -> stand first then turn. Unique.\n\ncorrection_scope: no correction/edit. Inapplicable, UNIQUE.\n\nrepetition_scope: no repetition, UNIQUE.\n\nreference_resolution: no pronouns? \"站着\" implies stand, \"左转六十度\" turn left 60. No unresolved. Note omitted shared arguments? Stand duration 2s explicit. Turn angle 60 deg. Unique.\n\ntemporal_relations: \"然后\" before/after, stand then turn. Unique.\n\nunresolved_relations: none vague? \"两秒钟\" explicit duration. \"六十度\" explicit. No unresolved. Unique.\n\nNeed check legal: stand duration positive finite 2 <=60. turn left 60 positive, <=180. Max 2 steps. So authorized unique.\n\nNeed coverage list split source into meaningful spans so every action, relation, editing clause considered. Text values concatenated in list order equal entire original source exactly. Source: \"站着，两秒钟；然后左转六十度。\"\n\nWe can split:\n\"站着\" ACTION\n\"，\" SEPARATOR\n\"两秒钟\" QUANTITY\n\"；\" SEPARATOR\n\"然后\" RELATION\n\"左转\" ACTION\n\"六十度\" QUANTITY\n\"。\" SEPARATOR? Or punctuation. Need concatenated exactly. Roles exact. Could include context? No. Need every action, relation considered.\n\nBut \"左转六十度\" could be one action with angle? We split action and quantity. Fine. \"站着\" action, \"两秒钟\" quantity modifies stand. \"然后\" relation. \"左转\" action, \"六十度\" quantity modifies turn. Punctuation separators.\n\nNeed explanations nonempty.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure JSON keys exactly status, coverage, dimensions. Each coverage object exactly text, role, explanation. Explanation nonempty. dimensions object exactly seven names. Each value exactly status, explanation. No extra.\n\nNeed consider if \"站着，两秒钟\" Chinese \"站着\" means standing; stand. Duration \"两秒钟\" = 2 seconds. Legal accepts positive finite duration_s. Good.\n\nPotential ambiguity: \"左转六十度\" could be interpreted as turn left 60 degrees. In Chinese, left/counterclockwise positive. unique.\n\nPotential issue: \"站着，两秒钟；然后左转六十度。\" The comma between stand and duration: duration attaches to stand. Unique. No other readings? Could be \"stand, two seconds; then turn left 60 degrees.\" Exactly.\n\nNeed output valid JSON. We can include Chinese exact.\n\nLet's craft.\n\nCoverage:\n1 text \"站着\" role ACTION explanation \"请求执行 stand 动作；没有参数，持续时间由后续量词'两秒钟'指定。\"\n2 text \"，\" role SEPARATOR explanation \"分隔 stand 动作与其持续时间量；不引入额外动作或顺序。\"\n3 text \"两秒钟\" role QUANTITY explanation \"为前一个 stand 动作指定持续时间为 2 秒；是明确有限正数，不触发默认持续时间，也不表示模糊时长。\"\n4 text \"；\" role SEPARATOR explanation \"分隔第一个动作-参数组与后续时序从句；不改变动作语义。\"\n5 text \"然后\" role RELATION explanation \"规定后一动作在前一动作之后执行，给出唯一线性顺序：先 stand，后 turn。\"\n6 text \"左转\" role ACTION explanation \"请求执行 turn 动作，方向为左转；角度由后续量词'六十度'指定。\"\n7 text \"六十度\" role QUANTITY explanation \"为 turn 动作指定角度 60 度；按左转为正，等价于正 60 度，是明确有限非零角度。\"\n8 text \"。\" role SEPARATOR explanation \"结束句子；不引入额外动作、顺序或未决关系。\"\n\nCheck concatenation equals original: 站着 + ， + 两秒钟 + ； + 然后 + 左转 + 六十度 + 。 = exactly. Good.\n\nDimensions:\naction_multiplicity status UNIQUE explanation: Source names exactly two actions: stand with duration, turn with angle. No repeated/edited/alternative actions. The comma and semicolon are separators not actions.\naction_order: UNIQUE: \"然后\" explicitly orders stand before turn. One linear plan.\ncorrection_scope: UNIQUE: no edit/correction/replacement clause; no prior instruction to modify. Inapplicable.\nrepetition_scope: UNIQUE: no repetition marker; neither action is repeated, and repetition cannot be inferred.\nreference_resolution: UNIQUE: \"两秒钟\" resolves to stand, \"六十度\" resolves to immediately following? Actually \"左转六十度\" angle resolves to left turn. No pronouns/ordinals/omitted shared args unresolved. \"然后\" refers to next action? Not pronoun. Unique.\ntemporal_relations: UNIQUE: \"然后\" yields strict precedence stand then turn; no waiting/simultaneity conflicts; representable as s1 stand duration_s=2.0, s2 turn angle_deg=60.\nunresolved_relations: UNIQUE: no explicit unresolved choice/scope/order. All quantities explicit and bounded legal. No vague duration.\n\nNeed mention legal. No issue.\n\nPotential concern: \"left/counterclockwise positive\" in prompt means left turn positive. Yes.\n\nNeed no markdown. Output exactly JSON.\n\nDouble check \"coverage is a nonempty list of objects with exactly text, role, explanation.\" Yes.\n\nDimensions names exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nStatus: AUTHORIZED_UNIQUE.\n\nNo extra fields.\n\nNeed ensure JSON escapes Chinese? Can output UTF-8. Valid. Use quotes. Commas. No trailing.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站着\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作；这是第一个动作，其持续时间由后续量词“两秒钟”指定。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔 stand 动作与其持续时间量；不引入额外动作、顺序或未决关系。\"},{\"text\":\"两秒钟\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的 stand 动作指定持续时间为 2 秒；这是明确、有限、正数的时长，不触发默认时长，也不表示模糊时长。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个动作-参数组与后续时序从句；不改变已确定的动作或参数。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"规定后一动作在前一动作之后执行，给出唯一线性顺序：先 stand，后 turn。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，方向为左转；角度由后续量词“六十度”指定。\"},{\"text\":\"六十度\",\"role\":\"QUANTITY\",\"explanation\":\"为 turn 动作指定角度 60 度；按左转为正，等价于正 60 度，是明确、有限、非零角度。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束句子；不引入额外动作、顺序、编辑或未决关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本只请求两个动作：stand 和 turn。没有重复动作、编辑动作或可替代动作；逗号和分号只是分隔符。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”明确表示 stand 在前、turn 在后，因此只有一条执行顺序，不提供多种可能排序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有编辑、修正、替换或覆盖任何先前动作、参数、组或关系；该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有重复标记，两个动作均未说明重复执行；不能将任一动作或整个序列推断为重复。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“两秒钟”唯一指向前面的 stand 动作；“六十度”唯一指向“左转”即 turn 动作。没有代词、序数、省略共享参数或需要外部上下文的指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”建立唯一严格先后关系：先 stand 持续 2 秒，再 turn 左转 60 度。没有等待、同时性或完成关系冲突，且可用线性步骤表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留未决选择、范围、顺序或关系；持续时间 2 秒和角度 60 度均已明确给出。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_2033ecec-93fa-4e6a-9324-46815e8375e0",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 147,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1929,
+            "output_tokens_details": {
+              "reasoning_tokens": 1286
+            },
+            "total_tokens": 2844
+          }
+        },
+        "request_sha256": "90694a46cf0e8771eebcfcfe76cd73b139e1eb1f60fd0090e32223b874f012cc",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.275099700000283,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_2033ecec-93fa-4e6a-9324-46815e8375e0",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站着\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作；这是第一个动作，其持续时间由后续量词“两秒钟”指定。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔 stand 动作与其持续时间量；不引入额外动作、顺序或未决关系。\"},{\"text\":\"两秒钟\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的 stand 动作指定持续时间为 2 秒；这是明确、有限、正数的时长，不触发默认时长，也不表示模糊时长。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个动作-参数组与后续时序从句；不改变已确定的动作或参数。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"规定后一动作在前一动作之后执行，给出唯一线性顺序：先 stand，后 turn。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，方向为左转；角度由后续量词“六十度”指定。\"},{\"text\":\"六十度\",\"role\":\"QUANTITY\",\"explanation\":\"为 turn 动作指定角度 60 度；按左转为正，等价于正 60 度，是明确、有限、非零角度。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束句子；不引入额外动作、顺序、编辑或未决关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本只请求两个动作：stand 和 turn。没有重复动作、编辑动作或可替代动作；逗号和分号只是分隔符。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”明确表示 stand 在前、turn 在后，因此只有一条执行顺序，不提供多种可能排序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有编辑、修正、替换或覆盖任何先前动作、参数、组或关系；该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有重复标记，两个动作均未说明重复执行；不能将任一动作或整个序列推断为重复。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“两秒钟”唯一指向前面的 stand 动作；“六十度”唯一指向“左转”即 turn 动作。没有代词、序数、省略共享参数或需要外部上下文的指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”建立唯一严格先后关系：先 stand 持续 2 秒，再 turn 左转 60 度。没有等待、同时性或完成关系冲突，且可用线性步骤表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留未决选择、范围、顺序或关系；持续时间 2 秒和角度 60 度均已明确给出。\"}}}",
+        "usage": {
+          "input_tokens": 147,
+          "output_tokens": 1929,
+          "total_tokens": 2844
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.5682716999999684,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-2s-turn-left60",
+      "model": "deepseek-flash",
+      "normalized_length": 13,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 276,
+      "raw_response_sha256": "bf810fb0f8f293393c735c57cf04aeb949b7851b3c386322b74c5122a02a2717",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b686b674-c68c-4c4f-8da4-9ca0612f51d9",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.281516600000032,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 10.275099700000283,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站着\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作；这是第一个动作，其持续时间由后续量词“两秒钟”指定。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔 stand 动作与其持续时间量；不引入额外动作、顺序或未决关系。\"},{\"text\":\"两秒钟\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的 stand 动作指定持续时间为 2 秒；这是明确、有限、正数的时长，不触发默认时长，也不表示模糊时长。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个动作-参数组与后续时序从句；不改变已确定的动作或参数。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"规定后一动作在前一动作之后执行，给出唯一线性顺序：先 stand，后 turn。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，方向为左转；角度由后续量词“六十度”指定。\"},{\"text\":\"六十度\",\"role\":\"QUANTITY\",\"explanation\":\"为 turn 动作指定角度 60 度；按左转为正，等价于正 60 度，是明确、有限、非零角度。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束句子；不引入额外动作、顺序、编辑或未决关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本只请求两个动作：stand 和 turn。没有重复动作、编辑动作或可替代动作；逗号和分号只是分隔符。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”明确表示 stand 在前、turn 在后，因此只有一条执行顺序，不提供多种可能排序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有编辑、修正、替换或覆盖任何先前动作、参数、组或关系；该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有重复标记，两个动作均未说明重复执行；不能将任一动作或整个序列推断为重复。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“两秒钟”唯一指向前面的 stand 动作；“六十度”唯一指向“左转”即 turn 动作。没有代词、序数、省略共享参数或需要外部上下文的指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”建立唯一严格先后关系：先 stand 持续 2 秒，再 turn 左转 60 度。没有等待、同时性或完成关系冲突，且可用线性步骤表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留未决选择、范围、顺序或关系；持续时间 2 秒和角度 60 度均已明确给出。\"}}}",
+          "raw_response_sha256": "3f6b1438d8d8034d6f0e4cd83e421ecb46489620f8150009990e4173087b2507",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_2033ecec-93fa-4e6a-9324-46815e8375e0",
+          "source_aware": false,
+          "source_sha256": "fe689069ce4c66c9c7d61e6515410af7eb56cd3986a6ba78ba5343c35b3b334c",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 147,
+            "output_tokens": 1929,
+            "total_tokens": 2844
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "请求执行 stand 动作；这是第一个动作，其持续时间由后续量词“两秒钟”指定。",
+                "role": "ACTION",
+                "text": "站着"
+              },
+              {
+                "explanation": "分隔 stand 动作与其持续时间量；不引入额外动作、顺序或未决关系。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "为前面的 stand 动作指定持续时间为 2 秒；这是明确、有限、正数的时长，不触发默认时长，也不表示模糊时长。",
+                "role": "QUANTITY",
+                "text": "两秒钟"
+              },
+              {
+                "explanation": "分隔第一个动作-参数组与后续时序从句；不改变已确定的动作或参数。",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "规定后一动作在前一动作之后执行，给出唯一线性顺序：先 stand，后 turn。",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "请求执行 turn 动作，方向为左转；角度由后续量词“六十度”指定。",
+                "role": "ACTION",
+                "text": "左转"
+              },
+              {
+                "explanation": "为 turn 动作指定角度 60 度；按左转为正，等价于正 60 度，是明确、有限、非零角度。",
+                "role": "QUANTITY",
+                "text": "六十度"
+              },
+              {
+                "explanation": "结束句子；不引入额外动作、顺序、编辑或未决关系。",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源文本只请求两个动作：stand 和 turn。没有重复动作、编辑动作或可替代动作；逗号和分号只是分隔符。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“然后”明确表示 stand 在前、turn 在后，因此只有一条执行顺序，不提供多种可能排序。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源文本没有编辑、修正、替换或覆盖任何先前动作、参数、组或关系；该维度不适用且不引入替代解释。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "“两秒钟”唯一指向前面的 stand 动作；“六十度”唯一指向“左转”即 turn 动作。没有代词、序数、省略共享参数或需要外部上下文的指代。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源文本没有重复标记，两个动作均未说明重复执行；不能将任一动作或整个序列推断为重复。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "“然后”建立唯一严格先后关系：先 stand 持续 2 秒，再 turn 左转 60 度。没有等待、同时性或完成关系冲突，且可用线性步骤表示。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源文本没有显式保留未决选择、范围、顺序或关系；持续时间 2 秒和角度 60 度均已明确给出。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 210,
+        "output_tokens": 389,
+        "total_tokens": 2135
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-2s-turn-left60",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "站着,两秒钟然后左转六十度",
+    "status": "SUCCESS"
+  }
+}

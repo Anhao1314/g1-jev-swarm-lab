@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 7.961157300000195,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 7.955336900002294,
+        "provider_document": {
+          "created_at": 1791359970,
+          "id": "resp_bb145548-c993-44db-b9e7-602082edce61",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_bb145548-c993-44db-b9e7-602082edce61",
+              "reasoning_content": "We need answer JSON only. Need inspect source Chinese \"请往右边转45°\". Means \"Please turn right 45°\". Need decide dimensions. Legal semantics: turn requires nonzero finite angle_deg, right/clockwise negative. Source says 往右边 turn right 45°. So angle_deg = -45. Need consider \"45°\" degree symbol. Legal. Action multiplicity: one turn action. action_order: single action, unique. correction_scope: no corrections. repetition_scope: no repetition. reference_resolution: no pronouns? \"右边\" means right side, directional. Could be interpreted as right relative to robot's current facing; standard. Does \"往右边转\" uniquely mean turn right? Yes. temporal_relations: single action, no temporal relations. unresolved_relations: none. status AUTHORIZED_UNIQUE.\n\nNeed coverage list split entire source exactly. Source \"请往右边转45°\". Could split into spans: \"请\" CONTEXT/SEPARATOR? \"往右边转\" ACTION? \"45°\" QUANTITY. Need every action relation editing considered. Since text values concatenated equal entire original. We can split: \"请\" context polite marker; \"往右边转\" action turn right; \"45°\" quantity angle. Maybe role ACTION for \"往右边转\" and QUANTITY for \"45°\". \"请\" CONTEXT. Ensure no whitespace. Source has no spaces. Text values: \"请\", \"往右边转\", \"45°\". Concatenate equals source. Explanation nonempty.\n\nNeed dimensions exactly seven names. Status UNIQUE for all? Need be careful with \"右边\" reference_resolution: right side relative to robot's forward direction. It's a direction word resolved by conventional robot frame. Not ambiguous. \"45°\" finite nonzero within 180. Legal. \"请\" polite imperative, not action.\n\nPotential issue: \"往右边转45°\" could mean turn right by 45 degrees. Yes. \"转\" could be rotate. Legal turn. Maximum abs 180. 45 ok.\n\nNeed output exactly JSON object no markdown. Need valid JSON. Keys exactly status, coverage, dimensions.\n\nNeed explanations. Let's craft.\n\nCoverage:\n- {\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker; it issues the following command but does not add, repeat, reorder, or edit any executable action.\"}\n- {\"text\":\"往右边转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn toward the right side relative to the robot's current forward direction; under the stated sign convention this is a clockwise/right turn.\"}\n- {\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, a nonzero finite angle within the 180-degree IR limit, yielding angle_deg = -45 for a right turn.\"}\n\nBut \"往右边转\" action includes \"转\", and \"45°\" quantity. Good.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one requested action (\"往右边转45°\"), no additional edited or repeated actions.\naction_order UNIQUE: only one action, so linear order is trivially single step s1.\ncorrection_scope UNIQUE: no edit/correction clause; no prior parameter replaced or preserved.\nrepetition_scope UNIQUE: no repetition marker; only one occurrence of the turn action.\nreference_resolution UNIQUE: directional \"右边\" is resolved as right relative to current heading; no pronoun or external missing context needed? Hmm \"right side\" could mean relative to robot's own right or viewer's right? In robot commands, \"往右边转\" typically relative to robot's current facing. Is that unequivocal? The IR's turn left/counterclockwise positive, right/clockwise negative. Source says right. So yes.\ntemporal_relations UNIQUE: no before/after/wait; single action representable as one step.\nunresolved_relations UNIQUE: no explicit unresolved choice.\n\nNeed if any dimension UNKNOWN due to \"请\" missing subject? The command is directed to robot; source is command. No.\n\nCould there be ambiguity \"转45°\" could be absolute orientation rather than relative? \"往右边转\" indicates turn right by 45, relative. Unique.\n\nNeed no extra fields. status \"AUTHORIZED_UNIQUE\".\n\nLet's ensure JSON escaping degree symbol fine. Chinese characters in JSON okay. \"45°\" contains degree. Fine.\n\nFinal only JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source Chinese \"请往右边转45°\". Means \"Please turn right 45°\". Need decide dimensions. Legal semantics: turn requires nonzero finite angle_deg, right/clockwise negative. Source says 往右边 turn right 45°. So angle_deg = -45. Need consider \"45°\" degree symbol. Legal. Action multiplicity: one turn action. action_order: single action, unique. correction_scope: no corrections. repetition_scope: no repetition. reference_resolution: no pronouns? \"右边\" means right side, directional. Could be interpreted as right relative to robot's current facing; standard. Does \"往右边转\" uniquely mean turn right? Yes. temporal_relations: single action, no temporal relations. unresolved_relations: none. status AUTHORIZED_UNIQUE.\n\nNeed coverage list split entire source exactly. Source \"请往右边转45°\". Could split into spans: \"请\" CONTEXT/SEPARATOR? \"往右边转\" ACTION? \"45°\" QUANTITY. Need every action relation editing considered. Since text values concatenated equal entire original. We can split: \"请\" context polite marker; \"往右边转\" action turn right; \"45°\" quantity angle. Maybe role ACTION for \"往右边转\" and QUANTITY for \"45°\". \"请\" CONTEXT. Ensure no whitespace. Source has no spaces. Text values: \"请\", \"往右边转\", \"45°\". Concatenate equals source. Explanation nonempty.\n\nNeed dimensions exactly seven names. Status UNIQUE for all? Need be careful with \"右边\" reference_resolution: right side relative to robot's forward direction. It's a direction word resolved by conventional robot frame. Not ambiguous. \"45°\" finite nonzero within 180. Legal. \"请\" polite imperative, not action.\n\nPotential issue: \"往右边转45°\" could mean turn right by 45 degrees. Yes. \"转\" could be rotate. Legal turn. Maximum abs 180. 45 ok.\n\nNeed output exactly JSON object no markdown. Need valid JSON. Keys exactly status, coverage, dimensions.\n\nNeed explanations. Let's craft.\n\nCoverage:\n- {\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker; it issues the following command but does not add, repeat, reorder, or edit any executable action.\"}\n- {\"text\":\"往右边转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn toward the right side relative to the robot's current forward direction; under the stated sign convention this is a clockwise/right turn.\"}\n- {\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, a nonzero finite angle within the 180-degree IR limit, yielding angle_deg = -45 for a right turn.\"}\n\nBut \"往右边转\" action includes \"转\", and \"45°\" quantity. Good.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one requested action (\"往右边转45°\"), no additional edited or repeated actions.\naction_order UNIQUE: only one action, so linear order is trivially single step s1.\ncorrection_scope UNIQUE: no edit/correction clause; no prior parameter replaced or preserved.\nrepetition_scope UNIQUE: no repetition marker; only one occurrence of the turn action.\nreference_resolution UNIQUE: directional \"右边\" is resolved as right relative to current heading; no pronoun or external missing context needed? Hmm \"right side\" could mean relative to robot's own right or viewer's right? In robot commands, \"往右边转\" typically relative to robot's current facing. Is that unequivocal? The IR's turn left/counterclockwise positive, right/clockwise negative. Source says right. So yes.\ntemporal_relations UNIQUE: no before/after/wait; single action representable as one step.\nunresolved_relations UNIQUE: no explicit unresolved choice.\n\nNeed if any dimension UNKNOWN due to \"请\" missing subject? The command is directed to robot; source is command. No.\n\nCould there be ambiguity \"转45°\" could be absolute orientation rather than relative? \"往右边转\" indicates turn right by 45, relative. Unique.\n\nNeed no extra fields. status \"AUTHORIZED_UNIQUE\".\n\nLet's ensure JSON escaping degree symbol fine. Chinese characters in JSON okay. \"45°\" contains degree. Fine.\n\nFinal only JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker; it frames the following text as a request but does not add, repeat, reorder, or edit any executable action.\"},{\"text\":\"往右边转\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one turn toward the right side relative to the robot's current forward direction; under the stated sign convention this is a clockwise/right turn.\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, a nonzero finite angle within the 180-degree IR limit, corresponding to angle_deg = -45 for a right turn.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests one turn action and contains no additional, edited, or repeated executable action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the linear plan is trivially a single step s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or editing clause is present; no prior action, parameter, group, or relation is changed, replaced, or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span appears; the turn action occurs once and the 45-degree quantity applies to it.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The directional word 右边 resolves to a right turn relative to the robot's current heading, matching the specified right/clockwise negative convention; no pronoun or external missing context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no before, after, simultaneous, waiting, or completion relation; the single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; right and 45 degrees are both determinate.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_bb145548-c993-44db-b9e7-602082edce61",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 142,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1368,
+            "output_tokens_details": {
+              "reasoning_tokens": 930
+            },
+            "total_tokens": 2278
+          }
+        },
+        "request_sha256": "19b8c9dc105fec2120c474cf9a55c00c5c8a7a2f85e373574b490a4abd84c476",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 7.953640100000484,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_bb145548-c993-44db-b9e7-602082edce61",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker; it frames the following text as a request but does not add, repeat, reorder, or edit any executable action.\"},{\"text\":\"往右边转\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one turn toward the right side relative to the robot's current forward direction; under the stated sign convention this is a clockwise/right turn.\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, a nonzero finite angle within the 180-degree IR limit, corresponding to angle_deg = -45 for a right turn.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests one turn action and contains no additional, edited, or repeated executable action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the linear plan is trivially a single step s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or editing clause is present; no prior action, parameter, group, or relation is changed, replaced, or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span appears; the turn action occurs once and the 45-degree quantity applies to it.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The directional word 右边 resolves to a right turn relative to the robot's current heading, matching the specified right/clockwise negative convention; no pronoun or external missing context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no before, after, simultaneous, waiting, or completion relation; the single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; right and 45 degrees are both determinate.\"}}}",
+        "usage": {
+          "input_tokens": 142,
+          "output_tokens": 1368,
+          "total_tokens": 2278
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.9139673999998195,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "example-turn-right45",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"example-turn-right45\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "553c8b8a8c462a462ee23bbe6b256563023fb1763bb0273f49488e0332bbab50",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_2ce11f25-4ebf-4b84-8a29-6b8966a43031",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 7.96019460000025,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 7.953640100000484,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker; it frames the following text as a request but does not add, repeat, reorder, or edit any executable action.\"},{\"text\":\"往右边转\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one turn toward the right side relative to the robot's current forward direction; under the stated sign convention this is a clockwise/right turn.\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, a nonzero finite angle within the 180-degree IR limit, corresponding to angle_deg = -45 for a right turn.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests one turn action and contains no additional, edited, or repeated executable action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the linear plan is trivially a single step s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or editing clause is present; no prior action, parameter, group, or relation is changed, replaced, or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span appears; the turn action occurs once and the 45-degree quantity applies to it.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The directional word 右边 resolves to a right turn relative to the robot's current heading, matching the specified right/clockwise negative convention; no pronoun or external missing context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no before, after, simultaneous, waiting, or completion relation; the single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; right and 45 degrees are both determinate.\"}}}",
+          "raw_response_sha256": "0736c66a74ef724315f67485054501144229b33755ef3f04f1557bc890d993c4",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_bb145548-c993-44db-b9e7-602082edce61",
+          "source_aware": false,
+          "source_sha256": "d7b1fdda61528b3f0580ca500c2e50cad874e6ff08e320159aa0ccc553320c49",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 142,
+            "output_tokens": 1368,
+            "total_tokens": 2278
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Politeness marker; it frames the following text as a request but does not add, repeat, reorder, or edit any executable action.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Requests exactly one turn toward the right side relative to the robot's current forward direction; under the stated sign convention this is a clockwise/right turn.",
+                "role": "ACTION",
+                "text": "往右边转"
+              },
+              {
+                "explanation": "Specifies the turn magnitude as 45 degrees, a nonzero finite angle within the 180-degree IR limit, corresponding to angle_deg = -45 for a right turn.",
+                "role": "QUANTITY",
+                "text": "45°"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests one turn action and contains no additional, edited, or repeated executable action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so the linear plan is trivially a single step s1 with no ordering alternatives.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or editing clause is present; no prior action, parameter, group, or relation is changed, replaced, or preserved.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The directional word 右边 resolves to a right turn relative to the robot's current heading, matching the specified right/clockwise negative convention; no pronoun or external missing context is required.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or repeated span appears; the turn action occurs once and the 45-degree quantity applies to it.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source contains no before, after, simultaneous, waiting, or completion relation; the single action is representable as one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; right and 45 degrees are both determinate.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 205,
+        "output_tokens": 151,
+        "total_tokens": 1892
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "example-turn-right45",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "请往右边转45°",
+    "status": "SUCCESS"
+  }
+}

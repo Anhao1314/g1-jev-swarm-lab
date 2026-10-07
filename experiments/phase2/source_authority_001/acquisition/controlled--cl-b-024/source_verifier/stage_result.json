@@ -1,0 +1,287 @@
+{
+  "added_wall_s": 7.923859400001675,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 7.920223600001918,
+        "provider_document": {
+          "created_at": 1791360501,
+          "id": "resp_326d7f40-dbb7-484e-828a-ba4d12dd8a8b",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_326d7f40-dbb7-484e-828a-ba4d12dd8a8b",
+              "reasoning_content": "We need answer JSON only. Need analyze source Chinese: \"往前移动六米，之后停止\" = move forward six meters, then stop. Need derive plan: s1 walk_forward distance_m 6.0, s2 stop {}, depends_on [\"s1\"]. Candidate matches. Need coverage exact split concatenate entire source. Need dimensions all unique likely. Need output JSON object keys exactly status, coverage, dimensions, authorized_plan. Need coverage spans. Source string: 往前移动六米，之后停止. Need split meaningful spans, text copied exactly, concatenation equals entire original. Let's craft coverage objects. Need cover every action, relation/edit clause. Source has \"往前移动六米\" action quantity? \"，之后停止\" relation plus action. Need ensure concatenation: Could split as \"往前移动\", \"六米\", \"，\", \"之后\", \"停止\". Roles: ACTION for 往前移动? Actually phrase \"往前移动\" = move forward, skill walk_forward. \"六米\" quantity distance. \"，\" separator. \"之后\" relation temporal. \"停止\" action. That concatenates exactly: 往前移动 + 六米 + ， + 之后 + 停止 = 往前移动六米，之后停止. Good.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE: exactly two actions: walk_forward and stop.\n- action_order: UNIQUE: walk_forward then stop due 之后.\n- correction_scope: UNIQUE: no corrections/edits; none.\n- repetition_scope: UNIQUE: no repetition; single execution of each.\n- reference_resolution: UNIQUE: no pronouns/ordinals/shared args? \"之后\" refers to after preceding action, stop no params. Need maybe \"往前\" direction understood as forward, no referent. unique.\n- temporal_relations: UNIQUE: sequential after relation, stop after forward motion. No timing.\n- unresolved_relations: UNIQUE: none.\n\nNeed authorized_plan list exactly. Parameters: distance_m 6.0? JSON number. Source says 六米. Use 6.0 or 6. \"Numbers finite JSON numbers.\" Candidate uses 6.0. Either accepted? Need exact? Probably numeric value. Use 6.0. stop params {}. depends_on.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty. Explanations nonempty. Need role values one of specified. Ensure no extra keys in each coverage object exactly text, role, explanation. dimensions object exactly seven keys. authorized_plan each step exactly id, skill, parameters, depends_on. No mission_id. Output JSON only no markdown.\n\nNeed be careful with punctuation and whitespace. Source has Chinese comma \"，\". No spaces.\n\nLet's craft detailed explanations. Coverage objects:\n1 text \"往前移动\", role ACTION, explanation \"Specifies forward locomotion action, compiled as walk_forward; it is the first requested action.\"\n2 text \"六米\", role QUANTITY, explanation \"Specifies distance 6 meters for preceding walk_forward; 米 is meters, so distance_m is 6.0.\"\n3 text \"，\", role SEPARATOR, explanation \"Separates clauses; it does not add or modify actions/parameters.\"\n4 text \"之后\", role RELATION, explanation \"Temporal relation meaning after the preceding action; orders stop after walk_forward.\"\n5 text \"停止\", role ACTION, explanation \"Specifies stop action, compiled as stop with empty parameters and second step.\"\n\nNeed \"every action, relation and edit clause\" no edit. Fine.\n\nDimensions explanations:\naction_multiplicity: \"Source requests exactly two actions: one forward movement and one stop. No action is repeated or replaced.\"\naction_order: \"The temporal marker 之后 requires the stop action to occur after the forward-movement action, yielding s1 then s2.\"\ncorrection_scope: \"No correction, replacement, or edit clause appears; neither action nor parameter is revised.\"\nrepetition_scope: \"No repetition marker or count appears; each action executes once.\"\nreference_resolution: \"There are no pronouns or ordinals needing external referents; 之后 refers to the immediately preceding movement clause, and stop requires no arguments.\"\ntemporal_relations: \"A single linear temporal relation is given: walk_forward completes, then stop occurs. No waiting, simultaneity, or extra timing is specified.\"\nunresolved_relations: \"No relation is explicitly left unresolved; the only relation, sequence after movement, is fixed.\"\n\nNeed authorized_plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}\n]\n\nNeed JSON exactly. Ensure no markdown. Let's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source Chinese: \"往前移动六米，之后停止\" = move forward six meters, then stop. Need derive plan: s1 walk_forward distance_m 6.0, s2 stop {}, depends_on [\"s1\"]. Candidate matches. Need coverage exact split concatenate entire source. Need dimensions all unique likely. Need output JSON object keys exactly status, coverage, dimensions, authorized_plan. Need coverage spans. Source string: 往前移动六米，之后停止. Need split meaningful spans, text copied exactly, concatenation equals entire original. Let's craft coverage objects. Need cover every action, relation/edit clause. Source has \"往前移动六米\" action quantity? \"，之后停止\" relation plus action. Need ensure concatenation: Could split as \"往前移动\", \"六米\", \"，\", \"之后\", \"停止\". Roles: ACTION for 往前移动? Actually phrase \"往前移动\" = move forward, skill walk_forward. \"六米\" quantity distance. \"，\" separator. \"之后\" relation temporal. \"停止\" action. That concatenates exactly: 往前移动 + 六米 + ， + 之后 + 停止 = 往前移动六米，之后停止. Good.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE: exactly two actions: walk_forward and stop.\n- action_order: UNIQUE: walk_forward then stop due 之后.\n- correction_scope: UNIQUE: no corrections/edits; none.\n- repetition_scope: UNIQUE: no repetition; single execution of each.\n- reference_resolution: UNIQUE: no pronouns/ordinals/shared args? \"之后\" refers to after preceding action, stop no params. Need maybe \"往前\" direction understood as forward, no referent. unique.\n- temporal_relations: UNIQUE: sequential after relation, stop after forward motion. No timing.\n- unresolved_relations: UNIQUE: none.\n\nNeed authorized_plan list exactly. Parameters: distance_m 6.0? JSON number. Source says 六米. Use 6.0 or 6. \"Numbers finite JSON numbers.\" Candidate uses 6.0. Either accepted? Need exact? Probably numeric value. Use 6.0. stop params {}. depends_on.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty. Explanations nonempty. Need role values one of specified. Ensure no extra keys in each coverage object exactly text, role, explanation. dimensions object exactly seven keys. authorized_plan each step exactly id, skill, parameters, depends_on. No mission_id. Output JSON only no markdown.\n\nNeed be careful with punctuation and whitespace. Source has Chinese comma \"，\". No spaces.\n\nLet's craft detailed explanations. Coverage objects:\n1 text \"往前移动\", role ACTION, explanation \"Specifies forward locomotion action, compiled as walk_forward; it is the first requested action.\"\n2 text \"六米\", role QUANTITY, explanation \"Specifies distance 6 meters for preceding walk_forward; 米 is meters, so distance_m is 6.0.\"\n3 text \"，\", role SEPARATOR, explanation \"Separates clauses; it does not add or modify actions/parameters.\"\n4 text \"之后\", role RELATION, explanation \"Temporal relation meaning after the preceding action; orders stop after walk_forward.\"\n5 text \"停止\", role ACTION, explanation \"Specifies stop action, compiled as stop with empty parameters and second step.\"\n\nNeed \"every action, relation and edit clause\" no edit. Fine.\n\nDimensions explanations:\naction_multiplicity: \"Source requests exactly two actions: one forward movement and one stop. No action is repeated or replaced.\"\naction_order: \"The temporal marker 之后 requires the stop action to occur after the forward-movement action, yielding s1 then s2.\"\ncorrection_scope: \"No correction, replacement, or edit clause appears; neither action nor parameter is revised.\"\nrepetition_scope: \"No repetition marker or count appears; each action executes once.\"\nreference_resolution: \"There are no pronouns or ordinals needing external referents; 之后 refers to the immediately preceding movement clause, and stop requires no arguments.\"\ntemporal_relations: \"A single linear temporal relation is given: walk_forward completes, then stop occurs. No waiting, simultaneity, or extra timing is specified.\"\nunresolved_relations: \"No relation is explicitly left unresolved; the only relation, sequence after movement, is fixed.\"\n\nNeed authorized_plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}\n]\n\nNeed JSON exactly. Ensure no markdown. Let's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies a forward locomotion action, compiled as walk_forward; it is the first requested action.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the preceding walk_forward action as 6 meters; 米 is meters, so distance_m is 6.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the movement clause from the following temporal clause; it adds or changes no action or parameter.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action occurs after the preceding movement action, fixing the execution order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies a stop action, compiled as stop with empty parameters; it is the second requested action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one forward movement and one stop. No action is repeated, replaced, or added beyond these.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The temporal marker 之后 requires the stop action to occur after the forward-movement action, yielding one order: walk_forward then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or edit clause appears; no prior action or parameter is revised.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repetition count appears; each listed action executes once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns or ordinal references requiring external context; 之后 refers to the immediately preceding movement clause, and stop requires no arguments.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single linear temporal relation is given: the forward movement is followed by stop. No waiting, simultaneity, or extra timing is specified.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation is explicitly left unresolved; the only relation, sequence after movement, is fixed by 之后.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_326d7f40-dbb7-484e-828a-ba4d12dd8a8b",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 210,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1513,
+            "output_tokens_details": {
+              "reasoning_tokens": 997
+            },
+            "total_tokens": 2747
+          }
+        },
+        "request_sha256": "c868c2c40cad60293dc3b4d974b357847902c255651b6d0ea713fd4cec36ad02",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 7.9187978000009025,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_326d7f40-dbb7-484e-828a-ba4d12dd8a8b",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies a forward locomotion action, compiled as walk_forward; it is the first requested action.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the preceding walk_forward action as 6 meters; 米 is meters, so distance_m is 6.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the movement clause from the following temporal clause; it adds or changes no action or parameter.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action occurs after the preceding movement action, fixing the execution order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies a stop action, compiled as stop with empty parameters; it is the second requested action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one forward movement and one stop. No action is repeated, replaced, or added beyond these.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The temporal marker 之后 requires the stop action to occur after the forward-movement action, yielding one order: walk_forward then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or edit clause appears; no prior action or parameter is revised.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repetition count appears; each listed action executes once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns or ordinal references requiring external context; 之后 refers to the immediately preceding movement clause, and stop requires no arguments.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single linear temporal relation is given: the forward movement is followed by stop. No waiting, simultaneity, or extra timing is specified.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation is explicitly left unresolved; the only relation, sequence after movement, is fixed by 之后.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+        "usage": {
+          "input_tokens": 210,
+          "output_tokens": 1513,
+          "total_tokens": 2747
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.13463369999954,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "forward6-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 10,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"forward6-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "f6b33550161c8912328e344e05b7e8e4cc8058c1526aebf9f0ae12e6fef3f9bc",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_52f822bf-d930-4002-9995-1ca55db77736",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 7.923196499999904,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 7.9187978000009025,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies a forward locomotion action, compiled as walk_forward; it is the first requested action.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the preceding walk_forward action as 6 meters; 米 is meters, so distance_m is 6.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the movement clause from the following temporal clause; it adds or changes no action or parameter.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action occurs after the preceding movement action, fixing the execution order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies a stop action, compiled as stop with empty parameters; it is the second requested action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one forward movement and one stop. No action is repeated, replaced, or added beyond these.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The temporal marker 之后 requires the stop action to occur after the forward-movement action, yielding one order: walk_forward then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or edit clause appears; no prior action or parameter is revised.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repetition count appears; each listed action executes once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns or ordinal references requiring external context; 之后 refers to the immediately preceding movement clause, and stop requires no arguments.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single linear temporal relation is given: the forward movement is followed by stop. No waiting, simultaneity, or extra timing is specified.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation is explicitly left unresolved; the only relation, sequence after movement, is fixed by 之后.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+          "raw_response_sha256": "7849c5f6b4c7c96a83d3e31ed5a5681f579ae8e800ccedd9b717146ce0a0b71c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_326d7f40-dbb7-484e-828a-ba4d12dd8a8b",
+          "source_aware": true,
+          "source_sha256": "2b2748c7a86af52ec3bff0d9f9871feeec3d89beec970d7d6eef1b0adfabe7e5",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 210,
+            "output_tokens": 1513,
+            "total_tokens": 2747
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 6.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies a forward locomotion action, compiled as walk_forward; it is the first requested action.",
+                "role": "ACTION",
+                "text": "往前移动"
+              },
+              {
+                "explanation": "Specifies the distance for the preceding walk_forward action as 6 meters; 米 is meters, so distance_m is 6.0.",
+                "role": "QUANTITY",
+                "text": "六米"
+              },
+              {
+                "explanation": "Separates the movement clause from the following temporal clause; it adds or changes no action or parameter.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Establishes that the next action occurs after the preceding movement action, fixing the execution order.",
+                "role": "RELATION",
+                "text": "之后"
+              },
+              {
+                "explanation": "Specifies a stop action, compiled as stop with empty parameters; it is the second requested action.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly two actions: one forward movement and one stop. No action is repeated, replaced, or added beyond these.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The temporal marker 之后 requires the stop action to occur after the forward-movement action, yielding one order: walk_forward then stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction, replacement, or edit clause appears; no prior action or parameter is revised.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns or ordinal references requiring external context; 之后 refers to the immediately preceding movement clause, and stop requires no arguments.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or repetition count appears; each listed action executes once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "A single linear temporal relation is given: the forward movement is followed by stop. No waiting, simultaneity, or extra timing is specified.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No relation is explicitly left unresolved; the only relation, sequence after movement, is fixed by 之后.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 206,
+        "output_tokens": 220,
+        "total_tokens": 1962
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "forward6-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前移动六米之后停止",
+    "status": "SUCCESS"
+  }
+}

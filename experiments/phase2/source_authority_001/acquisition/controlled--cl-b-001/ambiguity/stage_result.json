@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 8.186942600001203,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.183073500000319,
+        "provider_document": {
+          "created_at": 1791360414,
+          "id": "resp_cab9c9de-5a8e-4202-8840-a705d08823ac",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_cab9c9de-5a8e-4202-8840-a705d08823ac",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"向前移动四米\". Chinese: forward move 4 meters. Legal action walk_forward distance_m positive finite. \"向前\" means forward, \"移动\" move, \"四米\" 4 meters. This uniquely maps to walk_forward distance_m 4. One action. Dimensions UNIQUE all. Need coverage split meaningful spans, text concatenated exactly \"向前移动四米\". Could split into \"向前\" ACTION? and \"移动四米\" maybe ACTION/QUANTITY. Need every action relation editing considered. Source has no relations/edits. We can split:\n1 text \"向前\" role ACTION? meaning forward direction of movement; doesn't independently authorize? It modifies movement. Maybe role RELATION? Actually direction. Maybe role ACTION? The legal action word is \"移动\" (move) with \"向前\" direction and \"四米\" distance. Split:\n- \"向前\" role RELATION? direction specification relating motion. Explanation identifies forward direction. \n- \"移动\" role ACTION. \"移动\" is action verb, interpreted as walk_forward given forward and distance.\n- \"四米\" role QUANTITY. quantity 4 meters.\nConcatenation exactly. Need role allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We can use RELATION for \"向前\"? Or ACTION? The phrase \"向前移动\" together action. But coverage requires split, can split any meaningful spans. If \"向前\" role RELATION, it specifies direction. \"移动\" ACTION. \"四米\" QUANTITY. That's fine. But \"移动\" alone? It doesn't specify direction/distance. Maybe better split:\n- \"向前移动\" ACTION, \"四米\" QUANTITY. But the action word includes direction. Hmm coverage text \"向前移动\" role ACTION meaning forward movement; \"四米\" quantity. But then \"移动\" action with \"向前\" relation collapsed. That's okay. But dimension action_multiplicity: one requested action. Better maybe split \"向前\" CONTEXT? The role should describe meaning. I'd do \"向前\" RELATION, \"移动\" ACTION, \"四米\" QUANTITY. But \"向前\" is direction, relation between movement and direction? It may not be a temporal relation but relation dimension includes relations general. Role CONTEXT could say direction context. But \"RELATION\" likely for ordering. Direction is parameter, not relation. Maybe \"向前移动\" ACTION and \"四米\" QUANTITY is cleaner. But the phrase \"向前\" modifies action. We can split \"向前\" as CONTEXT? Hmm.\n\nNeed ensure text values concatenated equal entire source exactly. \"向前\" + \"移动\" + \"四米\" = \"向前移动四米\" yes.\n\nDimensions:\naction_multiplicity UNIQUE: one verb 移动, 向前 is direction modifier, 四米 is distance; no repeated/edited actions.\naction_order UNIQUE: single action; order inapplicable.\ncorrection_scope UNIQUE: no edits/corrections.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/ordinal/omitted shared args requiring external context; 向前 resolves direction relative to current facing? Is that unique? \"向前\" means forward relative to the robot's current orientation. That's standard. No ambiguity. \ntemporal_relations UNIQUE: single action no timing.\nunresolved_relations UNIQUE: none.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object keys status, coverage, dimensions. No markdown. Ensure explanations nonempty. Use proper JSON. Chinese characters okay. Need no extra fields. coverage list.\n\nPotential issue: \"向前移动四米\" could be interpreted as walk_forward 4 m. Unique. Yes.\n\nLet's craft.\n\nCoverage:\n[\n{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Direction modifier specifying forward motion; it does not introduce a separate action or alter the single movement command.\"},\n{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The sole action verb, denoting movement; with the forward direction and distance it corresponds to one walk_forward action.\"},\n{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity 4 meters, giving the sole walk_forward action a positive finite distance_m of 4.\"}\n]\n\nBut role \"RELATION\" for 向前 maybe okay. Could role \"CONTEXT\": \"forward direction context\". The instructions include relation dimensions. \"向前\" isn't a relation between actions. But roles include CONTEXT. Maybe use CONTEXT? It is a direction parameter, not context. ACTION maybe: \"向前移动\" together. Hmm.\n\nIf role RELATION, explanation must be account. Fine.\n\nDimensions explanations.\n\nNeed status. All unique.\n\nLet's ensure no illegal phrase \"compiler candidate\". Don't claim. Fine.\n\nOutput JSON exactly.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"向前移动四米\". Chinese: forward move 4 meters. Legal action walk_forward distance_m positive finite. \"向前\" means forward, \"移动\" move, \"四米\" 4 meters. This uniquely maps to walk_forward distance_m 4. One action. Dimensions UNIQUE all. Need coverage split meaningful spans, text concatenated exactly \"向前移动四米\". Could split into \"向前\" ACTION? and \"移动四米\" maybe ACTION/QUANTITY. Need every action relation editing considered. Source has no relations/edits. We can split:\n1 text \"向前\" role ACTION? meaning forward direction of movement; doesn't independently authorize? It modifies movement. Maybe role RELATION? Actually direction. Maybe role ACTION? The legal action word is \"移动\" (move) with \"向前\" direction and \"四米\" distance. Split:\n- \"向前\" role RELATION? direction specification relating motion. Explanation identifies forward direction. \n- \"移动\" role ACTION. \"移动\" is action verb, interpreted as walk_forward given forward and distance.\n- \"四米\" role QUANTITY. quantity 4 meters.\nConcatenation exactly. Need role allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We can use RELATION for \"向前\"? Or ACTION? The phrase \"向前移动\" together action. But coverage requires split, can split any meaningful spans. If \"向前\" role RELATION, it specifies direction. \"移动\" ACTION. \"四米\" QUANTITY. That's fine. But \"移动\" alone? It doesn't specify direction/distance. Maybe better split:\n- \"向前移动\" ACTION, \"四米\" QUANTITY. But the action word includes direction. Hmm coverage text \"向前移动\" role ACTION meaning forward movement; \"四米\" quantity. But then \"移动\" action with \"向前\" relation collapsed. That's okay. But dimension action_multiplicity: one requested action. Better maybe split \"向前\" CONTEXT? The role should describe meaning. I'd do \"向前\" RELATION, \"移动\" ACTION, \"四米\" QUANTITY. But \"向前\" is direction, relation between movement and direction? It may not be a temporal relation but relation dimension includes relations general. Role CONTEXT could say direction context. But \"RELATION\" likely for ordering. Direction is parameter, not relation. Maybe \"向前移动\" ACTION and \"四米\" QUANTITY is cleaner. But the phrase \"向前\" modifies action. We can split \"向前\" as CONTEXT? Hmm.\n\nNeed ensure text values concatenated equal entire source exactly. \"向前\" + \"移动\" + \"四米\" = \"向前移动四米\" yes.\n\nDimensions:\naction_multiplicity UNIQUE: one verb 移动, 向前 is direction modifier, 四米 is distance; no repeated/edited actions.\naction_order UNIQUE: single action; order inapplicable.\ncorrection_scope UNIQUE: no edits/corrections.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/ordinal/omitted shared args requiring external context; 向前 resolves direction relative to current facing? Is that unique? \"向前\" means forward relative to the robot's current orientation. That's standard. No ambiguity. \ntemporal_relations UNIQUE: single action no timing.\nunresolved_relations UNIQUE: none.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object keys status, coverage, dimensions. No markdown. Ensure explanations nonempty. Use proper JSON. Chinese characters okay. Need no extra fields. coverage list.\n\nPotential issue: \"向前移动四米\" could be interpreted as walk_forward 4 m. Unique. Yes.\n\nLet's craft.\n\nCoverage:\n[\n{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Direction modifier specifying forward motion; it does not introduce a separate action or alter the single movement command.\"},\n{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The sole action verb, denoting movement; with the forward direction and distance it corresponds to one walk_forward action.\"},\n{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity 4 meters, giving the sole walk_forward action a positive finite distance_m of 4.\"}\n]\n\nBut role \"RELATION\" for 向前 maybe okay. Could role \"CONTEXT\": \"forward direction context\". The instructions include relation dimensions. \"向前\" isn't a relation between actions. But roles include CONTEXT. Maybe use CONTEXT? It is a direction parameter, not context. ACTION maybe: \"向前移动\" together. Hmm.\n\nIf role RELATION, explanation must be account. Fine.\n\nDimensions explanations.\n\nNeed status. All unique.\n\nLet's ensure no illegal phrase \"compiler candidate\". Don't claim. Fine.\n\nOutput JSON exactly.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Direction modifier specifying forward motion relative to the robot's current facing; it does not introduce a separate action or edit.\"},{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The sole action verb, denoting one movement action; with the forward direction and the stated distance, it maps to one walk_forward action.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity of 4 meters, giving the sole walk_forward action a positive finite distance_m of 4.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action verb, 移动, modified by 向前 and quantified by 四米; there are no repeated, edited, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so no execution order among multiple actions exists or is needed.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or preserved prior instruction in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker, frequency, or repeated span in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronoun, ordinal, or omitted shared argument requiring resolution to another command; 向前 and 四米 directly modify the single movement action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneity, waiting, or completion relation is stated; the single action requires no temporal ordering.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly states one forward movement by four meters and leaves no scope, ordering, choice, or relation unresolved.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_cab9c9de-5a8e-4202-8840-a705d08823ac",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1419,
+            "output_tokens_details": {
+              "reasoning_tokens": 1023
+            },
+            "total_tokens": 2327
+          }
+        },
+        "request_sha256": "386d4ea989fa1ffe831f2bde30ea97ff00b340b44749fe2d1f50bfceea18078b",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.181142800000089,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_cab9c9de-5a8e-4202-8840-a705d08823ac",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Direction modifier specifying forward motion relative to the robot's current facing; it does not introduce a separate action or edit.\"},{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The sole action verb, denoting one movement action; with the forward direction and the stated distance, it maps to one walk_forward action.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity of 4 meters, giving the sole walk_forward action a positive finite distance_m of 4.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action verb, 移动, modified by 向前 and quantified by 四米; there are no repeated, edited, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so no execution order among multiple actions exists or is needed.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or preserved prior instruction in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker, frequency, or repeated span in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronoun, ordinal, or omitted shared argument requiring resolution to another command; 向前 and 四米 directly modify the single movement action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneity, waiting, or completion relation is stated; the single action requires no temporal ordering.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly states one forward movement by four meters and leaves no scope, ordering, choice, or relation unresolved.\"}}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 1419,
+          "total_tokens": 2327
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.9378258999968239,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-forward-4m",
+      "model": "deepseek-flash",
+      "normalized_length": 6,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-forward-4m\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "eff604e532bccf0ab749a84d07e53be11801205428da3779dd80120d35be3468",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_688b80d7-cc2c-43ff-a9e1-34cdfd1ee104",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.185998499997368,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.181142800000089,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Direction modifier specifying forward motion relative to the robot's current facing; it does not introduce a separate action or edit.\"},{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The sole action verb, denoting one movement action; with the forward direction and the stated distance, it maps to one walk_forward action.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity of 4 meters, giving the sole walk_forward action a positive finite distance_m of 4.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action verb, 移动, modified by 向前 and quantified by 四米; there are no repeated, edited, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so no execution order among multiple actions exists or is needed.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or preserved prior instruction in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker, frequency, or repeated span in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronoun, ordinal, or omitted shared argument requiring resolution to another command; 向前 and 四米 directly modify the single movement action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneity, waiting, or completion relation is stated; the single action requires no temporal ordering.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly states one forward movement by four meters and leaves no scope, ordering, choice, or relation unresolved.\"}}}",
+          "raw_response_sha256": "fa4d52a046171d4132e89655adedc0879b16b1fc7955d74b0f36881f7d975768",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_cab9c9de-5a8e-4202-8840-a705d08823ac",
+          "source_aware": false,
+          "source_sha256": "0126421e56de3f1a10e6fbee7ec8bf4a6805547ba976f53f4d7f2facb7d1ca95",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 1419,
+            "total_tokens": 2327
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Direction modifier specifying forward motion relative to the robot's current facing; it does not introduce a separate action or edit.",
+                "role": "RELATION",
+                "text": "向前"
+              },
+              {
+                "explanation": "The sole action verb, denoting one movement action; with the forward direction and the stated distance, it maps to one walk_forward action.",
+                "role": "ACTION",
+                "text": "移动"
+              },
+              {
+                "explanation": "Distance quantity of 4 meters, giving the sole walk_forward action a positive finite distance_m of 4.",
+                "role": "QUANTITY",
+                "text": "四米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action verb, 移动, modified by 向前 and quantified by 四米; there are no repeated, edited, or additional actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so no execution order among multiple actions exists or is needed.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, edit, replacement, or preserved prior instruction in the source.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The source contains no pronoun, ordinal, or omitted shared argument requiring resolution to another command; 向前 and 四米 directly modify the single movement action.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition marker, frequency, or repeated span in the source.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, simultaneity, waiting, or completion relation is stated; the single action requires no temporal ordering.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly states one forward movement by four meters and leaves no scope, ordering, choice, or relation unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 153,
+        "total_tokens": 1892
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-forward-4m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "向前移动四米",
+    "status": "SUCCESS"
+  }
+}

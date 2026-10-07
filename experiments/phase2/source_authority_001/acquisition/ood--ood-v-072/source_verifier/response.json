@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 15.713990500000364,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_91429aa0-16f9-4da0-8a79-f0444d60c908",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先走8米\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: walk_forward for 8 meters. 先 fixes this as the initial step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Comma separates the walk clause from its direction clarification; it does not create an action.\"},{\"text\":\"往前\",\"role\":\"CONTEXT\",\"explanation\":\"Clarifies that the walking is forward. walk_forward is inherently forward and has no direction parameter, so this does not add or change a step.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Semicolon separates the first action clause from the next turn clause and preserves the listed sequence.\"},{\"text\":\"右转60°\",\"role\":\"ACTION\",\"explanation\":\"Requests a right turn of 60 degrees, compiling to turn with angle_deg -60.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Comma separates the turn clause from the following stand clause.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stand action as occurring after the preceding turn, not as a repetition of an earlier action.\"},{\"text\":\"站 1s\",\"role\":\"ACTION\",\"explanation\":\"Requests stand for 1 second, so duration_s is 1.0. The space is preserved in the source span and has no semantic effect.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Comma separates the stand clause from the final stop clause.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests stop with empty parameters after the stand action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Period terminates the instruction and adds no action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: walk 8 meters, right turn 60 degrees, stand 1 second, and stop. There are no corrections or repetitions that add or replace actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear order: 先 walk, then right turn, then 再 stand, then stop. The semicolon, 再, and final comma preserve this sequence.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction word appears. 往前 clarifies the already requested walking direction and does not replace or alter another action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. 再 in 再站 1s marks temporal succession, not a repeated stand action, since no prior stand action exists.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"往前 refers to the preceding walk_forward action and adds no executable parameter. There are no unresolved pronouns or ordinal references requiring external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single sequential order is established: walk, then turn, then stand for 1 second, then stop after the stand completes. No simultaneous, waiting, or conditional timing is specified.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"All requested actions and parameters are resolved: 8 meters, right 60 degrees, stand 1 second, and stop with no parameters. No explicit unresolved choice or relation remains.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":1.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+  "usage": {
+    "input_tokens": 415,
+    "output_tokens": 3361,
+    "total_tokens": 4672
+  }
+}

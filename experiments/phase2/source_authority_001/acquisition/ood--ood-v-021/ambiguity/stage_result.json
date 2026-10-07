@@ -1,0 +1,186 @@
+{
+  "added_wall_s": 19.61556870000095,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 19.61062639999909,
+        "provider_document": {
+          "created_at": 1791359266,
+          "id": "resp_115379b5-957e-48f6-89d3-4f22678edd4a",
+          "incomplete_details": {
+            "reason": "max_output_tokens"
+          },
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_115379b5-957e-48f6-89d3-4f22678edd4a",
+              "reasoning_content": "We need answer exactly JSON. Need parse source Chinese. Need decide dimensions.\n\nSource: \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\"\n\nLet's translate: \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\"\n\nMeaning: Um, first stand, duration 2 seconds. Yes, just 2 seconds; then walk forward 4 meters, stop.\n\nNeed inspect seven dimensions. Possible ambiguities? \"先站\" stand first. \"时间2秒\" duration 2 seconds. \"对，就2秒\" correction/confirmation? It says \"Right, just 2 seconds\". This seems confirms duration 2s, not edit to something else. Then \"接着往前走4米\" then walk forward 4 meters. \"停\" stop. Action order: stand, walk_forward, stop. Unique? \"先...接着...停\" yes. Action multiplicity: stand, walk_forward, stop. Correction scope: \"对，就2秒\" maybe correction/affirmation; no ambiguity? It emphasizes exactly 2 seconds. \"对，就2秒\" could be interpreted as correction? Chinese \"对，就2秒\" means \"Yes, just 2 seconds.\" It does not negate earlier. It could perhaps be an edit clarifying duration, but still 2 seconds. So unique.\n\nReference resolution: \"那个\" filler. \"对\" refers to prior. \"就2秒\" refers duration. Fine. \"接着\" refers after stand. \"往前走\" omitted? It means walk forward. \"停\" after walk. Unique.\n\nTemporal relations: sequential \"先\", \"接着\", \"停\" after. Unique.\n\nRepetition: none. \"就2秒\" maybe not repetition. Unique/inapplicable.\n\nunresolved_relations: none explicit. Unique.\n\nNeed coverage list splitting entire source exact, preserving punctuation whitespace. Need text values concatenated equal entire source. We need split into meaningful spans. Source entire: 那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\n\nNeed exact whitespace none. We can split:\n- \"那个，\" context/filler\n- \"先站，\" action? Actually \"先站，\" includes adverb first and action stand, comma. role ACTION maybe.\n- \"时间2秒。\" quantity? It specifies duration. role QUANTITY? Could include action? We can have \"时间2秒。\" as QUANTITY.\n- \"对，\" EDIT? It is confirmation/correction. role EDIT maybe.\n- \"就2秒；\" EDIT or QUANTITY? It confirms duration exactly 2 seconds, possibly edit preserving. role EDIT or QUANTITY. Need every action/relation/editing clause. I can make \"对，就2秒；\" EDIT.\n- \"接着往前走4米，\" ACTION/RELATION? \"接着\" indicates temporal relation plus action. Maybe split \"接着\" RELATION, \"往前走4米，\" ACTION. But text concatenation must exact. \"接着往前走4米，\" could be ACTION with temporal included. To consider relation, maybe separate \"接着\" as RELATION and \"往前走4米，\" as ACTION. But \"往前走4米，\" starts immediately after 接着. Text exact. Good.\n- \"停。\" ACTION.\n\nNeed ensure every action included: stand action in \"先站，\", walk action \"往前走4米，\", stop action \"停。\". Quantity duration in \"时间2秒。\". Edit/confirmation in \"对，就2秒；\". SEPARATOR? commas and semicolons included within spans maybe no separate. \"那个，\" context. Maybe \"接着\" relation. Coverage list nonempty.\n\nNeed status. Likely AUTHORIZED_UNIQUE. But need be careful: \"先站，时间2秒。\" Chinese syntax: stand, time 2 seconds. \"站\" could be stand; duration 2s. \"往前走4米\" walk_forward. \"停\" stop. Legal. Turn none. Max steps 3.\n\nPotential issue: \"先站\" could mean \"stand first\" and \"时间2秒\" duration. Fine.\n\nCould \"接着往前走4米，停。\" mean \"then walk forward 4 meters and stop\" with stop at completion? Yes.\n\nCould \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\" The phrase \"对，就2秒\" could be interpreted as \"Yes, just 2 seconds\" meaning maybe stand duration exactly 2 seconds, not default. Fine.\n\nNeed consider action_multiplicity: \"先站\" then \"接着往前走4米\" then \"停\". Does \"对，就2秒\" introduce a repeated action? No, it's same duration. It could be a correction of previous duration? It says \"对\" (correct) and \"就2秒\" (only 2s). It preserves. Unique.\n\ncorrection_scope: \"对，就2秒\" may be an edit/confirmation that clarifies duration is 2 seconds. It does not alter action order. \"就\" emphasizes exact. Unique.\n\nCould \"先站，时间2秒。对，就2秒\" be considered an explicit correction? It may replace previous \"时间2秒\" with \"就2秒\" but both same. Scope is duration of stand. Unique. If it were different duration, ambiguous? But same.\n\nReference resolution: \"那个\" filler no referent. \"对\" refers to preceding specification. \"就2秒\" refers to duration. \"接着\" refers to after stand. \"往前走\" no object. \"停\" omitted subject but robot. All resolved within source. Unique.\n\nTemporal relations: \"先\" stand before; \"接着\" walk after stand; \"停\" after walk. No simultaneity. Unique.\n\nUnresolved_relations: None.\n\nNeed output JSON exact keys.\n\nNeed be careful: coverage text concatenated in list order equals entire original source exactly. Let's construct spans. Need include all punctuation. Source: 那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\n\nI can split:\n1. \"那个，\" (CONTEXT)\n2. \"先站，\" (ACTION)\n3. \"时间2秒。\" (QUANTITY)\n4. \"对，\" (EDIT) maybe\n5. \"就2秒；\" (QUANTITY or EDIT) Actually if split \"对，\" and \"就2秒；\", concatenation ok.\n6. \"接着\" (RELATION)\n7. \"往前走4米，\" (ACTION)\n8. \"停。\" (ACTION)\n\nThis concatenates: 那个，先站，时间2秒。对，就2秒；接着往前走4米，停。 Yes.\n\nNeed explanations nonempty, mention effect. \"对，\" is confirmation, not modifying authority except confirming. \"就2秒；\" emphasizes exact 2s, preserves stand duration. Maybe role EDIT for both? The instruction: role can be ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. \"对，\" is EDIT? It is not editing maybe confirmation. But we can classify EDIT with explanation. \"就2秒；\" maybe QUANTITY; but it also confirms. I can make \"对，就2秒；\" as EDIT to capture correction/confirmation clause. But then split? We can have \"对，就2秒；\" role EDIT. Then no separate \"对，\". This is fine. Text: \"对，就2秒；\" exact. Explanation: confirms/corrects duration to exactly 2 seconds, preserving the preceding stand duration and not adding action. That may be better. Then coverage:\n- 那个， context\n- 先站， action\n- 时间2秒。 quantity\n- 对，就2秒； edit\n- 接着 relation\n- 往前走4米， action\n- 停。 action\nConcatenation exact. Good.\n\nNeed decide if \"先站，\" includes \"先\" as temporal relation. Could be action plus relation. But role ACTION explanation can mention 先 orders stand first. Or split \"先\" and \"站，\"? The source \"先站，\" can be split \"先\" RELATION, \"站，\" ACTION. But \"站，\" includes stand action. That might more cleanly account temporal relation. But coverage can group. We need every relation considered; explanation in \"先站，\" can mention 先. That's okay. But perhaps split:\n1 \"那个，\" CONTEXT\n2 \"先\" RELATION\n3 \"站，\" ACTION\n4 \"时间2秒。\" QUANTITY\n5 \"对，就2秒；\" EDIT\n6 \"接着\" RELATION\n7 \"往前走4米，\" ACTION\n8 \"停。\" ACTION\nThis concatenates exact. This may be more precise. Does \"站，\" exact? Source \"先站，\" => \"先\" + \"站，\" yes. Good. Explanation for \"先\": marks stand as first; \"站，\": stand action without explicit duration? The following \"时间2秒。\" supplies duration. But wait if \"先\" separated, \"站，\" action has no duration immediately, but next quantity supplies. Fine.\n\nShould we split \"往前走4米，\" into \"往前走\" + \"4米\"? Could leave as action with distance. The dimension action_multiplicity: action walk_forward. Quantity \"4米\" embedded. Could also split \"往前走\" ACTION and \"4米，\" QUANTITY. But \"往前走\" means walk forward, distance quantity following. To account quantity, maybe split \"往前\" relation? Actually \"往前走4米\" is verb-object. Could split:\n- \"接着\" RELATION\n- \"往前走\" ACTION\n- \"4米，\" QUANTITY\n- \"停。\" ACTION\nBut \"往前走\" without distance is not legal unless distance supplied by next span. That's okay coverage. However, \"往前走4米，\" as one ACTION includes distance, simpler. The requirement coverage includes every action, relation and editing clause. Quantity can be in explanation. It doesn't require separate quantity token. But if role ACTION includes distance, fine. Yet dimensions quantify distance. To be safe, split \"往前走\" ACTION and \"4米，\" QUANTITY. But then \"往前走\" alone action word lacks distance, but next quantity. Coverage text exact. Explanation: walk forward action requiring distance from following quantity. That is okay. But role ACTION for \"往前走\" and QUANTITY for \"4米，\". The comma at end of 4米 belongs to quantity span. Then \"停。\" action. Need ensure no missing. \"接着\" relation.\n\nSimilarly \"时间2秒。\" could split \"时间\" maybe QUANTITY? \"2秒\" quantity. But \"时间2秒。\" as QUANTITY is fine.\n\nLet's design coverage robustly. Need text values concatenated exact. Let's choose:\n1. \"那个，\" — CONTEXT: filler with no executable effect, doesn't add action.\n2. \"先\" — RELATION: orders next action as first.\n3. \"站，\" — ACTION: stand action, duration specified by following 2s.\n4. \"时间2秒。\" — QUANTITY: duration 2 seconds for stand.\n5. \"对，就2秒；\" — EDIT: confirmation/correction that duration remains exactly 2 seconds; does not replace stand with another action nor change order.\n6. \"接着\" — RELATION: next action after stand.\n7. \"往前走\" — ACTION: walk_forward action, distance supplied by following span.\n8. \"4米，\" — QUANTITY: distance 4 meters for preceding walk_forward.\n9. \"停。\" — ACTION: stop action, ends plan.\n\nConcatenate: \"那个，\" + \"先\" + \"站，\" + \"时间2秒。\" + \"对，就2秒；\" + \"接着\" + \"往前走\" + \"4米，\" + \"停。\" = \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\" Yes.\n\nPotential issue: \"先站，\" originally has comma after 站. If split \"先\" + \"站，\", yes comma included. Good.\n\nNeed dimensions explanations. All UNIQUE. Need mention no explicit unresolved. status AUTHORIZED_UNIQUE.\n\nBut let's question if \"对，就2秒\" might be ambiguous as correction scope: Does \"对，就2秒\" confirm entire prior command? \"对\" could mean \"correct\" referring to \"stand for 2 seconds\" or just \"right\". \"就2秒\" could mean \"just 2 seconds\" maybe \"only 2 seconds\" and not more. It doesn't change. Unique.\n\nCould \"那个\" be a self-correction or filler? It's context, no effect.\n\nCould \"停\" be after walk, but does stop happen immediately after walking 4m or at the end after? It is sequential. Unique.\n\nTemporal relations: \"先\", \"接着\" and final \"停\" define linear order. The stop could be simultaneous with arrival? But plan is sequential: walk then stop. \"停\" as next action after walk. Legal. Unique.\n\nAction order: stand, walk_forward, stop. Unique.\n\nAction multiplicity: one stand, one walk, one stop. \"对，就2秒\" no extra action. Unique.\n\nRepetition scope: No repetition. \"就2秒\" emphasizes duration, not repeating stand. Unique/inapplicable.\n\nReference resolution: \"对\" refers to prior duration; \"就2秒\" same; \"接着\" refers to after stand; omitted subject of walk/stop is robot. All within source. Unique.\n\nUnresolved relations: None. Unique.\n\nNeed output exactly JSON no markdown. Ensure JSON valid, Chinese characters okay. Need escape? JSON can contain Unicode. Keys exactly status, coverage, dimensions. No extra.\n\nNeed maybe coverage explanations mention nonexecuting spans. Good.\n\nLet's formulate.\n\nPotential challenge: The system says \"If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" We think all unique. But need ensure \"entire source supports one legal interpretation.\" It does.\n\nCould there be ambiguity with \"站\" duration? It says \"时间2秒\" after. \"对，就2秒\" confirms. Unique.\n\nCould \"先站，时间2秒。\" be parsed as \"first stand; time 2 seconds\" or \"stand first for 2 seconds\"? Same.\n\nCould \"站\" in Chinese also mean \"station\" but in robot commands stand. Legal action.\n\nCould \"往前走4米\" require direction forward and distance 4m. Legal. \"停\" stop no parameters. Max steps 3 <=32. Stand duration 2 <=60. No turn.\n\nNeed maybe mention bounds? Not necessary but can.\n\nNeed no tool or executable.\n\nLet's write JSON. Need coverage text values exact. Use proper Chinese punctuation. Let's verify source: {\"source\":\"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\"}\nCharacters:\n那 个 ， 先 站 ， 时 间 2 秒 。 对 ， 就 2 秒 ； 接 着 往 前 走 4 米 ， 停 。\nOur concatenation:\n\"那个，\" = 那 个 ，\n\"先\" = 先\n\"站，\" = 站 ，\n\"时间2秒。\" = 时 间 2 秒 。\n\"对，就2秒；\" = 对 ， 就 2 秒 ；\n\"接着\" = 接 着\n\"往前走\" = 往 前 走\n\"4米，\" = 4 米 ，\n\"停。\" = 停 。\nMatches. Good.\n\nNeed explanations nonempty. For \"先\" relation: marks stand as first action and creates order relation to subsequent actions; no executable step. For \"接着\": marks walk as next after stand. For \"4米，\": quantity for preceding walk. For \"对，就2秒；\": edit/confirmation. Should role EDIT. Explanation: \"The phrase '对' affirms/corrects the preceding duration, and '就2秒' pins the stand duration to exactly 2 seconds; it preserves the stand action and does not introduce a new action or change order.\" Good.\n\nFor \"那个，\": context filler, no executable effect. Good.\n\nFor \"时间2秒。\": quantity: stand duration_s=2.0. Good.\n\nFor \"往前走\": action walk_forward, distance from next quantity. Good.\n\nFor \"站，\": action stand, duration from next quantity. Good.\n\nFor \"停。\": action stop. Good.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: Source requests exactly stand, walk_forward, stop; \"对，就2秒\" doesn't add/replace action. No repeated action.\naction_order: UNIQUE. 先 stand, 接着 walk, 停 final.\ncorrection_scope: UNIQUE. \"对，就2秒\" confirms/restricts duration of stand to 2s; doesn't change other actions. It preserves prior duration rather than replacing with different value. If one considered edit, scope exactly stand duration.\nrepetition_scope: UNIQUE. No repetition; \"就2秒\" emphasizes duration, not repeated stand. Inapplicable.\nreference_resolution: UNIQUE. 对/就2秒 refer to preceding stand duration; 接着 refers after stand; omitted subject walk/stop robot; no external context. \"那个\" filler no referent.\ntemporal_relations: UNIQUE. Single linear order stand -> walk -> stop. 先 and 接着, 停.\nunresolved_relations: UNIQUE. No explicit unresolved choice. None.\n\nNeed maybe status AUTHORIZED_UNIQUE.\n\nDouble-check instruction: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and the entire source supports one legal interpretation. If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" We set all unique.\n\nPotential hidden issue: \"对，就2秒\" could be interpreted as a correction to \"时间2秒\" maybe \"对，就2秒\" = \"yes, just 2 seconds\" but \"就\" could imply \"only 2 seconds\" and might be a new constraint? It doesn't change. Fine.\n\nPotential hidden issue: \"先站，时间2秒。\" Could \"先站\" be \"先站着\" wait stand? \"站\" as stand with default 2s? But explicit 2s. Fine.\n\nPotential hidden issue: \"停。\" maybe stop after walking, but does stop have duration? No. Fine.\n\nNeed no model confidence. Good.\n\nLet's produce JSON exactly. Ensure no markdown. Use double quotes. The explanation strings can contain Chinese quotes? Fine. Need escape internal double quotes? Avoid. Use single quotes? JSON strings can contain Chinese chars and punctuation. I can use Chinese quotes or no quotes. Avoid ASCII double quotes inside. Use '对' with Chinese single? That's okay. But JSON strings can contain Chinese single quotes. Fine. Use no unescaped newline. The JSON can be pretty with newlines. That's okay. No markdown. Ensure valid.\n\nLet's craft final.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON. Need parse source Chinese. Need decide dimensions.\n\nSource: \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\"\n\nLet's translate: \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\"\n\nMeaning: Um, first stand, duration 2 seconds. Yes, just 2 seconds; then walk forward 4 meters, stop.\n\nNeed inspect seven dimensions. Possible ambiguities? \"先站\" stand first. \"时间2秒\" duration 2 seconds. \"对，就2秒\" correction/confirmation? It says \"Right, just 2 seconds\". This seems confirms duration 2s, not edit to something else. Then \"接着往前走4米\" then walk forward 4 meters. \"停\" stop. Action order: stand, walk_forward, stop. Unique? \"先...接着...停\" yes. Action multiplicity: stand, walk_forward, stop. Correction scope: \"对，就2秒\" maybe correction/affirmation; no ambiguity? It emphasizes exactly 2 seconds. \"对，就2秒\" could be interpreted as correction? Chinese \"对，就2秒\" means \"Yes, just 2 seconds.\" It does not negate earlier. It could perhaps be an edit clarifying duration, but still 2 seconds. So unique.\n\nReference resolution: \"那个\" filler. \"对\" refers to prior. \"就2秒\" refers duration. Fine. \"接着\" refers after stand. \"往前走\" omitted? It means walk forward. \"停\" after walk. Unique.\n\nTemporal relations: sequential \"先\", \"接着\", \"停\" after. Unique.\n\nRepetition: none. \"就2秒\" maybe not repetition. Unique/inapplicable.\n\nunresolved_relations: none explicit. Unique.\n\nNeed coverage list splitting entire source exact, preserving punctuation whitespace. Need text values concatenated equal entire source. We need split into meaningful spans. Source entire: 那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\n\nNeed exact whitespace none. We can split:\n- \"那个，\" context/filler\n- \"先站，\" action? Actually \"先站，\" includes adverb first and action stand, comma. role ACTION maybe.\n- \"时间2秒。\" quantity? It specifies duration. role QUANTITY? Could include action? We can have \"时间2秒。\" as QUANTITY.\n- \"对，\" EDIT? It is confirmation/correction. role EDIT maybe.\n- \"就2秒；\" EDIT or QUANTITY? It confirms duration exactly 2 seconds, possibly edit preserving. role EDIT or QUANTITY. Need every action/relation/editing clause. I can make \"对，就2秒；\" EDIT.\n- \"接着往前走4米，\" ACTION/RELATION? \"接着\" indicates temporal relation plus action. Maybe split \"接着\" RELATION, \"往前走4米，\" ACTION. But text concatenation must exact. \"接着往前走4米，\" could be ACTION with temporal included. To consider relation, maybe separate \"接着\" as RELATION and \"往前走4米，\" as ACTION. But \"往前走4米，\" starts immediately after 接着. Text exact. Good.\n- \"停。\" ACTION.\n\nNeed ensure every action included: stand action in \"先站，\", walk action \"往前走4米，\", stop action \"停。\". Quantity duration in \"时间2秒。\". Edit/confirmation in \"对，就2秒；\". SEPARATOR? commas and semicolons included within spans maybe no separate. \"那个，\" context. Maybe \"接着\" relation. Coverage list nonempty.\n\nNeed status. Likely AUTHORIZED_UNIQUE. But need be careful: \"先站，时间2秒。\" Chinese syntax: stand, time 2 seconds. \"站\" could be stand; duration 2s. \"往前走4米\" walk_forward. \"停\" stop. Legal. Turn none. Max steps 3.\n\nPotential issue: \"先站\" could mean \"stand first\" and \"时间2秒\" duration. Fine.\n\nCould \"接着往前走4米，停。\" mean \"then walk forward 4 meters and stop\" with stop at completion? Yes.\n\nCould \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\" The phrase \"对，就2秒\" could be interpreted as \"Yes, just 2 seconds\" meaning maybe stand duration exactly 2 seconds, not default. Fine.\n\nNeed consider action_multiplicity: \"先站\" then \"接着往前走4米\" then \"停\". Does \"对，就2秒\" introduce a repeated action? No, it's same duration. It could be a correction of previous duration? It says \"对\" (correct) and \"就2秒\" (only 2s). It preserves. Unique.\n\ncorrection_scope: \"对，就2秒\" may be an edit/confirmation that clarifies duration is 2 seconds. It does not alter action order. \"就\" emphasizes exact. Unique.\n\nCould \"先站，时间2秒。对，就2秒\" be considered an explicit correction? It may replace previous \"时间2秒\" with \"就2秒\" but both same. Scope is duration of stand. Unique. If it were different duration, ambiguous? But same.\n\nReference resolution: \"那个\" filler no referent. \"对\" refers to preceding specification. \"就2秒\" refers to duration. \"接着\" refers to after stand. \"往前走\" no object. \"停\" omitted subject but robot. All resolved within source. Unique.\n\nTemporal relations: \"先\" stand before; \"接着\" walk after stand; \"停\" after walk. No simultaneity. Unique.\n\nUnresolved_relations: None.\n\nNeed output JSON exact keys.\n\nNeed be careful: coverage text concatenated in list order equals entire original source exactly. Let's construct spans. Need include all punctuation. Source: 那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\n\nI can split:\n1. \"那个，\" (CONTEXT)\n2. \"先站，\" (ACTION)\n3. \"时间2秒。\" (QUANTITY)\n4. \"对，\" (EDIT) maybe\n5. \"就2秒；\" (QUANTITY or EDIT) Actually if split \"对，\" and \"就2秒；\", concatenation ok.\n6. \"接着\" (RELATION)\n7. \"往前走4米，\" (ACTION)\n8. \"停。\" (ACTION)\n\nThis concatenates: 那个，先站，时间2秒。对，就2秒；接着往前走4米，停。 Yes.\n\nNeed explanations nonempty, mention effect. \"对，\" is confirmation, not modifying authority except confirming. \"就2秒；\" emphasizes exact 2s, preserves stand duration. Maybe role EDIT for both? The instruction: role can be ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. \"对，\" is EDIT? It is not editing maybe confirmation. But we can classify EDIT with explanation. \"就2秒；\" maybe QUANTITY; but it also confirms. I can make \"对，就2秒；\" as EDIT to capture correction/confirmation clause. But then split? We can have \"对，就2秒；\" role EDIT. Then no separate \"对，\". This is fine. Text: \"对，就2秒；\" exact. Explanation: confirms/corrects duration to exactly 2 seconds, preserving the preceding stand duration and not adding action. That may be better. Then coverage:\n- 那个， context\n- 先站， action\n- 时间2秒。 quantity\n- 对，就2秒； edit\n- 接着 relation\n- 往前走4米， action\n- 停。 action\nConcatenation exact. Good.\n\nNeed decide if \"先站，\" includes \"先\" as temporal relation. Could be action plus relation. But role ACTION explanation can mention 先 orders stand first. Or split \"先\" and \"站，\"? The source \"先站，\" can be split \"先\" RELATION, \"站，\" ACTION. But \"站，\" includes stand action. That might more cleanly account temporal relation. But coverage can group. We need every relation considered; explanation in \"先站，\" can mention 先. That's okay. But perhaps split:\n1 \"那个，\" CONTEXT\n2 \"先\" RELATION\n3 \"站，\" ACTION\n4 \"时间2秒。\" QUANTITY\n5 \"对，就2秒；\" EDIT\n6 \"接着\" RELATION\n7 \"往前走4米，\" ACTION\n8 \"停。\" ACTION\nThis concatenates exact. This may be more precise. Does \"站，\" exact? Source \"先站，\" => \"先\" + \"站，\" yes. Good. Explanation for \"先\": marks stand as first; \"站，\": stand action without explicit duration? The following \"时间2秒。\" supplies duration. But wait if \"先\" separated, \"站，\" action has no duration immediately, but next quantity supplies. Fine.\n\nShould we split \"往前走4米，\" into \"往前走\" + \"4米\"? Could leave as action with distance. The dimension action_multiplicity: action walk_forward. Quantity \"4米\" embedded. Could also split \"往前走\" ACTION and \"4米，\" QUANTITY. But \"往前走\" means walk forward, distance quantity following. To account quantity, maybe split \"往前\" relation? Actually \"往前走4米\" is verb-object. Could split:\n- \"接着\" RELATION\n- \"往前走\" ACTION\n- \"4米，\" QUANTITY\n- \"停。\" ACTION\nBut \"往前走\" without distance is not legal unless distance supplied by next span. That's okay coverage. However, \"往前走4米，\" as one ACTION includes distance, simpler. The requirement coverage includes every action, relation and editing clause. Quantity can be in explanation. It doesn't require separate quantity token. But if role ACTION includes distance, fine. Yet dimensions quantify distance. To be safe, split \"往前走\" ACTION and \"4米，\" QUANTITY. But then \"往前走\" alone action word lacks distance, but next quantity. Coverage text exact. Explanation: walk forward action requiring distance from following quantity. That is okay. But role ACTION for \"往前走\" and QUANTITY for \"4米，\". The comma at end of 4米 belongs to quantity span. Then \"停。\" action. Need ensure no missing. \"接着\" relation.\n\nSimilarly \"时间2秒。\" could split \"时间\" maybe QUANTITY? \"2秒\" quantity. But \"时间2秒。\" as QUANTITY is fine.\n\nLet's design coverage robustly. Need text values concatenated exact. Let's choose:\n1. \"那个，\" — CONTEXT: filler with no executable effect, doesn't add action.\n2. \"先\" — RELATION: orders next action as first.\n3. \"站，\" — ACTION: stand action, duration specified by following 2s.\n4. \"时间2秒。\" — QUANTITY: duration 2 seconds for stand.\n5. \"对，就2秒；\" — EDIT: confirmation/correction that duration remains exactly 2 seconds; does not replace stand with another action nor change order.\n6. \"接着\" — RELATION: next action after stand.\n7. \"往前走\" — ACTION: walk_forward action, distance supplied by following span.\n8. \"4米，\" — QUANTITY: distance 4 meters for preceding walk_forward.\n9. \"停。\" — ACTION: stop action, ends plan.\n\nConcatenate: \"那个，\" + \"先\" + \"站，\" + \"时间2秒。\" + \"对，就2秒；\" + \"接着\" + \"往前走\" + \"4米，\" + \"停。\" = \"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\" Yes.\n\nPotential issue: \"先站，\" originally has comma after 站. If split \"先\" + \"站，\", yes comma included. Good.\n\nNeed dimensions explanations. All UNIQUE. Need mention no explicit unresolved. status AUTHORIZED_UNIQUE.\n\nBut let's question if \"对，就2秒\" might be ambiguous as correction scope: Does \"对，就2秒\" confirm entire prior command? \"对\" could mean \"correct\" referring to \"stand for 2 seconds\" or just \"right\". \"就2秒\" could mean \"just 2 seconds\" maybe \"only 2 seconds\" and not more. It doesn't change. Unique.\n\nCould \"那个\" be a self-correction or filler? It's context, no effect.\n\nCould \"停\" be after walk, but does stop happen immediately after walking 4m or at the end after? It is sequential. Unique.\n\nTemporal relations: \"先\", \"接着\" and final \"停\" define linear order. The stop could be simultaneous with arrival? But plan is sequential: walk then stop. \"停\" as next action after walk. Legal. Unique.\n\nAction order: stand, walk_forward, stop. Unique.\n\nAction multiplicity: one stand, one walk, one stop. \"对，就2秒\" no extra action. Unique.\n\nRepetition scope: No repetition. \"就2秒\" emphasizes duration, not repeating stand. Unique/inapplicable.\n\nReference resolution: \"对\" refers to prior duration; \"就2秒\" same; \"接着\" refers to after stand; omitted subject of walk/stop is robot. All within source. Unique.\n\nUnresolved relations: None. Unique.\n\nNeed output exactly JSON no markdown. Ensure JSON valid, Chinese characters okay. Need escape? JSON can contain Unicode. Keys exactly status, coverage, dimensions. No extra.\n\nNeed maybe coverage explanations mention nonexecuting spans. Good.\n\nLet's formulate.\n\nPotential challenge: The system says \"If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" We think all unique. But need ensure \"entire source supports one legal interpretation.\" It does.\n\nCould there be ambiguity with \"站\" duration? It says \"时间2秒\" after. \"对，就2秒\" confirms. Unique.\n\nCould \"先站，时间2秒。\" be parsed as \"first stand; time 2 seconds\" or \"stand first for 2 seconds\"? Same.\n\nCould \"站\" in Chinese also mean \"station\" but in robot commands stand. Legal action.\n\nCould \"往前走4米\" require direction forward and distance 4m. Legal. \"停\" stop no parameters. Max steps 3 <=32. Stand duration 2 <=60. No turn.\n\nNeed maybe mention bounds? Not necessary but can.\n\nNeed no tool or executable.\n\nLet's write JSON. Need coverage text values exact. Use proper Chinese punctuation. Let's verify source: {\"source\":\"那个，先站，时间2秒。对，就2秒；接着往前走4米，停。\"}\nCharacters:\n那 个 ， 先 站 ， 时 间 2 秒 。 对 ， 就 2 秒 ； 接 着 往 前 走 4 米 ， 停 。\nOur concatenation:\n\"那个，\" = 那 个 ，\n\"先\" = 先\n\"站，\" = 站 ，\n\"时间2秒。\" = 时 间 2 秒 。\n\"对，就2秒；\" = 对 ， 就 2 秒 ；\n\"接着\" = 接 着\n\"往前走\" = 往 前 走\n\"4米，\" = 4 米 ，\n\"停。\" = 停 。\nMatches. Good.\n\nNeed explanations nonempty. For \"先\" relation: marks stand as first action and creates order relation to subsequent actions; no executable step. For \"接着\": marks walk as next after stand. For \"4米，\": quantity for preceding walk. For \"对，就2秒；\": edit/confirmation. Should role EDIT. Explanation: \"The phrase '对' affirms/corrects the preceding duration, and '就2秒' pins the stand duration to exactly 2 seconds; it preserves the stand action and does not introduce a new action or change order.\" Good.\n\nFor \"那个，\": context filler, no executable effect. Good.\n\nFor \"时间2秒。\": quantity: stand duration_s=2.0. Good.\n\nFor \"往前走\": action walk_forward, distance from next quantity. Good.\n\nFor \"站，\": action stand, duration from next quantity. Good.\n\nFor \"停。\": action stop. Good.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: Source requests exactly stand, walk_forward, stop; \"对，就2秒\" doesn't add/replace action. No repeated action.\naction_order: UNIQUE. 先 stand, 接着 walk, 停 final.\ncorrection_scope: UNIQUE. \"对，就2秒\" confirms/restricts duration of stand to 2s; doesn't change other actions. It preserves prior duration rather than replacing with different value. If one considered edit, scope exactly stand duration.\nrepetition_scope: UNIQUE. No repetition; \"就2秒\" emphasizes duration, not repeated stand. Inapplicable.\nreference_resolution: UNIQUE. 对/就2秒 refer to preceding stand duration; 接着 refers after stand; omitted subject walk/stop robot; no external context. \"那个\" filler no referent.\ntemporal_relations: UNIQUE. Single linear order stand -> walk -> stop. 先 and 接着, 停.\nunresolved_relations: UNIQUE. No explicit unresolved choice. None.\n\nNeed maybe status AUTHORIZED_UNIQUE.\n\nDouble-check instruction: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and the entire source supports one legal interpretation. If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" We set all unique.\n\nPotential hidden issue: \"对，就2秒\" could be interpreted as a correction to \"时间2秒\" maybe \"对，就2秒\" = \"yes, just 2 seconds\" but \"就\" could imply \"only 2 seconds\" and might be a new constraint? It doesn't change. Fine.\n\nPotential hidden issue: \"先站，时间2秒。\" Could \"先站\" be \"先站着\" wait stand? \"站\" as stand with default 2s? But explicit 2s. Fine.\n\nPotential hidden issue: \"停。\" maybe stop after walking, but does stop have duration? No. Fine.\n\nNeed no model confidence. Good.\n\nLet's produce JSON exactly. Ensure no markdown. Use double quotes. The explanation strings can contain Chinese quotes? Fine. Need escape internal double quotes? Avoid. Use single quotes? JSON strings can contain Chinese chars and punctuation. I can use Chinese quotes or no quotes. Avoid ASCII double quotes inside. Use '对' with Chinese single? That's okay. But JSON strings can contain Chinese single quotes. Fine. Use no unescaped newline. The JSON can be pretty with newlines. That's okay. No markdown. Ensure valid.\n\nLet's craft final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"那个，\",\n      \"",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_115379b5-957e-48f6-89d3-4f22678edd4a",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "incomplete",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 158,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 4096,
+            "output_tokens_details": {
+              "reasoning_tokens": 4065
+            },
+            "total_tokens": 5022
+          }
+        },
+        "request_sha256": "79f256b45d0f5d92b84db26d8a7274be9c8c0cbf98136f5138aaf916b10cd926",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "max_output_tokens",
+        "latency_s": 19.609022099999493,
+        "model": "deepseek-flash",
+        "provider_status": "incomplete",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_115379b5-957e-48f6-89d3-4f22678edd4a",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"那个，\",\n      \"",
+        "usage": {
+          "input_tokens": 158,
+          "output_tokens": 4096,
+          "total_tokens": 5022
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.5826899999992747,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 25,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 350,
+      "raw_response_sha256": "15e21cfcee856ae33541e3d87ef7ad6db9216b9bd846efe1e62d7a6c16ff3f18",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": false,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_78c76721-ee0b-43d6-bc4c-f2d3a83a00cc",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "finish_reason": "max_output_tokens",
+          "latency_s": 19.61484659999951,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 19.609022099999493,
+          "provider_status": "incomplete",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"那个，\",\n      \"",
+          "raw_response_sha256": "cb279cb8b087f4ee20cb04fba01483f63194bc4eccca10eb25ea5b386cea96c6",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_115379b5-957e-48f6-89d3-4f22678edd4a",
+          "source_aware": false,
+          "source_sha256": "b4e81b6c1724cc1f833f694f0ae8b7bf5b19ed2d5900b1db59feea01bdf65adf",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 158,
+            "output_tokens": 4096,
+            "total_tokens": 5022
+          }
+        },
+        "reason_code": "INCOMPLETE_PROVIDER_RESPONSE",
+        "status": "UNKNOWN"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 221,
+        "output_tokens": 366,
+        "total_tokens": 2123
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": "LLM_OUTPUT_INVALID",
+    "error_message": "source authorization withheld executable Mission: INCOMPLETE_PROVIDER_RESPONSE",
+    "mission": null,
+    "normalized_text": "那个,先站,时间2秒,对,就2秒接着往前走4米,停",
+    "status": "MALFORMED"
+  }
+}

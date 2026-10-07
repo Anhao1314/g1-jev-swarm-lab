@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 7.548618900000292,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_aee79f2d-bad7-4c07-8128-4bef735b3bc7",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action as forward movement, which maps to walk_forward with the distance supplied by the following quantity.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies 4 meters, so walk_forward parameter distance_m is 4.0.\"},{\"text\":\"，然后\",\"role\":\"RELATION\",\"explanation\":\"The comma plus 然后 establishes a sequential relation: the next action happens after the preceding movement.\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action as turning left, which maps to turn with a positive angle supplied by the following quantity.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies 45 degrees, so turn parameter angle_deg is 45.0.\"},{\"text\":\"，最后\",\"role\":\"RELATION\",\"explanation\":\"The comma plus 最后 establishes that the remaining action is final and comes after the preceding turn.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final action as stopping, which maps to stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three actions: one forward movement, one left turn, and one stop. There are no edits, added actions, or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly orders the actions: first 向前移动4米, then 向左转45度, and finally 停止. This yields the unique linear order walk_forward, turn, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction clauses or edit words in the source, so no action or parameter is replaced or revised.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated action span in the source, so each requested action occurs exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"All action arguments are explicit in the source: 4米 resolves to distance_m 4.0, 向左 resolves to a positive turn angle, and 45度 resolves to angle_deg 45.0. No pronoun or missing external referent requires resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 and 最后 provide a single sequential order: move, then turn, finally stop. No waiting, simultaneity, completion dependency, or alternative timing is introduced.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no relation, order, scope, parameter, or action unresolved; every requested action and its position in the sequence is explicit.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+  "usage": {
+    "input_tokens": 247,
+    "output_tokens": 1477,
+    "total_tokens": 2748
+  }
+}

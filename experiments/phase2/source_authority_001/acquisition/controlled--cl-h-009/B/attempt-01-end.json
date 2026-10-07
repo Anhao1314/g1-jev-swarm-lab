@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 2.548832800002856,
+  "provider_document": {
+    "created_at": 1791360766,
+    "id": "resp_00070693-b478-42cf-aed3-b1036a5ec665",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_00070693-b478-42cf-aed3-b1036a5ec665",
+        "reasoning_content": "We need answer only JSON. Need parse Chinese \"前进4米米\" = forward 4 meter meter? It has \"米米\" duplicated unit maybe malformed? Need decide. Is it malformed unit? The command says 前进4米米. Probably language parse error? Let's analyze.\n\nWe need translate user's Chinese command. Input: 前进4米米. It contains distance 4 with unit \"米米\" which is not valid unit vocabulary. Could be MALFORMED INVALID_UNIT? Or LANGUAGE_PARSE_ERROR? The rules: INVALID_UNIT: a unit outside supported vocabulary. Here \"米米\" is not a supported unit; duplicated 米. Could classify INVALID_UNIT. But maybe it's malformed syntax. Need choose one. Let's inspect examples. 前进5英尺 -> INVALID_UNIT. \"4米米\" has an unsupported unit \"米米\" (composite). It is a unit outside vocabulary. So MALFORMED with INVALID_UNIT likely. But is it \"米\" twice? Maybe syntactic malformed. However error codes: MALFORMED_NUMBER covers malformed numeric text, not unit. INVALID_UNIT covers unit outside supported vocabulary. Since there is extra 米, the unit is \"米米\" which is not supported. So INVALID_UNIT. Status MALFORMED. Mission null.\n\nNeed ensure exactly JSON.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need parse Chinese \"前进4米米\" = forward 4 meter meter? It has \"米米\" duplicated unit maybe malformed? Need decide. Is it malformed unit? The command says 前进4米米. Probably language parse error? Let's analyze.\n\nWe need translate user's Chinese command. Input: 前进4米米. It contains distance 4 with unit \"米米\" which is not valid unit vocabulary. Could be MALFORMED INVALID_UNIT? Or LANGUAGE_PARSE_ERROR? The rules: INVALID_UNIT: a unit outside supported vocabulary. Here \"米米\" is not a supported unit; duplicated 米. Could classify INVALID_UNIT. But maybe it's malformed syntax. Need choose one. Let's inspect examples. 前进5英尺 -> INVALID_UNIT. \"4米米\" has an unsupported unit \"米米\" (composite). It is a unit outside vocabulary. So MALFORMED with INVALID_UNIT likely. But is it \"米\" twice? Maybe syntactic malformed. However error codes: MALFORMED_NUMBER covers malformed numeric text, not unit. INVALID_UNIT covers unit outside supported vocabulary. Since there is extra 米, the unit is \"米米\" which is not supported. So INVALID_UNIT. Status MALFORMED. Mission null.\n\nNeed ensure exactly JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"MALFORMED\",\"mission\":null,\"error_code\":\"INVALID_UNIT\"}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_00070693-b478-42cf-aed3-b1036a5ec665",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 203,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 310,
+      "output_tokens_details": {
+        "reasoning_tokens": 289
+      },
+      "total_tokens": 2049
+    }
+  },
+  "request_sha256": "b11b08d9cb1443b928788bb48b6ea752cc91e9c2bb7956df5603de5e7c1c2046",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,382 @@
+{
+  "added_wall_s": 11.086479699999472,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 11.082466799998656,
+        "provider_document": {
+          "created_at": 1791359249,
+          "id": "resp_50a6481f-785e-40f0-8f6e-5e0c08434516",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_50a6481f-785e-40f0-8f6e-5e0c08434516",
+              "reasoning_content": "Source: \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\"\n\nActions:\n1. 前进六米 -> walk_forward 6m\n2. right turn 六十度 -> turn -60 degrees (right is negative)\n3. 前进八米 -> walk_forward 8m\n4. 停 -> stop\n\nOrder: 先...再...接着...最后 = sequential order, one linear order.\n\n\"我写成一行了，顺序照这行\" = \"I wrote it in one line, order follows this line.\" This confirms order is as written left-to-right.\n\nAll dimensions UNIQUE. Let me check each.\n\naction_multiplicity: four actions, all distinct, no corrections or repetitions. UNIQUE.\naction_order: 先/再/接着/最后 plus \"顺序照这行\" explicitly fixes left-to-right order. UNIQUE.\ncorrection_scope: \"我写成一行了，顺序照这行\" is not correcting; it's contextual confirmation. No edits. UNIQUE (inapplicable).\nrepetition_scope: no repetition. UNIQUE.\nreference_resolution: no pronouns/ordinals other than sequencing connectives which are resolved. UNIQUE.\ntemporal_relations: strictly sequential, no simultaneity. UNIQUE.\nunresolved_relations: none. UNIQUE.\n\nSo AUTHORIZED_UNIQUE. Candidate matches: s1 walk 6, s2 turn -60, s3 walk 8, s4 stop. Yes matches.\n\nNow coverage: need to split text exactly, concatenation equals original.\n\nOriginal: \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\"\n\nLet me split into spans:\n1. \"先前进六米\" - ACTION\n2. \"，\" - SEPARATOR\n3. \"再 right turn 六十度\" - ACTION\n4. \"，\" - SEPARATOR\n5. \"接着前进八米\" - ACTION\n6. \"，\" - SEPARATOR\n7. \"最后停\" - ACTION\n8. \"；\" - SEPARATOR\n9. \"我写成一行了\" - CONTEXT\n10. \"，\" - SEPARATOR\n11. \"顺序照这行\" - RELATION\n12. \"。\" - SEPARATOR\n\nWait, but \"先\" \"再\" \"接着\" \"最后\" are order markers. I could separate them but concatenation must hold. Let me keep them within ACTION spans, and mention they encode order. Actually maybe better to make them separate RELATION spans? But then the ACTION text would be \"前进六米\" which is fine too. Hmm, but concatenation must exactly equal. Either way works. Let me do separate spans for clarity? The instruction says split into meaningful spans so every action, relation and edit clause is analyzed. I'll keep order markers attached with explanation, or separate. I'll separate them for clarity — that's more precise.\n\nLet me construct:\n1. \"先\" - RELATION: order marker, first action\n2. \"前进六米\" - ACTION + QUANTITY... role must be single. Use ACTION. Hmm, 六米 is quantity within. I could split \"前进\" and \"六米\"? That's getting fine-grained. Let me be moderate: separate order connectives as RELATION, actions as ACTION including quantity, but maybe better to also mark quantities. The requirement: every action, relation and edit clause is analyzed. Quantities too could be separate. I'll split quantities as QUANTITY spans to be safe? That adds complexity but is fine as long as concatenation is exact.\n\nLet me do:\n1. \"先\" RELATION\n2. \"前进\" ACTION\n3. \"六米\" QUANTITY\n4. \"，\" SEPARATOR\n5. \"再\" RELATION\n6. \" right turn 六十度\" — hmm, need exact copying including space after 再. Original: \"再 right turn 六十度\" — there's a space between 再 and right. Let me check the source: \"再 right turn 六十度，\". Yes, \"再 right turn 六十度\".\n\nSo span 6: \" right turn 六十度\" would include leading space. Better: attach space to \"再 \" ... Let's do:\n5. \"再 \" RELATION (includes trailing space)\n6. \"right turn\" ACTION\n7. \" sixty度\"? Hmm original: \"right turn 六十度\" — space between turn and 六十度. So:\n6. \"right turn \" ... awkward. \n\nSimpler: keep \"再 right turn 六十度\" as one span with role ACTION and explain the 再 is an order marker. Hmm but I want the relation marked.\n\nAlternatively:\n1. \"先\" RELATION\n2. \"前进六米\" ACTION (with sub-explanation)\n3. \"，\" SEPARATOR\n4. \"再 \" RELATION\n5. \"right turn 六十度\" ACTION\n6. \"，\" SEPARATOR\n7. \"接着\" RELATION\n8. \"前进八米\" ACTION\n9. \"，\" SEPARATOR\n10. \"最后\" RELATION\n11. \"停\" ACTION\n12. \"；\" SEPARATOR\n13. \"我写成一行了\" CONTEXT\n14. \"，\" SEPARATOR\n15. \"顺序照这行\" RELATION\n16. \"。\" SEPARATOR\n\nCheck concatenation: 先 + 前进六米 + ， + 再  + right turn 六十度 + ， + 接着 + 前进八米 + ， + 最后 + 停 + ； + 我写成一行了 + ， + 顺序照这行 + 。 = \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\" ✓\n\nGood. That's exact.\n\nNow dimensions explanations.\n\naction_multiplicity: UNIQUE — four actions: walk 6m, turn right 60°, walk 8m, stop. No edits, no repetitions.\n\naction_order: UNIQUE — 先...再...接着...最后 plus explicit \"顺序照这行\" fixes linear left-to-right execution order s1..s4.\n\ncorrection_scope: UNIQUE — no correction clause; \"我写成一行了\" only says formatting is single line, does not replace any action.\n\nrepetition_scope: UNIQUE — no repetition words; each action once.\n\nreference_resolution: UNIQUE — no pronouns or ordinal references needing external context; sequencing connectives refer to adjacent actions in the written line.\n\ntemporal_relations: UNIQUE — strictly sequential, no wait/simultaneous/completion constraints beyond sequential dependency.\n\nunresolved_relations: UNIQUE — no explicit unresolved choices.\n\nAuthorized plan with 4 steps.\n\nWrite JSON.",
+              "summary": [
+                {
+                  "text": "Source: \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\"\n\nActions:\n1. 前进六米 -> walk_forward 6m\n2. right turn 六十度 -> turn -60 degrees (right is negative)\n3. 前进八米 -> walk_forward 8m\n4. 停 -> stop\n\nOrder: 先...再...接着...最后 = sequential order, one linear order.\n\n\"我写成一行了，顺序照这行\" = \"I wrote it in one line, order follows this line.\" This confirms order is as written left-to-right.\n\nAll dimensions UNIQUE. Let me check each.\n\naction_multiplicity: four actions, all distinct, no corrections or repetitions. UNIQUE.\naction_order: 先/再/接着/最后 plus \"顺序照这行\" explicitly fixes left-to-right order. UNIQUE.\ncorrection_scope: \"我写成一行了，顺序照这行\" is not correcting; it's contextual confirmation. No edits. UNIQUE (inapplicable).\nrepetition_scope: no repetition. UNIQUE.\nreference_resolution: no pronouns/ordinals other than sequencing connectives which are resolved. UNIQUE.\ntemporal_relations: strictly sequential, no simultaneity. UNIQUE.\nunresolved_relations: none. UNIQUE.\n\nSo AUTHORIZED_UNIQUE. Candidate matches: s1 walk 6, s2 turn -60, s3 walk 8, s4 stop. Yes matches.\n\nNow coverage: need to split text exactly, concatenation equals original.\n\nOriginal: \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\"\n\nLet me split into spans:\n1. \"先前进六米\" - ACTION\n2. \"，\" - SEPARATOR\n3. \"再 right turn 六十度\" - ACTION\n4. \"，\" - SEPARATOR\n5. \"接着前进八米\" - ACTION\n6. \"，\" - SEPARATOR\n7. \"最后停\" - ACTION\n8. \"；\" - SEPARATOR\n9. \"我写成一行了\" - CONTEXT\n10. \"，\" - SEPARATOR\n11. \"顺序照这行\" - RELATION\n12. \"。\" - SEPARATOR\n\nWait, but \"先\" \"再\" \"接着\" \"最后\" are order markers. I could separate them but concatenation must hold. Let me keep them within ACTION spans, and mention they encode order. Actually maybe better to make them separate RELATION spans? But then the ACTION text would be \"前进六米\" which is fine too. Hmm, but concatenation must exactly equal. Either way works. Let me do separate spans for clarity? The instruction says split into meaningful spans so every action, relation and edit clause is analyzed. I'll keep order markers attached with explanation, or separate. I'll separate them for clarity — that's more precise.\n\nLet me construct:\n1. \"先\" - RELATION: order marker, first action\n2. \"前进六米\" - ACTION + QUANTITY... role must be single. Use ACTION. Hmm, 六米 is quantity within. I could split \"前进\" and \"六米\"? That's getting fine-grained. Let me be moderate: separate order connectives as RELATION, actions as ACTION including quantity, but maybe better to also mark quantities. The requirement: every action, relation and edit clause is analyzed. Quantities too could be separate. I'll split quantities as QUANTITY spans to be safe? That adds complexity but is fine as long as concatenation is exact.\n\nLet me do:\n1. \"先\" RELATION\n2. \"前进\" ACTION\n3. \"六米\" QUANTITY\n4. \"，\" SEPARATOR\n5. \"再\" RELATION\n6. \" right turn 六十度\" — hmm, need exact copying including space after 再. Original: \"再 right turn 六十度\" — there's a space between 再 and right. Let me check the source: \"再 right turn 六十度，\". Yes, \"再 right turn 六十度\".\n\nSo span 6: \" right turn 六十度\" would include leading space. Better: attach space to \"再 \" ... Let's do:\n5. \"再 \" RELATION (includes trailing space)\n6. \"right turn\" ACTION\n7. \" sixty度\"? Hmm original: \"right turn 六十度\" — space between turn and 六十度. So:\n6. \"right turn \" ... awkward. \n\nSimpler: keep \"再 right turn 六十度\" as one span with role ACTION and explain the 再 is an order marker. Hmm but I want the relation marked.\n\nAlternatively:\n1. \"先\" RELATION\n2. \"前进六米\" ACTION (with sub-explanation)\n3. \"，\" SEPARATOR\n4. \"再 \" RELATION\n5. \"right turn 六十度\" ACTION\n6. \"，\" SEPARATOR\n7. \"接着\" RELATION\n8. \"前进八米\" ACTION\n9. \"，\" SEPARATOR\n10. \"最后\" RELATION\n11. \"停\" ACTION\n12. \"；\" SEPARATOR\n13. \"我写成一行了\" CONTEXT\n14. \"，\" SEPARATOR\n15. \"顺序照这行\" RELATION\n16. \"。\" SEPARATOR\n\nCheck concatenation: 先 + 前进六米 + ， + 再  + right turn 六十度 + ， + 接着 + 前进八米 + ， + 最后 + 停 + ； + 我写成一行了 + ， + 顺序照这行 + 。 = \"先前进六米，再 right turn 六十度，接着前进八米，最后停；我写成一行了，顺序照这行。\" ✓\n\nGood. That's exact.\n\nNow dimensions explanations.\n\naction_multiplicity: UNIQUE — four actions: walk 6m, turn right 60°, walk 8m, stop. No edits, no repetitions.\n\naction_order: UNIQUE — 先...再...接着...最后 plus explicit \"顺序照这行\" fixes linear left-to-right execution order s1..s4.\n\ncorrection_scope: UNIQUE — no correction clause; \"我写成一行了\" only says formatting is single line, does not replace any action.\n\nrepetition_scope: UNIQUE — no repetition words; each action once.\n\nreference_resolution: UNIQUE — no pronouns or ordinal references needing external context; sequencing connectives refer to adjacent actions in the written line.\n\ntemporal_relations: UNIQUE — strictly sequential, no wait/simultaneous/completion constraints beyond sequential dependency.\n\nunresolved_relations: UNIQUE — no explicit unresolved choices.\n\nAuthorized plan with 4 steps.\n\nWrite JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'first', marking that the immediately following action is the first executed step of the sequence.\"},{\"text\":\"前进六米\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk of six meters; 米 are meters, so this is walk_forward with distance_m = 6.0, executed first per 先.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; carries no action, parameter or ordering content of its own.\"},{\"text\":\"再 \",\"role\":\"RELATION\",\"explanation\":\"Order connective 'then', fixing that the next action follows the first action in sequence; the trailing space is formatting only and has no semantic effect.\"},{\"text\":\"right turn 六十度\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn of 六十度 (60 degrees) to the right; right is signed negative, giving turn with angle_deg = -60.0, within the 180-degree maximum.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; no action or parameter content.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'next/afterwards', placing the following action third in the linear sequence.\"},{\"text\":\"前进八米\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk of eight meters, i.e. walk_forward with distance_m = 8.0 as the third step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; no semantic content.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'finally', marking the following action as the last step of the sequence.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests a stop; this is the stop skill with empty parameters {}, executed last.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Semicolon separating the command string from the following meta-comment; it contributes no action or parameter.\"},{\"text\":\"我写成一行了\",\"role\":\"CONTEXT\",\"explanation\":\"Meta-comment stating the instruction was written on a single line; it is formatting context only and neither adds, removes nor replaces any action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator within the meta-comment; no semantic content.\"},{\"text\":\"顺序照这行\",\"role\":\"RELATION\",\"explanation\":\"Explicitly confirms the execution order is exactly the written left-to-right order of the line, resolving action_order to one linear sequence.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; no action, parameter or ordering content.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly four actions are requested: 前进六米 (walk 6 m), right turn 六十度 (turn -60°), 前进八米 (walk 8 m) and 停 (stop). There are no edit clauses adding or replacing an action and no repetition markers, so each action occurs exactly once.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectives 先 / 再 / 接着 / 最后 impose a single linear order, and the additional clause 顺序照这行 explicitly confirms the order follows the written line: walk 6 m, turn right 60°, walk 8 m, stop. No alternative order is permitted.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or replacement appears. 我写成一行了 only describes formatting (one line instead of multiple lines) and 顺序照这行 confirms ordering; neither edits, replaces nor preserves any earlier action or parameter, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition words or numeric counts of repetition occur. Each of the four actions is stated once, so there is no span to widen or narrow.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals or omitted shared arguments requiring external context. The order connectives refer unambiguously to the immediately adjacent written actions, and 这行 refers to the single command line itself.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are purely sequential (先, 再, 接着, 最后); no simultaneity, waiting, delay or completion condition is stated. The plan is representable as one linear chain s1→s2→s3→s4 without inventing timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No clause leaves any choice, scope, order or relation explicitly unresolved; the meta-comment fixes the order to the written line rather than opening an alternative reading.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_50a6481f-785e-40f0-8f6e-5e0c08434516",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 428,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 2595,
+            "output_tokens_details": {
+              "reasoning_tokens": 1459
+            },
+            "total_tokens": 3919
+          }
+        },
+        "request_sha256": "f3e30e3cd1ff0e5af6b9fccc510f9b55990dc04431e2a30ea8d8ec55ad4bf021",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 11.080844600001,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_50a6481f-785e-40f0-8f6e-5e0c08434516",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'first', marking that the immediately following action is the first executed step of the sequence.\"},{\"text\":\"前进六米\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk of six meters; 米 are meters, so this is walk_forward with distance_m = 6.0, executed first per 先.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; carries no action, parameter or ordering content of its own.\"},{\"text\":\"再 \",\"role\":\"RELATION\",\"explanation\":\"Order connective 'then', fixing that the next action follows the first action in sequence; the trailing space is formatting only and has no semantic effect.\"},{\"text\":\"right turn 六十度\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn of 六十度 (60 degrees) to the right; right is signed negative, giving turn with angle_deg = -60.0, within the 180-degree maximum.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; no action or parameter content.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'next/afterwards', placing the following action third in the linear sequence.\"},{\"text\":\"前进八米\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk of eight meters, i.e. walk_forward with distance_m = 8.0 as the third step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; no semantic content.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'finally', marking the following action as the last step of the sequence.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests a stop; this is the stop skill with empty parameters {}, executed last.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Semicolon separating the command string from the following meta-comment; it contributes no action or parameter.\"},{\"text\":\"我写成一行了\",\"role\":\"CONTEXT\",\"explanation\":\"Meta-comment stating the instruction was written on a single line; it is formatting context only and neither adds, removes nor replaces any action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator within the meta-comment; no semantic content.\"},{\"text\":\"顺序照这行\",\"role\":\"RELATION\",\"explanation\":\"Explicitly confirms the execution order is exactly the written left-to-right order of the line, resolving action_order to one linear sequence.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; no action, parameter or ordering content.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly four actions are requested: 前进六米 (walk 6 m), right turn 六十度 (turn -60°), 前进八米 (walk 8 m) and 停 (stop). There are no edit clauses adding or replacing an action and no repetition markers, so each action occurs exactly once.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectives 先 / 再 / 接着 / 最后 impose a single linear order, and the additional clause 顺序照这行 explicitly confirms the order follows the written line: walk 6 m, turn right 60°, walk 8 m, stop. No alternative order is permitted.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or replacement appears. 我写成一行了 only describes formatting (one line instead of multiple lines) and 顺序照这行 confirms ordering; neither edits, replaces nor preserves any earlier action or parameter, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition words or numeric counts of repetition occur. Each of the four actions is stated once, so there is no span to widen or narrow.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals or omitted shared arguments requiring external context. The order connectives refer unambiguously to the immediately adjacent written actions, and 这行 refers to the single command line itself.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are purely sequential (先, 再, 接着, 最后); no simultaneity, waiting, delay or completion condition is stated. The plan is representable as one linear chain s1→s2→s3→s4 without inventing timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No clause leaves any choice, scope, order or relation explicitly unresolved; the meta-comment fixes the order to the written line rather than opening an alternative reading.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+        "usage": {
+          "input_tokens": 428,
+          "output_tokens": 2595,
+          "total_tokens": 3919
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.9640407000006235,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-6m-right60-8m-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 40,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 440,
+      "raw_response_sha256": "febd70a2b85b0297aef302e99d32df9929f446076ea7d4cac2c926650c110b3e",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_934a80cf-6cf6-4161-953e-4f41e2ac76f9",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 11.085608800000045,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 11.080844600001,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'first', marking that the immediately following action is the first executed step of the sequence.\"},{\"text\":\"前进六米\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk of six meters; 米 are meters, so this is walk_forward with distance_m = 6.0, executed first per 先.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; carries no action, parameter or ordering content of its own.\"},{\"text\":\"再 \",\"role\":\"RELATION\",\"explanation\":\"Order connective 'then', fixing that the next action follows the first action in sequence; the trailing space is formatting only and has no semantic effect.\"},{\"text\":\"right turn 六十度\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn of 六十度 (60 degrees) to the right; right is signed negative, giving turn with angle_deg = -60.0, within the 180-degree maximum.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; no action or parameter content.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'next/afterwards', placing the following action third in the linear sequence.\"},{\"text\":\"前进八米\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk of eight meters, i.e. walk_forward with distance_m = 8.0 as the third step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; no semantic content.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Order connective 'finally', marking the following action as the last step of the sequence.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests a stop; this is the stop skill with empty parameters {}, executed last.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Semicolon separating the command string from the following meta-comment; it contributes no action or parameter.\"},{\"text\":\"我写成一行了\",\"role\":\"CONTEXT\",\"explanation\":\"Meta-comment stating the instruction was written on a single line; it is formatting context only and neither adds, removes nor replaces any action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator within the meta-comment; no semantic content.\"},{\"text\":\"顺序照这行\",\"role\":\"RELATION\",\"explanation\":\"Explicitly confirms the execution order is exactly the written left-to-right order of the line, resolving action_order to one linear sequence.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; no action, parameter or ordering content.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly four actions are requested: 前进六米 (walk 6 m), right turn 六十度 (turn -60°), 前进八米 (walk 8 m) and 停 (stop). There are no edit clauses adding or replacing an action and no repetition markers, so each action occurs exactly once.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectives 先 / 再 / 接着 / 最后 impose a single linear order, and the additional clause 顺序照这行 explicitly confirms the order follows the written line: walk 6 m, turn right 60°, walk 8 m, stop. No alternative order is permitted.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or replacement appears. 我写成一行了 only describes formatting (one line instead of multiple lines) and 顺序照这行 confirms ordering; neither edits, replaces nor preserves any earlier action or parameter, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition words or numeric counts of repetition occur. Each of the four actions is stated once, so there is no span to widen or narrow.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals or omitted shared arguments requiring external context. The order connectives refer unambiguously to the immediately adjacent written actions, and 这行 refers to the single command line itself.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are purely sequential (先, 再, 接着, 最后); no simultaneity, waiting, delay or completion condition is stated. The plan is representable as one linear chain s1→s2→s3→s4 without inventing timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No clause leaves any choice, scope, order or relation explicitly unresolved; the meta-comment fixes the order to the written line rather than opening an alternative reading.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+          "raw_response_sha256": "ca986dfaef106ce2ee35ffbe40b96f0fd5070020450ad0bdcfc20a0c93981e8f",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_50a6481f-785e-40f0-8f6e-5e0c08434516",
+          "source_aware": true,
+          "source_sha256": "f9daf1347fe6b7718f37282e5e05e154d3e95b924abc84e8367d143da3710c84",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 428,
+            "output_tokens": 2595,
+            "total_tokens": 3919
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 6.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "angle_deg": -60.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {
+                  "distance_m": 8.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s3"
+                ],
+                "id": "s4",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Order connective 'first', marking that the immediately following action is the first executed step of the sequence.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Requests a forward walk of six meters; 米 are meters, so this is walk_forward with distance_m = 6.0, executed first per 先.",
+                "role": "ACTION",
+                "text": "前进六米"
+              },
+              {
+                "explanation": "Clause separator; carries no action, parameter or ordering content of its own.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Order connective 'then', fixing that the next action follows the first action in sequence; the trailing space is formatting only and has no semantic effect.",
+                "role": "RELATION",
+                "text": "再 "
+              },
+              {
+                "explanation": "Requests a turn of 六十度 (60 degrees) to the right; right is signed negative, giving turn with angle_deg = -60.0, within the 180-degree maximum.",
+                "role": "ACTION",
+                "text": "right turn 六十度"
+              },
+              {
+                "explanation": "Clause separator; no action or parameter content.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Order connective 'next/afterwards', placing the following action third in the linear sequence.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Requests a forward walk of eight meters, i.e. walk_forward with distance_m = 8.0 as the third step.",
+                "role": "ACTION",
+                "text": "前进八米"
+              },
+              {
+                "explanation": "Clause separator; no semantic content.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Order connective 'finally', marking the following action as the last step of the sequence.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Requests a stop; this is the stop skill with empty parameters {}, executed last.",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "Semicolon separating the command string from the following meta-comment; it contributes no action or parameter.",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "Meta-comment stating the instruction was written on a single line; it is formatting context only and neither adds, removes nor replaces any action.",
+                "role": "CONTEXT",
+                "text": "我写成一行了"
+              },
+              {
+                "explanation": "Clause separator within the meta-comment; no semantic content.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Explicitly confirms the execution order is exactly the written left-to-right order of the line, resolving action_order to one linear sequence.",
+                "role": "RELATION",
+                "text": "顺序照这行"
+              },
+              {
+                "explanation": "Sentence-ending punctuation; no action, parameter or ordering content.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Exactly four actions are requested: 前进六米 (walk 6 m), right turn 六十度 (turn -60°), 前进八米 (walk 8 m) and 停 (stop). There are no edit clauses adding or replacing an action and no repetition markers, so each action occurs exactly once.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The connectives 先 / 再 / 接着 / 最后 impose a single linear order, and the additional clause 顺序照这行 explicitly confirms the order follows the written line: walk 6 m, turn right 60°, walk 8 m, stop. No alternative order is permitted.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or replacement appears. 我写成一行了 only describes formatting (one line instead of multiple lines) and 顺序照这行 confirms ordering; neither edits, replaces nor preserves any earlier action or parameter, so correction scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals or omitted shared arguments requiring external context. The order connectives refer unambiguously to the immediately adjacent written actions, and 这行 refers to the single command line itself.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition words or numeric counts of repetition occur. Each of the four actions is stated once, so there is no span to widen or narrow.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The relations are purely sequential (先, 再, 接着, 最后); no simultaneity, waiting, delay or completion condition is stated. The plan is representable as one linear chain s1→s2→s3→s4 without inventing timing.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No clause leaves any choice, scope, order or relation explicitly unresolved; the meta-comment fixes the order to the written line rather than opening an alternative reading.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 229,
+        "output_tokens": 576,
+        "total_tokens": 2341
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-6m-right60-8m-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先前进六米再rightturn六十度接着前进八米最后停,我写成一行了,顺序照这行",
+    "status": "SUCCESS"
+  }
+}

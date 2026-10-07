@@ -1,0 +1,327 @@
+{
+  "added_wall_s": 15.945347900000343,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 15.939232900000206,
+        "provider_document": {
+          "created_at": 1791360184,
+          "id": "resp_e2e732b8-1f23-4b39-8a16-30f595ce2222",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_e2e732b8-1f23-4b39-8a16-30f595ce2222",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source: \"请先停下，然后往前走4米，再向左转45度，最后停止\"\n\nNeed decide dimensions. Need parse actions: stop? stand? \"停下\" stop. \"往前走4米\" walk_forward distance 4m. \"向左转45度\" turn left 45 deg positive. \"最后停止\" stop. Execution order: 先停下 then 往前走4米, 再向左转45度, 最后停止. Seems unique. But need assess action_multiplicity: two stop actions? First stop and final stop. Are they distinct? Source explicitly \"先停下\" then later \"最后停止\" yes two stop actions. Need account. Could there be ambiguity: final \"停止\" might refer to same as initial? No, 最后 stop distinct. Unique.\n\nAction_order: \"先...然后...再...最后\" unique linear order: stop, walk_forward 4m, turn left 45, stop. Unique.\n\nCorrection_scope: none. UNIQUE/inapplicable.\n\nRepetition_scope: none. UNIQUE/inapplicable.\n\nReference_resolution: \"向左转\" left relative to current heading. No pronoun. No external missing context? \"左\" is relative to robot's current orientation. Is this resolvable? Yes left means counterclockwise positive. No ambiguity. \"先\" etc. Unique.\n\nTemporal_relations: sequential order by 先/然后/再/最后. Unique.\n\nUnresolved_relations: none.\n\nNeed ensure source legal. stop no params, walk_forward 4米 positive finite, turn left 45度 nonzero finite within max 180. stand not involved. Max steps 4. Legal. So AUTHORIZED_UNIQUE.\n\nNeed coverage list split meaningful spans so entire source exactly concatenated. Need preserve exact source. Let's construct coverage objects. Source: 请先停下，然后往前走4米，再向左转45度，最后停止\n\nNeed split into spans covering exact characters. We can choose:\n1 \"请\" CONTEXT? Or maybe \"请\" politeness context not action. \n2 \"先停下\" ACTION? Contains action and order?\nNeed text concatenated exactly equals source. We need include comma punctuation as SEPARATOR maybe. Let's split carefully.\n\nOption spans:\n\"请\" CONTEXT explanation politeness marker not modifying authority.\n\"先停下\" ACTION includes stop action with order first\n\"，\" SEPARATOR\n\"然后往前走4米\" ACTION? Actually \"然后\" relation plus \"往前走4米\" action. Could split \"然后\" RELATION and \"往前走4米\" ACTION. But text concatenation must exact. Let's do:\n\"请\" CONTEXT\n\"先\" RELATION? Hmm \"先停下\" could be ACTION with first relation. But for clarity:\n\"先\" RELATION\n\"停下\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"往前走4米\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"向左转45度\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停止\" ACTION\n\nConcatenation: 请先停下，然后往前走4米，再向左转45度，最后停止. Yes. Need every action relation editing clause considered. Role for \"先\" RELATION, \"然后\" RELATION, \"再\" RELATION, \"最后\" RELATION. \"请\" CONTEXT. Commas SEPARATOR. Action spans: 停下, 往前走4米, 向左转45度, 停止. Quantity? The distance and angle embedded in action spans. But requirement coverage roles include QUANTITY. Do we need separate quantity spans? If split \"往前走4米\" as ACTION includes quantity. Could split \"往前走\" ACTION and \"4米\" QUANTITY. But then action \"walk_forward\" and quantity. Need text concat exact. Similarly \"向左转\" ACTION and \"45度\" QUANTITY. Is that better? We can split to ensure quantities considered. Let's do:\n1 \"请\" CONTEXT\n2 \"先\" RELATION\n3 \"停下\" ACTION\n4 \"，\" SEPARATOR\n5 \"然后\" RELATION\n6 \"往前走\" ACTION\n7 \"4米\" QUANTITY\n8 \"，\" SEPARATOR\n9 \"再\" RELATION\n10 \"向左转\" ACTION\n11 \"45度\" QUANTITY\n12 \"，\" SEPARATOR\n13 \"最后\" RELATION\n14 \"停止\" ACTION\n\nConcatenate exactly: 请先停下，然后往前走4米，再向左转45度，最后停止. Yes. Note \"向左转\" action includes direction left. Quantity 45度. Good.\n\nNeed explanations nonempty. For each.\n\nNeed status dimension explanations. Need mention no editing/repetition. For correction_scope UNIQUE: no edit markers; none of clauses replace prior action. Initial stop and final stop both preserved. Wait: Could final stop be replacing initial? \"最后停止\" means final stop not editing initial. No correction. Unique.\n\nAction_multiplicity: four actions: stop, walk, turn, stop. \"先停下\" and \"最后停止\" are two separate stop actions, not same action repeated? Need account. Unique.\n\nAction_order: exactly one order due to 先,然后,再,最后.\n\nRepetition_scope: no repetition requested. The two stops are distinct instructions, not repetition of one span. Unique.\n\nReference_resolution: \"左\" resolves via turn semantics to counterclockwise positive; \"往前\" forward relative to current heading. No omitted arguments? walk_forward has distance 4m. turn angle 45度. stop no params. No pronouns. Unique.\n\nTemporal_relations: sequential, each after previous, no simult/waiting. Unique.\n\nUnresolved_relations: none explicitly unresolved. unique.\n\nNeed output exactly JSON object. Ensure keys exactly status, coverage, dimensions. Dimensions object exactly seven names. No extra.\n\nPotential issue: \"请\" as CONTEXT. \"先\" as RELATION. We need every span explanation. For separators, explanation why nonexecuting not modify authority. Good.\n\nNeed ensure no markdown. final only JSON.\n\nLet's craft concise but adequate.\n\nCheck Chinese punctuation: source uses ASCII comma? It shows \"，\" fullwidth. Yes. Need copy exact.\n\nCoverage list order text values:\n\"请\"\n\"先\"\n\"停下\"\n\"，\"\n\"然后\"\n\"往前走\"\n\"4米\"\n\"，\"\n\"再\"\n\"向左转\"\n\"45度\"\n\"，\"\n\"最后\"\n\"停止\"\n\nConcatenation: 请先停下，然后往前走4米，再向左转45度，最后停止. Let's verify:\n请 + 先 = 请先\n+ 停下 = 请先停下\n+ ， = 请先停下，\n+ 然后 = 请先停下，然后\n+ 往前走 = 请先停下，然后往前走\n+ 4米 = ...4米\n+ ， = ...4米，\n+ 再 = ...，再\n+ 向左转 = ...再向左转\n+ 45度 = ...45度\n+ ， = ...45度，\n+ 最后 = ...，最后\n+ 停止 = ...最后停止. Yes.\n\nExplanations:\n请: politeness marker, no action param, doesn't alter authority.\n先: orders 停下 as first.\n停下: stop action with no params; distinct first stop.\n，: separator.\n然后: marks following walk as after stop.\n往前走: walk_forward action; forward relative current heading.\n4米: distance quantity 4 meters positive finite.\n，: separator.\n再: marks turn after walk.\n向左转: turn action left/counterclockwise.\n45度: angle quantity +45 deg nonzero finite within bound.\n，: separator.\n最后: marks stop after turn.\n停止: second stop action no params; distinct from first and final in order.\n\nNeed maybe \"walk_forward\" in explanation. Good.\n\nDimension statuses all UNIQUE. Need coverage nonempty. \"coverage\" list object exactly text, role, explanation. Role values allowed. We'll use CONTEXT, RELATION, ACTION, SEPARATOR, QUANTITY.\n\nNeed maybe include role for \"先\" RELATION, \"然后\", \"再\", \"最后\". Good.\n\nNow dimensions:\naction_multiplicity explanation: source contains four requested actions: 停下 (stop), 往前走4米 (walk_forward distance 4m), 向左转45度 (turn left 45), 停止 (stop). First and final stop are separate ordered actions, not one action described twice or replacing. No other action. UNIQUE.\naction_order: explicit markers 先,然后,再,最后 establish unique linear order: stop -> walk_forward(4) -> turn(+45) -> stop. No alternative order. UNIQUE.\ncorrection_scope: no edit/correction terms; no clause replaces or modifies another. Initial stop preserved; final stop additional. UNIQUE.\nrepetition_scope: no repetition or loop; two stops are distinct actions at distinct positions. Not repeated span. UNIQUE.\nreference_resolution: no pronouns or external referents. \"往前\" and \"左\" resolved by action semantics relative current heading; 4米 and 45度 explicit. stop no args. UNIQUE.\ntemporal_relations: sequence expressed via 先/然后/再/最后; each action after predecessor; no simultaneous/waiting. Unique linear plan. UNIQUE.\nunresolved_relations: no explicit unresolved choice/scope/order/relation; all actions/order/params fixed. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE. Need mention legal bounds? Not necessary but could in explanation maybe action_order. But dimensions not legality. Maybe coverage explanations.\n\nPotential subtle ambiguity: \"最后停止\" after turn. Could \"停止\" be not an action but final marker? No, stop action. Unique.\n\nCould there be ambiguity with \"向左转45度\" left/counterclockwise positive. Yes.\n\nPotential issue: The IR action is \"walk_forward\" not \"往前走\"; but source Chinese maps to walk_forward. Fine.\n\nCould \"先停下\" initial stop: If robot is already stopped, stop action still legal. Not ambiguity.\n\nNeed not mention model confidence.\n\nLet's ensure JSON valid with Chinese. Use standard JSON. Need escape? Chinese fine.\n\nNeed exactly one JSON object. We'll output.\n\nDouble-check no extra whitespace? Not important. final.\n\nLet's compose final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source: \"请先停下，然后往前走4米，再向左转45度，最后停止\"\n\nNeed decide dimensions. Need parse actions: stop? stand? \"停下\" stop. \"往前走4米\" walk_forward distance 4m. \"向左转45度\" turn left 45 deg positive. \"最后停止\" stop. Execution order: 先停下 then 往前走4米, 再向左转45度, 最后停止. Seems unique. But need assess action_multiplicity: two stop actions? First stop and final stop. Are they distinct? Source explicitly \"先停下\" then later \"最后停止\" yes two stop actions. Need account. Could there be ambiguity: final \"停止\" might refer to same as initial? No, 最后 stop distinct. Unique.\n\nAction_order: \"先...然后...再...最后\" unique linear order: stop, walk_forward 4m, turn left 45, stop. Unique.\n\nCorrection_scope: none. UNIQUE/inapplicable.\n\nRepetition_scope: none. UNIQUE/inapplicable.\n\nReference_resolution: \"向左转\" left relative to current heading. No pronoun. No external missing context? \"左\" is relative to robot's current orientation. Is this resolvable? Yes left means counterclockwise positive. No ambiguity. \"先\" etc. Unique.\n\nTemporal_relations: sequential order by 先/然后/再/最后. Unique.\n\nUnresolved_relations: none.\n\nNeed ensure source legal. stop no params, walk_forward 4米 positive finite, turn left 45度 nonzero finite within max 180. stand not involved. Max steps 4. Legal. So AUTHORIZED_UNIQUE.\n\nNeed coverage list split meaningful spans so entire source exactly concatenated. Need preserve exact source. Let's construct coverage objects. Source: 请先停下，然后往前走4米，再向左转45度，最后停止\n\nNeed split into spans covering exact characters. We can choose:\n1 \"请\" CONTEXT? Or maybe \"请\" politeness context not action. \n2 \"先停下\" ACTION? Contains action and order?\nNeed text concatenated exactly equals source. We need include comma punctuation as SEPARATOR maybe. Let's split carefully.\n\nOption spans:\n\"请\" CONTEXT explanation politeness marker not modifying authority.\n\"先停下\" ACTION includes stop action with order first\n\"，\" SEPARATOR\n\"然后往前走4米\" ACTION? Actually \"然后\" relation plus \"往前走4米\" action. Could split \"然后\" RELATION and \"往前走4米\" ACTION. But text concatenation must exact. Let's do:\n\"请\" CONTEXT\n\"先\" RELATION? Hmm \"先停下\" could be ACTION with first relation. But for clarity:\n\"先\" RELATION\n\"停下\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"往前走4米\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"向左转45度\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停止\" ACTION\n\nConcatenation: 请先停下，然后往前走4米，再向左转45度，最后停止. Yes. Need every action relation editing clause considered. Role for \"先\" RELATION, \"然后\" RELATION, \"再\" RELATION, \"最后\" RELATION. \"请\" CONTEXT. Commas SEPARATOR. Action spans: 停下, 往前走4米, 向左转45度, 停止. Quantity? The distance and angle embedded in action spans. But requirement coverage roles include QUANTITY. Do we need separate quantity spans? If split \"往前走4米\" as ACTION includes quantity. Could split \"往前走\" ACTION and \"4米\" QUANTITY. But then action \"walk_forward\" and quantity. Need text concat exact. Similarly \"向左转\" ACTION and \"45度\" QUANTITY. Is that better? We can split to ensure quantities considered. Let's do:\n1 \"请\" CONTEXT\n2 \"先\" RELATION\n3 \"停下\" ACTION\n4 \"，\" SEPARATOR\n5 \"然后\" RELATION\n6 \"往前走\" ACTION\n7 \"4米\" QUANTITY\n8 \"，\" SEPARATOR\n9 \"再\" RELATION\n10 \"向左转\" ACTION\n11 \"45度\" QUANTITY\n12 \"，\" SEPARATOR\n13 \"最后\" RELATION\n14 \"停止\" ACTION\n\nConcatenate exactly: 请先停下，然后往前走4米，再向左转45度，最后停止. Yes. Note \"向左转\" action includes direction left. Quantity 45度. Good.\n\nNeed explanations nonempty. For each.\n\nNeed status dimension explanations. Need mention no editing/repetition. For correction_scope UNIQUE: no edit markers; none of clauses replace prior action. Initial stop and final stop both preserved. Wait: Could final stop be replacing initial? \"最后停止\" means final stop not editing initial. No correction. Unique.\n\nAction_multiplicity: four actions: stop, walk, turn, stop. \"先停下\" and \"最后停止\" are two separate stop actions, not same action repeated? Need account. Unique.\n\nAction_order: exactly one order due to 先,然后,再,最后.\n\nRepetition_scope: no repetition requested. The two stops are distinct instructions, not repetition of one span. Unique.\n\nReference_resolution: \"左\" resolves via turn semantics to counterclockwise positive; \"往前\" forward relative to current heading. No omitted arguments? walk_forward has distance 4m. turn angle 45度. stop no params. No pronouns. Unique.\n\nTemporal_relations: sequential, each after previous, no simult/waiting. Unique.\n\nUnresolved_relations: none explicitly unresolved. unique.\n\nNeed output exactly JSON object. Ensure keys exactly status, coverage, dimensions. Dimensions object exactly seven names. No extra.\n\nPotential issue: \"请\" as CONTEXT. \"先\" as RELATION. We need every span explanation. For separators, explanation why nonexecuting not modify authority. Good.\n\nNeed ensure no markdown. final only JSON.\n\nLet's craft concise but adequate.\n\nCheck Chinese punctuation: source uses ASCII comma? It shows \"，\" fullwidth. Yes. Need copy exact.\n\nCoverage list order text values:\n\"请\"\n\"先\"\n\"停下\"\n\"，\"\n\"然后\"\n\"往前走\"\n\"4米\"\n\"，\"\n\"再\"\n\"向左转\"\n\"45度\"\n\"，\"\n\"最后\"\n\"停止\"\n\nConcatenation: 请先停下，然后往前走4米，再向左转45度，最后停止. Let's verify:\n请 + 先 = 请先\n+ 停下 = 请先停下\n+ ， = 请先停下，\n+ 然后 = 请先停下，然后\n+ 往前走 = 请先停下，然后往前走\n+ 4米 = ...4米\n+ ， = ...4米，\n+ 再 = ...，再\n+ 向左转 = ...再向左转\n+ 45度 = ...45度\n+ ， = ...45度，\n+ 最后 = ...，最后\n+ 停止 = ...最后停止. Yes.\n\nExplanations:\n请: politeness marker, no action param, doesn't alter authority.\n先: orders 停下 as first.\n停下: stop action with no params; distinct first stop.\n，: separator.\n然后: marks following walk as after stop.\n往前走: walk_forward action; forward relative current heading.\n4米: distance quantity 4 meters positive finite.\n，: separator.\n再: marks turn after walk.\n向左转: turn action left/counterclockwise.\n45度: angle quantity +45 deg nonzero finite within bound.\n，: separator.\n最后: marks stop after turn.\n停止: second stop action no params; distinct from first and final in order.\n\nNeed maybe \"walk_forward\" in explanation. Good.\n\nDimension statuses all UNIQUE. Need coverage nonempty. \"coverage\" list object exactly text, role, explanation. Role values allowed. We'll use CONTEXT, RELATION, ACTION, SEPARATOR, QUANTITY.\n\nNeed maybe include role for \"先\" RELATION, \"然后\", \"再\", \"最后\". Good.\n\nNow dimensions:\naction_multiplicity explanation: source contains four requested actions: 停下 (stop), 往前走4米 (walk_forward distance 4m), 向左转45度 (turn left 45), 停止 (stop). First and final stop are separate ordered actions, not one action described twice or replacing. No other action. UNIQUE.\naction_order: explicit markers 先,然后,再,最后 establish unique linear order: stop -> walk_forward(4) -> turn(+45) -> stop. No alternative order. UNIQUE.\ncorrection_scope: no edit/correction terms; no clause replaces or modifies another. Initial stop preserved; final stop additional. UNIQUE.\nrepetition_scope: no repetition or loop; two stops are distinct actions at distinct positions. Not repeated span. UNIQUE.\nreference_resolution: no pronouns or external referents. \"往前\" and \"左\" resolved by action semantics relative current heading; 4米 and 45度 explicit. stop no args. UNIQUE.\ntemporal_relations: sequence expressed via 先/然后/再/最后; each action after predecessor; no simultaneous/waiting. Unique linear plan. UNIQUE.\nunresolved_relations: no explicit unresolved choice/scope/order/relation; all actions/order/params fixed. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE. Need mention legal bounds? Not necessary but could in explanation maybe action_order. But dimensions not legality. Maybe coverage explanations.\n\nPotential subtle ambiguity: \"最后停止\" after turn. Could \"停止\" be not an action but final marker? No, stop action. Unique.\n\nCould there be ambiguity with \"向左转45度\" left/counterclockwise positive. Yes.\n\nPotential issue: The IR action is \"walk_forward\" not \"往前走\"; but source Chinese maps to walk_forward. Fine.\n\nCould \"先停下\" initial stop: If robot is already stopped, stop action still legal. Not ambiguity.\n\nNeed not mention model confidence.\n\nLet's ensure JSON valid with Chinese. Use standard JSON. Need escape? Chinese fine.\n\nNeed exactly one JSON object. We'll output.\n\nDouble-check no extra whitespace? Not important. final.\n\nLet's compose final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"请\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Politeness marker addressing the request; it introduces no action, parameter, order, edit, or unresolved relation and therefore does not modify authority.\"\n    },\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the immediately following action '停下' as the first action in the sequence.\"\n    },\n    {\n      \"text\": \"停下\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop action with no parameters. It is the first stop and is distinct from the later '停止'.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following walking action after the preceding stop action.\"\n    },\n    {\n      \"text\": \"往前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a forward walking action; '往前' resolves to forward relative to the current heading.\"\n    },\n    {\n      \"text\": \"4米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the walk_forward distance as 4 meters, a positive finite distance_m value.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following turn action after the walking action.\"\n    },\n    {\n      \"text\": \"向左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a turn to the left, which resolves to a counterclockwise/positive turn relative to the current heading.\"\n    },\n    {\n      \"text\": \"45度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the turn angle as 45 degrees, a nonzero finite angle_deg value within the 180-degree bound.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following stop action as the final action after the turn.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a final stop action with no parameters. It is a second distinct stop action, not a replacement of the first stop.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly four actions: '停下' (stop), '往前走4米' (walk_forward with distance 4 m), '向左转45度' (turn left 45 degrees), and '停止' (stop). The first and final stops are separate ordered actions, not one action rewritten or silently merged.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The explicit sequence markers '先', '然后', '再', and '最后' establish one linear order: stop, walk_forward 4 m, turn left 45 degrees, stop. No alternative execution order is authorized.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no edit, correction, replacement, or revision terms. No clause changes an earlier action or parameter; the initial '停下' is preserved and the final '停止' is an additional ordered action.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition, loop, or repeat count is requested. The two stop words are separate instructions at distinct positions in the sequence rather than a repeated span.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns or external references to resolve. '往前' resolves within the walking action as forward relative to the current heading, '左' resolves within the turn semantics as counterclockwise/positive, and the quantities '4米' and '45度' are explicit. The stop actions take no arguments.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence is fully linear: each action follows its predecessor according to '先', '然后', '再', and '最后'. There is no simultaneity, waiting condition, or completion dependency beyond strict step-to-step succession.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit choice, scope, ordering, or relation unresolved. All actions, their order, and their parameters are fixed by the text.\"\n    }\n  }\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_e2e732b8-1f23-4b39-8a16-30f595ce2222",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 153,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 3333,
+            "output_tokens_details": {
+              "reasoning_tokens": 2192
+            },
+            "total_tokens": 4254
+          }
+        },
+        "request_sha256": "2921d667b29fe32838b92e19fabfea732c62748e6ae9875b981fdb3fac628ff7",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 15.937599000000773,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e2e732b8-1f23-4b39-8a16-30f595ce2222",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"请\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Politeness marker addressing the request; it introduces no action, parameter, order, edit, or unresolved relation and therefore does not modify authority.\"\n    },\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the immediately following action '停下' as the first action in the sequence.\"\n    },\n    {\n      \"text\": \"停下\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop action with no parameters. It is the first stop and is distinct from the later '停止'.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following walking action after the preceding stop action.\"\n    },\n    {\n      \"text\": \"往前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a forward walking action; '往前' resolves to forward relative to the current heading.\"\n    },\n    {\n      \"text\": \"4米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the walk_forward distance as 4 meters, a positive finite distance_m value.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following turn action after the walking action.\"\n    },\n    {\n      \"text\": \"向左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a turn to the left, which resolves to a counterclockwise/positive turn relative to the current heading.\"\n    },\n    {\n      \"text\": \"45度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the turn angle as 45 degrees, a nonzero finite angle_deg value within the 180-degree bound.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following stop action as the final action after the turn.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a final stop action with no parameters. It is a second distinct stop action, not a replacement of the first stop.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly four actions: '停下' (stop), '往前走4米' (walk_forward with distance 4 m), '向左转45度' (turn left 45 degrees), and '停止' (stop). The first and final stops are separate ordered actions, not one action rewritten or silently merged.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The explicit sequence markers '先', '然后', '再', and '最后' establish one linear order: stop, walk_forward 4 m, turn left 45 degrees, stop. No alternative execution order is authorized.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no edit, correction, replacement, or revision terms. No clause changes an earlier action or parameter; the initial '停下' is preserved and the final '停止' is an additional ordered action.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition, loop, or repeat count is requested. The two stop words are separate instructions at distinct positions in the sequence rather than a repeated span.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns or external references to resolve. '往前' resolves within the walking action as forward relative to the current heading, '左' resolves within the turn semantics as counterclockwise/positive, and the quantities '4米' and '45度' are explicit. The stop actions take no arguments.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence is fully linear: each action follows its predecessor according to '先', '然后', '再', and '最后'. There is no simultaneity, waiting condition, or completion dependency beyond strict step-to-step succession.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit choice, scope, ordering, or relation unresolved. All actions, their order, and their parameters are fixed by the text.\"\n    }\n  }\n}",
+        "usage": {
+          "input_tokens": 153,
+          "output_tokens": 3333,
+          "total_tokens": 4254
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.300586800000019,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stop-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 22,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"stop-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "3f4d1d157e8ec0be55cf35a7f680d2cfba8a1d2ea0947beddb6b72f01d8b18ee",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_ee89c278-e935-48e6-89d7-32dadd7fbba9",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 15.944475000000239,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 15.937599000000773,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"请\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Politeness marker addressing the request; it introduces no action, parameter, order, edit, or unresolved relation and therefore does not modify authority.\"\n    },\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the immediately following action '停下' as the first action in the sequence.\"\n    },\n    {\n      \"text\": \"停下\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop action with no parameters. It is the first stop and is distinct from the later '停止'.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following walking action after the preceding stop action.\"\n    },\n    {\n      \"text\": \"往前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a forward walking action; '往前' resolves to forward relative to the current heading.\"\n    },\n    {\n      \"text\": \"4米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the walk_forward distance as 4 meters, a positive finite distance_m value.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following turn action after the walking action.\"\n    },\n    {\n      \"text\": \"向左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a turn to the left, which resolves to a counterclockwise/positive turn relative to the current heading.\"\n    },\n    {\n      \"text\": \"45度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the turn angle as 45 degrees, a nonzero finite angle_deg value within the 180-degree bound.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating clauses; it adds no action or modifying clause and does not change authority.\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Places the following stop action as the final action after the turn.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a final stop action with no parameters. It is a second distinct stop action, not a replacement of the first stop.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly four actions: '停下' (stop), '往前走4米' (walk_forward with distance 4 m), '向左转45度' (turn left 45 degrees), and '停止' (stop). The first and final stops are separate ordered actions, not one action rewritten or silently merged.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The explicit sequence markers '先', '然后', '再', and '最后' establish one linear order: stop, walk_forward 4 m, turn left 45 degrees, stop. No alternative execution order is authorized.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no edit, correction, replacement, or revision terms. No clause changes an earlier action or parameter; the initial '停下' is preserved and the final '停止' is an additional ordered action.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition, loop, or repeat count is requested. The two stop words are separate instructions at distinct positions in the sequence rather than a repeated span.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns or external references to resolve. '往前' resolves within the walking action as forward relative to the current heading, '左' resolves within the turn semantics as counterclockwise/positive, and the quantities '4米' and '45度' are explicit. The stop actions take no arguments.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence is fully linear: each action follows its predecessor according to '先', '然后', '再', and '最后'. There is no simultaneity, waiting condition, or completion dependency beyond strict step-to-step succession.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit choice, scope, ordering, or relation unresolved. All actions, their order, and their parameters are fixed by the text.\"\n    }\n  }\n}",
+          "raw_response_sha256": "22937c7db24ecf480be8391a996e921d94612424009712c125425fad3ad3994a",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_e2e732b8-1f23-4b39-8a16-30f595ce2222",
+          "source_aware": false,
+          "source_sha256": "5e72ad60868290fca50cd838a819eba9cb4eb38d7a1d26ac858fb399c330a764",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 153,
+            "output_tokens": 3333,
+            "total_tokens": 4254
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Politeness marker addressing the request; it introduces no action, parameter, order, edit, or unresolved relation and therefore does not modify authority.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Orders the immediately following action '停下' as the first action in the sequence.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Requests the stop action with no parameters. It is the first stop and is distinct from the later '停止'.",
+                "role": "ACTION",
+                "text": "停下"
+              },
+              {
+                "explanation": "Punctuation separating clauses; it adds no action or modifying clause and does not change authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Places the following walking action after the preceding stop action.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Requests a forward walking action; '往前' resolves to forward relative to the current heading.",
+                "role": "ACTION",
+                "text": "往前走"
+              },
+              {
+                "explanation": "Specifies the walk_forward distance as 4 meters, a positive finite distance_m value.",
+                "role": "QUANTITY",
+                "text": "4米"
+              },
+              {
+                "explanation": "Punctuation separating clauses; it adds no action or modifying clause and does not change authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Places the following turn action after the walking action.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Requests a turn to the left, which resolves to a counterclockwise/positive turn relative to the current heading.",
+                "role": "ACTION",
+                "text": "向左转"
+              },
+              {
+                "explanation": "Specifies the turn angle as 45 degrees, a nonzero finite angle_deg value within the 180-degree bound.",
+                "role": "QUANTITY",
+                "text": "45度"
+              },
+              {
+                "explanation": "Punctuation separating clauses; it adds no action or modifying clause and does not change authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Places the following stop action as the final action after the turn.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Requests a final stop action with no parameters. It is a second distinct stop action, not a replacement of the first stop.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly four actions: '停下' (stop), '往前走4米' (walk_forward with distance 4 m), '向左转45度' (turn left 45 degrees), and '停止' (stop). The first and final stops are separate ordered actions, not one action rewritten or silently merged.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The explicit sequence markers '先', '然后', '再', and '最后' establish one linear order: stop, walk_forward 4 m, turn left 45 degrees, stop. No alternative execution order is authorized.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There are no edit, correction, replacement, or revision terms. No clause changes an earlier action or parameter; the initial '停下' is preserved and the final '停止' is an additional ordered action.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns or external references to resolve. '往前' resolves within the walking action as forward relative to the current heading, '左' resolves within the turn semantics as counterclockwise/positive, and the quantities '4米' and '45度' are explicit. The stop actions take no arguments.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition, loop, or repeat count is requested. The two stop words are separate instructions at distinct positions in the sequence rather than a repeated span.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The sequence is fully linear: each action follows its predecessor according to '先', '然后', '再', and '最后'. There is no simultaneity, waiting condition, or completion dependency beyond strict step-to-step succession.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit choice, scope, ordering, or relation unresolved. All actions, their order, and their parameters are fixed by the text.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 216,
+        "output_tokens": 334,
+        "total_tokens": 2086
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stop-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {},
+          "skill": "stop"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "请先停下然后往前走4米再向左转45度最后停止",
+    "status": "SUCCESS"
+  }
+}

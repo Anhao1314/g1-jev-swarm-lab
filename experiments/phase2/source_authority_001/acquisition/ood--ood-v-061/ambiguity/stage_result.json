@@ -1,0 +1,251 @@
+{
+  "added_wall_s": 8.36205340000015,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.358724399999119,
+        "provider_document": {
+          "created_at": 1791359619,
+          "id": "resp_e29f242a-df84-4dc1-ad10-c69b8b088b92",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_e29f242a-df84-4dc1-ad10-c69b8b088b92",
+              "reasoning_content": "We need answer only JSON object. Need inspect source \"八米，往前。\" Chinese. Means \"8 meters, forward.\" It's an instruction: walk_forward distance 8m. Need decide dimensions. Seven dimensions. Source has action? \"八米，往前。\" likely quantity 8 meters and direction forward. Legal action walk_forward requires positive finite distance_m. It uniquely authorizes one action? Let's parse.\n\nChinese: 八米，往前。 = \"8 meters, forward.\" It could be interpreted as walk forward 8 meters. Action word not explicit \"走\" but \"往前\" means forward, with 八米 distance. Is this a legal Mission IR action? walk_forward action implied. Need assess ambiguity. Could be go forward 8 meters. No other actions. Order one action. Correction none. Repetition none. Reference none. Temporal none. Unresolved none. Probably AUTHORIZED_UNIQUE.\n\nBut careful: \"八米，往前。\" Might mean distance 8 meters, direction forward, yes exactly walk_forward distance_m=8.0. The source doesn't explicitly say \"走\" but \"往前\" is imperative \"forward\" and quantity. In these tasks, legal action words include stand, walk_forward, turn, stop; Chinese equivalents? Source in Chinese. Need map. \"往前\" = forward. Likely unique.\n\nHowever, there could be ambiguity: \"八米，往前\" could be a fragment omitting action verb. Does it authorize \"walk_forward\" or could be \"move forward 8 meters\" only? The IR has walk_forward, so yes. But \"往前\" maybe \"go forward\" or \"forward\" direction. Could also be turn? no.\n\nNeed include coverage spans exactly equal source. Source: \"八米，往前。\" Characters: 八 米 ， 往 前 。 Need split meaningful spans. Since text values concatenated must equal entire source. We can split into e.g. \"八米\" QUANTITY, \"，\" SEPARATOR, \"往前\" ACTION/RELATION? \"。\" SEPARATOR. Need role exactly allowed. Maybe \"八米\" QUANTITY, \"，\" SEPARATOR, \"往前\" ACTION, \"。\" SEPARATOR. Or \"往前\" could be RELATION? The action is walk_forward? The word \"往前\" denotes forward direction, combined with quantity; action implied. Role ACTION maybe. Explanation nonempty.\n\nNeed ensure \"text values concatenated in list order equal entire original source exactly\". If list: [{\"text\":\"八米\",...},{\"text\":\"，\",...},{\"text\":\"往前\",...},{\"text\":\"。\",...}] concatenates \"八米，往前。\". Good.\n\nDimensions:\n- action_multiplicity: UNIQUE. One requested action: walking forward 8 meters. No repeated/edited actions.\n- action_order: UNIQUE. Only one action; no ordering issue.\n- correction_scope: UNIQUE. No correction or edit clauses.\n- repetition_scope: UNIQUE. No repetition.\n- reference_resolution: UNIQUE. No pronouns/ordinal/omitted shared refs; direction \"往前\" self-contained; no external context.\n- temporal_relations: UNIQUE. No before/after/waiting; single action linear.\n- unresolved_relations: UNIQUE. No explicit unresolved choice/scope/order/relation.\n\nStatus AUTHORIZED_UNIQUE if all UNIQUE and legal. Need perhaps consider missing explicit action verb as unknown? The source \"八米，往前。\" Is not a complete sentence? Could be interpreted as \"8 meters forward\" as a command. In Chinese, \"往前\" can mean \"go forward\". It's an imperative. So unique.\n\nLet's craft JSON exactly. Need no markdown. Ensure keys exactly status, coverage, dimensions. Explanations nonempty. Should mention IR semantics.\n\nPotential issue: \"八米\" could be \"8 meters\" or \"eight meters\". Quantity. \"往前\" maybe action: proceed forward. There is no explicit \"走\" but the IR action walk_forward maps from forward movement with distance. Fine.\n\nCould the source be ambiguous between \"walk forward 8 meters\" and \"move forward 8 meters\" where move isn't legal? But legal compilation has walk_forward as only forward movement action. If \"move forward\" corresponds to walk_forward. In safety research pilot, likely yes.\n\nNeed maybe mention \"八米\" before \"往前\": The order of quantity and direction doesn't imply reversed. It provides distance argument. Unique.\n\nOutput status \"AUTHORIZED_UNIQUE\". coverage nonempty. dimensions object exactly seven names.\n\nLet's write.\n\nNeed be careful with JSON validity, Unicode. Use Chinese characters. Strings.\n\nCoverage roles:\n1 text \"八米\" role QUANTITY explanation: Specifies positive finite distance of 8 meters for the forward movement; supplies walk_forward distance_m=8.0.\n2 text \"，\" role SEPARATOR explanation: Punctuation separates quantity from direction; no action authority.\n3 text \"往前\" role ACTION explanation: Imperative forward direction, uniquely identifies walk_forward; combined with 八米 forms single action.\n4 text \"。\" role SEPARATOR explanation: Terminates instruction; no modification.\n\nMaybe \"往前\" as ACTION? It's direction, but action implied. Fine. Could be RELATION? Hmm \"往前\" means forward. The action is walking forward. Role ACTION is okay.\n\nMaybe \"八米\" is quantity but also \"八\" and \"米\"; no need split.\n\nFor action_order explanation: only one action, so linear plan s1; no multiple order.\n\nFor temporal: no temporal modifiers, single action; no simultaneous/waiting.\n\nFor reference: none.\n\nNeed mention no legal interpretation can be established? no.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON object. Need inspect source \"八米，往前。\" Chinese. Means \"8 meters, forward.\" It's an instruction: walk_forward distance 8m. Need decide dimensions. Seven dimensions. Source has action? \"八米，往前。\" likely quantity 8 meters and direction forward. Legal action walk_forward requires positive finite distance_m. It uniquely authorizes one action? Let's parse.\n\nChinese: 八米，往前。 = \"8 meters, forward.\" It could be interpreted as walk forward 8 meters. Action word not explicit \"走\" but \"往前\" means forward, with 八米 distance. Is this a legal Mission IR action? walk_forward action implied. Need assess ambiguity. Could be go forward 8 meters. No other actions. Order one action. Correction none. Repetition none. Reference none. Temporal none. Unresolved none. Probably AUTHORIZED_UNIQUE.\n\nBut careful: \"八米，往前。\" Might mean distance 8 meters, direction forward, yes exactly walk_forward distance_m=8.0. The source doesn't explicitly say \"走\" but \"往前\" is imperative \"forward\" and quantity. In these tasks, legal action words include stand, walk_forward, turn, stop; Chinese equivalents? Source in Chinese. Need map. \"往前\" = forward. Likely unique.\n\nHowever, there could be ambiguity: \"八米，往前\" could be a fragment omitting action verb. Does it authorize \"walk_forward\" or could be \"move forward 8 meters\" only? The IR has walk_forward, so yes. But \"往前\" maybe \"go forward\" or \"forward\" direction. Could also be turn? no.\n\nNeed include coverage spans exactly equal source. Source: \"八米，往前。\" Characters: 八 米 ， 往 前 。 Need split meaningful spans. Since text values concatenated must equal entire source. We can split into e.g. \"八米\" QUANTITY, \"，\" SEPARATOR, \"往前\" ACTION/RELATION? \"。\" SEPARATOR. Need role exactly allowed. Maybe \"八米\" QUANTITY, \"，\" SEPARATOR, \"往前\" ACTION, \"。\" SEPARATOR. Or \"往前\" could be RELATION? The action is walk_forward? The word \"往前\" denotes forward direction, combined with quantity; action implied. Role ACTION maybe. Explanation nonempty.\n\nNeed ensure \"text values concatenated in list order equal entire original source exactly\". If list: [{\"text\":\"八米\",...},{\"text\":\"，\",...},{\"text\":\"往前\",...},{\"text\":\"。\",...}] concatenates \"八米，往前。\". Good.\n\nDimensions:\n- action_multiplicity: UNIQUE. One requested action: walking forward 8 meters. No repeated/edited actions.\n- action_order: UNIQUE. Only one action; no ordering issue.\n- correction_scope: UNIQUE. No correction or edit clauses.\n- repetition_scope: UNIQUE. No repetition.\n- reference_resolution: UNIQUE. No pronouns/ordinal/omitted shared refs; direction \"往前\" self-contained; no external context.\n- temporal_relations: UNIQUE. No before/after/waiting; single action linear.\n- unresolved_relations: UNIQUE. No explicit unresolved choice/scope/order/relation.\n\nStatus AUTHORIZED_UNIQUE if all UNIQUE and legal. Need perhaps consider missing explicit action verb as unknown? The source \"八米，往前。\" Is not a complete sentence? Could be interpreted as \"8 meters forward\" as a command. In Chinese, \"往前\" can mean \"go forward\". It's an imperative. So unique.\n\nLet's craft JSON exactly. Need no markdown. Ensure keys exactly status, coverage, dimensions. Explanations nonempty. Should mention IR semantics.\n\nPotential issue: \"八米\" could be \"8 meters\" or \"eight meters\". Quantity. \"往前\" maybe action: proceed forward. There is no explicit \"走\" but the IR action walk_forward maps from forward movement with distance. Fine.\n\nCould the source be ambiguous between \"walk forward 8 meters\" and \"move forward 8 meters\" where move isn't legal? But legal compilation has walk_forward as only forward movement action. If \"move forward\" corresponds to walk_forward. In safety research pilot, likely yes.\n\nNeed maybe mention \"八米\" before \"往前\": The order of quantity and direction doesn't imply reversed. It provides distance argument. Unique.\n\nOutput status \"AUTHORIZED_UNIQUE\". coverage nonempty. dimensions object exactly seven names.\n\nLet's write.\n\nNeed be careful with JSON validity, Unicode. Use Chinese characters. Strings.\n\nCoverage roles:\n1 text \"八米\" role QUANTITY explanation: Specifies positive finite distance of 8 meters for the forward movement; supplies walk_forward distance_m=8.0.\n2 text \"，\" role SEPARATOR explanation: Punctuation separates quantity from direction; no action authority.\n3 text \"往前\" role ACTION explanation: Imperative forward direction, uniquely identifies walk_forward; combined with 八米 forms single action.\n4 text \"。\" role SEPARATOR explanation: Terminates instruction; no modification.\n\nMaybe \"往前\" as ACTION? It's direction, but action implied. Fine. Could be RELATION? Hmm \"往前\" means forward. The action is walking forward. Role ACTION is okay.\n\nMaybe \"八米\" is quantity but also \"八\" and \"米\"; no need split.\n\nFor action_order explanation: only one action, so linear plan s1; no multiple order.\n\nFor temporal: no temporal modifiers, single action; no simultaneous/waiting.\n\nFor reference: none.\n\nNeed mention no legal interpretation can be established? no.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"八米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a positive finite distance of eight meters, supplying the distance_m parameter for the single forward movement action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the distance quantity from the direction word; it carries no action or editing authority.\"},{\"text\":\"往前\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward direction, which uniquely identifies the legal walk_forward action when combined with the eight-meter distance.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it terminates the instruction and does not modify the action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: moving forward by eight meters. There are no repeated, edited, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is a single linear order with one step and no alternative sequencing.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, replacement, or edit clauses in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the instruction is not duplicated or looped.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments requiring resolution. The direction '往前' is self-contained and the distance is given explicitly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneity, or completion relation is stated. The single action can be represented as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relation unresolved.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_e29f242a-df84-4dc1-ad10-c69b8b088b92",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 141,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1605,
+            "output_tokens_details": {
+              "reasoning_tokens": 1199
+            },
+            "total_tokens": 2514
+          }
+        },
+        "request_sha256": "004f8c4425700da2f663e8d9bb91f8d8558fd8cb2bf42353160abce57dda6762",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.3573722000001,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e29f242a-df84-4dc1-ad10-c69b8b088b92",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"八米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a positive finite distance of eight meters, supplying the distance_m parameter for the single forward movement action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the distance quantity from the direction word; it carries no action or editing authority.\"},{\"text\":\"往前\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward direction, which uniquely identifies the legal walk_forward action when combined with the eight-meter distance.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it terminates the instruction and does not modify the action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: moving forward by eight meters. There are no repeated, edited, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is a single linear order with one step and no alternative sequencing.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, replacement, or edit clauses in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the instruction is not duplicated or looped.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments requiring resolution. The direction '往前' is self-contained and the distance is given explicitly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneity, or completion relation is stated. The single action can be represented as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relation unresolved.\"}}}",
+        "usage": {
+          "input_tokens": 141,
+          "output_tokens": 1605,
+          "total_tokens": 2514
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.133942400001615,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk8",
+      "model": "deepseek-flash",
+      "normalized_length": 5,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 197,
+      "raw_response_sha256": "cbf9b2bae6d117babefa36aa36f33b06476cebd584c3ec1cc3dd50fbb44598d9",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_44c39768-78ad-4235-9a38-938d64f0d59c",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.361433200001557,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.3573722000001,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"八米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a positive finite distance of eight meters, supplying the distance_m parameter for the single forward movement action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the distance quantity from the direction word; it carries no action or editing authority.\"},{\"text\":\"往前\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward direction, which uniquely identifies the legal walk_forward action when combined with the eight-meter distance.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it terminates the instruction and does not modify the action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: moving forward by eight meters. There are no repeated, edited, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is a single linear order with one step and no alternative sequencing.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, replacement, or edit clauses in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the instruction is not duplicated or looped.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments requiring resolution. The direction '往前' is self-contained and the distance is given explicitly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneity, or completion relation is stated. The single action can be represented as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relation unresolved.\"}}}",
+          "raw_response_sha256": "58ee6d8acd4967fab7963e22ccd73858f9a99d3285b620b9ee8784f9ce62dd71",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_e29f242a-df84-4dc1-ad10-c69b8b088b92",
+          "source_aware": false,
+          "source_sha256": "053364f390c0c1a53bb25d4187e2f1cff8f4caa701b5685ad4b5ab3b6f6b122d",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 141,
+            "output_tokens": 1605,
+            "total_tokens": 2514
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Specifies a positive finite distance of eight meters, supplying the distance_m parameter for the single forward movement action.",
+                "role": "QUANTITY",
+                "text": "八米"
+              },
+              {
+                "explanation": "Punctuation separating the distance quantity from the direction word; it carries no action or editing authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Imperative forward direction, which uniquely identifies the legal walk_forward action when combined with the eight-meter distance.",
+                "role": "ACTION",
+                "text": "往前"
+              },
+              {
+                "explanation": "Sentence-ending punctuation; it terminates the instruction and does not modify the action.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: moving forward by eight meters. There are no repeated, edited, or additional actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so there is a single linear order with one step and no alternative sequencing.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There are no correction, replacement, or edit clauses in the source.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, or omitted shared arguments requiring resolution. The direction '往前' is self-contained and the distance is given explicitly.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition marker or repeated span; the instruction is not duplicated or looped.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, waiting, simultaneity, or completion relation is stated. The single action can be represented as one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relation unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 181,
+        "total_tokens": 1921
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk8",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "八米,往前",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "added_wall_s": 2.494565100001637,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 2.430753900000127,
+        "provider_document": {
+          "created_at": 1791360878,
+          "id": "resp_1e909e9b-0753-4130-b7e7-39acd8c9ee15",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_1e909e9b-0753-4130-b7e7-39acd8c9ee15",
+              "reasoning_content": "We need answer only JSON. Need parse Chinese: \"往前走六米，然后顺时针转45度，接着停止\" = walk forward six meters, then turn clockwise 45 deg, then stop.\n\nNeed mission_id path-safe. Could use example? Generate e.g. \"mission-walk6-turn45-stop\" maybe <=64. Steps:\ns1 walk_forward distance_m 6.0 depends []\ns2 turn angle_deg -45.0 depends [\"s1\"] (clockwise negative)\ns3 stop parameters {} depends [\"s2\"]\n\nNeed ensure exactly fields. status SUCCESS, error_code null.\n\nNeed output no markdown.\n\nCheck numeric: 六米 means 6 meters. Chinese numeral. Should be valid? Yes. Need not reject. duration? No.\n\nNeed maybe mission_id \"walk6-turn45-stop\" starts alnum. fine.\n\nReturn JSON.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need parse Chinese: \"往前走六米，然后顺时针转45度，接着停止\" = walk forward six meters, then turn clockwise 45 deg, then stop.\n\nNeed mission_id path-safe. Could use example? Generate e.g. \"mission-walk6-turn45-stop\" maybe <=64. Steps:\ns1 walk_forward distance_m 6.0 depends []\ns2 turn angle_deg -45.0 depends [\"s1\"] (clockwise negative)\ns3 stop parameters {} depends [\"s2\"]\n\nNeed ensure exactly fields. status SUCCESS, error_code null.\n\nNeed output no markdown.\n\nCheck numeric: 六米 means 6 meters. Chinese numeral. Should be valid? Yes. Need not reject. duration? No.\n\nNeed maybe mission_id \"walk6-turn45-stop\" starts alnum. fine.\n\nReturn JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk6-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_1e909e9b-0753-4130-b7e7-39acd8c9ee15",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 211,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 294,
+            "output_tokens_details": {
+              "reasoning_tokens": 178
+            },
+            "total_tokens": 2041
+          }
+        },
+        "request_sha256": "0302e7aef8b6baf425bc5b083559e28590b551e5ac45ed3b463bfaf467eef743",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 2.428559199997835,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_1e909e9b-0753-4130-b7e7-39acd8c9ee15",
+        "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk6-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+        "usage": {
+          "input_tokens": 211,
+          "output_tokens": 294,
+          "total_tokens": 2041
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 1,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.428559199997835,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk6-turn45-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 18,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk6-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "cfbc06f75ea46ff3d30ad0dc52c3417c3f3676a6e30d39660efbb05716d8ef2c",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_1e909e9b-0753-4130-b7e7-39acd8c9ee15",
+      "route": "GUARDED_DIRECT_LLM",
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 211,
+        "output_tokens": 294,
+        "total_tokens": 2041
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk6-turn45-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前走六米然后顺时针转45度接着停止",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 9.291595800001232,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_eb77096e-a8cc-44a2-bd81-6fb3e93233e3",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies one forward movement action, which maps to the legal skill walk_forward; \\\"向前\\\" fixes the direction as forward and introduces no alternative skill.\"},{\"text\":\"1200厘米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the preceding walk_forward action: 1200 centimeters converts exactly to 12.0 meters, a positive finite distance.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action occurs after the forward movement, fixing the order so the turn follows the walk_forward step.\"},{\"text\":\"顺时针转\",\"role\":\"ACTION\",\"explanation\":\"Specifies one turning action with clockwise direction, which maps to the legal skill turn and makes the angle negative.\"},{\"text\":\"90度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 90 degrees; combined with clockwise direction it becomes -90.0 degrees, nonzero, finite, and within the 180-degree maximum.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the final action follows the turn, fixing the order so stop is after the turn step.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Specifies one stop action, which maps to the legal skill stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three actions: one forward movement, one clockwise turn, and one stop. There are no omitted actions, edited replacements, or repeated action requests.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence words \\\"然后\\\" and \\\"接着\\\" impose one linear order: forward movement first, clockwise turn second, stop third.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction words or edits in the source, so no previous action, parameter, group, or relation is changed or replaced.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested; each of the three actions occurs exactly once with no repeated span or count.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"All required arguments are explicit: walk distance is 1200厘米, turn direction is 顺时针 and angle is 90度, and stop has no arguments. There are no pronouns, ordinal references, or omitted shared arguments requiring external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations are a single sequential chain: the turn is after the forward movement, and stop is after the turn. No waiting, simultaneity, conditions, or completion dependencies beyond this linear order are stated.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action count, order, parameter, scope, or relation unresolved; all requested actions and parameters are fixed.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":12.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+  "usage": {
+    "input_tokens": 251,
+    "output_tokens": 1671,
+    "total_tokens": 2946
+  }
+}

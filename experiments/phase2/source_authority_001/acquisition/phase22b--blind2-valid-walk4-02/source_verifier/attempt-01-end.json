@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.117601099998865,
+  "provider_document": {
+    "created_at": 1791359887,
+    "id": "resp_1e1d5ab2-ac8a-4416-86d8-c982027589f6",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_1e1d5ab2-ac8a-4416-86d8-c982027589f6",
+        "reasoning_content": "We need answer exact JSON. Need analyze source Chinese \"帮我往前走四米\" = \"Help me walk forward four meters.\" Need derive plan. Need consider dimensions. Candidate matches likely. Need output JSON with status AUTHORIZED_UNIQUE? Need inspect all dimensions. Source only one action: walk_forward distance 4 meters. \"往前走\" walk forward. \"四米\" 4 meters. One step s1 depends [].\n\nNeed coverage split exact entire source. Source string: 帮我往前走四米. Need split meaningful spans with exact concatenation. Could split \"帮我\" context? \"往前走\" action? \"四米\" quantity. But concatenated must equal \"帮我往前走四米\". Need roles. Maybe coverage objects:\n1 text \"帮我\" role CONTEXT explanation \"Polite request marker addressed to assistant; no executable action, doesn't alter plan.\"\n2 text \"往前走\" role ACTION explanation \"Requests walking forward; maps to walk_forward skill.\"\n3 text \"四米\" role QUANTITY explanation \"Specifies distance 4.0 meters; parameter distance_m=4.0.\"\nThis concatenates \"帮我往前走四米\" yes.\n\nNeed dimensions all UNIQUE. action_multiplicity: exactly one action. action_order: one step order trivial. correction_scope: no corrections. repetition_scope: no repetition. reference_resolution: no pronouns/ordinals requiring external, first-person \"我\" is requester not a step ref; \"往前走\" no object. temporal_relations: no before/after; single linear step. unresolved_relations: none.\n\nNeed authorized_plan list step.\n\nNeed ensure valid JSON. No markdown. Need include dimensions object exactly seven keys. coverage list nonempty. authorized_plan null? no. Steps exactly id skill parameters depends_on. Parameters distance_m 4.0 or 4? finite JSON number. Use 4.0.\n\nNeed perhaps note \"帮我\" is context not action. \"往前走\" action. \"四米\" quantity. Should role for \"帮我\" be CONTEXT. Good.\n\nNeed be careful: \"往前走四米\" could be \"walk forward four meters\", legal. Stand default irrelevant. No temporal. AUTHORIZED_UNIQUE.\n\nNeed output exactly one JSON object. We can use final. Ensure no markdown. Need no extra text. Let's craft.\n\nPotential issue: coverage text values concatenated equal original exactly. Our three spans:\n\"帮我\" + \"往前走\" + \"四米\" = \"帮我往前走四米\". Yes.\n\nDimensions:\naction_multiplicity status UNIQUE explanation...\naction_order UNIQUE\ncorrection_scope UNIQUE\nrepetition_scope UNIQUE\nreference_resolution UNIQUE\ntemporal_relations UNIQUE\nunresolved_relations UNIQUE\n\nNeed each explanation nonempty. Good.\n\nNow final.",
+        "summary": [
+          {
+            "text": "We need answer exact JSON. Need analyze source Chinese \"帮我往前走四米\" = \"Help me walk forward four meters.\" Need derive plan. Need consider dimensions. Candidate matches likely. Need output JSON with status AUTHORIZED_UNIQUE? Need inspect all dimensions. Source only one action: walk_forward distance 4 meters. \"往前走\" walk forward. \"四米\" 4 meters. One step s1 depends [].\n\nNeed coverage split exact entire source. Source string: 帮我往前走四米. Need split meaningful spans with exact concatenation. Could split \"帮我\" context? \"往前走\" action? \"四米\" quantity. But concatenated must equal \"帮我往前走四米\". Need roles. Maybe coverage objects:\n1 text \"帮我\" role CONTEXT explanation \"Polite request marker addressed to assistant; no executable action, doesn't alter plan.\"\n2 text \"往前走\" role ACTION explanation \"Requests walking forward; maps to walk_forward skill.\"\n3 text \"四米\" role QUANTITY explanation \"Specifies distance 4.0 meters; parameter distance_m=4.0.\"\nThis concatenates \"帮我往前走四米\" yes.\n\nNeed dimensions all UNIQUE. action_multiplicity: exactly one action. action_order: one step order trivial. correction_scope: no corrections. repetition_scope: no repetition. reference_resolution: no pronouns/ordinals requiring external, first-person \"我\" is requester not a step ref; \"往前走\" no object. temporal_relations: no before/after; single linear step. unresolved_relations: none.\n\nNeed authorized_plan list step.\n\nNeed ensure valid JSON. No markdown. Need include dimensions object exactly seven keys. coverage list nonempty. authorized_plan null? no. Steps exactly id skill parameters depends_on. Parameters distance_m 4.0 or 4? finite JSON number. Use 4.0.\n\nNeed perhaps note \"帮我\" is context not action. \"往前走\" action. \"四米\" quantity. Should role for \"帮我\" be CONTEXT. Good.\n\nNeed be careful: \"往前走四米\" could be \"walk forward four meters\", legal. Stand default irrelevant. No temporal. AUTHORIZED_UNIQUE.\n\nNeed output exactly one JSON object. We can use final. Ensure no markdown. Need no extra text. Let's craft.\n\nPotential issue: coverage text values concatenated equal original exactly. Our three spans:\n\"帮我\" + \"往前走\" + \"四米\" = \"帮我往前走四米\". Yes.\n\nDimensions:\naction_multiplicity status UNIQUE explanation...\naction_order UNIQUE\ncorrection_scope UNIQUE\nrepetition_scope UNIQUE\nreference_resolution UNIQUE\ntemporal_relations UNIQUE\nunresolved_relations UNIQUE\n\nNeed each explanation nonempty. Good.\n\nNow final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request phrase addressed to the assistant; it introduces no executable action, parameter, order, repetition, or correction and therefore does not alter the authorized plan.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Requests forward walking as the single action; this maps to the legal skill walk_forward.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as four meters; this supplies exactly distance_m = 4.0 for the walk_forward action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: walking forward. There is no conjunction, list, edit, or repetition that adds or replaces another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one action, the sole execution order is the single walk_forward step followed by nothing else.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, edit, replacement, or revised parameter; nothing earlier is changed or preserved against a competing instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repeated span; the walk_forward action is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The only first-person element is the requester phrase '帮我', which does not refer to a step, parameter, or external object. The action has its distance supplied explicitly as '四米', so no omitted argument must be resolved externally.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated. The single action has one trivial linear execution order.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no action, parameter, order, scope, or relation explicitly unresolved; distance and action are both specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_1e1d5ab2-ac8a-4416-86d8-c982027589f6",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 315,
+      "input_tokens_details": {
+        "cached_tokens": 896
+      },
+      "output_tokens": 1040,
+      "output_tokens_details": {
+        "reasoning_tokens": 577
+      },
+      "total_tokens": 2251
+    }
+  },
+  "request_sha256": "7b114915bb4d930fe9057471fa0439dcd8ff53e64d5461a6964347ba85446342",
+  "status": "SUCCESS"
+}

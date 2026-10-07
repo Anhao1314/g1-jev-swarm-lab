@@ -1,0 +1,178 @@
+{
+  "added_wall_s": 2.462621800001216,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 2.4101573999978427,
+        "provider_document": {
+          "created_at": 1791360985,
+          "id": "resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+              "reasoning_content": "We need answer JSON only. Need parse Chinese: \"站立5秒然后前进六米接着向右转45度最后立即停止\"\n\nWe need Mission IR. Steps:\ns1 stand duration_s 5.0\ns2 walk_forward distance_m 6.0\ns3 turn angle_deg -45.0 (right negative)\ns4 stop {}\ndepends each previous.\n\nMission_id safe. Need choose e.g. \"mission-stand-walk-right-stop\". Must match regex. No extra text. Ensure exactly fields.\n\nNeed decide status SUCCESS. No ambiguity. \"立即停止\" stop. Good.\n\nNeed output JSON object with status mission error_code. Ensure no markdown. ",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need parse Chinese: \"站立5秒然后前进六米接着向右转45度最后立即停止\"\n\nWe need Mission IR. Steps:\ns1 stand duration_s 5.0\ns2 walk_forward distance_m 6.0\ns3 turn angle_deg -45.0 (right negative)\ns4 stop {}\ndepends each previous.\n\nMission_id safe. Need choose e.g. \"mission-stand-walk-right-stop\". Must match regex. No extra text. Ensure exactly fields.\n\nNeed decide status SUCCESS. No ambiguity. \"立即停止\" stop. Good.\n\nNeed output JSON object with status mission error_code. Ensure no markdown. ",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_cce1cf12-4fbf-44c9-8972-d348e079143c",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 214,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 288,
+            "output_tokens_details": {
+              "reasoning_tokens": 142
+            },
+            "total_tokens": 2038
+          }
+        },
+        "request_sha256": "538747b748bfbfc983a7dd4bdee6643b4afc775a96c2b1275da895879f11bc5e",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 2.408296000001428,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+        "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+        "usage": {
+          "input_tokens": 214,
+          "output_tokens": 288,
+          "total_tokens": 2038
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 1,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.408296000001428,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 24,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "f94968dc501ee24000dce94bc5b2fbb89daed5ee08d2d55e45d895e16a19b623",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_cce1cf12-4fbf-44c9-8972-d348e079143c",
+      "route": "GUARDED_DIRECT_LLM",
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 214,
+        "output_tokens": 288,
+        "total_tokens": 2038
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "站立5秒然后前进六米接着向右转45度最后立即停止",
+    "status": "SUCCESS"
+  }
+}

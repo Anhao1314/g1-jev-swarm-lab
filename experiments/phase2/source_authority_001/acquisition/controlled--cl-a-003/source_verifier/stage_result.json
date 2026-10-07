@@ -1,0 +1,251 @@
+{
+  "added_wall_s": 11.878927099998691,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 11.874403199999506,
+        "provider_document": {
+          "created_at": 1791360291,
+          "id": "resp_e9b30e70-2a07-4cdb-92f6-1243fbb2bb76",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_e9b30e70-2a07-4cdb-92f6-1243fbb2bb76",
+              "reasoning_content": "We need answer JSON only. Need derive source plan. Source \"保持站立\" Chinese: \"keep standing\" / \"remain standing\". Need determine action plan. Legal skills stand etc. It requests standing. Does it specify duration? \"保持站立\" means maintain standing. It does not specify duration. In compilation semantics: stand parameters duration_s positive finite seconds at most 60. When no duration is specified compilation default exactly 2.0. An explicitly vague duration is unresolved, not default. Here no duration specified. So default 2.0 authorized? Need be careful: \"保持站立\" could imply indefinite duration, but not explicit duration. Semantics say when no duration specified default exactly 2.0. So yes stand with duration_s 2.0. One action. Candidate matches.\n\nNeed output JSON with status AUTHORIZED_UNIQUE, coverage split source into meaningful spans. Source exactly \"保持站立\". Could split into \"保持\" and \"站立\" maybe role ACTION? Need every span concatenated equals entire source exactly. Need explanations nonempty. Could have one coverage object text \"保持站立\", role ACTION, explanation. But \"split source into meaningful spans so every action, relation and edit clause is analyzed.\" One span is okay? It is entire source, meaningful. Maybe split \"保持\" (RELATION? or ACTION) and \"站立\" (ACTION). Need role allowed ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"保持\" means maintain, \"站立\" means stand. Combined action \"保持站立\". If split, \"保持\" could be ACTION? It modifies \"站立\" as maintain. Better one span text \"保持站立\" role ACTION. Explanation: instructs to remain standing; stand skill with unspecified duration, default 2.0. No relations, edits, quantities. Then dimensions.\n\nNeed check dimensions:\n- action_multiplicity: UNIQUE. Exactly one requested action: remain standing. Source contains no additional, repeated, or edited actions.\n- action_order: UNIQUE? With one action order trivial/unambiguous. Or inapplicable. UNIQUE.\n- correction_scope: UNIQUE. No corrections/edits; none to scope.\n- repetition_scope: UNIQUE. No repetitions; single occurrence.\n- reference_resolution: UNIQUE. No pronouns/ordinals/omitted args except stand duration default per semantics. Or omitted duration resolved by default. UNIQUE.\n- temporal_relations: UNIQUE. No before/after/simultaneous/waiting; single action.\n- unresolved_relations: UNIQUE. No explicit unresolved relations.\n\nAuthorized plan:\n[\n {\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}\n]\n\nNeed output exactly one JSON object. Ensure coverage text concatenated equals \"保持站立\". If one object text \"保持站立\" okay. Explanation nonempty. Dimensions exactly names. authorized_plan not null. status AUTHORIZED_UNIQUE.\n\nNeed perhaps mention candidate_ir matches? Not required, but maybe not in output except authorized_plan. We must not include candidate comparison? Output schema exact keys. We can include in dimension explanations maybe source-derived. No extra keys.\n\nNeed ensure JSON valid. Chinese text okay. \"保持站立\" in source. In coverage text exact. Perhaps one coverage object role ACTION. Does coverage need split every action, relation edit clause; one action. Good.\n\nLet's craft with sufficient explanation. Need no markdown. Final JSON only.\n\nNeed be careful with duration: If source \"保持站立\" maybe \"保持\" implies duration, but no explicit duration. Semantics says no duration specified default exactly 2.0. \"保持\" might be explicitly vague? Is \"保持\" vague duration? It means keep/maintain. Does that count as explicitly vague duration? The rule: \"An explicitly vague duration is unresolved, not the default.\" But source doesn't mention duration, it just says keep standing. Is \"保持\" explicitly vague duration? Hmm. Need consider. It may imply indefinite/continue, but not a numeric duration. Does that make duration unresolved? Let's parse. Source \"保持站立\": literally \"maintain standing\". In robotics, command may mean remain standing (duration indefinite). But compilation semantics state when no duration specified default exactly 2.0. Is \"保持\" a duration spec? It is not a duration phrase like \"一会儿\" or \"一段时间\"; it's an action aspect \"keep\". The default applies when no duration specified. Could \"保持\" be an explicitly vague duration? It doesn't specify duration, just maintain. I think no explicit vague duration. So default 2.0.\n\nBut maybe \"保持站立\" could mean \"stay standing\" with no duration, so default. Candidate uses 2.0. Good.\n\nNeed maybe coverage split \"保持\" and \"站立\":\n- text \"保持\", role ACTION? Explanation \"modifier/verb 'maintain', indicates continuous standing but no explicit duration; does not create an additional action.\"\n- text \"站立\", role ACTION, explanation \"standing action; maps to stand with default duration 2.0 because no duration specified.\"\nConcatenated equals \"保持站立\". This might better satisfy meaningful spans. Role for \"保持\" could be RELATION? It expresses maintenance/continuation, but not temporal relation among multiple actions. ACTION maybe. Or CONTEXT. If role ACTION for \"保持\" might imply action multiplicity? But explanation says it is aspect of same action not separate. Role allowed maybe ACTION. \"站立\" ACTION. Could also role \"SEPARATOR\"? no. Need every action clause analyzed. Combined phrase is one action. Splitting into \"保持\" as RELATION? It is not relation. Maybe \"ACTION\" for both is okay, but action_multiplicity explanation must clarify one combined action. The coverage roles are not strictly semantic? It says role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. \"保持\" is an action modifier. I can use CONTEXT? Hmm.\n\nMaybe safest: one span \"保持站立\" role ACTION. Then no risk of implying two actions. It is a meaningful span. The instruction \"Split source into meaningful spans\" doesn't require multiple if source is one clause. So one object.\n\nNeed maybe mention candidate_ir in dimensions? The output doesn't ask comparison. But could mention \"candidate_ir is consistent\" but that would be extra? Explanation can mention? The role of dimensions is source. It might be okay. But perhaps avoid candidate to focus source. Status is about source uniqueness. If candidate matches, same plan. We can just output.\n\nLet's ensure no markdown. Final.\n\nWait, the system says \"FIRST derive ... Only AFTER ... compare ...\" We don't need include derivation. Output exactly one JSON object. Good.\n\nLet's formulate dimensions explanations:\n\naction_multiplicity: \"The entire source is the single imperative '保持站立' (remain standing). It requests one stand action; no conjunction, repetition, edit, or additional action is present.\"\naction_order: \"With exactly one requested action, the execution order is trivially fixed: perform that stand action as s1. No alternative order exists.\"\ncorrection_scope: \"There is no correction or edit marker in the source; nothing replaces or preserves an earlier instruction.\"\nrepetition_scope: \"No repetition count, loop, or repeated action phrase is present; the stand action occurs once.\"\nreference_resolution: \"There are no pronouns, ordinals, or shared arguments requiring external referents. The only omitted parameter is duration for stand, and the compilation semantics for unspecified duration supply exactly 2.0.\"\ntemporal_relations: \"No before/after, simultaneous, waiting, or completion relation is stated; the single action can be represented in a single linear order.\"\nunresolved_relations: \"The source leaves no explicit relation, scope, order, or choice unresolved; it directly requests one stand action.\"\n\nAuthorized plan with id s1 skill stand parameters duration_s 2.0 depends_on [].\n\nCoverage:\n{\n\"text\":\"保持站立\",\n\"role\":\"ACTION\",\n\"explanation\":\"This is the complete imperative: keep/remain standing. It authorizes exactly one stand action. Since no duration_s is specified, the compilation default 2.0 seconds applies; there are no edits, repetitions, references, or temporal relations to resolve.\"\n}\n\nNeed use exact source text. Yes.\n\nStatus AUTHORIZED_UNIQUE. Coverage nonempty list. All dimension statuses UNIQUE. Need no extra fields.\n\nPotential issue: \"保持站立\" might also be interpreted as \"hold stand\" but no issue.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need derive source plan. Source \"保持站立\" Chinese: \"keep standing\" / \"remain standing\". Need determine action plan. Legal skills stand etc. It requests standing. Does it specify duration? \"保持站立\" means maintain standing. It does not specify duration. In compilation semantics: stand parameters duration_s positive finite seconds at most 60. When no duration is specified compilation default exactly 2.0. An explicitly vague duration is unresolved, not default. Here no duration specified. So default 2.0 authorized? Need be careful: \"保持站立\" could imply indefinite duration, but not explicit duration. Semantics say when no duration specified default exactly 2.0. So yes stand with duration_s 2.0. One action. Candidate matches.\n\nNeed output JSON with status AUTHORIZED_UNIQUE, coverage split source into meaningful spans. Source exactly \"保持站立\". Could split into \"保持\" and \"站立\" maybe role ACTION? Need every span concatenated equals entire source exactly. Need explanations nonempty. Could have one coverage object text \"保持站立\", role ACTION, explanation. But \"split source into meaningful spans so every action, relation and edit clause is analyzed.\" One span is okay? It is entire source, meaningful. Maybe split \"保持\" (RELATION? or ACTION) and \"站立\" (ACTION). Need role allowed ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"保持\" means maintain, \"站立\" means stand. Combined action \"保持站立\". If split, \"保持\" could be ACTION? It modifies \"站立\" as maintain. Better one span text \"保持站立\" role ACTION. Explanation: instructs to remain standing; stand skill with unspecified duration, default 2.0. No relations, edits, quantities. Then dimensions.\n\nNeed check dimensions:\n- action_multiplicity: UNIQUE. Exactly one requested action: remain standing. Source contains no additional, repeated, or edited actions.\n- action_order: UNIQUE? With one action order trivial/unambiguous. Or inapplicable. UNIQUE.\n- correction_scope: UNIQUE. No corrections/edits; none to scope.\n- repetition_scope: UNIQUE. No repetitions; single occurrence.\n- reference_resolution: UNIQUE. No pronouns/ordinals/omitted args except stand duration default per semantics. Or omitted duration resolved by default. UNIQUE.\n- temporal_relations: UNIQUE. No before/after/simultaneous/waiting; single action.\n- unresolved_relations: UNIQUE. No explicit unresolved relations.\n\nAuthorized plan:\n[\n {\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}\n]\n\nNeed output exactly one JSON object. Ensure coverage text concatenated equals \"保持站立\". If one object text \"保持站立\" okay. Explanation nonempty. Dimensions exactly names. authorized_plan not null. status AUTHORIZED_UNIQUE.\n\nNeed perhaps mention candidate_ir matches? Not required, but maybe not in output except authorized_plan. We must not include candidate comparison? Output schema exact keys. We can include in dimension explanations maybe source-derived. No extra keys.\n\nNeed ensure JSON valid. Chinese text okay. \"保持站立\" in source. In coverage text exact. Perhaps one coverage object role ACTION. Does coverage need split every action, relation edit clause; one action. Good.\n\nLet's craft with sufficient explanation. Need no markdown. Final JSON only.\n\nNeed be careful with duration: If source \"保持站立\" maybe \"保持\" implies duration, but no explicit duration. Semantics says no duration specified default exactly 2.0. \"保持\" might be explicitly vague? Is \"保持\" vague duration? It means keep/maintain. Does that count as explicitly vague duration? The rule: \"An explicitly vague duration is unresolved, not the default.\" But source doesn't mention duration, it just says keep standing. Is \"保持\" explicitly vague duration? Hmm. Need consider. It may imply indefinite/continue, but not a numeric duration. Does that make duration unresolved? Let's parse. Source \"保持站立\": literally \"maintain standing\". In robotics, command may mean remain standing (duration indefinite). But compilation semantics state when no duration specified default exactly 2.0. Is \"保持\" a duration spec? It is not a duration phrase like \"一会儿\" or \"一段时间\"; it's an action aspect \"keep\". The default applies when no duration specified. Could \"保持\" be an explicitly vague duration? It doesn't specify duration, just maintain. I think no explicit vague duration. So default 2.0.\n\nBut maybe \"保持站立\" could mean \"stay standing\" with no duration, so default. Candidate uses 2.0. Good.\n\nNeed maybe coverage split \"保持\" and \"站立\":\n- text \"保持\", role ACTION? Explanation \"modifier/verb 'maintain', indicates continuous standing but no explicit duration; does not create an additional action.\"\n- text \"站立\", role ACTION, explanation \"standing action; maps to stand with default duration 2.0 because no duration specified.\"\nConcatenated equals \"保持站立\". This might better satisfy meaningful spans. Role for \"保持\" could be RELATION? It expresses maintenance/continuation, but not temporal relation among multiple actions. ACTION maybe. Or CONTEXT. If role ACTION for \"保持\" might imply action multiplicity? But explanation says it is aspect of same action not separate. Role allowed maybe ACTION. \"站立\" ACTION. Could also role \"SEPARATOR\"? no. Need every action clause analyzed. Combined phrase is one action. Splitting into \"保持\" as RELATION? It is not relation. Maybe \"ACTION\" for both is okay, but action_multiplicity explanation must clarify one combined action. The coverage roles are not strictly semantic? It says role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. \"保持\" is an action modifier. I can use CONTEXT? Hmm.\n\nMaybe safest: one span \"保持站立\" role ACTION. Then no risk of implying two actions. It is a meaningful span. The instruction \"Split source into meaningful spans\" doesn't require multiple if source is one clause. So one object.\n\nNeed maybe mention candidate_ir in dimensions? The output doesn't ask comparison. But could mention \"candidate_ir is consistent\" but that would be extra? Explanation can mention? The role of dimensions is source. It might be okay. But perhaps avoid candidate to focus source. Status is about source uniqueness. If candidate matches, same plan. We can just output.\n\nLet's ensure no markdown. Final.\n\nWait, the system says \"FIRST derive ... Only AFTER ... compare ...\" We don't need include derivation. Output exactly one JSON object. Good.\n\nLet's formulate dimensions explanations:\n\naction_multiplicity: \"The entire source is the single imperative '保持站立' (remain standing). It requests one stand action; no conjunction, repetition, edit, or additional action is present.\"\naction_order: \"With exactly one requested action, the execution order is trivially fixed: perform that stand action as s1. No alternative order exists.\"\ncorrection_scope: \"There is no correction or edit marker in the source; nothing replaces or preserves an earlier instruction.\"\nrepetition_scope: \"No repetition count, loop, or repeated action phrase is present; the stand action occurs once.\"\nreference_resolution: \"There are no pronouns, ordinals, or shared arguments requiring external referents. The only omitted parameter is duration for stand, and the compilation semantics for unspecified duration supply exactly 2.0.\"\ntemporal_relations: \"No before/after, simultaneous, waiting, or completion relation is stated; the single action can be represented in a single linear order.\"\nunresolved_relations: \"The source leaves no explicit relation, scope, order, or choice unresolved; it directly requests one stand action.\"\n\nAuthorized plan with id s1 skill stand parameters duration_s 2.0 depends_on [].\n\nCoverage:\n{\n\"text\":\"保持站立\",\n\"role\":\"ACTION\",\n\"explanation\":\"This is the complete imperative: keep/remain standing. It authorizes exactly one stand action. Since no duration_s is specified, the compilation default 2.0 seconds applies; there are no edits, repetitions, references, or temporal relations to resolve.\"\n}\n\nNeed use exact source text. Yes.\n\nStatus AUTHORIZED_UNIQUE. Coverage nonempty list. All dimension statuses UNIQUE. Need no extra fields.\n\nPotential issue: \"保持站立\" might also be interpreted as \"hold stand\" but no issue.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"This is the complete imperative: keep/remain standing. It authorizes exactly one stand action. Since no duration_s is specified, the compilation default 2.0 seconds applies; there are no edits, repetitions, references, or temporal relations to resolve.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The entire source is the single imperative '保持站立' (remain standing). It requests one stand action; no conjunction, repetition, edit, or additional action is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one requested action, the execution order is trivially fixed: perform that stand action as s1. No alternative order exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source; nothing replaces or preserves an earlier instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, loop, or repeated action phrase is present; the stand action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or shared arguments requiring external referents. The only omitted parameter is duration for stand, and the compilation semantics for unspecified duration supply exactly 2.0.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneous, waiting, or completion relation is stated; the single action can be represented in a single linear order.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit relation, scope, order, or choice unresolved; it directly requests one stand action.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_e9b30e70-2a07-4cdb-92f6-1243fbb2bb76",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 181,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 2195,
+            "output_tokens_details": {
+              "reasoning_tokens": 1789
+            },
+            "total_tokens": 3400
+          }
+        },
+        "request_sha256": "ee7391c2609c71e3127aa7907c1ee6530612a920a5fb1bceae0a53ca38ece7f6",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 11.872813099998893,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e9b30e70-2a07-4cdb-92f6-1243fbb2bb76",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"This is the complete imperative: keep/remain standing. It authorizes exactly one stand action. Since no duration_s is specified, the compilation default 2.0 seconds applies; there are no edits, repetitions, references, or temporal relations to resolve.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The entire source is the single imperative '保持站立' (remain standing). It requests one stand action; no conjunction, repetition, edit, or additional action is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one requested action, the execution order is trivially fixed: perform that stand action as s1. No alternative order exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source; nothing replaces or preserves an earlier instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, loop, or repeated action phrase is present; the stand action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or shared arguments requiring external referents. The only omitted parameter is duration for stand, and the compilation semantics for unspecified duration supply exactly 2.0.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneous, waiting, or completion relation is stated; the single action can be represented in a single linear order.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit relation, scope, order, or choice unresolved; it directly requests one stand action.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 181,
+          "output_tokens": 2195,
+          "total_tokens": 3400
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.918005899999116,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand",
+      "model": "deepseek-flash",
+      "normalized_length": 4,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "dff5922b20346b6d9418691a52cf8c3c21145a8715deee432e74f5eb5a82aebc",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_df6ad802-dc39-4f09-aaf5-5760269ed922",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 11.878257699998358,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 11.872813099998893,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"This is the complete imperative: keep/remain standing. It authorizes exactly one stand action. Since no duration_s is specified, the compilation default 2.0 seconds applies; there are no edits, repetitions, references, or temporal relations to resolve.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The entire source is the single imperative '保持站立' (remain standing). It requests one stand action; no conjunction, repetition, edit, or additional action is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one requested action, the execution order is trivially fixed: perform that stand action as s1. No alternative order exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source; nothing replaces or preserves an earlier instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition count, loop, or repeated action phrase is present; the stand action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or shared arguments requiring external referents. The only omitted parameter is duration for stand, and the compilation semantics for unspecified duration supply exactly 2.0.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneous, waiting, or completion relation is stated; the single action can be represented in a single linear order.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit relation, scope, order, or choice unresolved; it directly requests one stand action.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "a9c5820ceaa17f06a8f2e0c439ae1742f3d37c480326314829cfae685c2007b8",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_e9b30e70-2a07-4cdb-92f6-1243fbb2bb76",
+          "source_aware": true,
+          "source_sha256": "05d0bb63ce32714400473aa34c98a4a670eb2deb44615c49ea973ed6e20c5ddf",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 181,
+            "output_tokens": 2195,
+            "total_tokens": 3400
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 2.0
+                },
+                "skill": "stand"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "This is the complete imperative: keep/remain standing. It authorizes exactly one stand action. Since no duration_s is specified, the compilation default 2.0 seconds applies; there are no edits, repetitions, references, or temporal relations to resolve.",
+                "role": "ACTION",
+                "text": "保持站立"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The entire source is the single imperative '保持站立' (remain standing). It requests one stand action; no conjunction, repetition, edit, or additional action is present.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "With exactly one requested action, the execution order is trivially fixed: perform that stand action as s1. No alternative order exists.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction or edit marker in the source; nothing replaces or preserves an earlier instruction.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, or shared arguments requiring external referents. The only omitted parameter is duration for stand, and the compilation semantics for unspecified duration supply exactly 2.0.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition count, loop, or repeated action phrase is present; the stand action occurs once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, simultaneous, waiting, or completion relation is stated; the single action can be represented in a single linear order.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit relation, scope, order, or choice unresolved; it directly requests one stand action.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 201,
+        "output_tokens": 141,
+        "total_tokens": 1878
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        }
+      ]
+    },
+    "normalized_text": "保持站立",
+    "status": "SUCCESS"
+  }
+}

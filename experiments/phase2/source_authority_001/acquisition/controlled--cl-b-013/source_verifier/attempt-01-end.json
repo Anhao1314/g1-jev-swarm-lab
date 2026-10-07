@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.202930199997354,
+  "provider_document": {
+    "created_at": 1791360454,
+    "id": "resp_e955819a-8fce-4a32-b9d6-231122441b1b",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_e955819a-8fce-4a32-b9d6-231122441b1b",
+        "reasoning_content": "We need answer JSON only. Need derive source plan. Source \"向右转45.0度\". Chinese: 向右转 = turn right. 45.0度 = 45.0 degrees. Semantics: right/clockwise negative. So turn angle_deg -45.0. Plan one step s1 turn -45.0 depends_on []. Candidate matches. Need coverage split entire source exactly. Entire source length? \"向右转45.0度\". Need meaningful spans, concatenation exact. Could split as \"向右转\" ACTION? \"45.0\" QUANTITY? \"度\" QUANTITY/unit? Need text exact. Role. We need seven dimensions. Status AUTHORIZED_UNIQUE.\n\nNeed be careful with \"向右转\" maybe Chinese:向右 = to the right, 转 = turn. Source no punctuation. We can make coverage [{\"text\":\"向右转\",\"role\":\"ACTION\",...},{\"text\":\"45.0\",\"role\":\"QUANTITY\",...},{\"text\":\"度\",\"role\":\"QUANTITY\",...}] Concatenates exactly. But maybe \"向右转45.0度\" all action? The requirement split meaningful spans. We can include quantity unit separately. Explanation nonempty. Each says effect. \"向右转\" specifies turn right/clockwise negative. \"45.0\" magnitude. \"度\" degrees; max abs? 45 <=180. No corrections/repetitions/relations.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action turn.\naction_order UNIQUE: single action, trivial order.\ncorrection_scope UNIQUE: no correction/edit.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/omitted args? \"right\" direction and 45 deg full. Omitted? none.\ntemporal_relations UNIQUE: no temporal relations, single step.\nunresolved_relations UNIQUE: none.\n\nAuthorized plan: steps id s1 skill turn parameters angle_deg -45.0 depends_on []. No mission_id. JSON number finite. Use -45.0 or -45? JSON number can be -45.0. Candidate uses -45.0. Need output exactly keys status, coverage, dimensions, authorized_plan. No markdown.\n\nNeed ensure coverage text concatenated equal entire original source. Original: \"向右转45.0度\". If text spans \"向右转\", \"45.0\", \"度\" concatenates \"向右转45.0度\" yes. Good.\n\nNeed maybe role \"QUANTITY\" for \"45.0度\" instead of split to avoid unit separate? But splitting \"45.0\" and \"度\" both quantity okay. Every action etc. Need not too verbose.\n\nPotential issue: \"向右转45.0度\" in Chinese grammar: \"turn right 45.0 degrees\" means turn right by 45 degrees, not \"turn to right 45 degrees\"? Direction right and magnitude 45. Yes.\n\nNeed final JSON only. Ensure dimensions has exactly seven names. Use status strings. authorized_plan list.\n\nLet's craft.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need derive source plan. Source \"向右转45.0度\". Chinese: 向右转 = turn right. 45.0度 = 45.0 degrees. Semantics: right/clockwise negative. So turn angle_deg -45.0. Plan one step s1 turn -45.0 depends_on []. Candidate matches. Need coverage split entire source exactly. Entire source length? \"向右转45.0度\". Need meaningful spans, concatenation exact. Could split as \"向右转\" ACTION? \"45.0\" QUANTITY? \"度\" QUANTITY/unit? Need text exact. Role. We need seven dimensions. Status AUTHORIZED_UNIQUE.\n\nNeed be careful with \"向右转\" maybe Chinese:向右 = to the right, 转 = turn. Source no punctuation. We can make coverage [{\"text\":\"向右转\",\"role\":\"ACTION\",...},{\"text\":\"45.0\",\"role\":\"QUANTITY\",...},{\"text\":\"度\",\"role\":\"QUANTITY\",...}] Concatenates exactly. But maybe \"向右转45.0度\" all action? The requirement split meaningful spans. We can include quantity unit separately. Explanation nonempty. Each says effect. \"向右转\" specifies turn right/clockwise negative. \"45.0\" magnitude. \"度\" degrees; max abs? 45 <=180. No corrections/repetitions/relations.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action turn.\naction_order UNIQUE: single action, trivial order.\ncorrection_scope UNIQUE: no correction/edit.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/omitted args? \"right\" direction and 45 deg full. Omitted? none.\ntemporal_relations UNIQUE: no temporal relations, single step.\nunresolved_relations UNIQUE: none.\n\nAuthorized plan: steps id s1 skill turn parameters angle_deg -45.0 depends_on []. No mission_id. JSON number finite. Use -45.0 or -45? JSON number can be -45.0. Candidate uses -45.0. Need output exactly keys status, coverage, dimensions, authorized_plan. No markdown.\n\nNeed ensure coverage text concatenated equal entire original source. Original: \"向右转45.0度\". If text spans \"向右转\", \"45.0\", \"度\" concatenates \"向右转45.0度\" yes. Good.\n\nNeed maybe role \"QUANTITY\" for \"45.0度\" instead of split to avoid unit separate? But splitting \"45.0\" and \"度\" both quantity okay. Every action etc. Need not too verbose.\n\nPotential issue: \"向右转45.0度\" in Chinese grammar: \"turn right 45.0 degrees\" means turn right by 45 degrees, not \"turn to right 45 degrees\"? Direction right and magnitude 45. Yes.\n\nNeed final JSON only. Ensure dimensions has exactly seven names. Use status strings. authorized_plan list.\n\nLet's craft.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the single requested action: turn to the right, which per compilation semantics is clockwise/right and therefore uses a negative angle_deg. It does not introduce any additional action.\"},{\"text\":\"45.0\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the numeric magnitude of the turn as 45.0 degrees. It supplies the absolute value for the turn angle, so angle_deg is -45.0 after applying the right/clockwise sign.\"},{\"text\":\"度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the unit as degrees for the preceding 45.0 magnitude. It confirms the turn parameter is measured in degrees, not meters or seconds.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The complete source contains exactly one action phrase, 向右转, with the quantity 45.0度. There is no conjunction, repetition, edit, or second verb authorizing another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable action is requested, so the complete execution order is the single turn step. No ordering alternatives exist.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, replacement, or edit marker. Nothing earlier is modified or preserved by a later instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repeated action span. The turn is requested once with magnitude 45.0 degrees.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, shared arguments, or omitted referents requiring external context. The direction 右 and angle 45.0度 are fully specified.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source has no before, after, simultaneous, waiting, or completion relation. A single-step linear plan represents the only executable interpretation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly specifies one action, one direction, and one magnitude. It leaves no scope, order, reference, or relationship unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_e955819a-8fce-4a32-b9d6-231122441b1b",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 188,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1143,
+      "output_tokens_details": {
+        "reasoning_tokens": 638
+      },
+      "total_tokens": 2355
+    }
+  },
+  "request_sha256": "e8ba898de608145754f39d149c174f429dc6d5805158dc8757e038e4e5c90dbe",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,249 @@
+{
+  "added_wall_s": 24.97621799999979,
+  "live_evidence": {
+    "events": [
+      {
+        "error_type": "LLMBackendError",
+        "http_status": null,
+        "index": 1,
+        "latency_s": 19.718919899998582,
+        "request_sha256": "2a88d54eac71815b970765805c39c88df4679b4eedf164f15b4869a474812ea1",
+        "status": "API_ERROR"
+      },
+      {
+        "index": 2,
+        "latency_s": 4.749687100000301,
+        "provider_document": {
+          "created_at": 1791360875,
+          "id": "resp_5a0ae7d0-4e8c-48ec-bf7a-0566c8b516cd",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_5a0ae7d0-4e8c-48ec-bf7a-0566c8b516cd",
+              "reasoning_content": "We need answer JSON only. Need analyze source \"前进1200厘米\". Chinese. Means \"move forward 1200 centimeters\". Action walk_forward distance 1200 cm = 12 m positive finite. Need seven dimensions.\n\nNeed coverage split entire source exactly, text values concatenated equal source. Could just one span text \"前进1200厘米\" role ACTION maybe explanation. But requirement split into meaningful spans so every action, relation, editing clause considered. Could split \"前进\" action and \"1200厘米\" quantity? Text concatenation exact. Need preserve. Let's do two spans: \"前进\" ACTION explanation means walk forward, \"1200厘米\" QUANTITY explanation distance 1200 cm converts to 12 m, positive finite, parameter for preceding action. No separator. Concatenated exact.\n\nDimensions:\naction_multiplicity: UNIQUE. Only one action requested.\naction_order: UNIQUE? Single action no ordering alternatives.\ncorrection_scope: UNIQUE. No edits/corrections.\nrepetition_scope: UNIQUE. No repetition.\nreference_resolution: UNIQUE? Pronoun omitted? Action \"前进\" has implicit subject robot, no ambiguous referent. Shared arguments? Quantity directly attached. Need maybe unique.\ntemporal_relations: UNIQUE. Single action, no before/after.\nunresolved_relations: UNIQUE. None explicit unresolved.\n\nStatus AUTHORIZED_UNIQUE. Need ensure legal: walk_forward requires positive finite distance_m; 1200 cm = 12 m. Yes.\n\nOutput JSON exactly. Need no markdown. Ensure dimensions object exactly seven names. coverage nonempty list. Explanation nonempty. Role one of allowed. Text concatenation exact: \"前进\" + \"1200厘米\" = \"前进1200厘米\". Good.\n\nNeed maybe include coverage explanation for \"前进\" says Chinese command forward; combined with following quantity. For \"1200厘米\" says unit cm converted to meters. Good.\n\nNeed not mention confidence. Final answer.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source \"前进1200厘米\". Chinese. Means \"move forward 1200 centimeters\". Action walk_forward distance 1200 cm = 12 m positive finite. Need seven dimensions.\n\nNeed coverage split entire source exactly, text values concatenated equal source. Could just one span text \"前进1200厘米\" role ACTION maybe explanation. But requirement split into meaningful spans so every action, relation, editing clause considered. Could split \"前进\" action and \"1200厘米\" quantity? Text concatenation exact. Need preserve. Let's do two spans: \"前进\" ACTION explanation means walk forward, \"1200厘米\" QUANTITY explanation distance 1200 cm converts to 12 m, positive finite, parameter for preceding action. No separator. Concatenated exact.\n\nDimensions:\naction_multiplicity: UNIQUE. Only one action requested.\naction_order: UNIQUE? Single action no ordering alternatives.\ncorrection_scope: UNIQUE. No edits/corrections.\nrepetition_scope: UNIQUE. No repetition.\nreference_resolution: UNIQUE? Pronoun omitted? Action \"前进\" has implicit subject robot, no ambiguous referent. Shared arguments? Quantity directly attached. Need maybe unique.\ntemporal_relations: UNIQUE. Single action, no before/after.\nunresolved_relations: UNIQUE. None explicit unresolved.\n\nStatus AUTHORIZED_UNIQUE. Need ensure legal: walk_forward requires positive finite distance_m; 1200 cm = 12 m. Yes.\n\nOutput JSON exactly. Need no markdown. Ensure dimensions object exactly seven names. coverage nonempty list. Explanation nonempty. Role one of allowed. Text concatenation exact: \"前进\" + \"1200厘米\" = \"前进1200厘米\". Good.\n\nNeed maybe include coverage explanation for \"前进\" says Chinese command forward; combined with following quantity. For \"1200厘米\" says unit cm converted to meters. Good.\n\nNeed not mention confidence. Final answer.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"指令要求向前移动，对应唯一合法动作 walk_forward，且其执行参数由后续的数量短语提供。\"},{\"text\":\"1200厘米\",\"role\":\"QUANTITY\",\"explanation\":\"该数量限定前一个动作的距离为 1200 厘米；换算为 1200/100 = 12 米，是正有限值，因此满足 walk_forward 对 distance_m 的合法要求，不引入额外动作或未决关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源字符串只请求一个动作：前进/向前移动；没有并列、重复、替换或额外的动作词。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，因此不存在多个动作之间的顺序选择；唯一线性计划为该动作本身。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、修正、替换或保留先前指令的措辞，因此修正范围不适用且不产生歧义。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词、次数或重复范围，因此不适用且不会把单次动作扩展为多次动作。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"数量短语“1200厘米”紧接动作“前进”，唯一地作为该前进动作的距离参数；没有代词、序数或外部指代需要解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有 before/after、同时、等待或完成关系；单动作可直接表示为一个线性步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留任何未决选择、范围、顺序或关系；唯一解释是行走距离 1200 厘米。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_5a0ae7d0-4e8c-48ec-bf7a-0566c8b516cd",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 808,
+            "output_tokens_details": {
+              "reasoning_tokens": 408
+            },
+            "total_tokens": 1716
+          }
+        },
+        "request_sha256": "2a88d54eac71815b970765805c39c88df4679b4eedf164f15b4869a474812ea1",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 2,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 2,
+        "finish_reason": "completed",
+        "latency_s": 4.747829700001603,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_5a0ae7d0-4e8c-48ec-bf7a-0566c8b516cd",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"指令要求向前移动，对应唯一合法动作 walk_forward，且其执行参数由后续的数量短语提供。\"},{\"text\":\"1200厘米\",\"role\":\"QUANTITY\",\"explanation\":\"该数量限定前一个动作的距离为 1200 厘米；换算为 1200/100 = 12 米，是正有限值，因此满足 walk_forward 对 distance_m 的合法要求，不引入额外动作或未决关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源字符串只请求一个动作：前进/向前移动；没有并列、重复、替换或额外的动作词。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，因此不存在多个动作之间的顺序选择；唯一线性计划为该动作本身。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、修正、替换或保留先前指令的措辞，因此修正范围不适用且不产生歧义。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词、次数或重复范围，因此不适用且不会把单次动作扩展为多次动作。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"数量短语“1200厘米”紧接动作“前进”，唯一地作为该前进动作的距离参数；没有代词、序数或外部指代需要解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有 before/after、同时、等待或完成关系；单动作可直接表示为一个线性步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留任何未决选择、范围、顺序或关系；唯一解释是行走距离 1200 厘米。\"}}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 808,
+          "total_tokens": 1716
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.8654831999992894,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk1200cm",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk1200cm\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":12.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "3e543db6558a9054bc820345ddc7488eb27ae4c8d012d52169dcc9f4689c645c",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_dc594b29-5c2c-4f65-a31d-acfbe595efde",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 2,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 24.975268199999846,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 4.747829700001603,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"指令要求向前移动，对应唯一合法动作 walk_forward，且其执行参数由后续的数量短语提供。\"},{\"text\":\"1200厘米\",\"role\":\"QUANTITY\",\"explanation\":\"该数量限定前一个动作的距离为 1200 厘米；换算为 1200/100 = 12 米，是正有限值，因此满足 walk_forward 对 distance_m 的合法要求，不引入额外动作或未决关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源字符串只请求一个动作：前进/向前移动；没有并列、重复、替换或额外的动作词。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，因此不存在多个动作之间的顺序选择；唯一线性计划为该动作本身。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、修正、替换或保留先前指令的措辞，因此修正范围不适用且不产生歧义。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词、次数或重复范围，因此不适用且不会把单次动作扩展为多次动作。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"数量短语“1200厘米”紧接动作“前进”，唯一地作为该前进动作的距离参数；没有代词、序数或外部指代需要解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有 before/after、同时、等待或完成关系；单动作可直接表示为一个线性步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留任何未决选择、范围、顺序或关系；唯一解释是行走距离 1200 厘米。\"}}}",
+          "raw_response_sha256": "9d109e4d9e5681375fd2a98b4d9db537ee01a948df4b2369640660b5ecc3e436",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_5a0ae7d0-4e8c-48ec-bf7a-0566c8b516cd",
+          "source_aware": false,
+          "source_sha256": "953ec800932a2c7fbe58b2098136a5dacb8249f3df4364ef4bf4494b16b34e92",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 808,
+            "total_tokens": 1716
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "指令要求向前移动，对应唯一合法动作 walk_forward，且其执行参数由后续的数量短语提供。",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "该数量限定前一个动作的距离为 1200 厘米；换算为 1200/100 = 12 米，是正有限值，因此满足 walk_forward 对 distance_m 的合法要求，不引入额外动作或未决关系。",
+                "role": "QUANTITY",
+                "text": "1200厘米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源字符串只请求一个动作：前进/向前移动；没有并列、重复、替换或额外的动作词。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "只有一个动作，因此不存在多个动作之间的顺序选择；唯一线性计划为该动作本身。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有编辑、修正、替换或保留先前指令的措辞，因此修正范围不适用且不产生歧义。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "数量短语“1200厘米”紧接动作“前进”，唯一地作为该前进动作的距离参数；没有代词、序数或外部指代需要解析。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有重复词、次数或重复范围，因此不适用且不会把单次动作扩展为多次动作。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "源中没有 before/after、同时、等待或完成关系；单动作可直接表示为一个线性步骤。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源没有显式保留任何未决选择、范围、顺序或关系；唯一解释是行走距离 1200 厘米。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 134,
+        "total_tokens": 1873
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk1200cm",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 12.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "前进1200厘米",
+    "status": "SUCCESS"
+  }
+}

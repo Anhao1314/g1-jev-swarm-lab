@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 2.6955329999982496,
+  "provider_document": {
+    "created_at": 1791360648,
+    "id": "resp_ee242717-5097-42a5-8290-caf69b8a2449",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_ee242717-5097-42a5-8290-caf69b8a2449",
+        "reasoning_content": "We need answer JSON only. Need parse Chinese command sequence: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\n\nNeed produce Mission IR. Skills: stand duration 5.0, walk_forward distance 4.0, turn angle left/counterclockwise positive 45.0, walk_forward 4.0, stop. Steps s1-s5 dependencies previous. mission_id path-safe. Need exactly fields. Use maybe \"mission-stand-walk-turn-walk-stop\". Ensure not too long? max 64. Let's count. \"mission-stand-walk-turn-walk-stop\" length: mission(7)+-(1)=8+stand5=13? Let's count: m i s s i o n =7, - =8, stand=5 =>13, -14, walk=4=>18, -19, turn=4=>23, -24, walk=4=>28, -29, stop=4=>33. Good.\n\nNeed ensure no markdown. Final JSON.\n\nPotential nuance: \"先站立5秒\" stand duration_s 5.0. \"再左转45度\" turn positive 45.0. Good.\n\nNeed output exactly one JSON object.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse Chinese command sequence: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\n\nNeed produce Mission IR. Skills: stand duration 5.0, walk_forward distance 4.0, turn angle left/counterclockwise positive 45.0, walk_forward 4.0, stop. Steps s1-s5 dependencies previous. mission_id path-safe. Need exactly fields. Use maybe \"mission-stand-walk-turn-walk-stop\". Ensure not too long? max 64. Let's count. \"mission-stand-walk-turn-walk-stop\" length: mission(7)+-(1)=8+stand5=13? Let's count: m i s s i o n =7, - =8, stand=5 =>13, -14, walk=4=>18, -19, turn=4=>23, -24, walk=4=>28, -29, stop=4=>33. Good.\n\nNeed ensure no markdown. Final JSON.\n\nPotential nuance: \"先站立5秒\" stand duration_s 5.0. \"再左转45度\" turn positive 45.0. Good.\n\nNeed output exactly one JSON object.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_ee242717-5097-42a5-8290-caf69b8a2449",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 223,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 440,
+      "output_tokens_details": {
+        "reasoning_tokens": 263
+      },
+      "total_tokens": 2199
+    }
+  },
+  "request_sha256": "01fc96f9186be4f113b3bf67c0ec450297376bd22a612b95a792e3cefad9d600",
+  "status": "SUCCESS"
+}

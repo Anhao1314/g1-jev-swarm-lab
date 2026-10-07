@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.142380700002832,
+  "provider_document": {
+    "created_at": 1791359922,
+    "id": "resp_d41cfcd7-05e8-44f1-8fad-58b701f6ef10",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_d41cfcd7-05e8-44f1-8fad-58b701f6ef10",
+        "reasoning_content": "We need answer JSON only. Need inspect source \"请往前走十米\" Chinese: \"Please walk forward ten meters\". Need decide dimensions. Legal actions: walk_forward positive finite distance_m. Source specifies forward 10 meters. No duration. So likely unique legal interpretation: walk_forward distance_m=10. Need coverage list split meaningful spans. Entire source exactly. Could split \"请往前走十米\" perhaps single span? Need coverage every action. Maybe split \"请往前\" context/action? \"走\" action? \"十米\" quantity. But text values concatenated must equal source. Need meaningful spans. Could do:\n- \"请\" CONTEXT polite request, no executable effect.\n- \"往前走\" ACTION? Hmm \"往前走\" means walk forward. But legal action is walk_forward. Could text \"往前走\" as ACTION.\n- \"十米\" QUANTITY.\nConcatenated: \"请\" + \"往前走\" + \"十米\" = \"请往前走十米\". Good. Role: CONTEXT, ACTION, QUANTITY. Need explanations. Alternatively \"请往前\" context? But \"往前走\" is action phrase. That's fine.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action walk_forward, no other action, repeated or edited.\naction_order UNIQUE: single action, order trivial/inapplicable.\ncorrection_scope UNIQUE: no correction/edit clauses.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/ordinals? \"请\" polite, \"往前走\" direction resolved as forward. Omitted shared args? Action has distance. No external context needed. Maybe \"往前走\" direction \"forward\" relative to robot facing, resolved. Unique.\ntemporal_relations UNIQUE: no temporal relations; single action, immediate, no waiting.\nunresolved_relations UNIQUE: none explicitly unresolved.\n\nStatus AUTHORIZED_UNIQUE. Need ensure \"请往前走十米\": Does \"往前走\" imply walk_forward? Yes. \"十米\" = ten meters. No ambiguity. There's no duration needed. Legal.\n\nNeed output JSON exactly keys status, coverage, dimensions. Ensure coverage text values concat equal entire source. Explanation nonempty.\n\nNeed maybe mention \"请\" doesn't modify authority. \"往前走\" action. \"十米\" quantity.\n\nPotential issue: \"往前\" could be \"forward\" and \"走\" walk. \"往前走\" action. Fine.\n\nNeed no markdown.\n\nLet's craft. Ensure dimensions object exactly seven names. Values objects exactly status, explanation. statuses all UNIQUE.\n\nNeed maybe coverage includes every action relation editing clause considered. Since no relation/edit, okay. Role for \"请\" CONTEXT. \"往前走\" ACTION. \"十米\" QUANTITY. Maybe punctuation no. Source has no punctuation. The concatenated list equals \"请往前走十米\". Good.\n\nFinal JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source \"请往前走十米\" Chinese: \"Please walk forward ten meters\". Need decide dimensions. Legal actions: walk_forward positive finite distance_m. Source specifies forward 10 meters. No duration. So likely unique legal interpretation: walk_forward distance_m=10. Need coverage list split meaningful spans. Entire source exactly. Could split \"请往前走十米\" perhaps single span? Need coverage every action. Maybe split \"请往前\" context/action? \"走\" action? \"十米\" quantity. But text values concatenated must equal source. Need meaningful spans. Could do:\n- \"请\" CONTEXT polite request, no executable effect.\n- \"往前走\" ACTION? Hmm \"往前走\" means walk forward. But legal action is walk_forward. Could text \"往前走\" as ACTION.\n- \"十米\" QUANTITY.\nConcatenated: \"请\" + \"往前走\" + \"十米\" = \"请往前走十米\". Good. Role: CONTEXT, ACTION, QUANTITY. Need explanations. Alternatively \"请往前\" context? But \"往前走\" is action phrase. That's fine.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action walk_forward, no other action, repeated or edited.\naction_order UNIQUE: single action, order trivial/inapplicable.\ncorrection_scope UNIQUE: no correction/edit clauses.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/ordinals? \"请\" polite, \"往前走\" direction resolved as forward. Omitted shared args? Action has distance. No external context needed. Maybe \"往前走\" direction \"forward\" relative to robot facing, resolved. Unique.\ntemporal_relations UNIQUE: no temporal relations; single action, immediate, no waiting.\nunresolved_relations UNIQUE: none explicitly unresolved.\n\nStatus AUTHORIZED_UNIQUE. Need ensure \"请往前走十米\": Does \"往前走\" imply walk_forward? Yes. \"十米\" = ten meters. No ambiguity. There's no duration needed. Legal.\n\nNeed output JSON exactly keys status, coverage, dimensions. Ensure coverage text values concat equal entire source. Explanation nonempty.\n\nNeed maybe mention \"请\" doesn't modify authority. \"往前走\" action. \"十米\" quantity.\n\nPotential issue: \"往前\" could be \"forward\" and \"走\" walk. \"往前走\" action. Fine.\n\nNeed no markdown.\n\nLet's craft. Ensure dimensions object exactly seven names. Values objects exactly status, explanation. statuses all UNIQUE.\n\nNeed maybe coverage includes every action relation editing clause considered. Since no relation/edit, okay. Role for \"请\" CONTEXT. \"往前走\" ACTION. \"十米\" QUANTITY. Maybe punctuation no. Source has no punctuation. The concatenated list equals \"请往前走十米\". Good.\n\nFinal JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it does not introduce an action, parameter, ordering, repetition, or edit and therefore does not affect the executable authority of the source.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one forward walking action, corresponding to the legal action walk_forward with direction forward.\"},{\"text\":\"十米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for that single walking action as ten meters, i.e. distance_m = 10, which is a positive finite value in meters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: walking forward. There are no additional, edited, or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one possible linear execution order and no competing ordering can be selected.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, replacement, or editing clause in the source, so no prior action, parameter, group, or relation is changed.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction; the single forward-walk request is not repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The action is explicit: forward walking. The quantity ten meters directly supplies its distance. No pronoun, ordinal, omitted argument, or external referent remains unresolved.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated. A single action can be represented as one linear step without inventing timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; it fully specifies one forward walk of ten meters.\"}}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_d41cfcd7-05e8-44f1-8fad-58b701f6ef10",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 140,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1017,
+      "output_tokens_details": {
+        "reasoning_tokens": 595
+      },
+      "total_tokens": 1925
+    }
+  },
+  "request_sha256": "a0a57bec26aa811a6990df042537b8246048604eaa95aef675fae2f91a576a9d",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,251 @@
+{
+  "added_wall_s": 13.100423700001556,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 13.094679499999984,
+        "provider_document": {
+          "created_at": 1791359417,
+          "id": "resp_844206ca-16ea-4241-8cd3-76e12f315079",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_844206ca-16ea-4241-8cd3-76e12f315079",
+              "reasoning_content": "We need answer JSON only. Need inspect source: \"站立两秒。嗯，结束，就这一项。\" Chinese: \"Stand for two seconds. Hmm, end, just this one.\" Need decide dimensions. Need parse legal IR. Action stand with duration 2 seconds. Then \"嗯，结束，就这一项。\" Means \"Um, end, just this item.\" Does that indicate stop? \"结束\" could mean end/finish, not necessarily action stop. \"就这一项\" means only this one item. Need determine if unique legal interpretation: one action stand duration 2.0 s. The phrase \"结束\" might be discourse marker ending the command, not an instruction to execute stop. Is it ambiguous? Let's analyze seven dimensions.\n\nSource entire: 站立两秒。嗯，结束，就这一项。\n\nAction words: 站立 = stand. \"两秒\" = 2 seconds. So stand duration_s=2.0. \"结束\" = end/finish. Could be \"stop\" action? Legal action stop has no parameters; Chinese \"结束\" could mean finish/end, potentially stop? \"就这一项\" = just this one item, clarifies only one action. Thus ends list, not additional action. Need decide if ambiguous due to \"结束\" possibly being stop action. The phrase \"嗯，结束，就这一项\" likely meta/context: end, just this one. The gate: source must uniquely authorize exactly one legal linear Mission IR 2.0 interpretation. Presence of action words and numbers alone insufficient. Here \"结束\" maybe editing/separator, not necessarily action \"stop\". \"就这一项\" explicitly states only this item, disambiguates that 结束 is not an action? Let's see: \"嗯\" filler, \"结束\" could mean finish discourse, \"就这一项\" = only this item. So action_multiplicity unique: one stand. Action order unique: single action. Correction scope: no edit. Repetition: no repeat. Reference: \"这一项\" refers to preceding stand action? \"就这一项\" = just this one item, reference to the only item. Unique. Temporal: stand duration 2 seconds, linear single. Unresolved: none? Potentially \"结束\" could be interpreted as stop, but \"就这一项\" says only this one. Need ensure \"结束\" is not an instruction. If there is any ambiguity: Could compile \"stand 2 seconds\" then \"stop\" because 结束 means end/stop? But \"就这一项\" explicitly says only one item. If \"结束\" were stop, there would be two items: stand and stop, contradicting \"就这一项\". Unless \"结束\" as stop is the one item? But then stand? no. So unique reading: stand only, then end of mission. Maybe \"结束\" as context/separator not action. Need coverage list: split source into spans. Need exact concatenation equals entire original source. We can split as:\n1 \"站立两秒。\" role ACTION explanation: stand for two seconds.\n2 \"嗯，结束，就这一项。\" role CONTEXT or SEPARATOR? Need include every clause. Could split \"嗯，\" context filler; \"结束，\" context? \"就这一项。\" context/quantity? Role options. Need text values concatenated exactly. Could do:\n- \"站立两秒。\" ACTION\n- \"嗯，\" CONTEXT\n- \"结束，\" CONTEXT or EDIT? It terminates request, not action; role CONTEXT.\n- \"就这一项。\" CONTEXT maybe RELATION? It clarifies only one action. Role CONTEXT perhaps.\n\nNeed ensure text exact with Chinese punctuation. Source: 站立两秒。嗯，结束，就这一项。\nLet's count: \"站立两秒。\" then \"嗯，\" then \"结束，\" then \"就这一项。\" Concatenates exactly: 站立两秒。嗯，结束，就这一项。 Yes.\n\nCould \"结束\" be ACTION? But if role ACTION, then we'd maybe need interpret as stop. But explanation can say it is not an executable action because \"就这一项\" limits to one and \"结束\" marks termination. Role CONTEXT. Is \"嗯\" no effect. \"就这一项\" reference. Need maybe role RELATION for \"就这一项\" because relation to action? It refers to \"this one item\". But role options include RELATION. Could assign \"就这一项。\" as RELATION: explicitly bounds action list to single preceding item. \"结束，\" as CONTEXT: signals end, no action. \"嗯，\" CONTEXT.\n\nNeed dimension statuses:\naction_multiplicity UNIQUE: exactly one action stand. \"就这一项\" excludes additional actions; \"结束\" is termination marker not stop action.\naction_order UNIQUE: single action; no order alternatives.\ncorrection_scope UNIQUE: no edits; \"结束\" doesn't replace prior; \"就这一项\" confirms scope.\nrepetition_scope UNIQUE: no repetition specified; stand is not repeated; \"两秒\" duration not repetitions.\nreference_resolution UNIQUE: \"这一项\" resolves to the one preceding stand action; no other referents.\ntemporal_relations UNIQUE: stand duration 2 s; no before/after/simultaneity; single linear step.\nunresolved_relations UNIQUE: no explicit unresolved relation. But wait, \"结束\" could be an unresolved relation? Hmm. Need decide if status AUTHORIZED_UNIQUE. The source \"站立两秒。嗯，结束，就这一项。\" is natural language. The phrase \"结束\" might be ambiguous as stop vs end-of-list. But \"就这一项\" strongly disambiguates. The gate demands unique legal interpretation. Is there material ambiguity? Let's examine. The action \"站立两秒\" is clear. The trailing \"结束，就这一项\" can be read as \"End. Just this one.\" It doesn't request another action. \"结束\" in Chinese could mean \"stop/finish\" but when followed by \"就这一项\" it is meta. If it were an action, it would be \"停止\" not \"结束\" maybe? But legal action stop could be \"结束\" semantically. The source explicitly says \"就这一项\", which means \"only this one item.\" If \"结束\" were stop, it would be a second item, contradicting. Thus unique.\n\nNeed maybe mention \"结束\" is a termination marker, not a stop action, because \"就这一项\" bounds plan to one action. Good.\n\nNeed output exactly JSON object. No markdown. Ensure keys exactly status, coverage, dimensions. coverage nonempty list of objects exactly text, role, explanation. Need valid JSON, escape nothing? Chinese ok. Need no extra fields.\n\nLet's craft concise but sufficient.\n\nCoverage:\n[\n{\"text\":\"站立两秒。\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one executable action: stand (站立) with duration 两秒 = 2.0 seconds. This is a legal stand instruction with positive finite duration within the 60 s bound.\"},\n{\"text\":\"嗯，\",\"role\":\"CONTEXT\",\"explanation\":\"Filler/discourse particle 嗯; it adds no action, parameter, order, or edit.\"},\n{\"text\":\"结束，\",\"role\":\"CONTEXT\",\"explanation\":\"Termination marker meaning 'end/finish' in this context; it does not request the executable stop action because the following 就这一项 explicitly limits the request to the single preceding item.\"},\n{\"text\":\"就这一项。\",\"role\":\"RELATION\",\"explanation\":\"Binds the scope to only this one item, resolving that the preceding stand is the sole action and excluding any additional action such as stop from 结束.\"}\n]\n\nCheck concatenation exactly: \"站立两秒。\" + \"嗯，\" + \"结束，\" + \"就这一项。\" = \"站立两秒。嗯，结束，就这一项。\" Yes.\n\nDimensions explanations:\naction_multiplicity UNIQUE: \"The only executable action is 站立两秒; 就这一项 explicitly says only this one item, and 结束 is a termination marker not a second stop action. No other action requested.\" \naction_order UNIQUE: \"Only one executable step exists, so no ordering choice; the following clauses do not add or reorder actions.\"\ncorrection_scope UNIQUE: \"No correction/edit is present. 结束 does not replace or alter the stand; 就这一项 confirms the single action's scope.\"\nrepetition_scope UNIQUE: \"No repetition is specified. 两秒 is a duration parameter for the single stand, not a repeat count, and nothing repeats the action.\"\nreference_resolution UNIQUE: \"这一项 refers to the single preceding item, 站立两秒; no other referent is available or needed.\"\ntemporal_relations UNIQUE: \"The single stand lasts 2 seconds. There are no before/after, simultaneous, waiting, or completion relations requiring more than one linear step.\"\nunresolved_relations UNIQUE: \"No relation is explicitly left unresolved. The possible colloquial reading of 结束 as stop is excluded by 就这一项, which states there is only one item.\"\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed be careful: Is \"结束\" as \"stop\" excluded? If someone says \"站立两秒。嗯，结束，就这一项。\" maybe \"结束\" is the end of command, yes.\n\nPotential issue: \"站立两秒\" stand duration \"两秒\" = 2 seconds. Legal stand accepts positive finite duration_s, default 2.0 when no duration. Here explicit 2.0. Good.\n\nCould \"结束\" itself be an action \"stop\"? The source says \"结束，就这一项\" = \"End, just this one item.\" If interpreted as \"stop\" action, then \"就这一项\" might refer to stop as the one item? But then what about stand? Could be \"stand two seconds. Hmm, end, just this one.\" The \"this one\" likely refers to stand. If someone says \"结束\" could be a command \"stop\". But then \"就这一项\" maybe \"just this item\" = only stand, not stop. So unique.\n\nNeed answer only JSON. Ensure no markdown. Use double quotes. Need escape? Chinese punctuation okay. JSON object with exactly status, coverage, dimensions. No newline? Fine.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source: \"站立两秒。嗯，结束，就这一项。\" Chinese: \"Stand for two seconds. Hmm, end, just this one.\" Need decide dimensions. Need parse legal IR. Action stand with duration 2 seconds. Then \"嗯，结束，就这一项。\" Means \"Um, end, just this item.\" Does that indicate stop? \"结束\" could mean end/finish, not necessarily action stop. \"就这一项\" means only this one item. Need determine if unique legal interpretation: one action stand duration 2.0 s. The phrase \"结束\" might be discourse marker ending the command, not an instruction to execute stop. Is it ambiguous? Let's analyze seven dimensions.\n\nSource entire: 站立两秒。嗯，结束，就这一项。\n\nAction words: 站立 = stand. \"两秒\" = 2 seconds. So stand duration_s=2.0. \"结束\" = end/finish. Could be \"stop\" action? Legal action stop has no parameters; Chinese \"结束\" could mean finish/end, potentially stop? \"就这一项\" = just this one item, clarifies only one action. Thus ends list, not additional action. Need decide if ambiguous due to \"结束\" possibly being stop action. The phrase \"嗯，结束，就这一项\" likely meta/context: end, just this one. The gate: source must uniquely authorize exactly one legal linear Mission IR 2.0 interpretation. Presence of action words and numbers alone insufficient. Here \"结束\" maybe editing/separator, not necessarily action \"stop\". \"就这一项\" explicitly states only this item, disambiguates that 结束 is not an action? Let's see: \"嗯\" filler, \"结束\" could mean finish discourse, \"就这一项\" = only this item. So action_multiplicity unique: one stand. Action order unique: single action. Correction scope: no edit. Repetition: no repeat. Reference: \"这一项\" refers to preceding stand action? \"就这一项\" = just this one item, reference to the only item. Unique. Temporal: stand duration 2 seconds, linear single. Unresolved: none? Potentially \"结束\" could be interpreted as stop, but \"就这一项\" says only this one. Need ensure \"结束\" is not an instruction. If there is any ambiguity: Could compile \"stand 2 seconds\" then \"stop\" because 结束 means end/stop? But \"就这一项\" explicitly says only one item. If \"结束\" were stop, there would be two items: stand and stop, contradicting \"就这一项\". Unless \"结束\" as stop is the one item? But then stand? no. So unique reading: stand only, then end of mission. Maybe \"结束\" as context/separator not action. Need coverage list: split source into spans. Need exact concatenation equals entire original source. We can split as:\n1 \"站立两秒。\" role ACTION explanation: stand for two seconds.\n2 \"嗯，结束，就这一项。\" role CONTEXT or SEPARATOR? Need include every clause. Could split \"嗯，\" context filler; \"结束，\" context? \"就这一项。\" context/quantity? Role options. Need text values concatenated exactly. Could do:\n- \"站立两秒。\" ACTION\n- \"嗯，\" CONTEXT\n- \"结束，\" CONTEXT or EDIT? It terminates request, not action; role CONTEXT.\n- \"就这一项。\" CONTEXT maybe RELATION? It clarifies only one action. Role CONTEXT perhaps.\n\nNeed ensure text exact with Chinese punctuation. Source: 站立两秒。嗯，结束，就这一项。\nLet's count: \"站立两秒。\" then \"嗯，\" then \"结束，\" then \"就这一项。\" Concatenates exactly: 站立两秒。嗯，结束，就这一项。 Yes.\n\nCould \"结束\" be ACTION? But if role ACTION, then we'd maybe need interpret as stop. But explanation can say it is not an executable action because \"就这一项\" limits to one and \"结束\" marks termination. Role CONTEXT. Is \"嗯\" no effect. \"就这一项\" reference. Need maybe role RELATION for \"就这一项\" because relation to action? It refers to \"this one item\". But role options include RELATION. Could assign \"就这一项。\" as RELATION: explicitly bounds action list to single preceding item. \"结束，\" as CONTEXT: signals end, no action. \"嗯，\" CONTEXT.\n\nNeed dimension statuses:\naction_multiplicity UNIQUE: exactly one action stand. \"就这一项\" excludes additional actions; \"结束\" is termination marker not stop action.\naction_order UNIQUE: single action; no order alternatives.\ncorrection_scope UNIQUE: no edits; \"结束\" doesn't replace prior; \"就这一项\" confirms scope.\nrepetition_scope UNIQUE: no repetition specified; stand is not repeated; \"两秒\" duration not repetitions.\nreference_resolution UNIQUE: \"这一项\" resolves to the one preceding stand action; no other referents.\ntemporal_relations UNIQUE: stand duration 2 s; no before/after/simultaneity; single linear step.\nunresolved_relations UNIQUE: no explicit unresolved relation. But wait, \"结束\" could be an unresolved relation? Hmm. Need decide if status AUTHORIZED_UNIQUE. The source \"站立两秒。嗯，结束，就这一项。\" is natural language. The phrase \"结束\" might be ambiguous as stop vs end-of-list. But \"就这一项\" strongly disambiguates. The gate demands unique legal interpretation. Is there material ambiguity? Let's examine. The action \"站立两秒\" is clear. The trailing \"结束，就这一项\" can be read as \"End. Just this one.\" It doesn't request another action. \"结束\" in Chinese could mean \"stop/finish\" but when followed by \"就这一项\" it is meta. If it were an action, it would be \"停止\" not \"结束\" maybe? But legal action stop could be \"结束\" semantically. The source explicitly says \"就这一项\", which means \"only this one item.\" If \"结束\" were stop, it would be a second item, contradicting. Thus unique.\n\nNeed maybe mention \"结束\" is a termination marker, not a stop action, because \"就这一项\" bounds plan to one action. Good.\n\nNeed output exactly JSON object. No markdown. Ensure keys exactly status, coverage, dimensions. coverage nonempty list of objects exactly text, role, explanation. Need valid JSON, escape nothing? Chinese ok. Need no extra fields.\n\nLet's craft concise but sufficient.\n\nCoverage:\n[\n{\"text\":\"站立两秒。\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one executable action: stand (站立) with duration 两秒 = 2.0 seconds. This is a legal stand instruction with positive finite duration within the 60 s bound.\"},\n{\"text\":\"嗯，\",\"role\":\"CONTEXT\",\"explanation\":\"Filler/discourse particle 嗯; it adds no action, parameter, order, or edit.\"},\n{\"text\":\"结束，\",\"role\":\"CONTEXT\",\"explanation\":\"Termination marker meaning 'end/finish' in this context; it does not request the executable stop action because the following 就这一项 explicitly limits the request to the single preceding item.\"},\n{\"text\":\"就这一项。\",\"role\":\"RELATION\",\"explanation\":\"Binds the scope to only this one item, resolving that the preceding stand is the sole action and excluding any additional action such as stop from 结束.\"}\n]\n\nCheck concatenation exactly: \"站立两秒。\" + \"嗯，\" + \"结束，\" + \"就这一项。\" = \"站立两秒。嗯，结束，就这一项。\" Yes.\n\nDimensions explanations:\naction_multiplicity UNIQUE: \"The only executable action is 站立两秒; 就这一项 explicitly says only this one item, and 结束 is a termination marker not a second stop action. No other action requested.\" \naction_order UNIQUE: \"Only one executable step exists, so no ordering choice; the following clauses do not add or reorder actions.\"\ncorrection_scope UNIQUE: \"No correction/edit is present. 结束 does not replace or alter the stand; 就这一项 confirms the single action's scope.\"\nrepetition_scope UNIQUE: \"No repetition is specified. 两秒 is a duration parameter for the single stand, not a repeat count, and nothing repeats the action.\"\nreference_resolution UNIQUE: \"这一项 refers to the single preceding item, 站立两秒; no other referent is available or needed.\"\ntemporal_relations UNIQUE: \"The single stand lasts 2 seconds. There are no before/after, simultaneous, waiting, or completion relations requiring more than one linear step.\"\nunresolved_relations UNIQUE: \"No relation is explicitly left unresolved. The possible colloquial reading of 结束 as stop is excluded by 就这一项, which states there is only one item.\"\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed be careful: Is \"结束\" as \"stop\" excluded? If someone says \"站立两秒。嗯，结束，就这一项。\" maybe \"结束\" is the end of command, yes.\n\nPotential issue: \"站立两秒\" stand duration \"两秒\" = 2 seconds. Legal stand accepts positive finite duration_s, default 2.0 when no duration. Here explicit 2.0. Good.\n\nCould \"结束\" itself be an action \"stop\"? The source says \"结束，就这一项\" = \"End, just this one item.\" If interpreted as \"stop\" action, then \"就这一项\" might refer to stop as the one item? But then what about stand? Could be \"stand two seconds. Hmm, end, just this one.\" The \"this one\" likely refers to stand. If someone says \"结束\" could be a command \"stop\". But then \"就这一项\" maybe \"just this item\" = only stand, not stop. So unique.\n\nNeed answer only JSON. Ensure no markdown. Use double quotes. Need escape? Chinese punctuation okay. JSON object with exactly status, coverage, dimensions. No newline? Fine.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立两秒。\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one executable action: stand (站立) with duration 两秒 = 2.0 seconds. This is a legal stand instruction with a positive finite duration within the 60-second bound.\"},{\"text\":\"嗯，\",\"role\":\"CONTEXT\",\"explanation\":\"Filler/discourse particle 嗯; it adds no action, parameter, order, repetition, or edit.\"},{\"text\":\"结束，\",\"role\":\"CONTEXT\",\"explanation\":\"Termination marker meaning end/finish in this context; it does not request the executable stop action because the following 就这一项 explicitly limits the request to the single preceding item.\"},{\"text\":\"就这一项。\",\"role\":\"RELATION\",\"explanation\":\"Binds the scope to only this one item, resolving that the preceding stand action is the sole action and excluding any additional action such as stop from 结束.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The only executable action is 站立两秒. 就这一项 explicitly states only this one item, and 结束 is a termination marker rather than a second stop action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable step exists, so there is no ordering choice. The following clauses add or reorder no actions.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit is present. 结束 does not replace or alter the stand action, and 就这一项 confirms the single-action scope.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is specified. 两秒 is a duration parameter for the single stand action, not a repeat count, and nothing repeats the action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这一项 refers to the single preceding item, 站立两秒; no other referent is available or required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The single stand action lasts 2 seconds. There are no before/after, simultaneous, waiting, or completion relations requiring more than one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation is explicitly left unresolved. The possible colloquial reading of 结束 as stop is excluded by 就这一项, which states there is only one item.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_844206ca-16ea-4241-8cd3-76e12f315079",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 148,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2680,
+            "output_tokens_details": {
+              "reasoning_tokens": 2166
+            },
+            "total_tokens": 3596
+          }
+        },
+        "request_sha256": "beef656258c41ecddf5212bb55c75b66592512db625cfa79d7778d05a5720379",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 13.093216499999471,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_844206ca-16ea-4241-8cd3-76e12f315079",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立两秒。\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one executable action: stand (站立) with duration 两秒 = 2.0 seconds. This is a legal stand instruction with a positive finite duration within the 60-second bound.\"},{\"text\":\"嗯，\",\"role\":\"CONTEXT\",\"explanation\":\"Filler/discourse particle 嗯; it adds no action, parameter, order, repetition, or edit.\"},{\"text\":\"结束，\",\"role\":\"CONTEXT\",\"explanation\":\"Termination marker meaning end/finish in this context; it does not request the executable stop action because the following 就这一项 explicitly limits the request to the single preceding item.\"},{\"text\":\"就这一项。\",\"role\":\"RELATION\",\"explanation\":\"Binds the scope to only this one item, resolving that the preceding stand action is the sole action and excluding any additional action such as stop from 结束.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The only executable action is 站立两秒. 就这一项 explicitly states only this one item, and 结束 is a termination marker rather than a second stop action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable step exists, so there is no ordering choice. The following clauses add or reorder no actions.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit is present. 结束 does not replace or alter the stand action, and 就这一项 confirms the single-action scope.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is specified. 两秒 is a duration parameter for the single stand action, not a repeat count, and nothing repeats the action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这一项 refers to the single preceding item, 站立两秒; no other referent is available or required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The single stand action lasts 2 seconds. There are no before/after, simultaneous, waiting, or completion relations requiring more than one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation is explicitly left unresolved. The possible colloquial reading of 结束 as stop is excluded by 就这一项, which states there is only one item.\"}}}",
+        "usage": {
+          "input_tokens": 148,
+          "output_tokens": 2680,
+          "total_tokens": 3596
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.561019299999316,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-2s",
+      "model": "deepseek-flash",
+      "normalized_length": 14,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 185,
+      "raw_response_sha256": "a3eeb5d167084c0f722f60aef8372199f748b362d303f0d59e0e9c0acee5488e",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_74c207b6-7263-460e-b4a4-59c3a9d4bd6c",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 13.099796399999832,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 13.093216499999471,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立两秒。\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one executable action: stand (站立) with duration 两秒 = 2.0 seconds. This is a legal stand instruction with a positive finite duration within the 60-second bound.\"},{\"text\":\"嗯，\",\"role\":\"CONTEXT\",\"explanation\":\"Filler/discourse particle 嗯; it adds no action, parameter, order, repetition, or edit.\"},{\"text\":\"结束，\",\"role\":\"CONTEXT\",\"explanation\":\"Termination marker meaning end/finish in this context; it does not request the executable stop action because the following 就这一项 explicitly limits the request to the single preceding item.\"},{\"text\":\"就这一项。\",\"role\":\"RELATION\",\"explanation\":\"Binds the scope to only this one item, resolving that the preceding stand action is the sole action and excluding any additional action such as stop from 结束.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The only executable action is 站立两秒. 就这一项 explicitly states only this one item, and 结束 is a termination marker rather than a second stop action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable step exists, so there is no ordering choice. The following clauses add or reorder no actions.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit is present. 结束 does not replace or alter the stand action, and 就这一项 confirms the single-action scope.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is specified. 两秒 is a duration parameter for the single stand action, not a repeat count, and nothing repeats the action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这一项 refers to the single preceding item, 站立两秒; no other referent is available or required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The single stand action lasts 2 seconds. There are no before/after, simultaneous, waiting, or completion relations requiring more than one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation is explicitly left unresolved. The possible colloquial reading of 结束 as stop is excluded by 就这一项, which states there is only one item.\"}}}",
+          "raw_response_sha256": "655abce52eede3aec3156097812cb95663354b0a0fbdd91966e35e421bd8fd02",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_844206ca-16ea-4241-8cd3-76e12f315079",
+          "source_aware": false,
+          "source_sha256": "59c936fc3ba44f64bf25076950891ab7def81ffd9cb36fc104d90d4b4d2a8597",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 148,
+            "output_tokens": 2680,
+            "total_tokens": 3596
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Requests exactly one executable action: stand (站立) with duration 两秒 = 2.0 seconds. This is a legal stand instruction with a positive finite duration within the 60-second bound.",
+                "role": "ACTION",
+                "text": "站立两秒。"
+              },
+              {
+                "explanation": "Filler/discourse particle 嗯; it adds no action, parameter, order, repetition, or edit.",
+                "role": "CONTEXT",
+                "text": "嗯，"
+              },
+              {
+                "explanation": "Termination marker meaning end/finish in this context; it does not request the executable stop action because the following 就这一项 explicitly limits the request to the single preceding item.",
+                "role": "CONTEXT",
+                "text": "结束，"
+              },
+              {
+                "explanation": "Binds the scope to only this one item, resolving that the preceding stand action is the sole action and excluding any additional action such as stop from 结束.",
+                "role": "RELATION",
+                "text": "就这一项。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The only executable action is 站立两秒. 就这一项 explicitly states only this one item, and 结束 is a termination marker rather than a second stop action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one executable step exists, so there is no ordering choice. The following clauses add or reorder no actions.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or edit is present. 结束 does not replace or alter the stand action, and 就这一项 confirms the single-action scope.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "这一项 refers to the single preceding item, 站立两秒; no other referent is available or required.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition is specified. 两秒 is a duration parameter for the single stand action, not a repeat count, and nothing repeats the action.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The single stand action lasts 2 seconds. There are no before/after, simultaneous, waiting, or completion relations requiring more than one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No relation is explicitly left unresolved. The possible colloquial reading of 结束 as stop is excluded by 就这一项, which states there is only one item.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 211,
+        "output_tokens": 288,
+        "total_tokens": 2035
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-2s",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        }
+      ]
+    },
+    "normalized_text": "站立两秒,嗯,结束,就这一项",
+    "status": "SUCCESS"
+  }
+}

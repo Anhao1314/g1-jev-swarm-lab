@@ -1,0 +1,188 @@
+{
+  "added_wall_s": 2.9848136000000522,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 2.930665300002147,
+        "provider_document": {
+          "created_at": 1791360880,
+          "id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_fe886a22-7152-450c-978a-4d40a983e448",
+              "reasoning_content": "We need answer JSON only. Need parse Chinese: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nNeed produce mission steps:\n1 walk_forward distance_m 4.0\n2 turn angle_deg +60 (left positive)\n3 walk_forward distance_m 4.0 (四米 = 4.0)\n4 turn angle_deg -60 (right negative)\n5 stop parameters {}\ndepends sequential.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-turn-stop\". Must match regex [A-Za-z0-9][A-Za-z0-9._-]{0,63} not end dot/reserved. OK.\n\nNeed exactly top-level keys status, mission, error_code. Ensure no markdown. JSON valid. Parameters keys exact. For stop {}. depends_on s previous.\n\nNeed consider \"立即停止\" stop. Fine.\n\nPotential ambiguity? \"往前移动\" means walk_forward. \"向左转\" left positive. \"向右转\" right negative. Good.\n\nReturn.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need parse Chinese: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nNeed produce mission steps:\n1 walk_forward distance_m 4.0\n2 turn angle_deg +60 (left positive)\n3 walk_forward distance_m 4.0 (四米 = 4.0)\n4 turn angle_deg -60 (right negative)\n5 stop parameters {}\ndepends sequential.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-turn-stop\". Must match regex [A-Za-z0-9][A-Za-z0-9._-]{0,63} not end dot/reserved. OK.\n\nNeed exactly top-level keys status, mission, error_code. Ensure no markdown. JSON valid. Parameters keys exact. For stop {}. depends_on s previous.\n\nNeed consider \"立即停止\" stop. Fine.\n\nPotential ambiguity? \"往前移动\" means walk_forward. \"向左转\" left positive. \"向右转\" right negative. Good.\n\nReturn.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_fe886a22-7152-450c-978a-4d40a983e448",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 223,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 407,
+            "output_tokens_details": {
+              "reasoning_tokens": 229
+            },
+            "total_tokens": 2166
+          }
+        },
+        "request_sha256": "8f777f946ac454768245b02aa5d6ed5a5f9c7d0a9de4c9c798cf17280e7c0d6c",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 2.9283309999991616,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+        "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+        "usage": {
+          "input_tokens": 223,
+          "output_tokens": 407,
+          "total_tokens": 2166
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 1,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.9283309999991616,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 37,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "a6ca42f9400bb1de4ea0c8bc6cd7580e0d25361e313a1bb08def3f76288f566f",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+      "route": "GUARDED_DIRECT_LLM",
+      "step_count": 5,
+      "usage": {
+        "input_tokens": 223,
+        "output_tokens": 407,
+        "total_tokens": 2166
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "angle_deg": -60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止",
+    "status": "SUCCESS"
+  }
+}

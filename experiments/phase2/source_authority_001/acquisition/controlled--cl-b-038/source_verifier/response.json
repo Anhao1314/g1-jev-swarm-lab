@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 11.761498799998662,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_e5f91a6a-5c5b-41f6-bd24-ba11dba81bd3",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针转\",\"role\":\"ACTION\",\"explanation\":\"This span names the turn action and its direction: counterclockwise. Under the compilation semantics, counterclockwise/逆时针 turn direction maps to a positive angle, so this authorizes one turn action whose later quantity supplies the magnitude.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"This span supplies the turn magnitude: 45 degrees. The unit 度 is degrees, so it fixes angle_deg to 45.0, a positive finite nonzero angle within the 180-degree maximum.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This Chinese comma separates the turn instruction from the following temporal relation and stop instruction. It adds no executable action, parameter, repetition, or edit.\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"This span means 'then immediately' and relates the stop to the preceding turn. It requires the stop to occur after the turn in one linear sequence, represented by making the stop step depend on the turn step, without inventing a wait step or extra timing event.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"This span names the stop action. It has no parameters under the compilation semantics, so it authorizes one final stop step with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly two requested actions: one counterclockwise turn and one stop. There are no edits, replacements, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one exact order: the turn first, then the stop. The relation phrase 接着立即 makes the stop follow the turn, so the sequence is turn then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or parameter-changing clause in the source. No earlier instruction is replaced or preserved by an edit because none exists.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition or repeated span in the source. The turn and stop are each requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, shared arguments, or omitted referents requiring external context. The stop has no object or parameter, and the turn magnitude and direction are given explicitly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires the stop to happen after the turn, with 接着立即 expressing immediate succession. This is represented as a single linear order with the stop depending on the turn; no separate wait, condition, or timing event is authorized.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave action identity, order, parameters, repetition, or scope unresolved. It uniquely determines a turn of 45 degrees counterclockwise followed by a stop.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+  "usage": {
+    "input_tokens": 211,
+    "output_tokens": 2210,
+    "total_tokens": 3445
+  }
+}

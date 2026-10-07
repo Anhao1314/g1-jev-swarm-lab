@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 16.813611600002332,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_b06476ff-3d7c-48e2-80dd-58da361811fe",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"站立\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"指定站立动作；其持续时间由紧随其后的“2秒”提供，因此不是未定动作。\"\n    },\n    {\n      \"text\": \"2秒\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"为站立动作提供2秒的有限正持续时间，对应 stand 的 duration_s=2.0，未使用默认值。\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"表示站立动作之后才执行下一动作，固定顺序为先站立，后接向前走。\"\n    },\n    {\n      \"text\": \"向前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"指定向前行走动作，对应 walk_forward；行走距离由紧随其后的“四米”提供。\"\n    },\n    {\n      \"text\": \"四米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"为向前走提供4米的有限正距离，对应 distance_m=4.0。\"\n    },\n    {\n      \"text\": \"接着\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"表示向前走之后接续下一动作，固定停止动作位于行走之后。\"\n    },\n    {\n      \"text\": \"立即\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"修饰随后的停止，表示行走完成后不插入额外等待而立刻执行停止。\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"指定停止动作，对应 stop，无参数；它在向前走四米之后执行。\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文只请求三个动作：站立、向前走、停止；分别由“站立”“向前走”“停止”标明，且没有编辑、替代或重复请求。\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"“然后”将站立置于向前走之前，“接着”将停止置于向前走之后，“立即”进一步限定停止紧随行走；唯一线性顺序为站立 -> 向前走 -> 停止。\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有修正、替换、撤销或“改成/而是”等编辑表达；没有任何先前指令需要确定被替换或保留。\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有重复标记，也未使用“再/重复/连续/每次”等表达；站立、向前走、停止各只出现一次，没有被重复的跨度。\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"没有需要外部上下文消解的代词或序数引用。站立时长由“2秒”明确，行走距离由“四米”明确，停止无参数；“向前”明确了行走方向。\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"“然后”“接着”“立即”共同确定先站立2秒，再向前走4米，随后立刻停止；该顺序可表示为每步依赖前一步的线性计划，无并行、额外等待或未定时序。\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有显式保留任何未决选择、范围、顺序或关系；所有动作、参数和前后关系均由文本明确。\"\n    }\n  }\n}",
+  "usage": {
+    "input_tokens": 147,
+    "output_tokens": 3570,
+    "total_tokens": 4485
+  }
+}

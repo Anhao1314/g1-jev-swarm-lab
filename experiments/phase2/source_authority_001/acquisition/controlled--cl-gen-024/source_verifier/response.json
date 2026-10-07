@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 18.988882300000114,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_5a9e4795-1de1-4e10-83e7-ed24295b6860",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向右转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action: a turn. 向右 means right/clockwise, so the signed angle is -90 degrees; the step is turn with angle_deg=-90.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequences the first turn before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"前进6.0米\",\"role\":\"ACTION\",\"explanation\":\"Requests the second action: walk_forward with distance_m=6.0. 米 are meters, so no unit conversion is needed.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequences the preceding walk before the next action. It is nonexecuting text and introduces no additional step or parameter.\"},{\"text\":\"逆时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Requests the third action: a turn. 逆时针 means counterclockwise, so the signed angle is +90 degrees; the step is turn with angle_deg=90.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as the final action in the ordered plan. It is nonexecuting text and introduces no extra step or parameter.\"},{\"text\":\"立即停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the fourth and final action: stop with parameters {}. 立即 emphasizes immediate execution after the preceding action but adds no IR parameter or separate executable event.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly four action clauses: 向右转90度, 前进6.0米, 逆时针转90度, and 立即停止. None is repeated or replaced; 然后, 接着, and 最后 sequence the actions rather than add alternatives.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 然后, 接着, and 最后 establish one exact linear order: turn right 90 degrees, walk forward 6.0 meters, turn counterclockwise 90 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source. No earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers, counts, or repeated spans. Each of the four actions occurs once in the plan.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or external referent is needed. 最后 refers to the final position in the same action sequence and resolves to the stop action; all other actions and parameters are explicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single linear execution order with before/after relations through 然后, 接着, and 最后. 立即 adds immediacy to the final stop but does not introduce a representable wait, simultaneous action, or additional event, so stop remains the last step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. The actions, order, directions, distances, angle, and final stop are all resolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+  "usage": {
+    "input_tokens": 156,
+    "output_tokens": 3217,
+    "total_tokens": 4525
+  }
+}

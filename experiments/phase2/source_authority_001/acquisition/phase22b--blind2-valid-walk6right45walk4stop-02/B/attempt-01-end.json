@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.6701788999998826,
+  "provider_document": {
+    "created_at": 1791360057,
+    "id": "resp_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+        "reasoning_content": "We need answer JSON only. Need parse Chinese command. Need determine if mission. User: \"麻烦先往前走六米，接着顺时针转45度，然后前进4m，再停止\"\n\nTranslate: Please first walk forward six meters, then clockwise turn 45 degrees, then forward 4m, then stop.\n\nLegal skills: walk_forward, turn, stop. Need steps s1 walk distance 6.0, s2 turn angle -45.0 (clockwise negative), s3 walk 4.0, s4 stop. depends_on previous exactly.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-stop\" matches [A-Za-z0-9][A-Za-z0-9._-]{0,63}, no ending dot, not reserved. Need exact fields. No extra.\n\nCheck \"六米\" number Chinese numeral 6. Is that allowed? Need parse numeric text. MALFORMED_NUMBER only NaN/Infinity/exponential/multiple decimal points otherwise malformed. Chinese numerals likely okay? Examples include 站立5秒, \"六米\" probably natural. Need convert to 6.0. \"45度\" 45.0. \"4m\" 4.0. \"顺时针\" clockwise negative. \"麻烦\" polite. \"先...接着...然后...再\" sequence.\n\nNeed ensure turn sign: clockwise negative per prompt: Right, clockwise and 顺时针 are negative. So -45.0.\n\nMission ID maybe \"seq-walk-turn-walk-stop\". Fine.\n\nReturn exactly JSON object no markdown. Need status SUCCESS, mission object, error_code null. Ensure schema_version \"2.0.0\". Steps IDs s1...s4. For every after s1 depends_on exactly previous step ID.\n\nLet's craft.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse Chinese command. Need determine if mission. User: \"麻烦先往前走六米，接着顺时针转45度，然后前进4m，再停止\"\n\nTranslate: Please first walk forward six meters, then clockwise turn 45 degrees, then forward 4m, then stop.\n\nLegal skills: walk_forward, turn, stop. Need steps s1 walk distance 6.0, s2 turn angle -45.0 (clockwise negative), s3 walk 4.0, s4 stop. depends_on previous exactly.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-stop\" matches [A-Za-z0-9][A-Za-z0-9._-]{0,63}, no ending dot, not reserved. Need exact fields. No extra.\n\nCheck \"六米\" number Chinese numeral 6. Is that allowed? Need parse numeric text. MALFORMED_NUMBER only NaN/Infinity/exponential/multiple decimal points otherwise malformed. Chinese numerals likely okay? Examples include 站立5秒, \"六米\" probably natural. Need convert to 6.0. \"45度\" 45.0. \"4m\" 4.0. \"顺时针\" clockwise negative. \"麻烦\" polite. \"先...接着...然后...再\" sequence.\n\nNeed ensure turn sign: clockwise negative per prompt: Right, clockwise and 顺时针 are negative. So -45.0.\n\nMission ID maybe \"seq-walk-turn-walk-stop\". Fine.\n\nReturn exactly JSON object no markdown. Need status SUCCESS, mission object, error_code null. Ensure schema_version \"2.0.0\". Steps IDs s1...s4. For every after s1 depends_on exactly previous step ID.\n\nLet's craft.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"seq-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 218,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 521,
+      "output_tokens_details": {
+        "reasoning_tokens": 373
+      },
+      "total_tokens": 2275
+    }
+  },
+  "request_sha256": "fc7987898bdf1284f9ca112f9a619bcde648055622a0e7095d0481952c6db1b3",
+  "status": "SUCCESS"
+}

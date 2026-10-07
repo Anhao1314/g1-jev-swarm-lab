@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 18.910822600000756,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_ca11a135-0ceb-471c-8c61-43a668b0cb1a",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前挪\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"请求向前移动；在合法 Mission IR 动作中对应 walk_forward，而不是 turn、stand 或 stop。\"\n    },\n    {\n      \"text\": \"4米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"给出 walk_forward 的正有限距离参数，即 distance_m=4 米；米为合法单位。\"\n    },\n    {\n      \"text\": \"就行\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"口语化结束/足够标记，本身不请求任何动作，也不添加 stop。\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"句末标点，仅分隔前后句，不改变动作或关系。\"\n    },\n    {\n      \"text\": \"‘就行’\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"引用前一句中的“就行”，为后续澄清限定作用对象；不新增动作。\"\n    },\n    {\n      \"text\": \"只是我说完了，\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"明确限定“就行”的含义仅为说话结束，不表示添加停或改变先前的前进动作。\"\n    },\n    {\n      \"text\": \"不另加停。\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"显式排除额外添加 stop；这是否定性澄清，不产生 stop 动作。\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"唯一动作请求是“往前挪4米”，对应一个 walk_forward；“就行”是结束标记，“不另加停”是否定澄清，均不增加 stand、turn 或 stop。\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源中只有一个动作，因此不存在多个执行顺序、先后或同时关系需要选择；线性计划只能是单个 walk_forward 步骤。\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"第二句明确限定“就行”的范围：它只表示说话结束，不添加 stop，并保留前面的前进距离动作，不替换或修改其距离。\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"没有重复执行动作的请求；“4米”是单一距离，引号中的“就行”只是被澄清的引用，不构成重复命令或重复动作。\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"“往前挪”唯一解析为向前 walk_forward；“‘就行’”指前句“就行”；“不另加停”指不向该请求添加 stop，无未解决指代或序数引用。\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"没有 before/after、同时、等待或完成关系；单一步骤可直接线性化为 s1: walk_forward 4m，无需发明时间关系。\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源中没有明确未解决的选择、范围、顺序或关系；唯一可能含糊的“就行”已被后续澄清为不添加 stop。\"\n    }\n  }\n}",
+  "usage": {
+    "input_tokens": 154,
+    "output_tokens": 3801,
+    "total_tokens": 4723
+  }
+}

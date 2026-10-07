@@ -1,0 +1,289 @@
+{
+  "added_wall_s": 14.596866700001556,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 14.59321060000002,
+        "provider_document": {
+          "created_at": 1791360056,
+          "id": "resp_51f7d854-7038-4793-847f-db00bb1eedb5",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_51f7d854-7038-4793-847f-db00bb1eedb5",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source: \"麻烦往前走四米，然后逆时针转45度，再停住\"\n\nWe need decide dimensions. Need provide coverage exact concatenation. Source string. Need status likely AUTHORIZED_UNIQUE? Let's analyze.\n\nSource: \"麻烦往前走四米，然后逆时针转45度，再停住\"\n\nActions: walk forward 4 meters, then counterclockwise turn 45 degrees, then stop. \"麻烦\" polite marker context? \"往前走四米\" walk_forward distance_m 4. \"逆时针转45度\" turn angle_deg +45 since counterclockwise positive. \"停住\" stop. Sequence via 然后 ... 再 ... exactly ordered. No ambiguity? Need check action_multiplicity: three actions. action_order: walk then turn then stop. correction_scope: none. repetition_scope: none. reference_resolution: pronouns? None. temporal_relations: then, then; linear. unresolved_relations: none. All unique. Legality: 4m positive finite; turn 45 <=180 nonzero; stop no params; 3 steps <=32. stand none. Default not relevant. So AUTHORIZED_UNIQUE.\n\nNeed coverage list with exact text spans concatenated equals entire source. We can split into meaningful spans. Need every action relation editing clause considered. Text copied exactly preserving whitespace/punctuation. Source has no spaces? \"麻烦往前走四米，然后逆时针转45度，再停住\". We can split:\n\"麻烦\" CONTEXT\n\"往前走四米\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"逆时针转45度\" ACTION? Includes turn angle and direction. Maybe split \"逆时针\" context? But action span can include direction. Need exact. \n\"，\" SEPARATOR\n\"再\" RELATION\n\"停住\" ACTION\n\nConcatenate: \"麻烦\" + \"往前走四米\" + \"，\" + \"然后\" + \"逆时针转45度\" + \"，\" + \"再\" + \"停住\" = exact. Need explanations. Role for \"麻烦\" CONTEXT: politeness marker, not action, no authority. \"往前走四米\" ACTION: forward walk 4m. \"，\" separator. \"然后\" RELATION: establishes next action after previous. \"逆时针转45度\" ACTION: counterclockwise turn 45 deg positive. \"，\" separator. \"再\" RELATION: indicates following stop after turn. \"停住\" ACTION: stop no params. Good.\n\nBut maybe \"再停住\" could mean \"then stop\" or \"stop again\"? Chinese \"再\" can mean \"then\" or \"again\". Could imply repetition? Need consider ambiguity: \"再停住\" maybe \"then stop\" not \"stop again\" because \"再\" used sequentially. But is there ambiguity? Source \"然后...，再...\" means \"then ..., then ...\". Could \"再\" mean again? \"再停住\" = \"then stop\" or \"stop again\"? Hmm. If interpreted as \"stop again\", but there was no prior stop, so impossible? It could be \"then stop\" sequential. In Chinese, \"再\" after comma often means \"then\" (and then). \"然后...，再...\" = then ... then ... So likely unique. Not explicit repetition. We shouldn't over-ambig? The gate asks source resolves. \"再\" could have multiple readings? In context \"然后A，再B\" means A then B. It doesn't indicate repeating B. If \"再\" as again, no prior stop, but could mean stop once more after something? Not enough. But ordinary reading unique. Need not mark ambiguous due to lexical polysemy if context resolves. The mission IR supports sequence. Good.\n\nPotential issue: \"往前走四米\" could be \"walk forward four meters\" action. \"逆时针转45度\" requires turn; left/counterclockwise positive. Great.\n\nNeed output exactly JSON object. No markdown. Ensure keys exactly status, coverage, dimensions. Dimensions object exactly names. Each dimension with status and explanation.\n\nNeed no extra fields. Coverage text values concatenated exactly equals original. Need be careful JSON escaping. Source uses Chinese and punctuation. We can include unicode directly. JSON valid.\n\nLet's craft.\n\nNeed status AUTHORIZED_UNIQUE only if all seven UNIQUE. Yes.\n\nCoverage entries:\n1 text \"麻烦\" role CONTEXT explanation \"Politeness marker; it does not request an action or alter any parameter, so it adds no executable authority.\" nonempty.\n2 \"往前走四米\" role ACTION explanation \"Requests one walk_forward action with distance_m=4 m, positive and finite.\"\n3 \"，\" role SEPARATOR explanation \"Separates the first action from the following sequencing relation; punctuation only, no authority.\"\n4 \"然后\" role RELATION explanation \"Marks the next action as occurring after the previous action, giving a single ordered transition.\"\n5 \"逆时针转45度\" role ACTION explanation \"Requests one turn action of 45 degrees counterclockwise, i.e. angle_deg=+45, nonzero and within legality bounds.\"\n6 \"，\" role SEPARATOR ...\n7 \"再\" role RELATION explanation \"Marks the following stop as occurring after the preceding turn, preserving the single linear order.\"\n8 \"停住\" role ACTION explanation \"Requests one stop action with no parameters.\"\n\nConcatenate exactly. Let's verify string:\n麻烦往前走四米，然后逆时针转45度，再停住\nOur segments: 麻烦 + 往前走四米 + ， + 然后 + 逆时针转45度 + ， + 再 + 停住\n= 麻烦往前走四米，然后逆时针转45度，再停住. Yes.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: source names exactly three actions: walk forward 4m, turn ccw 45, stop; no repeated/edited action clauses, no alternative grouping.\naction_order: UNIQUE. \"然后\" and \"再\" place walk before turn before stop; single linear s1 walk, s2 turn, s3 stop.\ncorrection_scope: UNIQUE. No edit/correction; none to scope.\nrepetition_scope: UNIQUE. No repetition; \"再\" here functions as sequential \"then\" not \"again\"; no span repeated. Hmm if I say \"here functions\" maybe assert. Could mention no explicit repetition. If \"再\" ambiguous? Let's think. Should we mark repetition_scope UNIQUE because inapplicable. Explanation: Source contains no explicit repetition instruction; \"再\" is used with \"然后\" to mark the next sequential action, not a repetition of a prior span. That resolves.\nreference_resolution: UNIQUE. No pronouns/ordinals/omitted shared args requiring external referent; actions have explicit or no parameters.\ntemporal_relations: UNIQUE. \"然后\" and \"再\" establish strict sequential completion? Actually \"然后\" means after that; \"再\" means then. Does it require waiting/completion? It gives before/after sequence. Linear order representable. Stop after turn. Unique.\nunresolved_relations: UNIQUE. No explicitly unresolved choice, scope, ordering or relationship. The only relations are resolved by sequential markers.\n\nNeed maybe mention \"maximum absolute turn angle 180, max stand 60 etc.\" Not necessary but can mention legal. Need no confidence.\n\nPotential issue: \"停住\" could be interpreted as stop immediately? But sequence clearly after turn. Good.\n\nNeed answer exactly JSON. Ensure no markdown. Use valid JSON.\n\nLet's ensure \"coverage\" nonempty list objects with exactly text, role, explanation. Each explanation nonempty. Good.\n\nShould status be AUTHORIZED_UNIQUE? Yes.\n\nLet's consider if \"麻烦\" as CONTEXT might be considered \"polite request\" not action. Good.\n\nNeed not mention compiler candidate.\n\nDouble-check dimension statuses exactly \"UNIQUE\". No AMBIGUOUS/UNKNOWN.\n\nPotential hidden issue: The source says \"麻烦往前走四米\" not \"向前走四米\". \"往前走四米\" means walk forward 4m. Good.\n\nPotential hidden issue: \"逆时针转45度\" angle positive. Legal max 180. Good.\n\nPotential hidden issue: \"停住\" no duration. Stop no params. Good.\n\nPotential hidden issue: The linear plan with each step after first depends on exactly predecessor. Sequence has dependencies. Stop after turn. Walk first. Good.\n\nPotential hidden issue: \"再\" as \"再停住\" might be \"stop again\" causing repetition. Let's parse Chinese: \"然后逆时针转45度，再停住\" = \"then turn counterclockwise 45 degrees, then stop.\" In Chinese, \"再\" often means \"then\" after \"然后\"; it's not necessarily repeat. If someone says \"然后...再...\" it's sequential. So unique.\n\nNeed include \"米\" conversion? It's already meters. Fine.\n\nLet's produce JSON. Ensure no trailing commas. Use escaped quotes? Explanations can contain no double quotes? We can avoid double quotes or escape. I'll use plain text no internal quotes. Chinese punctuation safe.\n\nLet's write.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source: \"麻烦往前走四米，然后逆时针转45度，再停住\"\n\nWe need decide dimensions. Need provide coverage exact concatenation. Source string. Need status likely AUTHORIZED_UNIQUE? Let's analyze.\n\nSource: \"麻烦往前走四米，然后逆时针转45度，再停住\"\n\nActions: walk forward 4 meters, then counterclockwise turn 45 degrees, then stop. \"麻烦\" polite marker context? \"往前走四米\" walk_forward distance_m 4. \"逆时针转45度\" turn angle_deg +45 since counterclockwise positive. \"停住\" stop. Sequence via 然后 ... 再 ... exactly ordered. No ambiguity? Need check action_multiplicity: three actions. action_order: walk then turn then stop. correction_scope: none. repetition_scope: none. reference_resolution: pronouns? None. temporal_relations: then, then; linear. unresolved_relations: none. All unique. Legality: 4m positive finite; turn 45 <=180 nonzero; stop no params; 3 steps <=32. stand none. Default not relevant. So AUTHORIZED_UNIQUE.\n\nNeed coverage list with exact text spans concatenated equals entire source. We can split into meaningful spans. Need every action relation editing clause considered. Text copied exactly preserving whitespace/punctuation. Source has no spaces? \"麻烦往前走四米，然后逆时针转45度，再停住\". We can split:\n\"麻烦\" CONTEXT\n\"往前走四米\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"逆时针转45度\" ACTION? Includes turn angle and direction. Maybe split \"逆时针\" context? But action span can include direction. Need exact. \n\"，\" SEPARATOR\n\"再\" RELATION\n\"停住\" ACTION\n\nConcatenate: \"麻烦\" + \"往前走四米\" + \"，\" + \"然后\" + \"逆时针转45度\" + \"，\" + \"再\" + \"停住\" = exact. Need explanations. Role for \"麻烦\" CONTEXT: politeness marker, not action, no authority. \"往前走四米\" ACTION: forward walk 4m. \"，\" separator. \"然后\" RELATION: establishes next action after previous. \"逆时针转45度\" ACTION: counterclockwise turn 45 deg positive. \"，\" separator. \"再\" RELATION: indicates following stop after turn. \"停住\" ACTION: stop no params. Good.\n\nBut maybe \"再停住\" could mean \"then stop\" or \"stop again\"? Chinese \"再\" can mean \"then\" or \"again\". Could imply repetition? Need consider ambiguity: \"再停住\" maybe \"then stop\" not \"stop again\" because \"再\" used sequentially. But is there ambiguity? Source \"然后...，再...\" means \"then ..., then ...\". Could \"再\" mean again? \"再停住\" = \"then stop\" or \"stop again\"? Hmm. If interpreted as \"stop again\", but there was no prior stop, so impossible? It could be \"then stop\" sequential. In Chinese, \"再\" after comma often means \"then\" (and then). \"然后...，再...\" = then ... then ... So likely unique. Not explicit repetition. We shouldn't over-ambig? The gate asks source resolves. \"再\" could have multiple readings? In context \"然后A，再B\" means A then B. It doesn't indicate repeating B. If \"再\" as again, no prior stop, but could mean stop once more after something? Not enough. But ordinary reading unique. Need not mark ambiguous due to lexical polysemy if context resolves. The mission IR supports sequence. Good.\n\nPotential issue: \"往前走四米\" could be \"walk forward four meters\" action. \"逆时针转45度\" requires turn; left/counterclockwise positive. Great.\n\nNeed output exactly JSON object. No markdown. Ensure keys exactly status, coverage, dimensions. Dimensions object exactly names. Each dimension with status and explanation.\n\nNeed no extra fields. Coverage text values concatenated exactly equals original. Need be careful JSON escaping. Source uses Chinese and punctuation. We can include unicode directly. JSON valid.\n\nLet's craft.\n\nNeed status AUTHORIZED_UNIQUE only if all seven UNIQUE. Yes.\n\nCoverage entries:\n1 text \"麻烦\" role CONTEXT explanation \"Politeness marker; it does not request an action or alter any parameter, so it adds no executable authority.\" nonempty.\n2 \"往前走四米\" role ACTION explanation \"Requests one walk_forward action with distance_m=4 m, positive and finite.\"\n3 \"，\" role SEPARATOR explanation \"Separates the first action from the following sequencing relation; punctuation only, no authority.\"\n4 \"然后\" role RELATION explanation \"Marks the next action as occurring after the previous action, giving a single ordered transition.\"\n5 \"逆时针转45度\" role ACTION explanation \"Requests one turn action of 45 degrees counterclockwise, i.e. angle_deg=+45, nonzero and within legality bounds.\"\n6 \"，\" role SEPARATOR ...\n7 \"再\" role RELATION explanation \"Marks the following stop as occurring after the preceding turn, preserving the single linear order.\"\n8 \"停住\" role ACTION explanation \"Requests one stop action with no parameters.\"\n\nConcatenate exactly. Let's verify string:\n麻烦往前走四米，然后逆时针转45度，再停住\nOur segments: 麻烦 + 往前走四米 + ， + 然后 + 逆时针转45度 + ， + 再 + 停住\n= 麻烦往前走四米，然后逆时针转45度，再停住. Yes.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: source names exactly three actions: walk forward 4m, turn ccw 45, stop; no repeated/edited action clauses, no alternative grouping.\naction_order: UNIQUE. \"然后\" and \"再\" place walk before turn before stop; single linear s1 walk, s2 turn, s3 stop.\ncorrection_scope: UNIQUE. No edit/correction; none to scope.\nrepetition_scope: UNIQUE. No repetition; \"再\" here functions as sequential \"then\" not \"again\"; no span repeated. Hmm if I say \"here functions\" maybe assert. Could mention no explicit repetition. If \"再\" ambiguous? Let's think. Should we mark repetition_scope UNIQUE because inapplicable. Explanation: Source contains no explicit repetition instruction; \"再\" is used with \"然后\" to mark the next sequential action, not a repetition of a prior span. That resolves.\nreference_resolution: UNIQUE. No pronouns/ordinals/omitted shared args requiring external referent; actions have explicit or no parameters.\ntemporal_relations: UNIQUE. \"然后\" and \"再\" establish strict sequential completion? Actually \"然后\" means after that; \"再\" means then. Does it require waiting/completion? It gives before/after sequence. Linear order representable. Stop after turn. Unique.\nunresolved_relations: UNIQUE. No explicitly unresolved choice, scope, ordering or relationship. The only relations are resolved by sequential markers.\n\nNeed maybe mention \"maximum absolute turn angle 180, max stand 60 etc.\" Not necessary but can mention legal. Need no confidence.\n\nPotential issue: \"停住\" could be interpreted as stop immediately? But sequence clearly after turn. Good.\n\nNeed answer exactly JSON. Ensure no markdown. Use valid JSON.\n\nLet's ensure \"coverage\" nonempty list objects with exactly text, role, explanation. Each explanation nonempty. Good.\n\nShould status be AUTHORIZED_UNIQUE? Yes.\n\nLet's consider if \"麻烦\" as CONTEXT might be considered \"polite request\" not action. Good.\n\nNeed not mention compiler candidate.\n\nDouble-check dimension statuses exactly \"UNIQUE\". No AMBIGUOUS/UNKNOWN.\n\nPotential hidden issue: The source says \"麻烦往前走四米\" not \"向前走四米\". \"往前走四米\" means walk forward 4m. Good.\n\nPotential hidden issue: \"逆时针转45度\" angle positive. Legal max 180. Good.\n\nPotential hidden issue: \"停住\" no duration. Stop no params. Good.\n\nPotential hidden issue: The linear plan with each step after first depends on exactly predecessor. Sequence has dependencies. Stop after turn. Walk first. Good.\n\nPotential hidden issue: \"再\" as \"再停住\" might be \"stop again\" causing repetition. Let's parse Chinese: \"然后逆时针转45度，再停住\" = \"then turn counterclockwise 45 degrees, then stop.\" In Chinese, \"再\" often means \"then\" after \"然后\"; it's not necessarily repeat. If someone says \"然后...再...\" it's sequential. So unique.\n\nNeed include \"米\" conversion? It's already meters. Fine.\n\nLet's produce JSON. Ensure no trailing commas. Use escaped quotes? Explanations can contain no double quotes? We can avoid double quotes or escape. I'll use plain text no internal quotes. Chinese punctuation safe.\n\nLet's write.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"礼貌标记，不表示任何可执行动作，也不改变距离、角度或顺序，因此不增加或修改授权。\"},{\"text\":\"往前走四米\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次向前行走动作，距离为四米，即 distance_m=4 米；该参数为正且有限，符合 walk_forward 的合法参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示后续动作发生在前一动作之后，建立从前走到转向的单向先后关系。\"},{\"text\":\"逆时针转45度\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次逆时针转向动作，角度为 45 度；逆时针在语义中为正，因此 angle_deg=+45，非零且未超过 180 度上限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"在此与“然后”连用，表示下一步动作发生在转向之后，而不是对既有动作的重复；它维持单一线性顺序。\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次停止动作，stop 不带参数，因此该动作授权明确且不涉及持续时间或距离。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本明确列出三个动作：向前走四米、逆时针转45度、停住；没有编辑、替换、重复或额外隐含动作，动作集合唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“再”明确给出顺序：先向前走四米，再逆时针转45度，最后停住；可唯一表示为 s1 walk_forward、s2 turn、s3 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有任何更正、替换或修改条款，因此不存在需要界定的更正范围，也不影响其他动作。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有要求重复任何动作或片段；“再”与“然后”连用表示随后执行，而不是把“停住”解释为再次停止。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有代词、序数引用或省略的共享参数需要外部消解；行走距离和转向角度均在源中直接给出。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“再”给出严格的前后关系，形成单一线性时序：行走完成后转向，转向后停止，无需发明等待或并行事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留任何未决选择、范围、顺序或关系；所有动作和先后关系均已由文本确定。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_51f7d854-7038-4793-847f-db00bb1eedb5",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 151,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2584,
+            "output_tokens_details": {
+              "reasoning_tokens": 1916
+            },
+            "total_tokens": 3503
+          }
+        },
+        "request_sha256": "b343a0757f1c99a7aa226448d968b358079812e446f7b7464a8b55e1705b9b5a",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 14.591736300000775,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_51f7d854-7038-4793-847f-db00bb1eedb5",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"礼貌标记，不表示任何可执行动作，也不改变距离、角度或顺序，因此不增加或修改授权。\"},{\"text\":\"往前走四米\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次向前行走动作，距离为四米，即 distance_m=4 米；该参数为正且有限，符合 walk_forward 的合法参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示后续动作发生在前一动作之后，建立从前走到转向的单向先后关系。\"},{\"text\":\"逆时针转45度\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次逆时针转向动作，角度为 45 度；逆时针在语义中为正，因此 angle_deg=+45，非零且未超过 180 度上限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"在此与“然后”连用，表示下一步动作发生在转向之后，而不是对既有动作的重复；它维持单一线性顺序。\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次停止动作，stop 不带参数，因此该动作授权明确且不涉及持续时间或距离。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本明确列出三个动作：向前走四米、逆时针转45度、停住；没有编辑、替换、重复或额外隐含动作，动作集合唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“再”明确给出顺序：先向前走四米，再逆时针转45度，最后停住；可唯一表示为 s1 walk_forward、s2 turn、s3 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有任何更正、替换或修改条款，因此不存在需要界定的更正范围，也不影响其他动作。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有要求重复任何动作或片段；“再”与“然后”连用表示随后执行，而不是把“停住”解释为再次停止。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有代词、序数引用或省略的共享参数需要外部消解；行走距离和转向角度均在源中直接给出。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“再”给出严格的前后关系，形成单一线性时序：行走完成后转向，转向后停止，无需发明等待或并行事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留任何未决选择、范围、顺序或关系；所有动作和先后关系均已由文本确定。\"}}}",
+        "usage": {
+          "input_tokens": 151,
+          "output_tokens": 2584,
+          "total_tokens": 3503
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.37281559999974,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk4-ccw45-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 19,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk4-ccw45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "dcd9be8b0ab8c4788dc014cc078867a6dc18de7952ef2774327d9faa76080110",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_6eadd1f9-7622-405f-b012-105f64cafe3a",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 14.596155300001556,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 14.591736300000775,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"礼貌标记，不表示任何可执行动作，也不改变距离、角度或顺序，因此不增加或修改授权。\"},{\"text\":\"往前走四米\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次向前行走动作，距离为四米，即 distance_m=4 米；该参数为正且有限，符合 walk_forward 的合法参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示后续动作发生在前一动作之后，建立从前走到转向的单向先后关系。\"},{\"text\":\"逆时针转45度\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次逆时针转向动作，角度为 45 度；逆时针在语义中为正，因此 angle_deg=+45，非零且未超过 180 度上限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"在此与“然后”连用，表示下一步动作发生在转向之后，而不是对既有动作的重复；它维持单一线性顺序。\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"请求执行一次停止动作，stop 不带参数，因此该动作授权明确且不涉及持续时间或距离。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本明确列出三个动作：向前走四米、逆时针转45度、停住；没有编辑、替换、重复或额外隐含动作，动作集合唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“再”明确给出顺序：先向前走四米，再逆时针转45度，最后停住；可唯一表示为 s1 walk_forward、s2 turn、s3 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有任何更正、替换或修改条款，因此不存在需要界定的更正范围，也不影响其他动作。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有要求重复任何动作或片段；“再”与“然后”连用表示随后执行，而不是把“停住”解释为再次停止。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有代词、序数引用或省略的共享参数需要外部消解；行走距离和转向角度均在源中直接给出。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“再”给出严格的前后关系，形成单一线性时序：行走完成后转向，转向后停止，无需发明等待或并行事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留任何未决选择、范围、顺序或关系；所有动作和先后关系均已由文本确定。\"}}}",
+          "raw_response_sha256": "d00fbfc8291e0a427f341e942c2113bcbde90072facbf658b17cd432046ad83a",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_51f7d854-7038-4793-847f-db00bb1eedb5",
+          "source_aware": false,
+          "source_sha256": "5c6b61cd696905cec0d8719b673f69270675d34069e0bc27f2b3099d383e0883",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 151,
+            "output_tokens": 2584,
+            "total_tokens": 3503
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "礼貌标记，不表示任何可执行动作，也不改变距离、角度或顺序，因此不增加或修改授权。",
+                "role": "CONTEXT",
+                "text": "麻烦"
+              },
+              {
+                "explanation": "请求执行一次向前行走动作，距离为四米，即 distance_m=4 米；该参数为正且有限，符合 walk_forward 的合法参数要求。",
+                "role": "ACTION",
+                "text": "往前走四米"
+              },
+              {
+                "explanation": "标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "表示后续动作发生在前一动作之后，建立从前走到转向的单向先后关系。",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "请求执行一次逆时针转向动作，角度为 45 度；逆时针在语义中为正，因此 angle_deg=+45，非零且未超过 180 度上限。",
+                "role": "ACTION",
+                "text": "逆时针转45度"
+              },
+              {
+                "explanation": "标点分隔符，仅分隔前后子句，不引入动作、参数或顺序变更。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "在此与“然后”连用，表示下一步动作发生在转向之后，而不是对既有动作的重复；它维持单一线性顺序。",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "请求执行一次停止动作，stop 不带参数，因此该动作授权明确且不涉及持续时间或距离。",
+                "role": "ACTION",
+                "text": "停住"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源文本明确列出三个动作：向前走四米、逆时针转45度、停住；没有编辑、替换、重复或额外隐含动作，动作集合唯一。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“然后”和“再”明确给出顺序：先向前走四米，再逆时针转45度，最后停住；可唯一表示为 s1 walk_forward、s2 turn、s3 stop。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源文本没有任何更正、替换或修改条款，因此不存在需要界定的更正范围，也不影响其他动作。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "源文本没有代词、序数引用或省略的共享参数需要外部消解；行走距离和转向角度均在源中直接给出。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源文本没有要求重复任何动作或片段；“再”与“然后”连用表示随后执行，而不是把“停住”解释为再次停止。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "“然后”和“再”给出严格的前后关系，形成单一线性时序：行走完成后转向，转向后停止，无需发明等待或并行事件。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源文本没有显式保留任何未决选择、范围、顺序或关系；所有动作和先后关系均已由文本确定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 214,
+        "output_tokens": 298,
+        "total_tokens": 2048
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk4-ccw45-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "麻烦往前走四米然后逆时针转45度再停住",
+    "status": "SUCCESS"
+  }
+}

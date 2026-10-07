@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "max_output_tokens",
+  "latency_s": 20.650012099999003,
+  "model": "deepseek-flash",
+  "provider_status": "incomplete",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_38901a4f-4a57-4dbc-b17b-e1676d628acb",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"顺序连接词，表示随后的第一个动作在序列中最先发生；本身不执行动作，也不改变动作参数。\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"表示一个 walk_forward 动作，方向为机器人当前前方；具体距离由后续数量 span 提供。\"},{\"text\":\"400厘米\",\"role\":\"QUANTITY\",\"explanation\":\"前一个 walk_forward 动作的距离参数，400 厘米等于 4 米，为正有限距离，满足 IR 合法性要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"全角逗号，仅分隔第一个和第二个动作子句；不改变动作含义或执行顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"在“先……再……”结构中表示第二个动作紧随第一个动作之后；此处不是重复执行指令。\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"表示一个 turn 动作，方向为左转；具体角度由后续数量 span 提供。\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"前一个 turn 动作的角度参数，45 度；左转为正，因此是 +45°，非零有限且未超过 180 度。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"全角逗号，仅分隔第二个和第三个动作子句；不改变动作含义或执行顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"顺序连接词，表示第三个动作在第二个动作之后发生；不引入重复、条件或并发关系。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"表示一个 stop 动作，无参数，作为线性序列的最后一步执行。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文明确列出三个独立动作：向前移动 400 厘米、向左转 45°、停止；由“先”“再”“然后”逐一枚举，没有遗漏动作、重复动作或对先前动作的替换。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先……再……然后……”给出唯一线性顺序：s1 walk_forward(4 米)，s2 turn(+45°)，s3 stop；每一步在前一步之后执行，不存在其他可选顺序或并列关系。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有编辑、修正、替换、覆盖或“改为”等表达，也没有指向先前动作或参数的修订关系；该维度不适用，且不引入任何替代解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有“重复”“再一次”等重复指令；“再”处于“先……再……”框架中，只表示第二个动作接续第一个动作，并不把任一段扩展为重复执行，重复范围为空。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"没有代词、序数回指或需要外部上下文补齐的指代；“向前”和“向左”由动作语义确定为机器人局部方向，400 厘米明确修饰向前移动，45° 明确修饰向左转，所有引用均可唯一解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“再”“然后”只表达先后完成关系：先移动，完成后左转，完成后停止；没有等待、同时执行或未指定时间关系，可由三步线性依赖计划表示。\"}",
+  "usage": {
+    "input_tokens": 149,
+    "output_tokens": 4096,
+    "total_tokens": 5013
+  }
+}

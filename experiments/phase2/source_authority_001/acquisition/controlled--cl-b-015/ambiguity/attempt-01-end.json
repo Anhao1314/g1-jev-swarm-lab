@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.22711100000015,
+  "provider_document": {
+    "created_at": 1791360464,
+    "id": "resp_06864621-8622-4e5b-9322-81858a71ded9",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_06864621-8622-4e5b-9322-81858a71ded9",
+        "reasoning_content": "We need answer JSON only. Need inspect source \"右转45.0度\". Chinese: \"right turn 45.0 degrees\" likely action turn angle_deg negative per rule: right/clockwise negative. So turn with -45.0 deg. Need decide seven dimensions. Source is just one action, no ambiguity. Need coverage split exactly entire source. We can have one span text \"右转45.0度\" role ACTION maybe includes quantity. Or split \"右转\" and \"45.0度\"? The concatenation must equal source. Need every action relation etc considered. One action turn right 45.0 degrees. A single ACTION span is okay? It includes quantity. But dimensions include action_multiplicity etc. Could split into ACTION and QUANTITY. Need exact text. Let's choose:\n1) text \"右转\" role ACTION explanation: specifies a turn action to the right; direction maps to negative angle per legal semantics.\n2) text \"45.0度\" role QUANTITY explanation: magnitude 45.0 degrees finite nonzero, units degrees, combined with right direction yields angle_deg -45.0.\nConcatenation exact \"右转45.0度\". Good.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action, turn; no repeated/edited actions.\naction_order UNIQUE: only one action, order trivially fixed. No temporal relation.\ncorrection_scope UNIQUE: no correction/edit; nothing changed.\nrepetition_scope UNIQUE: no repetition; not applicable.\nreference_resolution UNIQUE: no pronouns/ordinals/omitted args; direction/magnitude explicit. Maybe \"右转\" implies right turn, no external context.\ntemporal_relations UNIQUE: single action, no before/after etc; linear plan one step.\nunresolved_relations UNIQUE: no explicitly unresolved relation; direction and angle specified.\n\nstatus AUTHORIZED_UNIQUE. Need ensure legal interpretation: turn angle -45.0, abs <=180 nonzero finite, max steps one. Good.\n\nNeed output JSON. No markdown. Ensure keys exact. coverage list nonempty. Explanation nonempty. Dimensions exactly seven. No extra fields.\n\nPotential subtlety: \"右转45.0度\" could parse as \"turn right 45.0 degrees\" yes. Legal \"turn requires nonzero finite angle_deg (度 or degrees; left/counterclockwise positive, right/clockwise negative).\" So unique.\n\nNeed maybe mention source includes no explicit action verb? 右转 = turn right. Fine.\n\nFinal JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source \"右转45.0度\". Chinese: \"right turn 45.0 degrees\" likely action turn angle_deg negative per rule: right/clockwise negative. So turn with -45.0 deg. Need decide seven dimensions. Source is just one action, no ambiguity. Need coverage split exactly entire source. We can have one span text \"右转45.0度\" role ACTION maybe includes quantity. Or split \"右转\" and \"45.0度\"? The concatenation must equal source. Need every action relation etc considered. One action turn right 45.0 degrees. A single ACTION span is okay? It includes quantity. But dimensions include action_multiplicity etc. Could split into ACTION and QUANTITY. Need exact text. Let's choose:\n1) text \"右转\" role ACTION explanation: specifies a turn action to the right; direction maps to negative angle per legal semantics.\n2) text \"45.0度\" role QUANTITY explanation: magnitude 45.0 degrees finite nonzero, units degrees, combined with right direction yields angle_deg -45.0.\nConcatenation exact \"右转45.0度\". Good.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action, turn; no repeated/edited actions.\naction_order UNIQUE: only one action, order trivially fixed. No temporal relation.\ncorrection_scope UNIQUE: no correction/edit; nothing changed.\nrepetition_scope UNIQUE: no repetition; not applicable.\nreference_resolution UNIQUE: no pronouns/ordinals/omitted args; direction/magnitude explicit. Maybe \"右转\" implies right turn, no external context.\ntemporal_relations UNIQUE: single action, no before/after etc; linear plan one step.\nunresolved_relations UNIQUE: no explicitly unresolved relation; direction and angle specified.\n\nstatus AUTHORIZED_UNIQUE. Need ensure legal interpretation: turn angle -45.0, abs <=180 nonzero finite, max steps one. Good.\n\nNeed output JSON. No markdown. Ensure keys exact. coverage list nonempty. Explanation nonempty. Dimensions exactly seven. No extra fields.\n\nPotential subtlety: \"右转45.0度\" could parse as \"turn right 45.0 degrees\" yes. Legal \"turn requires nonzero finite angle_deg (度 or degrees; left/counterclockwise positive, right/clockwise negative).\" So unique.\n\nNeed maybe mention source includes no explicit action verb? 右转 = turn right. Fine.\n\nFinal JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the single requested action as a right turn. Under the legal turn semantics, right/clockwise direction maps to a negative angle_deg.\"},{\"text\":\"45.0度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the finite nonzero turn magnitude as 45.0 degrees. Combined with the right direction, this yields angle_deg -45.0, within the IR legality bound of 180 degrees absolute.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The entire source contains exactly one action: a right turn. There are no repeated, additional, or replacement actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one action, the execution order is trivially a single linear step with no competing orders.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, or replacement clause in the source, so no prior instruction is changed or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition clause. The turn is requested once and is not repeated or broadened to a sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The action and its direction/magnitude are explicit in the source. There are no pronouns, ordinal references, omitted shared arguments, or references requiring external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no before/after, simultaneity, waiting, or completion relations. The single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes both the direction, right, and the angle, 45.0 degrees. It does not leave any choice, scope, ordering, or relationship unresolved.\"}}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_06864621-8622-4e5b-9322-81858a71ded9",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 142,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 931,
+      "output_tokens_details": {
+        "reasoning_tokens": 527
+      },
+      "total_tokens": 1841
+    }
+  },
+  "request_sha256": "ae9bc4bf800e6372ed22dd134f76b7524ea15d91dc5a4a4dfb5aca6ac6efc11d",
+  "status": "SUCCESS"
+}

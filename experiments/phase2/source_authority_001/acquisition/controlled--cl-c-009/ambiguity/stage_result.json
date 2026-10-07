@@ -1,0 +1,183 @@
+{
+  "added_wall_s": 8.060244100001,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.05676769999991,
+        "provider_document": {
+          "created_at": 1791360625,
+          "id": "resp_ad610b2c-364d-407b-bc6d-a7146eefd7f7",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_ad610b2c-364d-407b-bc6d-a7146eefd7f7",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"左转45°\". Need determine authorization unique? Source Chinese: 左转45° = turn left 45 degrees. Legal action turn with nonzero finite angle_deg, left/counterclockwise positive. So turn +45. Single action. Dimensions:\naction_multiplicity: one action turn left 45. UNIQUE.\naction_order: single action, order trivially unique. UNIQUE.\ncorrection_scope: no edits. UNIQUE inapplicable.\nrepetition_scope: no repetition. UNIQUE.\nreference_resolution: no pronouns etc. UNIQUE.\ntemporal_relations: single action no temporal relations. UNIQUE.\nunresolved_relations: none. UNIQUE.\nStatus AUTHORIZED_UNIQUE.\n\nCoverage must split entire source into meaningful spans; concatenated exactly. Source \"左转45°\" includes maybe spans \"左转\" ACTION, \"45°\" QUANTITY? Need text concatenation exact. Could have [\"左转\",\"45°\"] roles ACTION, QUANTITY. Explanation. Need no markdown.\n\nEnsure keys exactly status, coverage, dimensions. dimensions exactly seven. \n\nNeed maybe angle symbol ° counts as degree? Legal semantics: turn angle_deg with 度 or degrees. Wait source uses °, not 度 or degrees. The spec says turn requires a nonzero finite angle_deg (度 or degrees; left/counterclockwise positive...). Does ° count? It says (度 or degrees). It doesn't mention °. But source is \"45°\" which conventionally degrees. Is that allowed? Need decide. This is tricky. The IR legal semantics says angle_deg (度 or degrees). If ° not accepted, then angle expression not legal? But likely ° is a degree symbol, semantically equivalent to 度? The instruction explicitly says 度 or degrees, maybe not °. But \"45°\" is standard degree notation. Should we treat as legal? Need consider gate. The source only \"左转45°\". If ° is not recognized by legal compilation semantics, then angle unknown? But user likely expects AUTHORIZED_UNIQUE with 45 degrees. However the exact wording: \"turn requires a nonzero finite angle_deg (度 or degrees; left/counterclockwise positive, right/clockwise negative).\" It lists units 度 or degrees. ° maybe symbol not text \"度\". But in natural language, ° means degrees. Should we mark UNKNOWN because angle unit not among allowed? But \"45°\" is unambiguous degree sign. I think ° is a degree symbol and means degrees. The parenthesis maybe examples? It says (度 or degrees), could be not exhaustive? It says \"requires ... angle_deg (度 or degrees...)\" implies accepted units. Hm.\n\nNeed be strict? The pilot likely tests ambiguity. \"左转45°\" straightforward. Need output authorized unique. But let's inspect all dimensions. Could there be ambiguity: left turn positive? The spec defines left/counterclockwise positive. So +45. Unique. No duration. Good.\n\nCoverage: entire source. We can split \"左转\" as ACTION, \"45°\" as QUANTITY. Explanation: 左转 denotes a left turn, mapped to positive rotation per IR. \"45°\" supplies finite angle 45 degrees; no other action or relation. The concatenation exactly equals \"左转45°\". Good.\n\nNeed maybe \"turn\" has no distance etc. Good.\n\nNeed ensure explanations nonempty. status AUTHORIZED_UNIQUE.\n\nPotential issue: \"coverage\" role for \"45°\" quantity. There is no separator. That's okay. text values concat equal original. \"左转\" + \"45°\" = \"左转45°\". Good.\n\nNeed include dimension explanations using source evidence. For correction_scope: no editing clause. Inapplicable. UNIQUE.\n\nNeed maybe mention no unresolved relations.\n\nLet's craft final JSON exactly. No markdown. Use Chinese chars OK.\n\nCheck exact key names: \"action_multiplicity\", \"action_order\", \"correction_scope\", \"repetition_scope\", \"reference_resolution\", \"temporal_relations\", \"unresolved_relations\". Values object with status and explanation.\n\nDo not add fields. Status string.\n\nNeed be careful with \"coverage\" text should be exact original source. We have array with two objects. The source string has no leading/trailing spaces. Text \"左转\" etc.\n\nShould \"左转45°\" maybe split into \"左转\" ACTION and \"45\" QUANTITY and \"°\" QUANTITY? But meaningful spans maybe \"45°\" quantity. Fine. Concatenation exact.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"左转45°\". Need determine authorization unique? Source Chinese: 左转45° = turn left 45 degrees. Legal action turn with nonzero finite angle_deg, left/counterclockwise positive. So turn +45. Single action. Dimensions:\naction_multiplicity: one action turn left 45. UNIQUE.\naction_order: single action, order trivially unique. UNIQUE.\ncorrection_scope: no edits. UNIQUE inapplicable.\nrepetition_scope: no repetition. UNIQUE.\nreference_resolution: no pronouns etc. UNIQUE.\ntemporal_relations: single action no temporal relations. UNIQUE.\nunresolved_relations: none. UNIQUE.\nStatus AUTHORIZED_UNIQUE.\n\nCoverage must split entire source into meaningful spans; concatenated exactly. Source \"左转45°\" includes maybe spans \"左转\" ACTION, \"45°\" QUANTITY? Need text concatenation exact. Could have [\"左转\",\"45°\"] roles ACTION, QUANTITY. Explanation. Need no markdown.\n\nEnsure keys exactly status, coverage, dimensions. dimensions exactly seven. \n\nNeed maybe angle symbol ° counts as degree? Legal semantics: turn angle_deg with 度 or degrees. Wait source uses °, not 度 or degrees. The spec says turn requires a nonzero finite angle_deg (度 or degrees; left/counterclockwise positive...). Does ° count? It says (度 or degrees). It doesn't mention °. But source is \"45°\" which conventionally degrees. Is that allowed? Need decide. This is tricky. The IR legal semantics says angle_deg (度 or degrees). If ° not accepted, then angle expression not legal? But likely ° is a degree symbol, semantically equivalent to 度? The instruction explicitly says 度 or degrees, maybe not °. But \"45°\" is standard degree notation. Should we treat as legal? Need consider gate. The source only \"左转45°\". If ° is not recognized by legal compilation semantics, then angle unknown? But user likely expects AUTHORIZED_UNIQUE with 45 degrees. However the exact wording: \"turn requires a nonzero finite angle_deg (度 or degrees; left/counterclockwise positive, right/clockwise negative).\" It lists units 度 or degrees. ° maybe symbol not text \"度\". But in natural language, ° means degrees. Should we mark UNKNOWN because angle unit not among allowed? But \"45°\" is unambiguous degree sign. I think ° is a degree symbol and means degrees. The parenthesis maybe examples? It says (度 or degrees), could be not exhaustive? It says \"requires ... angle_deg (度 or degrees...)\" implies accepted units. Hm.\n\nNeed be strict? The pilot likely tests ambiguity. \"左转45°\" straightforward. Need output authorized unique. But let's inspect all dimensions. Could there be ambiguity: left turn positive? The spec defines left/counterclockwise positive. So +45. Unique. No duration. Good.\n\nCoverage: entire source. We can split \"左转\" as ACTION, \"45°\" as QUANTITY. Explanation: 左转 denotes a left turn, mapped to positive rotation per IR. \"45°\" supplies finite angle 45 degrees; no other action or relation. The concatenation exactly equals \"左转45°\". Good.\n\nNeed maybe \"turn\" has no distance etc. Good.\n\nNeed ensure explanations nonempty. status AUTHORIZED_UNIQUE.\n\nPotential issue: \"coverage\" role for \"45°\" quantity. There is no separator. That's okay. text values concat equal original. \"左转\" + \"45°\" = \"左转45°\". Good.\n\nNeed include dimension explanations using source evidence. For correction_scope: no editing clause. Inapplicable. UNIQUE.\n\nNeed maybe mention no unresolved relations.\n\nLet's craft final JSON exactly. No markdown. Use Chinese chars OK.\n\nCheck exact key names: \"action_multiplicity\", \"action_order\", \"correction_scope\", \"repetition_scope\", \"reference_resolution\", \"temporal_relations\", \"unresolved_relations\". Values object with status and explanation.\n\nDo not add fields. Status string.\n\nNeed be careful with \"coverage\" text should be exact original source. We have array with two objects. The source string has no leading/trailing spaces. Text \"左转\" etc.\n\nShould \"左转45°\" maybe split into \"左转\" ACTION and \"45\" QUANTITY and \"°\" QUANTITY? But meaningful spans maybe \"45°\" quantity. Fine. Concatenation exact.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"“左转” requests a left turn. Under the stated turn semantics, left/counterclockwise is positive, so this is the single turn action direction and no other action is requested.\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"“45°” supplies a finite nonzero angle of 45 degrees for the turn, so the turn action has exactly one legal parameter value and no duration, distance, repetition or alternative parameter is introduced.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action expression, “左转”, with one quantity “45°”. There is no conjunction, repetition or additional action verb, so exactly one action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is no ordering choice among multiple actions; the single-action order is trivially resolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, replacement or scope-changing clause appears in “左转45°”, so this dimension is inapplicable and introduces no competing interpretation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or count is present; “左转45°” does not repeat any span and does not broaden or narrow a repeated action sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, omitted shared arguments or references to earlier commands. The only action and quantity are self-contained in “左转45°”.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting or completion relation is stated. With a single action, no temporal relation needs to be represented.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly supplies direction “左转” and angle “45°”; it leaves no choice, scope, ordering or relationship unresolved.\"}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_ad610b2c-364d-407b-bc6d-a7146eefd7f7",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1409,
+            "output_tokens_details": {
+              "reasoning_tokens": 972
+            },
+            "total_tokens": 2317
+          }
+        },
+        "request_sha256": "c583f592d9ba4f338cdedec11cdbd40cdf47b04cddf52ac762affd5f2b28a579",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.055347600002278,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_ad610b2c-364d-407b-bc6d-a7146eefd7f7",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"“左转” requests a left turn. Under the stated turn semantics, left/counterclockwise is positive, so this is the single turn action direction and no other action is requested.\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"“45°” supplies a finite nonzero angle of 45 degrees for the turn, so the turn action has exactly one legal parameter value and no duration, distance, repetition or alternative parameter is introduced.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action expression, “左转”, with one quantity “45°”. There is no conjunction, repetition or additional action verb, so exactly one action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is no ordering choice among multiple actions; the single-action order is trivially resolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, replacement or scope-changing clause appears in “左转45°”, so this dimension is inapplicable and introduces no competing interpretation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or count is present; “左转45°” does not repeat any span and does not broaden or narrow a repeated action sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, omitted shared arguments or references to earlier commands. The only action and quantity are self-contained in “左转45°”.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting or completion relation is stated. With a single action, no temporal relation needs to be represented.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly supplies direction “左转” and angle “45°”; it leaves no choice, scope, ordering or relationship unresolved.\"}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 1409,
+          "total_tokens": 2317
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.3869911000001593,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-turn-left-45",
+      "model": "deepseek-flash",
+      "normalized_length": 5,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-left-45\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "05cdc84be4324a51eea5b6d153f3bb963db0813c2982f0e9a8804283c14c9419",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": false,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_811becc9-45d6-4684-8c8d-f9ee72024524",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "finish_reason": "completed",
+          "latency_s": 8.059524799999053,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.055347600002278,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"“左转” requests a left turn. Under the stated turn semantics, left/counterclockwise is positive, so this is the single turn action direction and no other action is requested.\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"“45°” supplies a finite nonzero angle of 45 degrees for the turn, so the turn action has exactly one legal parameter value and no duration, distance, repetition or alternative parameter is introduced.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action expression, “左转”, with one quantity “45°”. There is no conjunction, repetition or additional action verb, so exactly one action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is no ordering choice among multiple actions; the single-action order is trivially resolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, replacement or scope-changing clause appears in “左转45°”, so this dimension is inapplicable and introduces no competing interpretation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or count is present; “左转45°” does not repeat any span and does not broaden or narrow a repeated action sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, omitted shared arguments or references to earlier commands. The only action and quantity are self-contained in “左转45°”.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting or completion relation is stated. With a single action, no temporal relation needs to be represented.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly supplies direction “左转” and angle “45°”; it leaves no choice, scope, ordering or relationship unresolved.\"}}",
+          "raw_response_sha256": "2a7cbf95755c6553953e588038d32e47f0a27d41e7684d4a153fd5936025d83c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ad610b2c-364d-407b-bc6d-a7146eefd7f7",
+          "source_aware": false,
+          "source_sha256": "d63666d5d6d722f354c2a2a0a54a7a157b6449ade2780c24494462622220477d",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 1409,
+            "total_tokens": 2317
+          }
+        },
+        "reason_code": "MALFORMED_OUTPUT",
+        "status": "UNKNOWN"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 224,
+        "total_tokens": 1963
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": "LLM_OUTPUT_INVALID",
+    "error_message": "source authorization withheld executable Mission: MALFORMED_OUTPUT",
+    "mission": null,
+    "normalized_text": "左转45°",
+    "status": "MALFORMED"
+  }
+}

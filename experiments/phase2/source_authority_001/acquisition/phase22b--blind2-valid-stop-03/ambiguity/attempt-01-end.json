@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 7.555837799998699,
+  "provider_document": {
+    "created_at": 1791359850,
+    "id": "resp_3a31e8d5-e448-4c12-a74c-0d3f1cf46fd3",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_3a31e8d5-e448-4c12-a74c-0d3f1cf46fd3",
+        "reasoning_content": "The source is \"这里停下\" - Chinese for \"stop here\". Need to determine if this uniquely authorizes a legal Mission IR interpretation.\n\nAction: stop. \"这里停下\" = \"stop here\". The word \"这里\" (here) refers to a location — there's no referent for \"here\" in the source. This is a reference resolution issue: \"here\" is an external spatial context that's missing. Also \"停下\" = stop, which is a legal action with no parameters.\n\nThe issue: \"这里\" (here) - an unresolved spatial reference. Missing context required → UNKNOWN for reference_resolution. Or is \"这里\" just a discourse marker meaning \"at this point\"? In Chinese, \"这里停下\" could mean \"stop here\" as in stop right now at this point. But the location referent is not established in source.\n\nHmm. Let's think: does \"here\" introduce ambiguity for the IR? The stop action has no parameters. If \"这里\" is interpreted as a deictic reference to current location, it's a no-op modifier — stop wherever you are. But it could also mean stop at a specific place not yet reached. Since source has no prior context, the referent of \"这里\" cannot be resolved within source → UNKNOWN reference_resolution.\n\nSo status = UNKNOWN.\n\nDimensions:\n- action_multiplicity: UNIQUE — exactly one action: stop.\n- action_order: UNIQUE — single action, no ordering.\n- correction_scope: UNIQUE — inapplicable, no edits.\n- repetition_scope: UNIQUE — inapplicable, no repetition.\n- reference_resolution: UNKNOWN — \"这里\" lacks a referent in source.\n- temporal_relations: UNIQUE — inapplicable, no timing relations.\n- unresolved_relations: UNIQUE — no explicitly unresolved relations? Hmm, but the \"here\" is unresolved. Actually unresolved_relations is about explicitly leaving a choice/scope/order unresolved. The source doesn't explicitly say \"either A or B\". But the deictic reference is unresolved. I'd say UNKNOWN for reference_resolution and unresolved_relations UNIQUE (no explicit unresolved relation stated) — or should unresolved_relations also be UNKNOWN? The instructions: \"preserve any explicitly unresolved choice, scope, ordering or relationship.\" \"这里\" is a dangling spatial reference, which is arguably an unresolved relation. But it's more naturally reference_resolution. I'll mark unresolved_relations UNIQUE with explanation that no explicit alternative is offered, but note the dangling reference handled under reference_resolution. Hmm, but could argue it's UNKNOWN. Let me keep it UNIQUE to be clean, since the dimension is about explicit unresolved alternatives, and there is no \"A or B\" construction. Actually the dangling \"here\" could be seen as an unresolved scope/relationship... I'll go UNIQUE and explain.\n\nCoverage: split source into spans. \"这里\" and \"停下\". text concatenation must equal \"这里停下\".\n\nSo coverage:\n1. text \"这里\", role CONTEXT (or RELATION), explanation: deictic locative with no antecedent in source; cannot be resolved; doesn't itself define an action.\n2. text \"停下\", role ACTION, explanation: stop action, no parameters, legal.\n\nStatus: UNKNOWN.\n\nLet me write it.",
+        "summary": [
+          {
+            "text": "The source is \"这里停下\" - Chinese for \"stop here\". Need to determine if this uniquely authorizes a legal Mission IR interpretation.\n\nAction: stop. \"这里停下\" = \"stop here\". The word \"这里\" (here) refers to a location — there's no referent for \"here\" in the source. This is a reference resolution issue: \"here\" is an external spatial context that's missing. Also \"停下\" = stop, which is a legal action with no parameters.\n\nThe issue: \"这里\" (here) - an unresolved spatial reference. Missing context required → UNKNOWN for reference_resolution. Or is \"这里\" just a discourse marker meaning \"at this point\"? In Chinese, \"这里停下\" could mean \"stop here\" as in stop right now at this point. But the location referent is not established in source.\n\nHmm. Let's think: does \"here\" introduce ambiguity for the IR? The stop action has no parameters. If \"这里\" is interpreted as a deictic reference to current location, it's a no-op modifier — stop wherever you are. But it could also mean stop at a specific place not yet reached. Since source has no prior context, the referent of \"这里\" cannot be resolved within source → UNKNOWN reference_resolution.\n\nSo status = UNKNOWN.\n\nDimensions:\n- action_multiplicity: UNIQUE — exactly one action: stop.\n- action_order: UNIQUE — single action, no ordering.\n- correction_scope: UNIQUE — inapplicable, no edits.\n- repetition_scope: UNIQUE — inapplicable, no repetition.\n- reference_resolution: UNKNOWN — \"这里\" lacks a referent in source.\n- temporal_relations: UNIQUE — inapplicable, no timing relations.\n- unresolved_relations: UNIQUE — no explicitly unresolved relations? Hmm, but the \"here\" is unresolved. Actually unresolved_relations is about explicitly leaving a choice/scope/order unresolved. The source doesn't explicitly say \"either A or B\". But the deictic reference is unresolved. I'd say UNKNOWN for reference_resolution and unresolved_relations UNIQUE (no explicit unresolved relation stated) — or should unresolved_relations also be UNKNOWN? The instructions: \"preserve any explicitly unresolved choice, scope, ordering or relationship.\" \"这里\" is a dangling spatial reference, which is arguably an unresolved relation. But it's more naturally reference_resolution. I'll mark unresolved_relations UNIQUE with explanation that no explicit alternative is offered, but note the dangling reference handled under reference_resolution. Hmm, but could argue it's UNKNOWN. Let me keep it UNIQUE to be clean, since the dimension is about explicit unresolved alternatives, and there is no \"A or B\" construction. Actually the dangling \"here\" could be seen as an unresolved scope/relationship... I'll go UNIQUE and explain.\n\nCoverage: split source into spans. \"这里\" and \"停下\". text concatenation must equal \"这里停下\".\n\nSo coverage:\n1. text \"这里\", role CONTEXT (or RELATION), explanation: deictic locative with no antecedent in source; cannot be resolved; doesn't itself define an action.\n2. text \"停下\", role ACTION, explanation: stop action, no parameters, legal.\n\nStatus: UNKNOWN.\n\nLet me write it.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"UNKNOWN\",\"coverage\":[{\"text\":\"这里\",\"role\":\"CONTEXT\",\"explanation\":\"Deictic locative ('here'). It supplies a place reference but no antecedent, prior location, coordinate or named target appears anywhere in the source, so its referent cannot be fixed from the source alone; external context would be required. It does not itself name an executable action and therefore neither adds nor removes an action from the plan.\",\"role_note\":\"\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"The only action word in the source; it maps to the legal parameterless action 'stop'. Because the accompanying locative '这里' does not resolve to a representable place, it is not clear whether this is an unconditional stop-now step or a stop that is conditioned on reaching an unspecified location, so the single step's meaning is not uniquely determined.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one action token occurs, '停下' (stop). No conjunction, list, repetition or additional verb introduces a second action, and there is no edited or replaced command.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With a single candidate action there is only one possible linear order, s1 = stop; no before/after or sequencing language is present to create an alternative ordering.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"Inapplicable: the source contains no edit, cancellation, 'instead', '改成' or any clause replacing or amending an earlier instruction, so no correction scope needs to be resolved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"Inapplicable: no 'again', '重复', count or loop marker appears, so no span is repeated and no repetition breadth is at issue.\"},\"reference_resolution\":{\"status\":\"UNKNOWN\",\"explanation\":\"The locative '这里' is a deictic reference, but the source contains no prior command, location, waypoint, pose or named place that could serve as its antecedent. Resolving it to 'current position', to 'an already reached point', or to an external place requires context outside the source; per the rules, external missing context is UNKNOWN. This unresolved referent is what prevents the single stop step from having one determinate meaning.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No temporal language (before, after, simultaneously, wait, until completion, duration) appears; with one step there is no ordering or timing relation to fix, so the dimension introduces no alternative reading.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source states no explicit unresolved choice such as 'A or B', 'either', or an intentionally left-open scope/ordering; there is no disjunction that the gate would have to preserve. The indeterminacy in this source is a dangling spatial reference, which is accounted for under reference_resolution rather than as an explicitly flagged unresolved relation.\"}},\"role_note\":\"\"}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_3a31e8d5-e448-4c12-a74c-0d3f1cf46fd3",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 138,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1324,
+      "output_tokens_details": {
+        "reasoning_tokens": 691
+      },
+      "total_tokens": 2230
+    }
+  },
+  "request_sha256": "35677e42ebcc0e2db045e56d1b2786b387a2508522a93f31352469650fe72fc5",
+  "status": "SUCCESS"
+}

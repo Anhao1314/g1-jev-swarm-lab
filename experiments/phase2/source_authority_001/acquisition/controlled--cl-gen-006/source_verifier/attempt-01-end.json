@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.696374799998011,
+  "provider_document": {
+    "created_at": 1791360814,
+    "id": "resp_6f76cbb8-8d8f-4217-a524-3983c0cdf5fb",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_6f76cbb8-8d8f-4217-a524-3983c0cdf5fb",
+        "reasoning_content": "We need answer JSON only. Need derive source plan. Source is Chinese \"向前走20m\" meaning walk forward 20m. Need verify all dimensions. Candidate matches likely. Need output coverage splitting entire source exactly. Need status AUTHORIZED_UNIQUE. Dimensions seven.\n\nNeed be careful source exact: \"向前走20m\". Spans can be maybe whole as ACTION? But coverage must split meaningful spans. It says text values concatenated equal entire original source. We can split into \"向前走\" and \"20m\" maybe. Need roles. \"向前走\" action skill walk_forward. \"20m\" quantity distance. The whole is one action. Need explain.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE. Only one action, no correction/repetition.\n- action_order: UNIQUE. Single action order trivial.\n- correction_scope: UNIQUE. No correction clauses; inapplicable.\n- repetition_scope: UNIQUE. No repetition.\n- reference_resolution: UNIQUE. No pronouns/external references; \"向前\" resolves to walk_forward forward direction.\n- temporal_relations: UNIQUE. Single action, no temporal relations.\n- unresolved_relations: UNIQUE. No explicit unresolved choices.\nauthorized_plan [{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[]}]\n\nNeed ensure JSON exactly. Coverage list nonempty. Could split as:\n1 text \"向前走\", role ACTION, explanation: imperative \"walk forward\"; authorized skill walk_forward. \n2 text \"20m\", role QUANTITY, explanation: distance parameter 20 meters for walking action. Need maybe \"m\" is meters. Concatenation equals source. No separator. That's fine.\n\nBut coverage says every action, relation edit clause. This source has action and quantity. Explanation nonempty. Good.\n\nNeed output exactly one JSON object. No markdown.\n\nDouble-check if \"向前走20m\" maybe \"walk forward 20m\" legal. walk_forward params exactly distance_m positive finite. 20m -> 20.0. Yes.\n\nNeed maybe mention \"向前\" direction. Actually skill walk_forward inherently forward, \"向前\" maps. \"走\" walk. \"20m\" distance. Good.\n\nPotential issue: \"向前走\" could be \"walk forward\", \"20m\" no explicit \"distance\" but in context quantity. Unique.\n\nLet's craft JSON. Ensure all keys exact. Dimensions each status/explanation. Use no extra.\n\nNeed \"status\": \"AUTHORIZED_UNIQUE\". \"coverage\": [...]. \"dimensions\": {...}. \"authorized_plan\": [...]. Use valid JSON. Chinese exact.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need derive source plan. Source is Chinese \"向前走20m\" meaning walk forward 20m. Need verify all dimensions. Candidate matches likely. Need output coverage splitting entire source exactly. Need status AUTHORIZED_UNIQUE. Dimensions seven.\n\nNeed be careful source exact: \"向前走20m\". Spans can be maybe whole as ACTION? But coverage must split meaningful spans. It says text values concatenated equal entire original source. We can split into \"向前走\" and \"20m\" maybe. Need roles. \"向前走\" action skill walk_forward. \"20m\" quantity distance. The whole is one action. Need explain.\n\nNeed dimensions:\n- action_multiplicity: UNIQUE. Only one action, no correction/repetition.\n- action_order: UNIQUE. Single action order trivial.\n- correction_scope: UNIQUE. No correction clauses; inapplicable.\n- repetition_scope: UNIQUE. No repetition.\n- reference_resolution: UNIQUE. No pronouns/external references; \"向前\" resolves to walk_forward forward direction.\n- temporal_relations: UNIQUE. Single action, no temporal relations.\n- unresolved_relations: UNIQUE. No explicit unresolved choices.\nauthorized_plan [{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[]}]\n\nNeed ensure JSON exactly. Coverage list nonempty. Could split as:\n1 text \"向前走\", role ACTION, explanation: imperative \"walk forward\"; authorized skill walk_forward. \n2 text \"20m\", role QUANTITY, explanation: distance parameter 20 meters for walking action. Need maybe \"m\" is meters. Concatenation equals source. No separator. That's fine.\n\nBut coverage says every action, relation edit clause. This source has action and quantity. Explanation nonempty. Good.\n\nNeed output exactly one JSON object. No markdown.\n\nDouble-check if \"向前走20m\" maybe \"walk forward 20m\" legal. walk_forward params exactly distance_m positive finite. 20m -> 20.0. Yes.\n\nNeed maybe mention \"向前\" direction. Actually skill walk_forward inherently forward, \"向前\" maps. \"走\" walk. \"20m\" distance. Good.\n\nPotential issue: \"向前走\" could be \"walk forward\", \"20m\" no explicit \"distance\" but in context quantity. Unique.\n\nLet's craft JSON. Ensure all keys exact. Dimensions each status/explanation. Use no extra.\n\nNeed \"status\": \"AUTHORIZED_UNIQUE\". \"coverage\": [...]. \"dimensions\": {...}. \"authorized_plan\": [...]. Use valid JSON. Chinese exact.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"This imperative span requests one forward walking action. Under the fixed skills, forward walking maps to the legal skill walk_forward and does not introduce any other action.\"},{\"text\":\"20m\",\"role\":\"QUANTITY\",\"explanation\":\"This span supplies the distance for the forward walking action as 20 meters. The unit m is meters, so the legal walk_forward parameter distance_m is 20.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action request: walking forward. There are no edited, repeated, alternative, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one requested action, the execution order is uniquely that action, compiled as step s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit clause in the source, so no earlier instruction is replaced or preserved; this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition wording or explicit repetition count. The single action is performed once, without silently broadening or narrowing any repetition scope.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted arguments requiring external reference. The direction word 向前 resolves directly to the forward direction of the single walk action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source has no before, after, simultaneous, waiting, or completion relation between multiple actions. A single action has a single trivial linear order.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action choice, parameter, order, scope, or relationship unresolved. The distance is specified as 20m and maps directly to distance_m 20.0.\"},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_6f76cbb8-8d8f-4217-a524-3983c0cdf5fb",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 186,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1018,
+      "output_tokens_details": {
+        "reasoning_tokens": 565
+      },
+      "total_tokens": 2228
+    }
+  },
+  "request_sha256": "0287fff29b29ea921a55a34acc32bf362d4abe49191f173c5f8b4f3ddc3719bd",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.997057399999903,
+  "provider_document": {
+    "created_at": 1791360393,
+    "id": "resp_ef79d83f-4a16-4598-a664-82e9c143782e",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_ef79d83f-4a16-4598-a664-82e9c143782e",
+        "reasoning_content": "We need answer JSON only. Need inspect source \"顺时针转45度\". Chinese: clockwise turn 45 degrees. Legal semantics: turn requires nonzero finite angle_deg; left/counterclockwise positive, right/clockwise negative. Clockwise means negative angle. So turn -45 degrees. Action single action. Dimensions: action_multiplicity unique (one turn action). action_order unique (single action order). correction_scope inapplicable unique. repetition_scope inapplicable unique. reference_resolution? \"顺时针\" modifies angle direction, resolved. No pronouns. temporal unique. unresolved relations none. Status AUTHORIZED_UNIQUE? Need check legality: turn angle -45, within max abs 180. Yes. Source supports one legal interpretation. coverage split. Need text values concatenated equal entire source. Could have one span \"顺时针转45度\" role ACTION. Or split into \"顺时针\" CONTEXT/QUANTITY, \"转\" ACTION, \"45度\" QUANTITY. Need meaningful spans every action relation editing considered. Entire source exact. I can split: \"顺时针\" role CONTEXT? It specifies direction. \"转\" ACTION. \"45度\" QUANTITY. Concatenation equals. Explanations nonempty. Maybe \"顺时针\" is direction modifier, not separate action, role CONTEXT? Or QUANTITY? Role options ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Direction is context/modifier. \"45度\" quantity. \"转\" action. Need ensure no omission.\n\nBut careful: \"顺时针转45度\": Is this unambiguously turn clockwise 45 degrees? In Chinese, yes. Legal turn angle with right/clockwise negative. The source doesn't explicitly say \"turn\" maybe \"转\" = turn. Yes. Unique.\n\nNeed output exactly JSON object keys status, coverage, dimensions. No markdown. Need valid JSON. Ensure explanation nonempty.\n\nLet's craft:\n\n{\n \"status\":\"AUTHORIZED_UNIQUE\",\n \"coverage\":[\n  {\"text\":\"顺时针\",\"role\":\"CONTEXT\",\"explanation\":\"方向修饰语，指定转弯方向为顺时针；在合法 turn 语义中对应负角方向，本身不产生独立动作。\"},\n  {\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"唯一的动作词，表示执行一次 turn；没有并列、重复或替换其他动作。\"},\n  {\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"角度参数，45 度为有限非零角；结合顺时针方向得到 angle_deg = -45，在 180 度绝对值上限内。\"}\n ],\n \"dimensions\":{\n  \"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中只有一个动作词“转”，无并列、重复或编辑另一个动作，因此恰好授权一个 turn 动作。\"},\n  \"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，执行顺序唯一，不需要在多个顺序之间选择。\"},\n  \"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、修正或替换子句，因此该维度不适用且不引入替代解释。\"},\n  \"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词或重复范围，因此该维度不适用且不引入替代解释。\"},\n  \"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“顺时针”直接修饰唯一的“转”，省略的主语不指向多个候选；“45度”直接作为该动作的角度参数，指代唯一。\"},\n  \"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个瞬时/单步 turn 动作，没有 before/after、等待或完成关系，线性顺序唯一。\"},\n  \"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留待选择的顺序、范围或关系；方向与角度共同确定唯一的 turn(-45 度) 解释。\"}\n }\n}\n\nNeed be cautious about \"turn\" semantics: left/counterclockwise positive, right/clockwise negative. Clockwise = negative. Yes.\n\nPotential issue: Is \"顺时针转45度\" maybe \"rotate clockwise 45 degrees\" unambiguous. Yes.\n\nNeed maybe status AUTHORIZED_UNIQUE. Coverage text concatenation exactly source. Let's verify: \"顺时针\" + \"转\" + \"45度\" = \"顺时针转45度\". Yes.\n\nNeed dimensions exactly seven names. Use exact names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Good.\n\nNeed no extra fields. Output raw JSON. Ensure no markdown. Use proper escaping? Chinese fine. Need valid JSON. No trailing commas. Let's final.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source \"顺时针转45度\". Chinese: clockwise turn 45 degrees. Legal semantics: turn requires nonzero finite angle_deg; left/counterclockwise positive, right/clockwise negative. Clockwise means negative angle. So turn -45 degrees. Action single action. Dimensions: action_multiplicity unique (one turn action). action_order unique (single action order). correction_scope inapplicable unique. repetition_scope inapplicable unique. reference_resolution? \"顺时针\" modifies angle direction, resolved. No pronouns. temporal unique. unresolved relations none. Status AUTHORIZED_UNIQUE? Need check legality: turn angle -45, within max abs 180. Yes. Source supports one legal interpretation. coverage split. Need text values concatenated equal entire source. Could have one span \"顺时针转45度\" role ACTION. Or split into \"顺时针\" CONTEXT/QUANTITY, \"转\" ACTION, \"45度\" QUANTITY. Need meaningful spans every action relation editing considered. Entire source exact. I can split: \"顺时针\" role CONTEXT? It specifies direction. \"转\" ACTION. \"45度\" QUANTITY. Concatenation equals. Explanations nonempty. Maybe \"顺时针\" is direction modifier, not separate action, role CONTEXT? Or QUANTITY? Role options ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Direction is context/modifier. \"45度\" quantity. \"转\" action. Need ensure no omission.\n\nBut careful: \"顺时针转45度\": Is this unambiguously turn clockwise 45 degrees? In Chinese, yes. Legal turn angle with right/clockwise negative. The source doesn't explicitly say \"turn\" maybe \"转\" = turn. Yes. Unique.\n\nNeed output exactly JSON object keys status, coverage, dimensions. No markdown. Need valid JSON. Ensure explanation nonempty.\n\nLet's craft:\n\n{\n \"status\":\"AUTHORIZED_UNIQUE\",\n \"coverage\":[\n  {\"text\":\"顺时针\",\"role\":\"CONTEXT\",\"explanation\":\"方向修饰语，指定转弯方向为顺时针；在合法 turn 语义中对应负角方向，本身不产生独立动作。\"},\n  {\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"唯一的动作词，表示执行一次 turn；没有并列、重复或替换其他动作。\"},\n  {\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"角度参数，45 度为有限非零角；结合顺时针方向得到 angle_deg = -45，在 180 度绝对值上限内。\"}\n ],\n \"dimensions\":{\n  \"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中只有一个动作词“转”，无并列、重复或编辑另一个动作，因此恰好授权一个 turn 动作。\"},\n  \"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，执行顺序唯一，不需要在多个顺序之间选择。\"},\n  \"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、修正或替换子句，因此该维度不适用且不引入替代解释。\"},\n  \"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词或重复范围，因此该维度不适用且不引入替代解释。\"},\n  \"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“顺时针”直接修饰唯一的“转”，省略的主语不指向多个候选；“45度”直接作为该动作的角度参数，指代唯一。\"},\n  \"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个瞬时/单步 turn 动作，没有 before/after、等待或完成关系，线性顺序唯一。\"},\n  \"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留待选择的顺序、范围或关系；方向与角度共同确定唯一的 turn(-45 度) 解释。\"}\n }\n}\n\nNeed be cautious about \"turn\" semantics: left/counterclockwise positive, right/clockwise negative. Clockwise = negative. Yes.\n\nPotential issue: Is \"顺时针转45度\" maybe \"rotate clockwise 45 degrees\" unambiguous. Yes.\n\nNeed maybe status AUTHORIZED_UNIQUE. Coverage text concatenation exactly source. Let's verify: \"顺时针\" + \"转\" + \"45度\" = \"顺时针转45度\". Yes.\n\nNeed dimensions exactly seven names. Use exact names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Good.\n\nNeed no extra fields. Output raw JSON. Ensure no markdown. Use proper escaping? Chinese fine. Need valid JSON. No trailing commas. Let's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"顺时针\",\"role\":\"CONTEXT\",\"explanation\":\"方向修饰语，指定转弯方向为顺时针；在合法 turn 语义中对应负角方向，本身不产生独立动作。\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"唯一的动作词，表示执行一次 turn；没有并列、重复或替换其他动作。\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"角度参数，45 度为有限非零角；结合顺时针方向得到 angle_deg = -45，在 180 度绝对值上限内。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中只有一个动作词“转”，无并列、重复或编辑另一个动作，因此恰好授权一个 turn 动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个动作，执行顺序唯一，不需要在多个顺序之间选择。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、修正或替换子句，因此该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词或重复范围，因此该维度不适用且不引入替代解释。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“顺时针”直接修饰唯一的“转”，省略的主语不指向多个候选；“45度”直接作为该动作的角度参数，指代唯一。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"只有一个单步 turn 动作，没有 before/after、等待或完成关系，线性顺序唯一。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留待选择的顺序、范围或关系；方向与角度共同确定唯一的 turn(-45 度) 解释。\"}}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_ef79d83f-4a16-4598-a664-82e9c143782e",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 140,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1372,
+      "output_tokens_details": {
+        "reasoning_tokens": 976
+      },
+      "total_tokens": 2280
+    }
+  },
+  "request_sha256": "60c1f250ad01a569f835e289270417f18fcc4417e7c4b569ab6a88a5a7be1bb3",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,309 @@
+{
+  "added_wall_s": 12.88250490000064,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.877644100000907,
+        "provider_document": {
+          "created_at": 1791360921,
+          "id": "resp_994eaa73-f62c-4f1f-90c6-a05d5cca845b",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_994eaa73-f62c-4f1f-90c6-a05d5cca845b",
+              "reasoning_content": "We need answer JSON only. Need inspect source. Chinese: \"向前走15米然后左转30度接着向前走400cm最后停下\"\n\nNeed decide unique legal Mission IR 2.0 interpretation. Actions: walk_forward 15 m, turn left 30 deg, walk_forward 400 cm = 4 m, stop. Order sequential via 然后/接着/最后. Seems unique. Need dimensions.\n\nNeed coverage split into meaningful spans, text concatenated exactly source. Need preserve. Source characters:\n向前走15米然后左转30度接着向前走400cm最后停下\n\nWe need split every action/relation/editing clause. No edits. Need roles. Could split:\n\"向前走15米\" ACTION\n\"然后\" RELATION\n\"左转30度\" ACTION\n\"接着\" RELATION\n\"向前走400cm\" ACTION\n\"最后\" RELATION\n\"停下\" ACTION\n\nDoes concatenation equal source? 向前走15米 + 然后 + 左转30度 + 接着 + 向前走400cm + 最后 + 停下 = yes. Need explanations nonempty. Maybe \"向前走15米\" action walk_forward distance 15 m. \"然后\" relation sequence after. \"左转30度\" turn left 30. \"接着\" sequence. \"向前走400cm\" walk_forward distance 400cm converted 4m. \"最后\" final sequence. \"停下\" stop. Good.\n\nDimensions:\naction_multiplicity: UNIQUE. Four actions accounted: walk, turn, walk, stop. No repeated or edited actions.\naction_order: UNIQUE. Exactly order via 然后、接着、最后.\ncorrection_scope: UNIQUE? Inapplicable, no edits. Need explanation no correction/edit markers. Status UNIQUE because inapplicable and introduces no alternative. The definition: UNIQUE means source resolves dimension, or it is inapplicable and introduces no alternative. Yes.\nrepetition_scope: UNIQUE. No repetition.\nreference_resolution: UNIQUE. No pronouns/ordinal references/omitted shared args except direction \"向前\" each walk specified? \"向前走400cm\" has explicit forward direction. \"停下\" no referent. Need explain no unresolved references; ordinals via 然后, 接着, 最后 determine order, no ambiguity. \"左转\" direction explicit.\ntemporal_relations: UNIQUE. Sequence linear, no timing/simultaneity, no waiting/completion beyond sequential. \"然后\", \"接着\", \"最后\" define linear order.\nunresolved_relations: UNIQUE. No explicitly unresolved relation.\n\nNeed ensure status AUTHORIZED_UNIQUE. Check legal: 400cm positive finite; 15m; turn 30 nonzero finite, left positive 30 <=180; stop no params; max 4 steps <=32; stand none. Good.\n\nNeed output exactly JSON object keys status, coverage, dimensions. No markdown. Need valid JSON. Use Chinese text exact. Ensure all explanations nonempty. The text values concatenated equal entire source exactly. Must preserve no spaces.\n\nLet's craft concise.\n\nNeed be careful \"向前走15米然后左转30度接着向前走400cm最后停下\" Maybe \"向前走\" as walk_forward, \"左转\" turn left. \"然后\" relation. Good.\n\nPotential ambiguity? \"左转30度\" means turn left 30 degrees; legal semantics left/counterclockwise positive. Unique. \"400cm\" unit conversion exact 4m. \"最后停下\" final stop. Good.\n\nNeed maybe \"向前走15米\" action plus quantity. Role ACTION. \"15米\" embedded quantity. The coverage objects role can be ACTION for whole span. That's okay. Every action, relation and editing clause considered.\n\nCould split quantities separately? Source text would need concatenate. We can split \"向前走15米\" into \"向前走\" ACTION and \"15米\" QUANTITY? It might be better to split meaningful spans. But text concatenation exact. Need no omission. Let's consider coverage list more granular:\n\"向前走\" ACTION (walk_forward)\n\"15米\" QUANTITY\n\"然后\" RELATION\n\"左转\" ACTION (turn left)\n\"30度\" QUANTITY\n\"接着\" RELATION\n\"向前走\" ACTION (second walk)\n\"400cm\" QUANTITY\n\"最后\" RELATION\n\"停下\" ACTION\nThis may be more thorough. Does concatenation equal? \"向前走\" + \"15米\" + \"然后\" + \"左转\" + \"30度\" + \"接着\" + \"向前走\" + \"400cm\" + \"最后\" + \"停下\" = 向前走15米然后左转30度接着向前走400cm最后停下. Yes.\n\nWhich is better? The coverage instructions: Split source into meaningful spans so every action, relation and editing clause is considered. text copied exactly. Role ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. This granular split is good. Explanations:\n- \"向前走\": ACTION: denotes first walk_forward; no distance on its own, but paired with next quantity.\n- \"15米\": QUANTITY: supplies positive finite distance 15m for preceding walk_forward.\n- \"然后\": RELATION: sequential ordering, next action after first.\n- \"左转\": ACTION: turn left; paired with 30度.\n- \"30度\": QUANTITY: angle magnitude 30 deg; direction left means +30.\n- \"接着\": RELATION: sequential.\n- \"向前走\": ACTION: second walk_forward; paired with 400cm.\n- \"400cm\": QUANTITY: 400 cm = 4 m.\n- \"最后\": RELATION: marks final action after previous.\n- \"停下\": ACTION: stop no params.\n\nGood. Need dimensions.\n\nPotential issue: Is \"左转30度\" a legal action? turn requires angle_deg. Left positive. Yes.\n\nPotential issue with action_multiplicity: repeated \"向前走\" appears twice; is repetition scope ambiguous? The source has two walk actions with different distances, not repetition of same span. \"Repetition_scope\" inapplicable. But action_multiplicity must account for repeated action? \"account for every requested action, including edited or repeated actions; distinguish another action from replacing a previous action.\" Here there are two walk_forward actions at different positions, not a repetition clause. Unique. No \"再\" or \"重复\". Good.\n\nPotential issue: \"然后\" and \"接着\" and \"最后\" all relation. Linear plan has each step after first depending exactly on predecessor. This source linear order exactly: walk, turn, walk, stop. No simultaneous. Good.\n\nNeed output JSON. Ensure no extra text. Use proper escaping? Chinese okay. JSON strings can include unicode. Need no markdown.\n\nLet's formulate explanation for each dimension:\n\naction_multiplicity: \"Source specifies four distinct actions in sequence: 向前走15米 (walk_forward 15 m), 左转30度 (turn left 30 deg), 向前走400cm (walk_forward 400 cm = 4 m), and 停下 (stop). The second 向前走 is a new action with its own quantity, not a replacement or repetition clause.\"\n\naction_order: \"然后, 接着, and 最后 explicitly order the actions as first walk, then left turn, then second walk, finally stop. No alternative order is stated.\"\n\ncorrection_scope: \"No edit, correction, negation, or replacement clause appears (e.g., no 改/不/重新). There is no prior instruction whose parameter, group, or relation is being changed, so this dimension is inapplicable and introduces no alternative.\"\n\nrepetition_scope: \"No repetition marker or repeated span occurs; the two 向前走 occurrences are separately quantified actions, not a request to repeat a span. No repetition count or scope is left open.\"\n\nreference_resolution: \"Directions and quantities are explicit for each action; no pronoun, ordinal, or omitted shared argument needs external resolution. 左转 resolves to left turn, and 向前走 for the second walk is explicitly restated rather than left implicit.\"\n\ntemporal_relations: \"The connectives 然后/接着/最后 establish a single linear completion order with no simultaneity, waiting, or unspecified timing. The plan is representable as s1 walk, s2 turn, s3 walk, s4 stop.\"\n\nunresolved_relations: \"Source does not explicitly leave any choice, scope, ordering, or relation unresolved; all actions and their order and quantities are fixed.\"\n\nNeed ensure all UNIQUE. Status AUTHORIZED_UNIQUE.\n\nCoverage explanations nonempty. Need role exactly one of allowed. Use ACTION, QUANTITY, RELATION. Is \"接着\" maybe RELATION. Good. \"然后\" relation. \"最后\" relation. All.\n\nNeed maybe \"最后\" could be context? It's relation. Good.\n\nNeed output exactly one JSON object. Let's ensure valid JSON with quotes. The text values exact. We'll use `\"text\": \"向前走\"` etc. The concatenated in list order: 向前走15米然后左转30度接着向前走400cm最后停下. Yes.\n\nDouble-check source includes \"cm\" lowercase. Yes.\n\nNeed no extra keys. dimensions keys exactly seven. Each value object with status and explanation. Good.\n\nPotential concern: The instructions say \"coverage is a nonempty list of objects with exactly text, role, explanation.\" We have exactly. Good.\n\nPotential concern: Status must be AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation. We believe yes.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source. Chinese: \"向前走15米然后左转30度接着向前走400cm最后停下\"\n\nNeed decide unique legal Mission IR 2.0 interpretation. Actions: walk_forward 15 m, turn left 30 deg, walk_forward 400 cm = 4 m, stop. Order sequential via 然后/接着/最后. Seems unique. Need dimensions.\n\nNeed coverage split into meaningful spans, text concatenated exactly source. Need preserve. Source characters:\n向前走15米然后左转30度接着向前走400cm最后停下\n\nWe need split every action/relation/editing clause. No edits. Need roles. Could split:\n\"向前走15米\" ACTION\n\"然后\" RELATION\n\"左转30度\" ACTION\n\"接着\" RELATION\n\"向前走400cm\" ACTION\n\"最后\" RELATION\n\"停下\" ACTION\n\nDoes concatenation equal source? 向前走15米 + 然后 + 左转30度 + 接着 + 向前走400cm + 最后 + 停下 = yes. Need explanations nonempty. Maybe \"向前走15米\" action walk_forward distance 15 m. \"然后\" relation sequence after. \"左转30度\" turn left 30. \"接着\" sequence. \"向前走400cm\" walk_forward distance 400cm converted 4m. \"最后\" final sequence. \"停下\" stop. Good.\n\nDimensions:\naction_multiplicity: UNIQUE. Four actions accounted: walk, turn, walk, stop. No repeated or edited actions.\naction_order: UNIQUE. Exactly order via 然后、接着、最后.\ncorrection_scope: UNIQUE? Inapplicable, no edits. Need explanation no correction/edit markers. Status UNIQUE because inapplicable and introduces no alternative. The definition: UNIQUE means source resolves dimension, or it is inapplicable and introduces no alternative. Yes.\nrepetition_scope: UNIQUE. No repetition.\nreference_resolution: UNIQUE. No pronouns/ordinal references/omitted shared args except direction \"向前\" each walk specified? \"向前走400cm\" has explicit forward direction. \"停下\" no referent. Need explain no unresolved references; ordinals via 然后, 接着, 最后 determine order, no ambiguity. \"左转\" direction explicit.\ntemporal_relations: UNIQUE. Sequence linear, no timing/simultaneity, no waiting/completion beyond sequential. \"然后\", \"接着\", \"最后\" define linear order.\nunresolved_relations: UNIQUE. No explicitly unresolved relation.\n\nNeed ensure status AUTHORIZED_UNIQUE. Check legal: 400cm positive finite; 15m; turn 30 nonzero finite, left positive 30 <=180; stop no params; max 4 steps <=32; stand none. Good.\n\nNeed output exactly JSON object keys status, coverage, dimensions. No markdown. Need valid JSON. Use Chinese text exact. Ensure all explanations nonempty. The text values concatenated equal entire source exactly. Must preserve no spaces.\n\nLet's craft concise.\n\nNeed be careful \"向前走15米然后左转30度接着向前走400cm最后停下\" Maybe \"向前走\" as walk_forward, \"左转\" turn left. \"然后\" relation. Good.\n\nPotential ambiguity? \"左转30度\" means turn left 30 degrees; legal semantics left/counterclockwise positive. Unique. \"400cm\" unit conversion exact 4m. \"最后停下\" final stop. Good.\n\nNeed maybe \"向前走15米\" action plus quantity. Role ACTION. \"15米\" embedded quantity. The coverage objects role can be ACTION for whole span. That's okay. Every action, relation and editing clause considered.\n\nCould split quantities separately? Source text would need concatenate. We can split \"向前走15米\" into \"向前走\" ACTION and \"15米\" QUANTITY? It might be better to split meaningful spans. But text concatenation exact. Need no omission. Let's consider coverage list more granular:\n\"向前走\" ACTION (walk_forward)\n\"15米\" QUANTITY\n\"然后\" RELATION\n\"左转\" ACTION (turn left)\n\"30度\" QUANTITY\n\"接着\" RELATION\n\"向前走\" ACTION (second walk)\n\"400cm\" QUANTITY\n\"最后\" RELATION\n\"停下\" ACTION\nThis may be more thorough. Does concatenation equal? \"向前走\" + \"15米\" + \"然后\" + \"左转\" + \"30度\" + \"接着\" + \"向前走\" + \"400cm\" + \"最后\" + \"停下\" = 向前走15米然后左转30度接着向前走400cm最后停下. Yes.\n\nWhich is better? The coverage instructions: Split source into meaningful spans so every action, relation and editing clause is considered. text copied exactly. Role ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. This granular split is good. Explanations:\n- \"向前走\": ACTION: denotes first walk_forward; no distance on its own, but paired with next quantity.\n- \"15米\": QUANTITY: supplies positive finite distance 15m for preceding walk_forward.\n- \"然后\": RELATION: sequential ordering, next action after first.\n- \"左转\": ACTION: turn left; paired with 30度.\n- \"30度\": QUANTITY: angle magnitude 30 deg; direction left means +30.\n- \"接着\": RELATION: sequential.\n- \"向前走\": ACTION: second walk_forward; paired with 400cm.\n- \"400cm\": QUANTITY: 400 cm = 4 m.\n- \"最后\": RELATION: marks final action after previous.\n- \"停下\": ACTION: stop no params.\n\nGood. Need dimensions.\n\nPotential issue: Is \"左转30度\" a legal action? turn requires angle_deg. Left positive. Yes.\n\nPotential issue with action_multiplicity: repeated \"向前走\" appears twice; is repetition scope ambiguous? The source has two walk actions with different distances, not repetition of same span. \"Repetition_scope\" inapplicable. But action_multiplicity must account for repeated action? \"account for every requested action, including edited or repeated actions; distinguish another action from replacing a previous action.\" Here there are two walk_forward actions at different positions, not a repetition clause. Unique. No \"再\" or \"重复\". Good.\n\nPotential issue: \"然后\" and \"接着\" and \"最后\" all relation. Linear plan has each step after first depending exactly on predecessor. This source linear order exactly: walk, turn, walk, stop. No simultaneous. Good.\n\nNeed output JSON. Ensure no extra text. Use proper escaping? Chinese okay. JSON strings can include unicode. Need no markdown.\n\nLet's formulate explanation for each dimension:\n\naction_multiplicity: \"Source specifies four distinct actions in sequence: 向前走15米 (walk_forward 15 m), 左转30度 (turn left 30 deg), 向前走400cm (walk_forward 400 cm = 4 m), and 停下 (stop). The second 向前走 is a new action with its own quantity, not a replacement or repetition clause.\"\n\naction_order: \"然后, 接着, and 最后 explicitly order the actions as first walk, then left turn, then second walk, finally stop. No alternative order is stated.\"\n\ncorrection_scope: \"No edit, correction, negation, or replacement clause appears (e.g., no 改/不/重新). There is no prior instruction whose parameter, group, or relation is being changed, so this dimension is inapplicable and introduces no alternative.\"\n\nrepetition_scope: \"No repetition marker or repeated span occurs; the two 向前走 occurrences are separately quantified actions, not a request to repeat a span. No repetition count or scope is left open.\"\n\nreference_resolution: \"Directions and quantities are explicit for each action; no pronoun, ordinal, or omitted shared argument needs external resolution. 左转 resolves to left turn, and 向前走 for the second walk is explicitly restated rather than left implicit.\"\n\ntemporal_relations: \"The connectives 然后/接着/最后 establish a single linear completion order with no simultaneity, waiting, or unspecified timing. The plan is representable as s1 walk, s2 turn, s3 walk, s4 stop.\"\n\nunresolved_relations: \"Source does not explicitly leave any choice, scope, ordering, or relation unresolved; all actions and their order and quantities are fixed.\"\n\nNeed ensure all UNIQUE. Status AUTHORIZED_UNIQUE.\n\nCoverage explanations nonempty. Need role exactly one of allowed. Use ACTION, QUANTITY, RELATION. Is \"接着\" maybe RELATION. Good. \"然后\" relation. \"最后\" relation. All.\n\nNeed maybe \"最后\" could be context? It's relation. Good.\n\nNeed output exactly one JSON object. Let's ensure valid JSON with quotes. The text values exact. We'll use `\"text\": \"向前走\"` etc. The concatenated in list order: 向前走15米然后左转30度接着向前走400cm最后停下. Yes.\n\nDouble-check source includes \"cm\" lowercase. Yes.\n\nNeed no extra keys. dimensions keys exactly seven. Each value object with status and explanation. Good.\n\nPotential concern: The instructions say \"coverage is a nonempty list of objects with exactly text, role, explanation.\" We have exactly. Good.\n\nPotential concern: Status must be AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation. We believe yes.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes the first walk_forward action; its direction is explicitly forward, and its distance is supplied by the following quantity.\"},{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a positive finite distance of 15 meters for the preceding 向前走 action.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action follows the first action in sequence; it does not create an alternative order.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Denotes a turn action to the left, with the angle magnitude supplied by the following quantity.\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a nonzero finite angle of 30 degrees for the preceding 左转 action; left turn maps to a positive angle.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action follows the preceding left turn in sequence.\"},{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes a second, distinct walk_forward action; it is explicitly forward and is not a replacement or repetition of the first walk.\"},{\"text\":\"400cm\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a positive finite distance of 400 centimeters, converted to 4 meters, for the second walk_forward action.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the following action is final in the sequence after the preceding walk.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Denotes the stop action, which has no parameters and completes the stated linear sequence.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source specifies four distinct actions: 向前走15米, 左转30度, 向前走400cm, and 停下. The second 向前走 is a separately quantified new action, not a replacement or repetition clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"然后, 接着, and 最后 explicitly order the actions as first walk, then left turn, then second walk, finally stop. No alternative order is stated.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, negation, or replacement clause appears. There is no prior instruction whose action, parameter, group, or relation is being changed, so this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span occurs; the two 向前走 occurrences are separately quantified actions, not a request to repeat a span, and no repetition count or scope is left open.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Directions and quantities are explicit for each action; no pronoun, ordinal, or omitted shared argument requires external resolution. 左转 resolves to left turn, and the second 向前走 is explicitly restated rather than left implicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectives 然后, 接着, and 最后 establish a single linear completion order with no simultaneity, waiting, or unspecified timing. The plan is representable as s1 walk, s2 turn, s3 walk, s4 stop.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"Source does not explicitly leave any choice, scope, ordering, or relationship unresolved; all actions, quantities, and their sequence are fixed.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_994eaa73-f62c-4f1f-90c6-a05d5cca845b",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 152,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2776,
+            "output_tokens_details": {
+              "reasoning_tokens": 2027
+            },
+            "total_tokens": 3696
+          }
+        },
+        "request_sha256": "5af8207b6a87cba210bdd2b380bdbb26c84977b5b0649b75ab63ab15013fb214",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.875984400001471,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_994eaa73-f62c-4f1f-90c6-a05d5cca845b",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes the first walk_forward action; its direction is explicitly forward, and its distance is supplied by the following quantity.\"},{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a positive finite distance of 15 meters for the preceding 向前走 action.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action follows the first action in sequence; it does not create an alternative order.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Denotes a turn action to the left, with the angle magnitude supplied by the following quantity.\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a nonzero finite angle of 30 degrees for the preceding 左转 action; left turn maps to a positive angle.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action follows the preceding left turn in sequence.\"},{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes a second, distinct walk_forward action; it is explicitly forward and is not a replacement or repetition of the first walk.\"},{\"text\":\"400cm\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a positive finite distance of 400 centimeters, converted to 4 meters, for the second walk_forward action.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the following action is final in the sequence after the preceding walk.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Denotes the stop action, which has no parameters and completes the stated linear sequence.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source specifies four distinct actions: 向前走15米, 左转30度, 向前走400cm, and 停下. The second 向前走 is a separately quantified new action, not a replacement or repetition clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"然后, 接着, and 最后 explicitly order the actions as first walk, then left turn, then second walk, finally stop. No alternative order is stated.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, negation, or replacement clause appears. There is no prior instruction whose action, parameter, group, or relation is being changed, so this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span occurs; the two 向前走 occurrences are separately quantified actions, not a request to repeat a span, and no repetition count or scope is left open.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Directions and quantities are explicit for each action; no pronoun, ordinal, or omitted shared argument requires external resolution. 左转 resolves to left turn, and the second 向前走 is explicitly restated rather than left implicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectives 然后, 接着, and 最后 establish a single linear completion order with no simultaneity, waiting, or unspecified timing. The plan is representable as s1 walk, s2 turn, s3 walk, s4 stop.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"Source does not explicitly leave any choice, scope, ordering, or relationship unresolved; all actions, quantities, and their sequence are fixed.\"}}}",
+        "usage": {
+          "input_tokens": 152,
+          "output_tokens": 2776,
+          "total_tokens": 3696
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 2,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.6512532999986433,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 27,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "07db3eb143af40f0feb4a80eb88e0a5b73d5d5520afd14d2ea545c15b9a81fe8",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_37cf467e-6c9a-42bb-96f2-a29a15ae1bae",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 12.881699300000037,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 12.875984400001471,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes the first walk_forward action; its direction is explicitly forward, and its distance is supplied by the following quantity.\"},{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a positive finite distance of 15 meters for the preceding 向前走 action.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action follows the first action in sequence; it does not create an alternative order.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Denotes a turn action to the left, with the angle magnitude supplied by the following quantity.\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a nonzero finite angle of 30 degrees for the preceding 左转 action; left turn maps to a positive angle.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the next action follows the preceding left turn in sequence.\"},{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes a second, distinct walk_forward action; it is explicitly forward and is not a replacement or repetition of the first walk.\"},{\"text\":\"400cm\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies a positive finite distance of 400 centimeters, converted to 4 meters, for the second walk_forward action.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the following action is final in the sequence after the preceding walk.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Denotes the stop action, which has no parameters and completes the stated linear sequence.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source specifies four distinct actions: 向前走15米, 左转30度, 向前走400cm, and 停下. The second 向前走 is a separately quantified new action, not a replacement or repetition clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"然后, 接着, and 最后 explicitly order the actions as first walk, then left turn, then second walk, finally stop. No alternative order is stated.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, negation, or replacement clause appears. There is no prior instruction whose action, parameter, group, or relation is being changed, so this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated span occurs; the two 向前走 occurrences are separately quantified actions, not a request to repeat a span, and no repetition count or scope is left open.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Directions and quantities are explicit for each action; no pronoun, ordinal, or omitted shared argument requires external resolution. 左转 resolves to left turn, and the second 向前走 is explicitly restated rather than left implicit.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectives 然后, 接着, and 最后 establish a single linear completion order with no simultaneity, waiting, or unspecified timing. The plan is representable as s1 walk, s2 turn, s3 walk, s4 stop.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"Source does not explicitly leave any choice, scope, ordering, or relationship unresolved; all actions, quantities, and their sequence are fixed.\"}}}",
+          "raw_response_sha256": "9376a68dd6be99d4a5626d28689087fa3891fd34a163ee6f4eca704837ef2326",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_994eaa73-f62c-4f1f-90c6-a05d5cca845b",
+          "source_aware": false,
+          "source_sha256": "f7c1bb8eb1ee74466cc5251aeca2a261e687cdb85dc1565f051e7d5c1444ab8b",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 152,
+            "output_tokens": 2776,
+            "total_tokens": 3696
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Denotes the first walk_forward action; its direction is explicitly forward, and its distance is supplied by the following quantity.",
+                "role": "ACTION",
+                "text": "向前走"
+              },
+              {
+                "explanation": "Supplies a positive finite distance of 15 meters for the preceding 向前走 action.",
+                "role": "QUANTITY",
+                "text": "15米"
+              },
+              {
+                "explanation": "Establishes that the next action follows the first action in sequence; it does not create an alternative order.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Denotes a turn action to the left, with the angle magnitude supplied by the following quantity.",
+                "role": "ACTION",
+                "text": "左转"
+              },
+              {
+                "explanation": "Supplies a nonzero finite angle of 30 degrees for the preceding 左转 action; left turn maps to a positive angle.",
+                "role": "QUANTITY",
+                "text": "30度"
+              },
+              {
+                "explanation": "Establishes that the next action follows the preceding left turn in sequence.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Denotes a second, distinct walk_forward action; it is explicitly forward and is not a replacement or repetition of the first walk.",
+                "role": "ACTION",
+                "text": "向前走"
+              },
+              {
+                "explanation": "Supplies a positive finite distance of 400 centimeters, converted to 4 meters, for the second walk_forward action.",
+                "role": "QUANTITY",
+                "text": "400cm"
+              },
+              {
+                "explanation": "Establishes that the following action is final in the sequence after the preceding walk.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Denotes the stop action, which has no parameters and completes the stated linear sequence.",
+                "role": "ACTION",
+                "text": "停下"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Source specifies four distinct actions: 向前走15米, 左转30度, 向前走400cm, and 停下. The second 向前走 is a separately quantified new action, not a replacement or repetition clause.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "然后, 接着, and 最后 explicitly order the actions as first walk, then left turn, then second walk, finally stop. No alternative order is stated.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No edit, correction, negation, or replacement clause appears. There is no prior instruction whose action, parameter, group, or relation is being changed, so this dimension is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "Directions and quantities are explicit for each action; no pronoun, ordinal, or omitted shared argument requires external resolution. 左转 resolves to left turn, and the second 向前走 is explicitly restated rather than left implicit.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or repeated span occurs; the two 向前走 occurrences are separately quantified actions, not a request to repeat a span, and no repetition count or scope is left open.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The connectives 然后, 接着, and 最后 establish a single linear completion order with no simultaneity, waiting, or unspecified timing. The plan is representable as s1 walk, s2 turn, s3 walk, s4 stop.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "Source does not explicitly leave any choice, scope, ordering, or relationship unresolved; all actions, quantities, and their sequence are fixed.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 215,
+        "output_tokens": 359,
+        "total_tokens": 2110
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 15.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "向前走15米然后左转30度接着向前走400cm最后停下",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 13.029248399998323,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_e58d8fd2-e6d6-417e-aa26-67fee4c7f3d4",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先站立1秒\",\"role\":\"ACTION\",\"explanation\":\"请求的第一个动作是站立，持续时间为1秒；先标记该动作位于执行序列首位。stand接受正的有限时长，且该时长不超过60秒的IR上限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后子句，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"然后将后续动作定位为紧接站立动作之后的下一步。\"},{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"请求前进4米；距离为正的有限值，且单位米无需换算。这是序列中的第二个动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后子句，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"再将后续动作定位为前进一步之后的下一步，保持线性顺序。\"},{\"text\":\"左转45度\",\"role\":\"ACTION\",\"explanation\":\"请求向左转45度；左转按规则映射为正角度45度，非零且绝对值不超过180度IR上限。这是序列中的第三个动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后子句，不改变动作内容或顺序。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"之后将后续动作定位为左转动作完成后的下一步。\"},{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"再次请求前进4米；这是与之前动作分开的第四个动作，距离为正的有限值。它不是对先前前进动作的替换或重复算子。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后子句，不改变动作内容或顺序。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"最后将后续动作定位为整个序列的末端动作。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求停止；stop无参数，作为序列中的第五个也是最后一个动作。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句号终止源文本，不增加动作、参数或关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本逐一请求五个动作：站立1秒、前进4米、左转45度、前进4米、停止。两个前进4米分别出现在不同序列位置，均为独立动作；没有编辑、替换或未计入的重复动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"先、然后、再、之后、最后共同给出唯一线性顺序：s1站立1秒，s2前进4米，s3左转45度，s4前进4米，s5停止；没有并列或可选顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有任何编辑、修正或替换词；每个子句只新增动作，不修改或替代先前指令，因此不存在需要确定的修正范围或不适用冲突。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"两个前进4米不是重复算子要求重复同一跨度，而是两个分别写出的独立动作，中间由左转45度分隔；应保留为两个步骤，既不压缩为一次，也不扩展为其他序列。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"站立时长、前进距离、转向方向和角度均为显式参数；左转唯一确定为正向45度，停止不需要参数。然后、再、之后、最后均指源文本内的紧邻前序关系，没有需外部上下文解析的代词或省略共享参数。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"所有连接词要求各动作依次发生并依赖前一步；站立1秒是动作自身持续时间，不与后续动作并行。源文本给出完整线性时序，无需额外等待、同时或完成事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本未显式留下任何未决的动作选择、参数范围、执行顺序或关系；所有动作、参数和先后关系均已唯一确定。\"}}}",
+  "usage": {
+    "input_tokens": 160,
+    "output_tokens": 2574,
+    "total_tokens": 3502
+  }
+}

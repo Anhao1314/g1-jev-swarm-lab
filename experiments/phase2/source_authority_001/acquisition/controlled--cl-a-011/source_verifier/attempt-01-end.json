@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 7.544049599997379,
+  "provider_document": {
+    "created_at": 1791360327,
+    "id": "resp_3b30137d-f8ef-48d5-9163-956d154125f8",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_3b30137d-f8ef-48d5-9163-956d154125f8",
+        "reasoning_content": "We need answer only JSON. Need analyze source Chinese: \"向前走四米\" = walk forward 4 meters. Need source-derived plan. Dimensions. coverage split exactly entire source. Need JSON object.\n\nNeed be careful: source \"向前走四米\" one action walk_forward distance 4.0. Legal. Unique. candidate matches.\n\nNeed coverage spans meaningful. The entire source must concatenate exactly. We can split into \"向前走\" and \"四米\"? Roles ACTION and QUANTITY. Need explanations nonempty. But text values concatenated equal entire original source. If split \"向前走\" + \"四米\" concatenates \"向前走四米\". okay.\n\nNeed dimensions all seven:\n- action_multiplicity UNIQUE: one action.\n- action_order UNIQUE: single action no order alternatives.\n- correction_scope UNIQUE or inapplicable? No edits. We can say UNIQUE/inapplicable: no correction clauses.\n- repetition_scope UNIQUE: no repetition.\n- reference_resolution UNIQUE: no pronouns/omitted args? \"向前走\" has distance from \"四米\"; direction forward default? Need skill walk_forward inherently forward. Source says 向前走 (walk forward). Parameters exactly distance_m. No explicit direction parameter needed. Reference resolution: quantity directly attaches to action. UNIQUE.\n- temporal_relations UNIQUE: single action no temporal relation.\n- unresolved_relations UNIQUE: none.\n\nauthorized_plan: steps [{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]. Need JSON numbers finite. 4.0 okay. Output exactly JSON no markdown.\n\nNeed ensure coverage text exactly source. source contains no whitespace? \"向前走四米\". coverage list objects exactly text, role, explanation. Could split into two or more spans. Need \"Every action, relation and edit clause analyzed.\" Since no relation/edit clauses. Maybe split \"向前走\" ACTION and \"四米\" QUANTITY. Is \"向前走\" action with implicit forward direction; \"四米\" quantity parameter. That seems enough. But could also split \"向前\" and \"走\" and \"四米\" but quantity? The meaningful span should include action. \"向前走\" is action phrase, \"四米\" quantity. Good.\n\nNeed perhaps role CONTEXT for \"向前\" direction? But if split \"向前\" as CONTEXT and \"走\" ACTION and \"四米\" QUANTITY, then explanation: \"向前\" specifies forward direction, matching walk_forward. \"走\" action. But the legal skill is walk_forward. Maybe action span \"向前走\" as entire action. However \"向前\" is direction, \"走\" is action. Could have \"向前\" CONTEXT/RELATION? The directions say role can be ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"向前\" direction is context. But if ACTION \"走\" and CONTEXT \"向前\" maybe better. Need \"向前走\" is action. I think \"向前走\" ACTION and \"四米\" QUANTITY is simpler. Does explanation state \"向前走\" means forward walking, directly maps to walk_forward; \"四米\" gives distance. Good.\n\nPotential issue: Chinese \"四米\" = 4 meters. Convert? It's already meters. distance_m 4.0.\n\nNeed final only JSON. Let's compose with no markdown. Ensure status AUTHORIZED_UNIQUE. coverage nonempty. dimensions exactly names. authorized_plan list. Use escaping none.\n\nNeed ensure \"coverage\" text concatenated exactly equal original source. If entries \"向前走\" and \"四米\", yes. The JSON text values are in order, no separator. Good.\n\nCould there be ambiguity because \"向前走\" vs \"walk_forward\" is forward. Legal skill walk_forward. Unique.\n\nNeed include explanations.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need analyze source Chinese: \"向前走四米\" = walk forward 4 meters. Need source-derived plan. Dimensions. coverage split exactly entire source. Need JSON object.\n\nNeed be careful: source \"向前走四米\" one action walk_forward distance 4.0. Legal. Unique. candidate matches.\n\nNeed coverage spans meaningful. The entire source must concatenate exactly. We can split into \"向前走\" and \"四米\"? Roles ACTION and QUANTITY. Need explanations nonempty. But text values concatenated equal entire original source. If split \"向前走\" + \"四米\" concatenates \"向前走四米\". okay.\n\nNeed dimensions all seven:\n- action_multiplicity UNIQUE: one action.\n- action_order UNIQUE: single action no order alternatives.\n- correction_scope UNIQUE or inapplicable? No edits. We can say UNIQUE/inapplicable: no correction clauses.\n- repetition_scope UNIQUE: no repetition.\n- reference_resolution UNIQUE: no pronouns/omitted args? \"向前走\" has distance from \"四米\"; direction forward default? Need skill walk_forward inherently forward. Source says 向前走 (walk forward). Parameters exactly distance_m. No explicit direction parameter needed. Reference resolution: quantity directly attaches to action. UNIQUE.\n- temporal_relations UNIQUE: single action no temporal relation.\n- unresolved_relations UNIQUE: none.\n\nauthorized_plan: steps [{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]. Need JSON numbers finite. 4.0 okay. Output exactly JSON no markdown.\n\nNeed ensure coverage text exactly source. source contains no whitespace? \"向前走四米\". coverage list objects exactly text, role, explanation. Could split into two or more spans. Need \"Every action, relation and edit clause analyzed.\" Since no relation/edit clauses. Maybe split \"向前走\" ACTION and \"四米\" QUANTITY. Is \"向前走\" action with implicit forward direction; \"四米\" quantity parameter. That seems enough. But could also split \"向前\" and \"走\" and \"四米\" but quantity? The meaningful span should include action. \"向前走\" is action phrase, \"四米\" quantity. Good.\n\nNeed perhaps role CONTEXT for \"向前\" direction? But if split \"向前\" as CONTEXT and \"走\" ACTION and \"四米\" QUANTITY, then explanation: \"向前\" specifies forward direction, matching walk_forward. \"走\" action. But the legal skill is walk_forward. Maybe action span \"向前走\" as entire action. However \"向前\" is direction, \"走\" is action. Could have \"向前\" CONTEXT/RELATION? The directions say role can be ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"向前\" direction is context. But if ACTION \"走\" and CONTEXT \"向前\" maybe better. Need \"向前走\" is action. I think \"向前走\" ACTION and \"四米\" QUANTITY is simpler. Does explanation state \"向前走\" means forward walking, directly maps to walk_forward; \"四米\" gives distance. Good.\n\nPotential issue: Chinese \"四米\" = 4 meters. Convert? It's already meters. distance_m 4.0.\n\nNeed final only JSON. Let's compose with no markdown. Ensure status AUTHORIZED_UNIQUE. coverage nonempty. dimensions exactly names. authorized_plan list. Use escaping none.\n\nNeed ensure \"coverage\" text concatenated exactly equal original source. If entries \"向前走\" and \"四米\", yes. The JSON text values are in order, no separator. Good.\n\nCould there be ambiguity because \"向前走\" vs \"walk_forward\" is forward. Legal skill walk_forward. Unique.\n\nNeed include explanations.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"This span is a single directed walking action. It maps to the legal skill walk_forward because 向前 means forward and the only walking skill is walk_forward; it authorizes exactly one action.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"This span specifies the distance for the preceding walking action. 米 means meters, so the required parameter is distance_m = 4.0; it does not introduce another action, repetition, edit, or unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one walking action, 向前走, with no conjunction, repetition, replacement, or additional action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so the execution order is uniquely s1 with no ordering alternatives.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction or edit clause, so no earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repetition quantity, so the single action occurs exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The quantity 四米 directly supplies the distance for the immediately preceding walking action; there are no pronouns, ordinals, shared arguments, or missing external referents.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source has only one action and no before/after, simultaneous, waiting, or completion relation, so no temporal ordering alternatives exist.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the action as forward walking and the distance as four meters; it leaves no scope, order, parameter, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_3b30137d-f8ef-48d5-9163-956d154125f8",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 189,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1264,
+      "output_tokens_details": {
+        "reasoning_tokens": 818
+      },
+      "total_tokens": 2477
+    }
+  },
+  "request_sha256": "df6f25095514a9840798aac683a8627aaf5d7dc328571f198c68ad65ffbcfea5",
+  "status": "SUCCESS"
+}

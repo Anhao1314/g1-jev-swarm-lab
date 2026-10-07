@@ -1,0 +1,264 @@
+{
+  "added_wall_s": 7.087836300001072,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 7.084582700001192,
+        "provider_document": {
+          "created_at": 1791360494,
+          "id": "resp_3722bd00-fd27-453b-a9fa-ae8192f70a1b",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_3722bd00-fd27-453b-a9fa-ae8192f70a1b",
+              "reasoning_content": "We need answer JSON only. Need inspect source Chinese: \"往前移动六米，之后停止\" means \"move forward six meters, then stop\". Need decide dimensions. We need produce coverage splitting entire source exactly. Source string: 往前移动六米，之后停止\n\nNeed map actions: walk_forward distance 6m, then stop. Order: move then stop. Unique? Let's analyze seven dimensions.\n\n- action_multiplicity: exactly two actions: forward move, stop. Unique.\n- action_order: \"之后\" after, move then stop. Unique linear order.\n- correction_scope: no corrections/edits. Inapplicable, unique.\n- repetition_scope: no repetition. Unique.\n- reference_resolution: no pronouns/ordinals? \"之后\" refers to previous action (the movement). Resolved. Unique. \"往前\" direction forward, no omitted shared args? walk_forward requires distance, given 六米. Stop no params. Unique.\n- temporal_relations: \"之后\" after previous, single linear order. Unique.\n- unresolved_relations: none. Unique.\n\nTherefore AUTHORIZED_UNIQUE. Need coverage list split into spans, concatenated exact. Could split:\n\"往前移动\" role ACTION explanation means walk_forward forward direction, initiates first action.\n\"六米\" role QUANTITY explanation distance 6 meters, positive finite, parameter for walk_forward.\n\"，\" role SEPARATOR explanation punctuation separating first action from subsequent temporal relation/action.\n\"之后\" role RELATION explanation indicates second action occurs after first, establishes order.\n\"停止\" role ACTION explanation stop action, no params.\n\nNeed ensure concatenation equals entire source exactly. \"往前移动六米，之后停止\" = 往前移动 + 六米 + ， + 之后 + 停止. Yes.\n\nNeed maybe \"往前移动六米\" as ACTION? But split okay if every span meaningful. Role for 六米 QUANTITY. \"之后\" relation. \"，\" separator. Good.\n\nNeed explanations nonempty. Status AUTHORIZED_UNIQUE. dimensions exactly. Ensure no markdown. Must be valid JSON object. Use Chinese explanations or English? Fine. Need explain all dimensions. No extra fields. Coverage nonempty list.\n\nNeed be careful: \"往前移动\" maybe \"forward move\" maps to walk_forward. \"往前\" means forward, \"移动\" move. Combined action. Could split \"往前\" and \"移动\"? But coverage must cover all. Our split \"往前移动\" okay as one action phrase.\n\nPotential ambiguity? Source says \"往前移动六米，之后停止\". Does \"之后\" mean after moving six meters, stop. Exactly one. No ambiguity. Action order unique. \"停止\" has no params. Fine.\n\nNeed output exactly JSON. Let's craft.\n\nEnsure dimension statuses: action_multiplicity UNIQUE, action_order UNIQUE, correction_scope UNIQUE, repetition_scope UNIQUE, reference_resolution UNIQUE, temporal_relations UNIQUE, unresolved_relations UNIQUE.\n\nExplanations use source evidence.\n\nNeed mention coverage role. Every explanation nonempty, including separator. For separator: punctuation, no action, doesn't alter authority except separating clauses. For relation: \"之后\" unambiguously places stop after forward movement. For quantity: six meters is distance parameter, positive finite, no other numeric interpretation.\n\nFinal JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source Chinese: \"往前移动六米，之后停止\" means \"move forward six meters, then stop\". Need decide dimensions. We need produce coverage splitting entire source exactly. Source string: 往前移动六米，之后停止\n\nNeed map actions: walk_forward distance 6m, then stop. Order: move then stop. Unique? Let's analyze seven dimensions.\n\n- action_multiplicity: exactly two actions: forward move, stop. Unique.\n- action_order: \"之后\" after, move then stop. Unique linear order.\n- correction_scope: no corrections/edits. Inapplicable, unique.\n- repetition_scope: no repetition. Unique.\n- reference_resolution: no pronouns/ordinals? \"之后\" refers to previous action (the movement). Resolved. Unique. \"往前\" direction forward, no omitted shared args? walk_forward requires distance, given 六米. Stop no params. Unique.\n- temporal_relations: \"之后\" after previous, single linear order. Unique.\n- unresolved_relations: none. Unique.\n\nTherefore AUTHORIZED_UNIQUE. Need coverage list split into spans, concatenated exact. Could split:\n\"往前移动\" role ACTION explanation means walk_forward forward direction, initiates first action.\n\"六米\" role QUANTITY explanation distance 6 meters, positive finite, parameter for walk_forward.\n\"，\" role SEPARATOR explanation punctuation separating first action from subsequent temporal relation/action.\n\"之后\" role RELATION explanation indicates second action occurs after first, establishes order.\n\"停止\" role ACTION explanation stop action, no params.\n\nNeed ensure concatenation equals entire source exactly. \"往前移动六米，之后停止\" = 往前移动 + 六米 + ， + 之后 + 停止. Yes.\n\nNeed maybe \"往前移动六米\" as ACTION? But split okay if every span meaningful. Role for 六米 QUANTITY. \"之后\" relation. \"，\" separator. Good.\n\nNeed explanations nonempty. Status AUTHORIZED_UNIQUE. dimensions exactly. Ensure no markdown. Must be valid JSON object. Use Chinese explanations or English? Fine. Need explain all dimensions. No extra fields. Coverage nonempty list.\n\nNeed be careful: \"往前移动\" maybe \"forward move\" maps to walk_forward. \"往前\" means forward, \"移动\" move. Combined action. Could split \"往前\" and \"移动\"? But coverage must cover all. Our split \"往前移动\" okay as one action phrase.\n\nPotential ambiguity? Source says \"往前移动六米，之后停止\". Does \"之后\" mean after moving six meters, stop. Exactly one. No ambiguity. Action order unique. \"停止\" has no params. Fine.\n\nNeed output exactly JSON. Let's craft.\n\nEnsure dimension statuses: action_multiplicity UNIQUE, action_order UNIQUE, correction_scope UNIQUE, repetition_scope UNIQUE, reference_resolution UNIQUE, temporal_relations UNIQUE, unresolved_relations UNIQUE.\n\nExplanations use source evidence.\n\nNeed mention coverage role. Every explanation nonempty, including separator. For separator: punctuation, no action, doesn't alter authority except separating clauses. For relation: \"之后\" unambiguously places stop after forward movement. For quantity: six meters is distance parameter, positive finite, no other numeric interpretation.\n\nFinal JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"表示向前移动的动作，对应合法线性计划中的 walk_forward；方向为前，且该动作是第一步。\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"为向前移动指定正有限距离六米，换算后为 6.0 米，满足 walk_forward 的距离参数要求，没有其他数量或单位歧义。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后两个动作子句，本身不请求执行动作，也不改变授权范围。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"明确表示停止发生在向前移动完成之后，从而确定两个动作的唯一线性先后关系。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"表示停止动作，对应 stop；该动作无参数，并且在向前移动之后执行。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中明确请求两个动作：向前移动六米，以及停止；没有额外、重复或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”唯一确定先执行向前移动六米，再执行停止，因此存在单一线性顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、更正、替换或撤销任何先前指令的内容，因此该维度不适用且不引入其他解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复动作、重复次数或重复范围，向前移动和停止各仅请求一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”唯一指向前面已请求的向前移动六米；向前移动已有明确方向与距离，停止无需参数，没有未解析的代词或共享参数。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"时间关系由“之后”明确给出，只要求停止在向前移动之后发生，可表示为两步线性计划而不需额外计时事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未解决的选择、顺序、范围或关系；两个动作及其先后关系均已确定。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_3722bd00-fd27-453b-a9fa-ae8192f70a1b",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 143,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1172,
+            "output_tokens_details": {
+              "reasoning_tokens": 689
+            },
+            "total_tokens": 2083
+          }
+        },
+        "request_sha256": "c254061e216993e109ea85479e2f4cac84bdd43798aeef5ee356e98998503483",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 7.0831913000001805,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_3722bd00-fd27-453b-a9fa-ae8192f70a1b",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"表示向前移动的动作，对应合法线性计划中的 walk_forward；方向为前，且该动作是第一步。\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"为向前移动指定正有限距离六米，换算后为 6.0 米，满足 walk_forward 的距离参数要求，没有其他数量或单位歧义。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后两个动作子句，本身不请求执行动作，也不改变授权范围。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"明确表示停止发生在向前移动完成之后，从而确定两个动作的唯一线性先后关系。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"表示停止动作，对应 stop；该动作无参数，并且在向前移动之后执行。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中明确请求两个动作：向前移动六米，以及停止；没有额外、重复或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”唯一确定先执行向前移动六米，再执行停止，因此存在单一线性顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、更正、替换或撤销任何先前指令的内容，因此该维度不适用且不引入其他解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复动作、重复次数或重复范围，向前移动和停止各仅请求一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”唯一指向前面已请求的向前移动六米；向前移动已有明确方向与距离，停止无需参数，没有未解析的代词或共享参数。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"时间关系由“之后”明确给出，只要求停止在向前移动之后发生，可表示为两步线性计划而不需额外计时事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未解决的选择、顺序、范围或关系；两个动作及其先后关系均已确定。\"}}}",
+        "usage": {
+          "input_tokens": 143,
+          "output_tokens": 1172,
+          "total_tokens": 2083
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.13463369999954,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "forward6-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 10,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"forward6-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "f6b33550161c8912328e344e05b7e8e4cc8058c1526aebf9f0ae12e6fef3f9bc",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_52f822bf-d930-4002-9995-1ca55db77736",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 7.0871845000001485,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 7.0831913000001805,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"表示向前移动的动作，对应合法线性计划中的 walk_forward；方向为前，且该动作是第一步。\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"为向前移动指定正有限距离六米，换算后为 6.0 米，满足 walk_forward 的距离参数要求，没有其他数量或单位歧义。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号仅分隔前后两个动作子句，本身不请求执行动作，也不改变授权范围。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"明确表示停止发生在向前移动完成之后，从而确定两个动作的唯一线性先后关系。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"表示停止动作，对应 stop；该动作无参数，并且在向前移动之后执行。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中明确请求两个动作：向前移动六米，以及停止；没有额外、重复或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”唯一确定先执行向前移动六米，再执行停止，因此存在单一线性顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、更正、替换或撤销任何先前指令的内容，因此该维度不适用且不引入其他解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复动作、重复次数或重复范围，向前移动和停止各仅请求一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”唯一指向前面已请求的向前移动六米；向前移动已有明确方向与距离，停止无需参数，没有未解析的代词或共享参数。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"时间关系由“之后”明确给出，只要求停止在向前移动之后发生，可表示为两步线性计划而不需额外计时事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未解决的选择、顺序、范围或关系；两个动作及其先后关系均已确定。\"}}}",
+          "raw_response_sha256": "2c006369452c6ea6ddf2a6b20f36fbc673e89f1db5bf5daf8fdf6a80e441d2e8",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_3722bd00-fd27-453b-a9fa-ae8192f70a1b",
+          "source_aware": false,
+          "source_sha256": "2b2748c7a86af52ec3bff0d9f9871feeec3d89beec970d7d6eef1b0adfabe7e5",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 143,
+            "output_tokens": 1172,
+            "total_tokens": 2083
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "表示向前移动的动作，对应合法线性计划中的 walk_forward；方向为前，且该动作是第一步。",
+                "role": "ACTION",
+                "text": "往前移动"
+              },
+              {
+                "explanation": "为向前移动指定正有限距离六米，换算后为 6.0 米，满足 walk_forward 的距离参数要求，没有其他数量或单位歧义。",
+                "role": "QUANTITY",
+                "text": "六米"
+              },
+              {
+                "explanation": "逗号仅分隔前后两个动作子句，本身不请求执行动作，也不改变授权范围。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "明确表示停止发生在向前移动完成之后，从而确定两个动作的唯一线性先后关系。",
+                "role": "RELATION",
+                "text": "之后"
+              },
+              {
+                "explanation": "表示停止动作，对应 stop；该动作无参数，并且在向前移动之后执行。",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源中明确请求两个动作：向前移动六米，以及停止；没有额外、重复或替换动作。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“之后”唯一确定先执行向前移动六米，再执行停止，因此存在单一线性顺序。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有编辑、更正、替换或撤销任何先前指令的内容，因此该维度不适用且不引入其他解读。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "“之后”唯一指向前面已请求的向前移动六米；向前移动已有明确方向与距离，停止无需参数，没有未解析的代词或共享参数。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有重复动作、重复次数或重复范围，向前移动和停止各仅请求一次。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "时间关系由“之后”明确给出，只要求停止在向前移动之后发生，可表示为两步线性计划而不需额外计时事件。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源没有显式留下未解决的选择、顺序、范围或关系；两个动作及其先后关系均已确定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 206,
+        "output_tokens": 220,
+        "total_tokens": 1962
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "forward6-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前移动六米之后停止",
+    "status": "SUCCESS"
+  }
+}

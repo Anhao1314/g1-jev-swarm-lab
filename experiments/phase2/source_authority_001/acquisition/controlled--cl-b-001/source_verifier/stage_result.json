@@ -1,0 +1,261 @@
+{
+  "added_wall_s": 8.708831600000849,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.705410099999426,
+        "provider_document": {
+          "created_at": 1791360406,
+          "id": "resp_e358db62-ed3a-40bc-8c9e-d58ce4cf12cd",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_e358db62-ed3a-40bc-8c9e-d58ce4cf12cd",
+              "reasoning_content": "We need answer JSON only. Need analyze source \"向前移动四米\". Need derive plan. Chinese: 向前移动四米 = move forward four meters. Legal skill walk_forward distance_m=4.0. One action. Dimensions. Coverage: need split source into meaningful spans, text concatenated exactly equals entire source. Source is one continuous string \"向前移动四米\". We can split? Need every action/relation/edit clause. Could have spans: \"向前\" context/direction, \"移动\" action, \"四米\" quantity. Need concatenate exactly \"向前\"+\"移动\"+\"四米\" = \"向前移动四米\". Yes. role: 向前 maybe CONTEXT or RELATION? It indicates direction forward, essential to mapping to walk_forward. \"移动\" ACTION. \"四米\" QUANTITY. All nonempty explanations. Could also treat entire as ACTION. But coverage nonempty list. Split meaningful. Need ensure text exact. We can use \"向前\" role CONTEXT? It is direction relation? Since walk_forward inherently forward, direction \"向前\" confirms walk_forward. \"移动\" action. \"四米\" quantity. No punctuation.\n\nDimensions:\n- action_multiplicity UNIQUE: exactly one movement action, no repetition/edit.\n- action_order UNIQUE: single step order trivial.\n- correction_scope UNIQUE: no edits/corrections.\n- repetition_scope UNIQUE: no repetition, inapplicable.\n- reference_resolution UNIQUE: no pronouns/ordinals/shared omitted args? The action has explicit distance \"四米\"; no unresolved reference.\n- temporal_relations UNIQUE: no temporal relations, single action.\n- unresolved_relations UNIQUE: none.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan steps s1 walk_forward distance_m 4.0 depends_on [].\n\nNeed be careful: \"向前移动\" maybe \"move forward\" is walk_forward. distance 4 meters. Yes.\n\nNeed output exactly JSON object. Keys exactly status, coverage, dimensions, authorized_plan. Need dimensions object exactly seven names. Values status and explanation. Coverage list objects exactly text, role, explanation. Text values concatenated in order must equal entire original source exactly. If split \"向前\" \"移动\" \"四米\", concatenation equals \"向前移动四米\". Good.\n\nNeed mention candidate? Candidate matches; but we derive source plan. In dimensions explanations can mention source evidence. Maybe no mention candidate? Fine. We need not include candidate. Ensure valid JSON, no markdown.\n\nLet's craft concise but enough. For coverage:\n{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward; it identifies the movement direction as forward, matching walk_forward without adding a separate action or timing.\"}\n{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The single requested movement action; in the legal skill set this is walk_forward because it is a translational move.\"}\n{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies distance 四 (4) 米 (meters), so the walk_forward distance_m parameter is 4.0.\"}\n\nCheck \"四米\" includes number and unit. Good.\n\nDimensions explanations:\naction_multiplicity: \"Exactly one movement action is requested; no conjunction, repetition, or replacement clause.\"\naction_order: \"Only one action, so the execution order is uniquely the single step s1; no ordering relation exists.\"\ncorrection_scope: \"No edit, correction, or replacement instruction appears; nothing is changed or preserved.\"\nrepetition_scope: \"No repetition marker or count appears; repetition is inapplicable and not narrowed or broadened.\"\nreference_resolution: \"No pronoun, ordinal, shared argument, or omitted argument requires resolution; distance is explicitly 四米.\"\ntemporal_relations: \"No before/after, waiting, simultaneous, or completion relation appears; the one-step plan has no temporal alternative.\"\nunresolved_relations: \"Source leaves no explicit unresolved choice of scope, order, or relation; all required parameters are fixed.\"\n\nauthorized_plan:\n{\"schema_version\"? Wait prompt: \"authorized_plan is null for... For AUTHORIZED_UNIQUE it is complete source-derived list of steps. Each step has exactly id, skill, parameters, depends_on as defined above. No mission_id needed.\" So authorized_plan should be list of steps? It says list of steps. Should not include schema_version or mission_id. Use [{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]. Good.\n\nNeed no extra fields. Status \"AUTHORIZED_UNIQUE\".\n\nLet's final. Ensure JSON valid: no comments. Use Chinese text exactly. Need maybe role values allowed. All good.\n\nDouble-check if \"向前移动四米\" maybe \"向前\" and \"移动\" overlaps? No. \"移动\" means move. Could \"向前\" be relation? Role allowed CONTEXT, RELATION, ACTION, EDIT, QUANTITY, SEPARATOR. Direction modifier could be RELATION to action? But context is okay. Explanation states direction. It doesn't alter authorization? It constrains selection to walk_forward. Could role RELATION be better: \"向前\" adverb modifies direction of 移动. Either allowed. Need every clause. Use CONTEXT.\n\nCould split into \"向前移动\" and \"四米\" maybe action phrase and quantity. But current split is meaningful. The requirement: text values concatenated in order must equal entire original source exactly. Good.\n\nLet's ensure no whitespace in source. Source is \"向前移动四米\". Our texts concatenate exactly. Good.\n\nPotential issue: \"四米\" in Chinese \"四\" numeral, \"米\" unit. In explanation \"四 (4) 米 (meters)\" okay.\n\nNo mission_id in plan. But candidate has mission_id; irrelevant. The host likely expects authorized_plan list, not object. Prompt: \"authorized_plan is null for AMBIGUOUS or UNKNOWN. For AUTHORIZED_UNIQUE it is the complete source-derived list of steps.\" So list. Good.\n\nLet's answer.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source \"向前移动四米\". Need derive plan. Chinese: 向前移动四米 = move forward four meters. Legal skill walk_forward distance_m=4.0. One action. Dimensions. Coverage: need split source into meaningful spans, text concatenated exactly equals entire source. Source is one continuous string \"向前移动四米\". We can split? Need every action/relation/edit clause. Could have spans: \"向前\" context/direction, \"移动\" action, \"四米\" quantity. Need concatenate exactly \"向前\"+\"移动\"+\"四米\" = \"向前移动四米\". Yes. role: 向前 maybe CONTEXT or RELATION? It indicates direction forward, essential to mapping to walk_forward. \"移动\" ACTION. \"四米\" QUANTITY. All nonempty explanations. Could also treat entire as ACTION. But coverage nonempty list. Split meaningful. Need ensure text exact. We can use \"向前\" role CONTEXT? It is direction relation? Since walk_forward inherently forward, direction \"向前\" confirms walk_forward. \"移动\" action. \"四米\" quantity. No punctuation.\n\nDimensions:\n- action_multiplicity UNIQUE: exactly one movement action, no repetition/edit.\n- action_order UNIQUE: single step order trivial.\n- correction_scope UNIQUE: no edits/corrections.\n- repetition_scope UNIQUE: no repetition, inapplicable.\n- reference_resolution UNIQUE: no pronouns/ordinals/shared omitted args? The action has explicit distance \"四米\"; no unresolved reference.\n- temporal_relations UNIQUE: no temporal relations, single action.\n- unresolved_relations UNIQUE: none.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan steps s1 walk_forward distance_m 4.0 depends_on [].\n\nNeed be careful: \"向前移动\" maybe \"move forward\" is walk_forward. distance 4 meters. Yes.\n\nNeed output exactly JSON object. Keys exactly status, coverage, dimensions, authorized_plan. Need dimensions object exactly seven names. Values status and explanation. Coverage list objects exactly text, role, explanation. Text values concatenated in order must equal entire original source exactly. If split \"向前\" \"移动\" \"四米\", concatenation equals \"向前移动四米\". Good.\n\nNeed mention candidate? Candidate matches; but we derive source plan. In dimensions explanations can mention source evidence. Maybe no mention candidate? Fine. We need not include candidate. Ensure valid JSON, no markdown.\n\nLet's craft concise but enough. For coverage:\n{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward; it identifies the movement direction as forward, matching walk_forward without adding a separate action or timing.\"}\n{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The single requested movement action; in the legal skill set this is walk_forward because it is a translational move.\"}\n{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies distance 四 (4) 米 (meters), so the walk_forward distance_m parameter is 4.0.\"}\n\nCheck \"四米\" includes number and unit. Good.\n\nDimensions explanations:\naction_multiplicity: \"Exactly one movement action is requested; no conjunction, repetition, or replacement clause.\"\naction_order: \"Only one action, so the execution order is uniquely the single step s1; no ordering relation exists.\"\ncorrection_scope: \"No edit, correction, or replacement instruction appears; nothing is changed or preserved.\"\nrepetition_scope: \"No repetition marker or count appears; repetition is inapplicable and not narrowed or broadened.\"\nreference_resolution: \"No pronoun, ordinal, shared argument, or omitted argument requires resolution; distance is explicitly 四米.\"\ntemporal_relations: \"No before/after, waiting, simultaneous, or completion relation appears; the one-step plan has no temporal alternative.\"\nunresolved_relations: \"Source leaves no explicit unresolved choice of scope, order, or relation; all required parameters are fixed.\"\n\nauthorized_plan:\n{\"schema_version\"? Wait prompt: \"authorized_plan is null for... For AUTHORIZED_UNIQUE it is complete source-derived list of steps. Each step has exactly id, skill, parameters, depends_on as defined above. No mission_id needed.\" So authorized_plan should be list of steps? It says list of steps. Should not include schema_version or mission_id. Use [{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]. Good.\n\nNeed no extra fields. Status \"AUTHORIZED_UNIQUE\".\n\nLet's final. Ensure JSON valid: no comments. Use Chinese text exactly. Need maybe role values allowed. All good.\n\nDouble-check if \"向前移动四米\" maybe \"向前\" and \"移动\" overlaps? No. \"移动\" means move. Could \"向前\" be relation? Role allowed CONTEXT, RELATION, ACTION, EDIT, QUANTITY, SEPARATOR. Direction modifier could be RELATION to action? But context is okay. Explanation states direction. It doesn't alter authorization? It constrains selection to walk_forward. Could role RELATION be better: \"向前\" adverb modifies direction of 移动. Either allowed. Need every clause. Use CONTEXT.\n\nCould split into \"向前移动\" and \"四米\" maybe action phrase and quantity. But current split is meaningful. The requirement: text values concatenated in order must equal entire original source exactly. Good.\n\nLet's ensure no whitespace in source. Source is \"向前移动四米\". Our texts concatenate exactly. Good.\n\nPotential issue: \"四米\" in Chinese \"四\" numeral, \"米\" unit. In explanation \"四 (4) 米 (meters)\" okay.\n\nNo mission_id in plan. But candidate has mission_id; irrelevant. The host likely expects authorized_plan list, not object. Prompt: \"authorized_plan is null for AMBIGUOUS or UNKNOWN. For AUTHORIZED_UNIQUE it is the complete source-derived list of steps.\" So list. Good.\n\nLet's answer.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward; it identifies the movement direction as forward and corresponds to the walk_forward skill without adding a separate action.\"},{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The single requested movement action; in the legal skill set this translational move is walk_forward.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as four meters, so the walk_forward distance_m parameter is 4.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one movement action is requested; there is no conjunction, repetition, or replacement clause adding another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one action, the execution order is uniquely the single step s1; no ordering relation exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement instruction appears; nothing earlier is changed or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or count appears; repetition is inapplicable and is neither narrowed nor broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, shared argument, or omitted argument requires resolution; the distance is explicitly stated as 四米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneous, or completion relation appears; the one-step plan has no temporal alternative.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice of scope, order, or relation; all required parameters for the single action are fixed.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_e358db62-ed3a-40bc-8c9e-d58ce4cf12cd",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 187,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1690,
+            "output_tokens_details": {
+              "reasoning_tokens": 1276
+            },
+            "total_tokens": 2901
+          }
+        },
+        "request_sha256": "b6b82997f1de22a23da2334be772b5ce4af6159684a8e4b2d199757388a8f117",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.703848799999832,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e358db62-ed3a-40bc-8c9e-d58ce4cf12cd",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward; it identifies the movement direction as forward and corresponds to the walk_forward skill without adding a separate action.\"},{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The single requested movement action; in the legal skill set this translational move is walk_forward.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as four meters, so the walk_forward distance_m parameter is 4.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one movement action is requested; there is no conjunction, repetition, or replacement clause adding another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one action, the execution order is uniquely the single step s1; no ordering relation exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement instruction appears; nothing earlier is changed or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or count appears; repetition is inapplicable and is neither narrowed nor broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, shared argument, or omitted argument requires resolution; the distance is explicitly stated as 四米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneous, or completion relation appears; the one-step plan has no temporal alternative.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice of scope, order, or relation; all required parameters for the single action are fixed.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 187,
+          "output_tokens": 1690,
+          "total_tokens": 2901
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.9378258999968239,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-forward-4m",
+      "model": "deepseek-flash",
+      "normalized_length": 6,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-forward-4m\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "eff604e532bccf0ab749a84d07e53be11801205428da3779dd80120d35be3468",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_688b80d7-cc2c-43ff-a9e1-34cdfd1ee104",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.708089499999915,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 8.703848799999832,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward; it identifies the movement direction as forward and corresponds to the walk_forward skill without adding a separate action.\"},{\"text\":\"移动\",\"role\":\"ACTION\",\"explanation\":\"The single requested movement action; in the legal skill set this translational move is walk_forward.\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as four meters, so the walk_forward distance_m parameter is 4.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one movement action is requested; there is no conjunction, repetition, or replacement clause adding another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one action, the execution order is uniquely the single step s1; no ordering relation exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement instruction appears; nothing earlier is changed or preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or count appears; repetition is inapplicable and is neither narrowed nor broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, shared argument, or omitted argument requires resolution; the distance is explicitly stated as 四米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneous, or completion relation appears; the one-step plan has no temporal alternative.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice of scope, order, or relation; all required parameters for the single action are fixed.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "f867ad7be6f68d4aa2cae49b31d3d1c95d04739ac27e6cf39f76df2889833aef",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_e358db62-ed3a-40bc-8c9e-d58ce4cf12cd",
+          "source_aware": true,
+          "source_sha256": "0126421e56de3f1a10e6fbee7ec8bf4a6805547ba976f53f4d7f2facb7d1ca95",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 187,
+            "output_tokens": 1690,
+            "total_tokens": 2901
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Direction modifier meaning forward; it identifies the movement direction as forward and corresponds to the walk_forward skill without adding a separate action.",
+                "role": "CONTEXT",
+                "text": "向前"
+              },
+              {
+                "explanation": "The single requested movement action; in the legal skill set this translational move is walk_forward.",
+                "role": "ACTION",
+                "text": "移动"
+              },
+              {
+                "explanation": "Specifies the distance as four meters, so the walk_forward distance_m parameter is 4.0.",
+                "role": "QUANTITY",
+                "text": "四米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Exactly one movement action is requested; there is no conjunction, repetition, or replacement clause adding another action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "With only one action, the execution order is uniquely the single step s1; no ordering relation exists.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No edit, correction, or replacement instruction appears; nothing earlier is changed or preserved.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "No pronoun, ordinal, shared argument, or omitted argument requires resolution; the distance is explicitly stated as 四米.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or count appears; repetition is inapplicable and is neither narrowed nor broadened.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, waiting, simultaneous, or completion relation appears; the one-step plan has no temporal alternative.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit unresolved choice of scope, order, or relation; all required parameters for the single action are fixed.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 153,
+        "total_tokens": 1892
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-forward-4m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "向前移动四米",
+    "status": "SUCCESS"
+  }
+}

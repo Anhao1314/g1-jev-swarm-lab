@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 8.531267399997887,
+  "provider_document": {
+    "created_at": 1791360576,
+    "id": "resp_44ef20e7-a759-4a67-9a08-5138f7aa7d82",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_44ef20e7-a759-4a67-9a08-5138f7aa7d82",
+        "reasoning_content": "We need answer JSON only. Need inspect source Chinese: \"先向左转45°，再停下\" Means first turn left 45 degrees, then stop. Need decide ambiguity across seven dimensions. Need output coverage split exact source. Need determine status.\n\nSource: 先向左转45°，再停下\nSpans: \"先\", \"向左转45°\", \"，\", \"再\", \"停下\"? Need coverage text concatenated exact. Role: CONTEXT/SEPARATOR/ACTION/RELATION. Need explain.\n\nActions: turn left 45° (turn angle left/counterclockwise positive => 45 degrees? Wait left positive, so angle_deg = +45). stop no params. Order: first turn, then stop. \"先...再...\" explicit sequence. So unique. action_multiplicity: exactly two actions: turn and stop. No repetition. correction_scope: no edit. repetition_scope: no repetition. reference_resolution: no pronouns? \"向左\" means left direction, clear. temporal_relations: 先...再... = first turn then stop, linear order. unresolved_relations: none. Unique.\n\nNeed ensure legal IR: turn 45 within max 180, stop. 2 steps. Good.\n\nCoverage: need split source into meaningful spans so every action, relation, editing clause considered. Text values concatenated equal entire original source exactly. Could do:\n1 \"先\" role RELATION? It means first. It denotes ordering relation with 再. Could role CONTEXT? Better RELATION. Explanation: marks turn as first in sequence.\n2 \"向左转45°\" role ACTION. Explanation: requests turn counterclockwise/left 45 degrees, legal nonzero finite angle_deg +45, within max 180.\n3 \"，\" role SEPARATOR. Punctuation separates clauses, no semantic effect.\n4 \"再\" role RELATION. Means then/next, orders stop after turn.\n5 \"停下\" role ACTION. Requests stop with no parameters.\nThis concatenates: 先 + 向左转45° + ， + 再 + 停下 = 先向左转45°，再停下. Yes.\n\nBut action span includes \"向左转45°\" (without 先) and stop \"停下\". Good.\n\nDimensions:\naction_multiplicity UNIQUE explanation exactly two actions. \"先\" and \"再\" don't introduce extra actions.\naction_order UNIQUE \"先...再...\" fixes turn before stop.\ncorrection_scope UNIQUE no correction/edit clause, no prior action changed.\nrepetition_scope UNIQUE no repetition marker; each action once.\nreference_resolution UNIQUE no pronouns/ordinals/omitted shared args? \"向左\" resolves direction left relative to robot? Does \"left\" require reference frame? In command, left is standard turn direction in IR; no external referent. Maybe left relative? The IR defines left/counterclockwise positive. Fine.\ntemporal_relations UNIQUE: first turn, then stop; no waits/simultaneity.\nunresolved_relations UNIQUE: no explicitly unresolved choice/scope/order etc.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON no markdown. Ensure keys exactly status, coverage, dimensions. Within dimensions exactly seven names. No extra. Explanations nonempty. Good.\n\nNeed be careful: \"先向左转45°，再停下\" Could \"先\" maybe \"first\" but there's only one action before stop; no ambiguity. \"再停下\" means then stop. Fine.\n\nPotential issue: \"停下\" could be \"stop\" and \"turn left 45°\" - linear plan s1 turn, s2 stop. Yes.\n\nNeed not mention compiler candidate implementation. Good.\n\nLet's craft valid JSON. Use Chinese text in strings; JSON UTF-8.\n\nCoverage role values: RELATION, ACTION, SEPARATOR, RELATION, ACTION. Maybe first \"先\" as RELATION or CONTEXT? The role taxonomy includes RELATION. \"先\" relation. \"再\" relation. Good.\n\nExplain each nonexecuting span does not modify authority. For \"先\": It imposes order, not action; supports unique sequence. For comma separator: no action. For \"再\": imposes next. Good.\n\nNeed mention \"°，\" split: span \"向左转45°\" includes degree sign. Yes exact. Then comma Chinese \"，\". Good.\n\nCheck concatenation:\n\"先\" + \"向左转45°\" = \"先向左转45°\"\n+ \"，\" = \"先向左转45°，\"\n+ \"再\" = \"先向左转45°，再\"\n+ \"停下\" = \"先向左转45°，再停下\"\nMatches source. Good.\n\nNow JSON. Ensure no markdown. Use status \"AUTHORIZED_UNIQUE\". Dimensions all UNIQUE.\n\nLet's produce.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source Chinese: \"先向左转45°，再停下\" Means first turn left 45 degrees, then stop. Need decide ambiguity across seven dimensions. Need output coverage split exact source. Need determine status.\n\nSource: 先向左转45°，再停下\nSpans: \"先\", \"向左转45°\", \"，\", \"再\", \"停下\"? Need coverage text concatenated exact. Role: CONTEXT/SEPARATOR/ACTION/RELATION. Need explain.\n\nActions: turn left 45° (turn angle left/counterclockwise positive => 45 degrees? Wait left positive, so angle_deg = +45). stop no params. Order: first turn, then stop. \"先...再...\" explicit sequence. So unique. action_multiplicity: exactly two actions: turn and stop. No repetition. correction_scope: no edit. repetition_scope: no repetition. reference_resolution: no pronouns? \"向左\" means left direction, clear. temporal_relations: 先...再... = first turn then stop, linear order. unresolved_relations: none. Unique.\n\nNeed ensure legal IR: turn 45 within max 180, stop. 2 steps. Good.\n\nCoverage: need split source into meaningful spans so every action, relation, editing clause considered. Text values concatenated equal entire original source exactly. Could do:\n1 \"先\" role RELATION? It means first. It denotes ordering relation with 再. Could role CONTEXT? Better RELATION. Explanation: marks turn as first in sequence.\n2 \"向左转45°\" role ACTION. Explanation: requests turn counterclockwise/left 45 degrees, legal nonzero finite angle_deg +45, within max 180.\n3 \"，\" role SEPARATOR. Punctuation separates clauses, no semantic effect.\n4 \"再\" role RELATION. Means then/next, orders stop after turn.\n5 \"停下\" role ACTION. Requests stop with no parameters.\nThis concatenates: 先 + 向左转45° + ， + 再 + 停下 = 先向左转45°，再停下. Yes.\n\nBut action span includes \"向左转45°\" (without 先) and stop \"停下\". Good.\n\nDimensions:\naction_multiplicity UNIQUE explanation exactly two actions. \"先\" and \"再\" don't introduce extra actions.\naction_order UNIQUE \"先...再...\" fixes turn before stop.\ncorrection_scope UNIQUE no correction/edit clause, no prior action changed.\nrepetition_scope UNIQUE no repetition marker; each action once.\nreference_resolution UNIQUE no pronouns/ordinals/omitted shared args? \"向左\" resolves direction left relative to robot? Does \"left\" require reference frame? In command, left is standard turn direction in IR; no external referent. Maybe left relative? The IR defines left/counterclockwise positive. Fine.\ntemporal_relations UNIQUE: first turn, then stop; no waits/simultaneity.\nunresolved_relations UNIQUE: no explicitly unresolved choice/scope/order etc.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON no markdown. Ensure keys exactly status, coverage, dimensions. Within dimensions exactly seven names. No extra. Explanations nonempty. Good.\n\nNeed be careful: \"先向左转45°，再停下\" Could \"先\" maybe \"first\" but there's only one action before stop; no ambiguity. \"再停下\" means then stop. Fine.\n\nPotential issue: \"停下\" could be \"stop\" and \"turn left 45°\" - linear plan s1 turn, s2 stop. Yes.\n\nNeed not mention compiler candidate implementation. Good.\n\nLet's craft valid JSON. Use Chinese text in strings; JSON UTF-8.\n\nCoverage role values: RELATION, ACTION, SEPARATOR, RELATION, ACTION. Maybe first \"先\" as RELATION or CONTEXT? The role taxonomy includes RELATION. \"先\" relation. \"再\" relation. Good.\n\nExplain each nonexecuting span does not modify authority. For \"先\": It imposes order, not action; supports unique sequence. For comma separator: no action. For \"再\": imposes next. Good.\n\nNeed mention \"°，\" split: span \"向左转45°\" includes degree sign. Yes exact. Then comma Chinese \"，\". Good.\n\nCheck concatenation:\n\"先\" + \"向左转45°\" = \"先向左转45°\"\n+ \"，\" = \"先向左转45°，\"\n+ \"再\" = \"先向左转45°，再\"\n+ \"停下\" = \"先向左转45°，再停下\"\nMatches source. Good.\n\nNow JSON. Ensure no markdown. Use status \"AUTHORIZED_UNIQUE\". Dimensions all UNIQUE.\n\nLet's produce.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"标记第一个动作在序列中的位置，要求其先于后续动作执行；它本身不引入额外动作，也不改变动作数量。\"},{\"text\":\"向左转45°\",\"role\":\"ACTION\",\"explanation\":\"请求一次向左转，方向为左/逆时针，角度为45度；在IR中对应角度为正45度，非零且有限，未超过180度上限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"中文逗号仅分隔前后分句，不执行动作，不改变参数、顺序或授权范围。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示接着/然后，要求后一动作在前一动作之后执行；它本身不引入额外动作，只确定顺序关系。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"请求停止动作，stop无参数；它与前面的左转构成第二个动作，且在其后执行。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本只请求两个动作：先向左转45°，然后停下。‘先’和‘再’是顺序标记而非额外动作，没有重复或替换语句，因此动作数量唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"‘先……再……’明确规定执行顺序：向左转45°在前，停下在后；没有其他可选顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有编辑、修正、撤销或替换子句，不存在需要判定被修改对象或保留范围的问题。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有重复标记，也未指定任何重复次数或重复跨度；向左转45°和停下各执行一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有依赖外部上下文的代词、序数引用或省略共享参数；‘向左’由IR方向约定直接解析为逆时针正角。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"唯一时序关系是‘先’左转、‘再’停下，即左转完成后执行停止；没有等待、同时或未决时序需要表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文本没有显式保留未决选择、范围、顺序或关系；两个动作及其先后关系均已确定。\"}}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_44ef20e7-a759-4a67-9a08-5138f7aa7d82",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 143,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1512,
+      "output_tokens_details": {
+        "reasoning_tokens": 987
+      },
+      "total_tokens": 2423
+    }
+  },
+  "request_sha256": "5ef2d20f4dc00b894874f73771a5cf8209e42d051dee181a359658d334a8c77b",
+  "status": "SUCCESS"
+}

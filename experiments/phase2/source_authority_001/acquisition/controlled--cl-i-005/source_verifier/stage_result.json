@@ -1,0 +1,256 @@
+{
+  "added_wall_s": 6.044535100001667,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.038685499999701,
+        "provider_document": {
+          "created_at": 1791360792,
+          "id": "resp_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+              "reasoning_content": "We need answer JSON only. Need analyze source \"左转120度\". Need derive plan. Chinese: 左转 = turn left. 120度 = 120 degrees. turn parameters angle_deg, left positive, max abs 180, nonzero finite. So angle_deg 120. Plan one step s1 turn angle_deg 120 depends_on [].\n\nNeed seven dimensions all UNIQUE likely. Coverage split meaningful spans and concatenated exactly source. Need decide spans. Source exactly \"左转120度\". We can split \"左转\" ACTION? \"120\" QUANTITY? \"度\" QUANTITY? Need text concatenated equals source. Could split into \"左转\" and \"120度\". Role ACTION and QUANTITY. Explanation nonempty. Need maybe \"左转\" action, \"120度\" quantity. Since action includes direction and verb. \"120度\" quantity. Fine.\n\nNeed dimensions exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status UNIQUE explanation. All unique. Need maybe action_order single action, inapplicable unique. correction none. repetition none. reference none? \"左转\" direction resolved. temporal none. unresolved none.\n\nNeed authorized_plan list step. IDs exactly s1 etc. parameters exactly angle_deg: 120.0? JSON number. Use 120.0 maybe okay. Candidate has 120.0. Need output JSON object no markdown.\n\nNeed ensure status AUTHORIZED_UNIQUE only if all seven UNIQUE. Yes.\n\nCoverage list objects exactly text role explanation. Text values concatenated equal original. Use \"左转\" and \"120度\". Explanation for \"左转\" states turn skill with left direction positive. \"120度\" states angle quantity 120 degrees -> angle_deg=120.0. Role QUANTITY. Need mention no additional actions.\n\nPotential issue: Chinese \"左转120度\" could mean turn left 120 degrees. It's unambiguous. Yes.\n\nNeed output exactly JSON object. No extra.\n\nLet's craft. But need be careful: Coverage text \"左转120度\" split. If split \"左转\" and \"120度\", concatenated equals. Good.\n\nDimensions explanation nonempty. Could mention \"No correction markers...\" etc.\n\nAuthorized plan:\n{\n \"schema_version\"? The instructions for authorized_plan says each step has id, skill, parameters, depends_on. It says For AUTHORIZED_UNIQUE it is complete source-derived list of steps. It doesn't mention schema_version. So authorized_plan should be list, not object. Yes: \"authorized_plan is null for ... For AUTHORIZED_UNIQUE it is the complete source-derived list of steps.\" So output:\n\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]\nNo schema_version.\n\nNeed include status, coverage, dimensions, authorized_plan. Exact keys.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source \"左转120度\". Need derive plan. Chinese: 左转 = turn left. 120度 = 120 degrees. turn parameters angle_deg, left positive, max abs 180, nonzero finite. So angle_deg 120. Plan one step s1 turn angle_deg 120 depends_on [].\n\nNeed seven dimensions all UNIQUE likely. Coverage split meaningful spans and concatenated exactly source. Need decide spans. Source exactly \"左转120度\". We can split \"左转\" ACTION? \"120\" QUANTITY? \"度\" QUANTITY? Need text concatenated equals source. Could split into \"左转\" and \"120度\". Role ACTION and QUANTITY. Explanation nonempty. Need maybe \"左转\" action, \"120度\" quantity. Since action includes direction and verb. \"120度\" quantity. Fine.\n\nNeed dimensions exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status UNIQUE explanation. All unique. Need maybe action_order single action, inapplicable unique. correction none. repetition none. reference none? \"左转\" direction resolved. temporal none. unresolved none.\n\nNeed authorized_plan list step. IDs exactly s1 etc. parameters exactly angle_deg: 120.0? JSON number. Use 120.0 maybe okay. Candidate has 120.0. Need output JSON object no markdown.\n\nNeed ensure status AUTHORIZED_UNIQUE only if all seven UNIQUE. Yes.\n\nCoverage list objects exactly text role explanation. Text values concatenated equal original. Use \"左转\" and \"120度\". Explanation for \"左转\" states turn skill with left direction positive. \"120度\" states angle quantity 120 degrees -> angle_deg=120.0. Role QUANTITY. Need mention no additional actions.\n\nPotential issue: Chinese \"左转120度\" could mean turn left 120 degrees. It's unambiguous. Yes.\n\nNeed output exactly JSON object. No extra.\n\nLet's craft. But need be careful: Coverage text \"左转120度\" split. If split \"左转\" and \"120度\", concatenated equals. Good.\n\nDimensions explanation nonempty. Could mention \"No correction markers...\" etc.\n\nAuthorized plan:\n{\n \"schema_version\"? The instructions for authorized_plan says each step has id, skill, parameters, depends_on. It says For AUTHORIZED_UNIQUE it is complete source-derived list of steps. It doesn't mention schema_version. So authorized_plan should be list, not object. Yes: \"authorized_plan is null for ... For AUTHORIZED_UNIQUE it is the complete source-derived list of steps.\" So output:\n\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]\nNo schema_version.\n\nNeed include status, coverage, dimensions, authorized_plan. Exact keys.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the single requested action: turn left. Under the turn semantics, left is positive, so the turn angle must be positive.\"},{\"text\":\"120度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 120 degrees. This resolves the turn parameter to angle_deg = 120.0, which is finite, nonzero, and within the maximum absolute angle of 180 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: one left turn. There is no conjunction, repetition, or additional action clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one action, the execution order is uniquely the single turn step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, cancellation, replacement, or correction clause affecting any action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so no action is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and quantity are explicit within the source: left turn and 120 degrees. No pronoun, ordinal, or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, waiting, simultaneous, condition, or completion relation, so a single-step linear plan fully represents it.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no action, parameter, order, scope, or relation explicitly unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 185,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1027,
+            "output_tokens_details": {
+              "reasoning_tokens": 628
+            },
+            "total_tokens": 2236
+          }
+        },
+        "request_sha256": "e2b81299df836fdbdc3ed764180068e9234a48b81a1a03452955aba8144de5c9",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.037263400001393,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the single requested action: turn left. Under the turn semantics, left is positive, so the turn angle must be positive.\"},{\"text\":\"120度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 120 degrees. This resolves the turn parameter to angle_deg = 120.0, which is finite, nonzero, and within the maximum absolute angle of 180 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: one left turn. There is no conjunction, repetition, or additional action clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one action, the execution order is uniquely the single turn step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, cancellation, replacement, or correction clause affecting any action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so no action is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and quantity are explicit within the source: left turn and 120 degrees. No pronoun, ordinal, or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, waiting, simultaneous, condition, or completion relation, so a single-step linear plan fully represents it.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no action, parameter, order, scope, or relation explicitly unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 185,
+          "output_tokens": 1027,
+          "total_tokens": 2236
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.8011675999987347,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-left-120",
+      "model": "deepseek-flash",
+      "normalized_length": 6,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-left-120\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "522550d7a587fc3baf99235efe45695113ba03eb10b6206ab599093ed647196f",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_4c959095-ee32-4c93-85b6-7f1ec8d49bc6",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 6.043947900001513,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 6.037263400001393,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the single requested action: turn left. Under the turn semantics, left is positive, so the turn angle must be positive.\"},{\"text\":\"120度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 120 degrees. This resolves the turn parameter to angle_deg = 120.0, which is finite, nonzero, and within the maximum absolute angle of 180 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: one left turn. There is no conjunction, repetition, or additional action clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one action, the execution order is uniquely the single turn step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, cancellation, replacement, or correction clause affecting any action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so no action is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and quantity are explicit within the source: left turn and 120 degrees. No pronoun, ordinal, or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, waiting, simultaneous, condition, or completion relation, so a single-step linear plan fully represents it.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no action, parameter, order, scope, or relation explicitly unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "cd13f5489f5d00ac07f65289219d4d7dc6755f12139b38afc5e76600bbaa6488",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+          "source_aware": true,
+          "source_sha256": "e809a74c48dce3e3d230c3a428c3050ed49c4bfe7ff8ce04c61e88b711147b48",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 185,
+            "output_tokens": 1027,
+            "total_tokens": 2236
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": 120.0
+                },
+                "skill": "turn"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the single requested action: turn left. Under the turn semantics, left is positive, so the turn angle must be positive.",
+                "role": "ACTION",
+                "text": "左转"
+              },
+              {
+                "explanation": "Specifies the turn magnitude as 120 degrees. This resolves the turn parameter to angle_deg = 120.0, which is finite, nonzero, and within the maximum absolute angle of 180 degrees.",
+                "role": "QUANTITY",
+                "text": "120度"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: one left turn. There is no conjunction, repetition, or additional action clause.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "With exactly one action, the execution order is uniquely the single turn step.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no edit, cancellation, replacement, or correction clause affecting any action or parameter.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The direction and quantity are explicit within the source: left turn and 120 degrees. No pronoun, ordinal, or omitted referent requires external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker or count, so no action is repeated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies no before/after, waiting, simultaneous, condition, or completion relation, so a single-step linear plan fully represents it.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no action, parameter, order, scope, or relation explicitly unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 164,
+        "total_tokens": 1903
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-left-120",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 120.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "左转120度",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "added_wall_s": 11.821605900000577,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 11.81716669999878,
+        "provider_document": {
+          "created_at": 1791360880,
+          "id": "resp_126d4902-0141-4623-980b-280acf95212d",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_126d4902-0141-4623-980b-280acf95212d",
+              "reasoning_content": "We need answer only JSON. Need derive source plan. Source: \"往前走六米，然后顺时针转45度，接着停止\"\n\nNeed inspect dimensions. Actions:\n1 walk_forward distance 6 m\n2 turn clockwise 45 => angle_deg -45 (since clockwise negative)\n3 stop\nOrder: then, then = sequential: s1, s2, s3. Repetition none. Corrections none. References none. Temporal sequential. Unresolved none. Legal. Unique. Candidate matches.\n\nNeed output exactly JSON object keys status, coverage, dimensions, authorized_plan. Coverage spans must concatenate exactly entire source. Need split meaningful spans. Ensure text concatenation equals source exactly, no gaps. Source Chinese: \"往前走六米，然后顺时针转45度，接着停止\"\n\nNeed choose spans. Could split:\n\"往前走六米\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"顺时针转45度\" ACTION\n\"，\" SEPARATOR\n\"接着\" RELATION\n\"停止\" ACTION\n\nNeed roles: ACTION, RELATION, SEPARATOR maybe QUANTITY. But QUANTITY spans? We can include numbers within ACTION? Need coverage meaningful spans every action relation edit clause. Could split quantities separately: \"往前走\" ACTION? \"六米\" QUANTITY? But source punctuation exact. The instruction: coverage list objects with text, role, explanation. Split source into meaningful spans so every action, relation and edit clause is analyzed. text copied exactly. Could split:\n\"往前走\" ACTION? \"六米\" QUANTITY? But then \"往前走六米\" as action. We can have both? No duplication. Need concatenation exact.\n\nOption:\n1 text \"往前走六米\" role ACTION explanation ...\n2 text \"，\" role SEPARATOR\n3 text \"然后\" role RELATION\n4 text \"顺时针转45度\" role ACTION\n5 text \"，\" role SEPARATOR\n6 text \"接着\" role RELATION\n7 text \"停止\" role ACTION\n\nThis covers, but quantity embedded. Is that acceptable? It says meaningful spans so every action, relation and edit clause analyzed. Quantity maybe embedded but explanation can mention parameters. But likely okay. Could split quantities to be thorough:\n- \"往前走\" ACTION? Actually skill is walk_forward, quantity \"六米\". If split, \"往前走\" alone action? \"六米\" quantity. Then concatenate.\n- \"顺时针转\" ACTION? \"45度\" quantity. But \"顺时针转\" includes direction/clockwise; parameter angle_deg -45. The whole \"顺时针转45度\" is action with quantity. We can split as \"顺时针转\" ACTION? Then \"45度\" QUANTITY. But \"顺时针\" is direction part of action. Might be okay.\n- \"停止\" ACTION.\n\nNeed coverage roles maybe ACTION, QUANTITY, RELATION, SEPARATOR. It says role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. No restriction that each action must be single span. Need every action relation edit clause. If we split action and quantity, ensure explanations. For \"往前走\" explanation: denotes walk_forward skill; its distance supplied by following QUANTITY. For \"六米\" quantity: sets distance_m=6.0. For \"顺时针转\" action: denotes turn skill; direction clockwise determines negative sign. For \"45度\" quantity: sets absolute angle 45, with clockwise gives -45. \"停止\" action: stop.\n\nBut text \"顺时针转45度\": splitting \"顺时针转\" and \"45度\" concatenates. Great.\n\nNeed maybe \"然后\" and \"接着\" are RELATION. Comma separators. Source includes Chinese comma \"，\". Exactly.\n\nNeed dimensions:\naction_multiplicity UNIQUE: three actions: walk, turn, stop. No repetition/edit.\naction_order UNIQUE: sequential due 然后/接着: walk then turn then stop.\ncorrection_scope UNIQUE: no corrections; no edits.\nrepetition_scope UNIQUE: none.\nreference_resolution UNIQUE: no pronouns/ordinal; parameters explicit.\ntemporal_relations UNIQUE: 然后/接着 establish linear immediate sequence, no waiting/simultaneous. Use depends_on chain.\nunresolved_relations UNIQUE: no explicit unresolved choices.\n\nAuthorized plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},\n{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}\n]\n\nNeed JSON only. Ensure valid. No markdown.\n\nPotential issue: source says \"往前走六米\" walk forward six meters. Good.\n\nPotential issue with turn max abs angle 180, 45 okay. Clockwise negative.\n\nNeed coverage explanation nonempty. Let's craft.\n\nCoverage objects exactly keys text, role, explanation. We can include 8 spans:\n1 \"往前走\" ACTION\n2 \"六米\" QUANTITY\n3 \"，\" SEPARATOR\n4 \"然后\" RELATION\n5 \"顺时针转\" ACTION\n6 \"45度\" QUANTITY\n7 \"，\" SEPARATOR\n8 \"接着\" RELATION\n9 \"停止\" ACTION\n\nConcatenate: \"往前走\"+\"六米\"+\"，\"+\"然后\"+\"顺时针转\"+\"45度\"+\"，\"+\"接着\"+\"停止\" = \"往前走六米，然后顺时针转45度，接着停止\". Yes.\n\nBut \"顺时针转\" action: in Chinese, direction \"顺时针\" and verb \"转\". It means turn clockwise. Explanation: denotes turn skill; \"顺时针\" means clockwise hence negative angle, quantity follows. \"45度\" sets angle_deg -45? Need mention combined.\n\nShould we separate \"顺时针\" as context? Maybe role ACTION? \"顺时针转\" is action. Fine.\n\nCould also combine \"顺时针转45度\" as ACTION. But splitting is okay. The coverage role \"QUANTITY\" for \"六米\", \"45度\" valid.\n\nNeed every explanation nonempty. For separators: punctuation separates clauses and does not alter plan except delimiting. For relations: \"然后\" means after previous action, imposes s1 before s2. \"接着\" means after previous, imposes s2 before s3.\n\nDimensions explanations detailed. Need mention no alternatives.\n\nPotential issue: \"停止\" as stop skill with no duration. Stop params {} exactly. It is action. Good.\n\nPotential issue: \"往前走\" as walk_forward (not walk? Legal skills stand, walk_forward, turn, stop). Good.\n\nNeed status AUTHORIZED_UNIQUE. Candidate matches. Even if mismatch we output source-derived plan. Good.\n\nNow final JSON. Ensure no extra text. Use valid JSON double quotes. Chinese punctuation in strings fine. No markdown. We need output exactly one JSON object. Good.\n\nLet's ensure dimensions keys exactly:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status and explanation. Good.\n\nPotential concern: coverage \"text\" values concatenated in order must equal entire original source exactly. If we use \"往前走\" and \"六米\" etc, yes. Let's verify original source: \"往前走六米，然后顺时针转45度，接着停止\"\nOur concatenation:\n往前走\n六米\n，\n然后\n顺时针转\n45度\n，\n接着\n停止\n=> 往前走六米，然后顺时针转45度，接着停止. Yes.\n\nNeed JSON escapes? Chinese comma not need. Quotes? No. \"45度\" includes digits. Good.\n\nLet's write.\n\nDimension explanations:\naction_multiplicity: Source requests three distinct actions: walk_forward with distance six meters, turn with clockwise 45 degrees, stop. No clause adds/replaces/repeats. Unique.\naction_order: \"然后\" after first, \"接着\" after second. The only linear order is walk -> turn -> stop. Unique.\ncorrection_scope: No correction/edit words (\"改为\", \"不是\", etc.). Candidate no edit. Unique.\nrepetition_scope: No repetition markers or counts. Each action once. Unique.\nreference_resolution: No pronouns/ordinal references; quantities directly attach to actions. Unique.\ntemporal_relations: Relations are sequential, no waiting/simultaneous; represent as depends_on chain. Unique.\nunresolved_relations: No explicit unresolved choices/scope/order. Unique.\n\nMaybe action_multiplicity \"往前走六米\" and \"停止\" are actions. Good.\n\nNeed if no duration for stand? no stand.\n\nNow final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need derive source plan. Source: \"往前走六米，然后顺时针转45度，接着停止\"\n\nNeed inspect dimensions. Actions:\n1 walk_forward distance 6 m\n2 turn clockwise 45 => angle_deg -45 (since clockwise negative)\n3 stop\nOrder: then, then = sequential: s1, s2, s3. Repetition none. Corrections none. References none. Temporal sequential. Unresolved none. Legal. Unique. Candidate matches.\n\nNeed output exactly JSON object keys status, coverage, dimensions, authorized_plan. Coverage spans must concatenate exactly entire source. Need split meaningful spans. Ensure text concatenation equals source exactly, no gaps. Source Chinese: \"往前走六米，然后顺时针转45度，接着停止\"\n\nNeed choose spans. Could split:\n\"往前走六米\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"顺时针转45度\" ACTION\n\"，\" SEPARATOR\n\"接着\" RELATION\n\"停止\" ACTION\n\nNeed roles: ACTION, RELATION, SEPARATOR maybe QUANTITY. But QUANTITY spans? We can include numbers within ACTION? Need coverage meaningful spans every action relation edit clause. Could split quantities separately: \"往前走\" ACTION? \"六米\" QUANTITY? But source punctuation exact. The instruction: coverage list objects with text, role, explanation. Split source into meaningful spans so every action, relation and edit clause is analyzed. text copied exactly. Could split:\n\"往前走\" ACTION? \"六米\" QUANTITY? But then \"往前走六米\" as action. We can have both? No duplication. Need concatenation exact.\n\nOption:\n1 text \"往前走六米\" role ACTION explanation ...\n2 text \"，\" role SEPARATOR\n3 text \"然后\" role RELATION\n4 text \"顺时针转45度\" role ACTION\n5 text \"，\" role SEPARATOR\n6 text \"接着\" role RELATION\n7 text \"停止\" role ACTION\n\nThis covers, but quantity embedded. Is that acceptable? It says meaningful spans so every action, relation and edit clause analyzed. Quantity maybe embedded but explanation can mention parameters. But likely okay. Could split quantities to be thorough:\n- \"往前走\" ACTION? Actually skill is walk_forward, quantity \"六米\". If split, \"往前走\" alone action? \"六米\" quantity. Then concatenate.\n- \"顺时针转\" ACTION? \"45度\" quantity. But \"顺时针转\" includes direction/clockwise; parameter angle_deg -45. The whole \"顺时针转45度\" is action with quantity. We can split as \"顺时针转\" ACTION? Then \"45度\" QUANTITY. But \"顺时针\" is direction part of action. Might be okay.\n- \"停止\" ACTION.\n\nNeed coverage roles maybe ACTION, QUANTITY, RELATION, SEPARATOR. It says role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. No restriction that each action must be single span. Need every action relation edit clause. If we split action and quantity, ensure explanations. For \"往前走\" explanation: denotes walk_forward skill; its distance supplied by following QUANTITY. For \"六米\" quantity: sets distance_m=6.0. For \"顺时针转\" action: denotes turn skill; direction clockwise determines negative sign. For \"45度\" quantity: sets absolute angle 45, with clockwise gives -45. \"停止\" action: stop.\n\nBut text \"顺时针转45度\": splitting \"顺时针转\" and \"45度\" concatenates. Great.\n\nNeed maybe \"然后\" and \"接着\" are RELATION. Comma separators. Source includes Chinese comma \"，\". Exactly.\n\nNeed dimensions:\naction_multiplicity UNIQUE: three actions: walk, turn, stop. No repetition/edit.\naction_order UNIQUE: sequential due 然后/接着: walk then turn then stop.\ncorrection_scope UNIQUE: no corrections; no edits.\nrepetition_scope UNIQUE: none.\nreference_resolution UNIQUE: no pronouns/ordinal; parameters explicit.\ntemporal_relations UNIQUE: 然后/接着 establish linear immediate sequence, no waiting/simultaneous. Use depends_on chain.\nunresolved_relations UNIQUE: no explicit unresolved choices.\n\nAuthorized plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},\n{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}\n]\n\nNeed JSON only. Ensure valid. No markdown.\n\nPotential issue: source says \"往前走六米\" walk forward six meters. Good.\n\nPotential issue with turn max abs angle 180, 45 okay. Clockwise negative.\n\nNeed coverage explanation nonempty. Let's craft.\n\nCoverage objects exactly keys text, role, explanation. We can include 8 spans:\n1 \"往前走\" ACTION\n2 \"六米\" QUANTITY\n3 \"，\" SEPARATOR\n4 \"然后\" RELATION\n5 \"顺时针转\" ACTION\n6 \"45度\" QUANTITY\n7 \"，\" SEPARATOR\n8 \"接着\" RELATION\n9 \"停止\" ACTION\n\nConcatenate: \"往前走\"+\"六米\"+\"，\"+\"然后\"+\"顺时针转\"+\"45度\"+\"，\"+\"接着\"+\"停止\" = \"往前走六米，然后顺时针转45度，接着停止\". Yes.\n\nBut \"顺时针转\" action: in Chinese, direction \"顺时针\" and verb \"转\". It means turn clockwise. Explanation: denotes turn skill; \"顺时针\" means clockwise hence negative angle, quantity follows. \"45度\" sets angle_deg -45? Need mention combined.\n\nShould we separate \"顺时针\" as context? Maybe role ACTION? \"顺时针转\" is action. Fine.\n\nCould also combine \"顺时针转45度\" as ACTION. But splitting is okay. The coverage role \"QUANTITY\" for \"六米\", \"45度\" valid.\n\nNeed every explanation nonempty. For separators: punctuation separates clauses and does not alter plan except delimiting. For relations: \"然后\" means after previous action, imposes s1 before s2. \"接着\" means after previous, imposes s2 before s3.\n\nDimensions explanations detailed. Need mention no alternatives.\n\nPotential issue: \"停止\" as stop skill with no duration. Stop params {} exactly. It is action. Good.\n\nPotential issue: \"往前走\" as walk_forward (not walk? Legal skills stand, walk_forward, turn, stop). Good.\n\nNeed status AUTHORIZED_UNIQUE. Candidate matches. Even if mismatch we output source-derived plan. Good.\n\nNow final JSON. Ensure no extra text. Use valid JSON double quotes. Chinese punctuation in strings fine. No markdown. We need output exactly one JSON object. Good.\n\nLet's ensure dimensions keys exactly:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status and explanation. Good.\n\nPotential concern: coverage \"text\" values concatenated in order must equal entire original source exactly. If we use \"往前走\" and \"六米\" etc, yes. Let's verify original source: \"往前走六米，然后顺时针转45度，接着停止\"\nOur concatenation:\n往前走\n六米\n，\n然后\n顺时针转\n45度\n，\n接着\n停止\n=> 往前走六米，然后顺时针转45度，接着停止. Yes.\n\nNeed JSON escapes? Chinese comma not need. Quotes? No. \"45度\" includes digits. Good.\n\nLet's write.\n\nDimension explanations:\naction_multiplicity: Source requests three distinct actions: walk_forward with distance six meters, turn with clockwise 45 degrees, stop. No clause adds/replaces/repeats. Unique.\naction_order: \"然后\" after first, \"接着\" after second. The only linear order is walk -> turn -> stop. Unique.\ncorrection_scope: No correction/edit words (\"改为\", \"不是\", etc.). Candidate no edit. Unique.\nrepetition_scope: No repetition markers or counts. Each action once. Unique.\nreference_resolution: No pronouns/ordinal references; quantities directly attach to actions. Unique.\ntemporal_relations: Relations are sequential, no waiting/simultaneous; represent as depends_on chain. Unique.\nunresolved_relations: No explicit unresolved choices/scope/order. Unique.\n\nMaybe action_multiplicity \"往前走六米\" and \"停止\" are actions. Good.\n\nNeed if no duration for stand? no stand.\n\nNow final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes the walk_forward skill; its distance is supplied by the following quantity.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Sets the walk_forward distance_m to 6.0 meters.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the first action from the following relation and does not change execution.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the turn action after the preceding walk action.\"},{\"text\":\"顺时针转\",\"role\":\"ACTION\",\"explanation\":\"Denotes the turn skill with clockwise direction; clockwise makes the angle negative.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Sets the turn magnitude to 45 degrees; combined with clockwise, angle_deg is -45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the turn action from the following relation and does not change execution.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the stop action after the preceding turn action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Denotes the stop skill with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three distinct actions: walk forward six meters, turn clockwise 45 degrees, and stop. There is no clause adding, replacing, or repeating an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations '然后' and '接着' establish one linear order: walk first, turn second, stop third. No other order is authorized.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction or edit clauses in the source, so no earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers or counts; each of the three actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted shared arguments requiring external resolution; each quantity directly modifies its adjacent action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The two connecting words express sequential relations only, with no waiting, simultaneous, or completion conditions beyond the linear order. This is representable as a depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit relation, scope, order, or choice unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_126d4902-0141-4623-980b-280acf95212d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 247,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 2466,
+            "output_tokens_details": {
+              "reasoning_tokens": 1822
+            },
+            "total_tokens": 3737
+          }
+        },
+        "request_sha256": "532e7e79820a24f71bd41f1a7aee62c0f5ffc65b069dece524f854f6ee065d4c",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 11.814844000000448,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_126d4902-0141-4623-980b-280acf95212d",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes the walk_forward skill; its distance is supplied by the following quantity.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Sets the walk_forward distance_m to 6.0 meters.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the first action from the following relation and does not change execution.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the turn action after the preceding walk action.\"},{\"text\":\"顺时针转\",\"role\":\"ACTION\",\"explanation\":\"Denotes the turn skill with clockwise direction; clockwise makes the angle negative.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Sets the turn magnitude to 45 degrees; combined with clockwise, angle_deg is -45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the turn action from the following relation and does not change execution.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the stop action after the preceding turn action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Denotes the stop skill with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three distinct actions: walk forward six meters, turn clockwise 45 degrees, and stop. There is no clause adding, replacing, or repeating an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations '然后' and '接着' establish one linear order: walk first, turn second, stop third. No other order is authorized.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction or edit clauses in the source, so no earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers or counts; each of the three actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted shared arguments requiring external resolution; each quantity directly modifies its adjacent action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The two connecting words express sequential relations only, with no waiting, simultaneous, or completion conditions beyond the linear order. This is representable as a depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit relation, scope, order, or choice unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+        "usage": {
+          "input_tokens": 247,
+          "output_tokens": 2466,
+          "total_tokens": 3737
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.428559199997835,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk6-turn45-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 18,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk6-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "cfbc06f75ea46ff3d30ad0dc52c3417c3f3676a6e30d39660efbb05716d8ef2c",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_1e909e9b-0753-4130-b7e7-39acd8c9ee15",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 11.820112400000653,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 11.814844000000448,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Denotes the walk_forward skill; its distance is supplied by the following quantity.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Sets the walk_forward distance_m to 6.0 meters.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the first action from the following relation and does not change execution.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the turn action after the preceding walk action.\"},{\"text\":\"顺时针转\",\"role\":\"ACTION\",\"explanation\":\"Denotes the turn skill with clockwise direction; clockwise makes the angle negative.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Sets the turn magnitude to 45 degrees; combined with clockwise, angle_deg is -45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separates the turn action from the following relation and does not change execution.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the stop action after the preceding turn action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Denotes the stop skill with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three distinct actions: walk forward six meters, turn clockwise 45 degrees, and stop. There is no clause adding, replacing, or repeating an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The relations '然后' and '接着' establish one linear order: walk first, turn second, stop third. No other order is authorized.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction or edit clauses in the source, so no earlier action, parameter, group, or relation is replaced or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no repetition markers or counts; each of the three actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted shared arguments requiring external resolution; each quantity directly modifies its adjacent action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The two connecting words express sequential relations only, with no waiting, simultaneous, or completion conditions beyond the linear order. This is representable as a depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit relation, scope, order, or choice unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+          "raw_response_sha256": "178d39899a95e132778677bea5fb3b16f12aacdaa9437781113b2e6c7447a506",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_126d4902-0141-4623-980b-280acf95212d",
+          "source_aware": true,
+          "source_sha256": "11949ede27bb62dc1c28f50d8cf62de2f8dfbd107d996df2f51c301ee17e83bb",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 247,
+            "output_tokens": 2466,
+            "total_tokens": 3737
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 6.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "angle_deg": -45.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Denotes the walk_forward skill; its distance is supplied by the following quantity.",
+                "role": "ACTION",
+                "text": "往前走"
+              },
+              {
+                "explanation": "Sets the walk_forward distance_m to 6.0 meters.",
+                "role": "QUANTITY",
+                "text": "六米"
+              },
+              {
+                "explanation": "Punctuation separates the first action from the following relation and does not change execution.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Orders the turn action after the preceding walk action.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Denotes the turn skill with clockwise direction; clockwise makes the angle negative.",
+                "role": "ACTION",
+                "text": "顺时针转"
+              },
+              {
+                "explanation": "Sets the turn magnitude to 45 degrees; combined with clockwise, angle_deg is -45.0.",
+                "role": "QUANTITY",
+                "text": "45度"
+              },
+              {
+                "explanation": "Punctuation separates the turn action from the following relation and does not change execution.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Orders the stop action after the preceding turn action.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Denotes the stop skill with empty parameters.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly three distinct actions: walk forward six meters, turn clockwise 45 degrees, and stop. There is no clause adding, replacing, or repeating an action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The relations '然后' and '接着' establish one linear order: walk first, turn second, stop third. No other order is authorized.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There are no correction or edit clauses in the source, so no earlier action, parameter, group, or relation is replaced or preserved by an edit.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinal references, or omitted shared arguments requiring external resolution; each quantity directly modifies its adjacent action.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There are no repetition markers or counts; each of the three actions is requested exactly once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The two connecting words express sequential relations only, with no waiting, simultaneous, or completion conditions beyond the linear order. This is representable as a depends_on chain.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit relation, scope, order, or choice unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 211,
+        "output_tokens": 294,
+        "total_tokens": 2041
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk6-turn45-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前走六米然后顺时针转45度接着停止",
+    "status": "SUCCESS"
+  }
+}

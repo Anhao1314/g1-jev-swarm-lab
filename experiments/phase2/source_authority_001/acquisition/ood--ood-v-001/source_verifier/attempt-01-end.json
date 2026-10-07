@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 7.1521192000000156,
+  "provider_document": {
+    "created_at": 1791359120,
+    "id": "resp_d3203e07-43bc-46f2-b9a8-c30d7a455007",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_d3203e07-43bc-46f2-b9a8-c30d7a455007",
+        "reasoning_content": "We need answer JSON only. Need analyze source Chinese: \"给我一个四米的前进。\" Means \"Give me a four-meter forward movement.\" Need derive plan. We need decide if unique authorized. Source indicates action walk_forward distance 4m? Chinese 前进 likely walk_forward. \"一个\" one. \"四米\" 4 meters. No repetitions. One action. Candidate matches. Need output status AUTHORIZED_UNIQUE, coverage split exact. dimensions seven. authorized_plan with step s1 walk_forward distance_m 4.0 depends_on [].\n\nNeed be careful: source has \"给我一个四米的前进。\" Literally \"Give me a four-meter forward.\" Is \"前进\" ambiguous between walk_forward? In legal skills stand, walk_forward, turn, stop. 前进 means forward movement, maps to walk_forward. \"给我\" command/request. One action. Good.\n\nNeed coverage list with exact text spans concatenated equal entire source exactly. Source: \"给我一个四米的前进。\" Could split:\n1 \"给我\" CONTEXT, request imperative\n2 \"一个\" QUANTITY, indicates one action\n3 \"四米\" QUANTITY, distance\n4 \"的\" maybe SEPARATOR\n5 \"前进\" ACTION\n6 \"。\" SEPARATOR\nNeed ensure concatenation exactly \"给我一个四米的前进。\". If split \"给我\" + \"一个\" + \"四米\" + \"的\" + \"前进\" + \"。\" equals. Good. Explanations nonempty.\n\nDimensions:\n- action_multiplicity: UNIQUE: exactly one forward action, \"一个\" one.\n- action_order: UNIQUE: single step order trivial.\n- correction_scope: UNIQUE: no edits/corrections.\n- repetition_scope: UNIQUE: no repetition; \"一个\" one.\n- reference_resolution: UNIQUE? No pronouns/ordinals; omitted subject \"me\" irrelevant. The action's argument distance explicit. maybe unique.\n- temporal_relations: UNIQUE: no temporal relation; single action.\n- unresolved_relations: UNIQUE: no explicit unresolved.\n\nNeed exact keys. authorized_plan steps exactly no extra. Number 4.0 finite JSON. distance_m positive.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed output JSON object no markdown. We can craft.\n\nDouble-check compilation semantics: \"walk_forward parameters exactly distance_m, positive finite meters.\" distance 4.0. \"前进\" perhaps can be walk_forward; no other legal. Good.\n\nNeed maybe \"四米\" is quantity. \"一个\" modifies action. \"的\" connects.\n\nWe should not mention candidate in final? dimensions explanations can mention source only. Candidate match not required. They asked assess complete source even if candidate looks natural. Could mention no correction etc. Final exactly JSON.\n\nNeed ensure coverage explanations include why nonexecuting text doesn't alter authorization. For CONTEXT \"给我\": indicates imperative request, no executable skill/parameter. For SEPARATOR punctuation \"。\" terminates sentence; no action. For \"的\": syntactic separator linking quantity to action; no separate action.\n\nLet's produce.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source Chinese: \"给我一个四米的前进。\" Means \"Give me a four-meter forward movement.\" Need derive plan. We need decide if unique authorized. Source indicates action walk_forward distance 4m? Chinese 前进 likely walk_forward. \"一个\" one. \"四米\" 4 meters. No repetitions. One action. Candidate matches. Need output status AUTHORIZED_UNIQUE, coverage split exact. dimensions seven. authorized_plan with step s1 walk_forward distance_m 4.0 depends_on [].\n\nNeed be careful: source has \"给我一个四米的前进。\" Literally \"Give me a four-meter forward.\" Is \"前进\" ambiguous between walk_forward? In legal skills stand, walk_forward, turn, stop. 前进 means forward movement, maps to walk_forward. \"给我\" command/request. One action. Good.\n\nNeed coverage list with exact text spans concatenated equal entire source exactly. Source: \"给我一个四米的前进。\" Could split:\n1 \"给我\" CONTEXT, request imperative\n2 \"一个\" QUANTITY, indicates one action\n3 \"四米\" QUANTITY, distance\n4 \"的\" maybe SEPARATOR\n5 \"前进\" ACTION\n6 \"。\" SEPARATOR\nNeed ensure concatenation exactly \"给我一个四米的前进。\". If split \"给我\" + \"一个\" + \"四米\" + \"的\" + \"前进\" + \"。\" equals. Good. Explanations nonempty.\n\nDimensions:\n- action_multiplicity: UNIQUE: exactly one forward action, \"一个\" one.\n- action_order: UNIQUE: single step order trivial.\n- correction_scope: UNIQUE: no edits/corrections.\n- repetition_scope: UNIQUE: no repetition; \"一个\" one.\n- reference_resolution: UNIQUE? No pronouns/ordinals; omitted subject \"me\" irrelevant. The action's argument distance explicit. maybe unique.\n- temporal_relations: UNIQUE: no temporal relation; single action.\n- unresolved_relations: UNIQUE: no explicit unresolved.\n\nNeed exact keys. authorized_plan steps exactly no extra. Number 4.0 finite JSON. distance_m positive.\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed output JSON object no markdown. We can craft.\n\nDouble-check compilation semantics: \"walk_forward parameters exactly distance_m, positive finite meters.\" distance 4.0. \"前进\" perhaps can be walk_forward; no other legal. Good.\n\nNeed maybe \"四米\" is quantity. \"一个\" modifies action. \"的\" connects.\n\nWe should not mention candidate in final? dimensions explanations can mention source only. Candidate match not required. They asked assess complete source even if candidate looks natural. Could mention no correction etc. Final exactly JSON.\n\nNeed ensure coverage explanations include why nonexecuting text doesn't alter authorization. For CONTEXT \"给我\": indicates imperative request, no executable skill/parameter. For SEPARATOR punctuation \"。\" terminates sentence; no action. For \"的\": syntactic separator linking quantity to action; no separate action.\n\nLet's produce.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"给我\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"这是一个请求/命令框架，表示要求执行后续动作，本身不引入技能、参数、顺序或重复。\"\n    },\n    {\n      \"text\": \"一个\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"明确动作数量为一个；它限制后续动作为单次执行，不产生额外步骤。\"\n    },\n    {\n      \"text\": \"四米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"指定距离数值为四米，即 4.0 米；该数值是 walk_forward 的唯一距离参数。\"\n    },\n    {\n      \"text\": \"的\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"连接数量/距离与动作的语法成分，不表示额外动作、参数、时间或修正。\"\n    },\n    {\n      \"text\": \"前进\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"对应合法技能 walk_forward；在给定四米距离时，唯一可执行解释为向前行走四米。\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"句末标点，仅结束该指令，不引入其他动作、关系或未决选择。\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文使用“一个”限定数量，并要求一次“前进”，因此只有一个 walk_forward 动作，没有添加、替换或重复动作。\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文只有单个动作，因此执行顺序唯一且平凡，不需要在多个动作之间选择顺序。\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有修正、替换或编辑词，也没有改变任何先前动作或参数的指令。\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有重复、再次、循环等表达；“一个”明确限定为一次执行。\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有代词、序数或省略参数需要外部指代；“四米”直接修饰“前进”，解析为 walk_forward 的距离 4.0 米。\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有 before/after、同时、等待或完成关系；单个动作可由单一步骤线性表示。\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源文没有显式保留未决的动作、参数、顺序或关系；距离和动作均已明确。\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 4.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_d3203e07-43bc-46f2-b9a8-c30d7a455007",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 317,
+      "input_tokens_details": {
+        "cached_tokens": 896
+      },
+      "output_tokens": 1373,
+      "output_tokens_details": {
+        "reasoning_tokens": 649
+      },
+      "total_tokens": 2586
+    }
+  },
+  "request_sha256": "fb4671caf0687b5b2309df86cd6c783e7131a4b1aa2001612b880752e13e9460",
+  "status": "SUCCESS"
+}

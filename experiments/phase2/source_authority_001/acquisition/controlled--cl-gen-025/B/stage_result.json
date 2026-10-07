@@ -1,0 +1,186 @@
+{
+  "added_wall_s": 24.2763365000028,
+  "live_evidence": {
+    "events": [
+      {
+        "error_type": "LLMBackendError",
+        "http_status": 502,
+        "index": 1,
+        "latency_s": 21.046994199998153,
+        "request_sha256": "8bfc488bfdd542fc9fa04a2c127d9581550589b0c6107832e4c68eb28ebe7868",
+        "status": "API_ERROR"
+      },
+      {
+        "index": 2,
+        "latency_s": 2.655348399999639,
+        "provider_document": {
+          "created_at": 1791360919,
+          "id": "resp_37cf467e-6c9a-42bb-96f2-a29a15ae1bae",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_37cf467e-6c9a-42bb-96f2-a29a15ae1bae",
+              "reasoning_content": "We need answer only JSON. Need parse Chinese. Command: \"向前走15米然后左转30度接着向前走400cm最后停下\"\n\nNeed map to Mission IR steps:\n- 向前走15米 = walk_forward 15.0\n- 左转30度 = turn angle_deg +30.0 (left positive)\n- 向前走400cm = walk_forward distance_m 4.0\n- 最后停下 = stop {}\n\nNeed mission_id path-safe. Could use \"cmd-walk-turn-walk-stop\" or generated. Must match [A-Za-z0-9][A-Za-z0-9._-]{0,63}, not end dot, not reserved. Use \"mission-4step\" maybe.\n\nSteps s1..s4 with depends_on previous exactly. s1 depends_on []. s2 [\"s1\"], s3 [\"s2\"], s4 [\"s3\"].\n\nNeed ensure no extra fields. status SUCCESS mission object error_code null.\n\nOutput exactly JSON.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need parse Chinese. Command: \"向前走15米然后左转30度接着向前走400cm最后停下\"\n\nNeed map to Mission IR steps:\n- 向前走15米 = walk_forward 15.0\n- 左转30度 = turn angle_deg +30.0 (left positive)\n- 向前走400cm = walk_forward distance_m 4.0\n- 最后停下 = stop {}\n\nNeed mission_id path-safe. Could use \"cmd-walk-turn-walk-stop\" or generated. Must match [A-Za-z0-9][A-Za-z0-9._-]{0,63}, not end dot, not reserved. Use \"mission-4step\" maybe.\n\nSteps s1..s4 with depends_on previous exactly. s1 depends_on []. s2 [\"s1\"], s3 [\"s2\"], s4 [\"s3\"].\n\nNeed ensure no extra fields. status SUCCESS mission object error_code null.\n\nOutput exactly JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_37cf467e-6c9a-42bb-96f2-a29a15ae1bae",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 215,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 359,
+            "output_tokens_details": {
+              "reasoning_tokens": 212
+            },
+            "total_tokens": 2110
+          }
+        },
+        "request_sha256": "8bfc488bfdd542fc9fa04a2c127d9581550589b0c6107832e4c68eb28ebe7868",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 2,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 2,
+        "finish_reason": "completed",
+        "latency_s": 2.6512532999986433,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_37cf467e-6c9a-42bb-96f2-a29a15ae1bae",
+        "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+        "usage": {
+          "input_tokens": 215,
+          "output_tokens": 359,
+          "total_tokens": 2110
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 2,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.6512532999986433,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 27,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "07db3eb143af40f0feb4a80eb88e0a5b73d5d5520afd14d2ea545c15b9a81fe8",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_37cf467e-6c9a-42bb-96f2-a29a15ae1bae",
+      "route": "GUARDED_DIRECT_LLM",
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 215,
+        "output_tokens": 359,
+        "total_tokens": 2110
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 15.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "向前走15米然后左转30度接着向前走400cm最后停下",
+    "status": "SUCCESS"
+  }
+}

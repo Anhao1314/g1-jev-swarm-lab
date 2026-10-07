@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 7.550005000000965,
+  "provider_document": {
+    "created_at": 1791360551,
+    "id": "resp_aee79f2d-bad7-4c07-8128-4bef735b3bc7",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_aee79f2d-bad7-4c07-8128-4bef735b3bc7",
+        "reasoning_content": "We need answer exactly JSON. Need analyze source Chinese: \"向前移动4米，然后向左转45度，最后停止\"\n\nWe need derive plan. Source clauses:\n向前移动4米 = walk_forward distance_m 4.0\n，然后 = relation sequential then\n向左转45度 = turn angle_deg 45 (left positive)\n，最后 = relation finally\n停止 = stop.\n\nOrder: move, then turn, finally stop. Unique. Candidate matches. Need provide coverage exact concatenation. Dimensions all UNIQUE. authorized_plan list s1 walk_forward 4.0 depends_on []; s2 turn 45.0 depends_on [\"s1\"]; s3 stop {} depends_on [\"s2\"].\n\nNeed ensure coverage text concatenates exactly entire original source. We need split meaningful spans including punctuation/whitespace. Source string: \"向前移动4米，然后向左转45度，最后停止\" No spaces. We can split:\n\"向前移动4米\" ACTION\n\"，然后\" RELATION? or SEPARATOR? The comma plus 然后 is relation. Role RELATION maybe. Need text values concatenated exactly. Then \"向左转45度\" ACTION\n\"，最后\" RELATION\n\"停止\" ACTION\nThis covers all. Need every explanation nonempty. Note \"4米\" maybe quantity within action? The coverage roles. If split 向前移动4米 as one ACTION, explanation includes distance. But role ACTION. It also includes quantity. Could split quantities? \"向前移动\" ACTION, \"4米\" QUANTITY. Then relation. But must concatenate. Let's design meaningful spans.\n\nSource: 向前移动4米，然后向左转45度，最后停止\nPossible spans:\n1 \"向前移动\" ACTION\n2 \"4米\" QUANTITY\n3 \"，然后\" RELATION\n4 \"向左转\" ACTION\n5 \"45度\" QUANTITY\n6 \"，最后\" RELATION\n7 \"停止\" ACTION\n\nThis better. Need ensure concatenated exactly: 向前移动 + 4米 + ，然后 + 向左转 + 45度 + ，最后 + 停止 = original. Yes.\n\nExplanations:\n1 means first action walk_forward; direction forward; no duration.\n2 quantity 4米 = 4 meters, parameter distance_m=4.0.\n3 comma+然后 establishes sequential relation after previous action, not simultaneous.\n4 second action turn; left indicates positive angle; skill turn.\n5 quantity 45度 = 45 degrees, angle_deg=45.0.\n6 relation finally, final step after previous.\n7 stop with empty params, terminal action.\n\nNeed dimensions:\naction_multiplicity: UNIQUE: exactly three actions, walk, turn, stop; no repeats/edits/additions.\naction_order: UNIQUE: first walk, then turn, finally stop, linear s1-s2-s3.\ncorrection_scope: UNIQUE: no corrections/edits.\nrepetition_scope: UNIQUE: no repetitions.\nreference_resolution: UNIQUE: no pronouns/ordinal? \"然后\", \"最后\" refer to sequence; all params explicit. Maybe \"left\" resolved by convention.\ntemporal_relations: UNIQUE: explicit sequential then/finally, single linear order, no timing.\nunresolved_relations: UNIQUE: none unresolved.\n\nNeed output status AUTHORIZED_UNIQUE.\n\nNeed be cautious: \"最后\" means final, yes. Candidate uses 45.0 positive. Good.\n\nPotential issue: Coverage text exact punctuation. Chinese comma \"，\" and source no spaces. Yes.\n\nNeed exactly one JSON object, no markdown. Ensure keys exactly status, coverage, dimensions, authorized_plan. coverage objects exactly text, role, explanation. dimensions object exactly seven names. authorized_plan steps each exactly id, skill, parameters, depends_on. No extra. That's it.\n\nLet's produce.",
+        "summary": [
+          {
+            "text": "We need answer exactly JSON. Need analyze source Chinese: \"向前移动4米，然后向左转45度，最后停止\"\n\nWe need derive plan. Source clauses:\n向前移动4米 = walk_forward distance_m 4.0\n，然后 = relation sequential then\n向左转45度 = turn angle_deg 45 (left positive)\n，最后 = relation finally\n停止 = stop.\n\nOrder: move, then turn, finally stop. Unique. Candidate matches. Need provide coverage exact concatenation. Dimensions all UNIQUE. authorized_plan list s1 walk_forward 4.0 depends_on []; s2 turn 45.0 depends_on [\"s1\"]; s3 stop {} depends_on [\"s2\"].\n\nNeed ensure coverage text concatenates exactly entire original source. We need split meaningful spans including punctuation/whitespace. Source string: \"向前移动4米，然后向左转45度，最后停止\" No spaces. We can split:\n\"向前移动4米\" ACTION\n\"，然后\" RELATION? or SEPARATOR? The comma plus 然后 is relation. Role RELATION maybe. Need text values concatenated exactly. Then \"向左转45度\" ACTION\n\"，最后\" RELATION\n\"停止\" ACTION\nThis covers all. Need every explanation nonempty. Note \"4米\" maybe quantity within action? The coverage roles. If split 向前移动4米 as one ACTION, explanation includes distance. But role ACTION. It also includes quantity. Could split quantities? \"向前移动\" ACTION, \"4米\" QUANTITY. Then relation. But must concatenate. Let's design meaningful spans.\n\nSource: 向前移动4米，然后向左转45度，最后停止\nPossible spans:\n1 \"向前移动\" ACTION\n2 \"4米\" QUANTITY\n3 \"，然后\" RELATION\n4 \"向左转\" ACTION\n5 \"45度\" QUANTITY\n6 \"，最后\" RELATION\n7 \"停止\" ACTION\n\nThis better. Need ensure concatenated exactly: 向前移动 + 4米 + ，然后 + 向左转 + 45度 + ，最后 + 停止 = original. Yes.\n\nExplanations:\n1 means first action walk_forward; direction forward; no duration.\n2 quantity 4米 = 4 meters, parameter distance_m=4.0.\n3 comma+然后 establishes sequential relation after previous action, not simultaneous.\n4 second action turn; left indicates positive angle; skill turn.\n5 quantity 45度 = 45 degrees, angle_deg=45.0.\n6 relation finally, final step after previous.\n7 stop with empty params, terminal action.\n\nNeed dimensions:\naction_multiplicity: UNIQUE: exactly three actions, walk, turn, stop; no repeats/edits/additions.\naction_order: UNIQUE: first walk, then turn, finally stop, linear s1-s2-s3.\ncorrection_scope: UNIQUE: no corrections/edits.\nrepetition_scope: UNIQUE: no repetitions.\nreference_resolution: UNIQUE: no pronouns/ordinal? \"然后\", \"最后\" refer to sequence; all params explicit. Maybe \"left\" resolved by convention.\ntemporal_relations: UNIQUE: explicit sequential then/finally, single linear order, no timing.\nunresolved_relations: UNIQUE: none unresolved.\n\nNeed output status AUTHORIZED_UNIQUE.\n\nNeed be cautious: \"最后\" means final, yes. Candidate uses 45.0 positive. Good.\n\nPotential issue: Coverage text exact punctuation. Chinese comma \"，\" and source no spaces. Yes.\n\nNeed exactly one JSON object, no markdown. Ensure keys exactly status, coverage, dimensions, authorized_plan. coverage objects exactly text, role, explanation. dimensions object exactly seven names. authorized_plan steps each exactly id, skill, parameters, depends_on. No extra. That's it.\n\nLet's produce.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action as forward movement, which maps to walk_forward with the distance supplied by the following quantity.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies 4 meters, so walk_forward parameter distance_m is 4.0.\"},{\"text\":\"，然后\",\"role\":\"RELATION\",\"explanation\":\"The comma plus 然后 establishes a sequential relation: the next action happens after the preceding movement.\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action as turning left, which maps to turn with a positive angle supplied by the following quantity.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies 45 degrees, so turn parameter angle_deg is 45.0.\"},{\"text\":\"，最后\",\"role\":\"RELATION\",\"explanation\":\"The comma plus 最后 establishes that the remaining action is final and comes after the preceding turn.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final action as stopping, which maps to stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three actions: one forward movement, one left turn, and one stop. There are no edits, added actions, or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly orders the actions: first 向前移动4米, then 向左转45度, and finally 停止. This yields the unique linear order walk_forward, turn, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction clauses or edit words in the source, so no action or parameter is replaced or revised.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated action span in the source, so each requested action occurs exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"All action arguments are explicit in the source: 4米 resolves to distance_m 4.0, 向左 resolves to a positive turn angle, and 45度 resolves to angle_deg 45.0. No pronoun or missing external referent requires resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 and 最后 provide a single sequential order: move, then turn, finally stop. No waiting, simultaneity, completion dependency, or alternative timing is introduced.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no relation, order, scope, parameter, or action unresolved; every requested action and its position in the sequence is explicit.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_aee79f2d-bad7-4c07-8128-4bef735b3bc7",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 247,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1477,
+      "output_tokens_details": {
+        "reasoning_tokens": 807
+      },
+      "total_tokens": 2748
+    }
+  },
+  "request_sha256": "e7337191dad72d8100df5cba74f2c371bcf585e8088b25ca2aee53c39dd68432",
+  "status": "SUCCESS"
+}

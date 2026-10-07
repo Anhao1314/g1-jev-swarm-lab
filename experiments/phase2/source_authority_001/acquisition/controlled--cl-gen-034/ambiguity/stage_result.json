@@ -1,0 +1,289 @@
+{
+  "added_wall_s": 9.052118999999948,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 9.048525400001381,
+        "provider_document": {
+          "created_at": 1791360976,
+          "id": "resp_8875b783-ecf1-4b78-afbd-6d010a3c66c8",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_8875b783-ecf1-4b78-afbd-6d010a3c66c8",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source: \"往前走六米然后顺时针转45度接着停止\"\n\nNeed determine status. Let's parse. Actions: walk_forward 6 m, turn clockwise 45 degrees => angle -45. stop. Order explicit: then/then. Unique. Need consider \"顺时针\" clockwise maps negative. Legal. Three steps. No ambiguity? Need check reference resolution: \"往前走六米\" subject omitted but one robot? No prior referent. In Chinese imperative, implicit addressee/agent. Is reference resolution UNIQUE because source commands robot? We are gate for Mission IR. Source only. \"往前走\" imperative. We can treat as action. No ambiguity. Action multiplicity exactly three. Action order: sequential due 然后/接着. Correction none. Repetition none. Temporal relations: \"然后\" then, \"接着\" then. Unique linear order. Unresolved none. status AUTHORIZED_UNIQUE. Need coverage split meaningful spans exact concatenation. Need ensure every character accounted. Source: 往前走六米然后顺时针转45度接着停止\n\nLet's split:\n\"往前走六米\" ACTION? Contains action + quantity. But role only one per span. Could split \"往前走\" ACTION, \"六米\" QUANTITY, \"然后\" SEPARATOR/RELATION? \"然后\" indicates relation order. Role RELATION maybe. \"顺时针\" maybe CONTEXT? Actually turn direction parameter. \"转\" ACTION, \"顺时针\" QUANTITY? Hmm direction isn't quantity. Role CONTEXT perhaps. \"45度\" QUANTITY. \"接着\" RELATION. \"停止\" ACTION.\n\nNeed text concatenation exactly entire source. Let's propose:\n1. text \"往前走\" role ACTION explanation: walk forward command, require positive distance from following quantity.\n2. \"六米\" role QUANTITY: distance six meters, satisfies walk_forward positive finite distance_m.\n3. \"然后\" role RELATION: sequential ordering, next action after previous completion.\n4. \"顺时针\" role CONTEXT: clockwise direction modifier for following turn; maps to negative angle.\n5. \"转\" role ACTION: turn action, requires nonzero angle from following quantity.\n6. \"45度\" role QUANTITY: angle 45 degrees, with clockwise gives -45, within max.\n7. \"接着\" role RELATION: sequential ordering, stop follows turn.\n8. \"停止\" role ACTION: stop action, no params.\n\nConcatenation: 往前走 + 六米 = 往前走六米; +然后 = 往前走六米然后; +顺时针 = ...顺时针; +转; +45度; +接着; +停止. Good. Need no markdown. All dimensions unique. Explanations nonempty. Need mention no corrections, repetition, etc.\n\nNeed be careful: \"往前走六米然后顺时针转45度接着停止\" Could \"往前\" and \"走\" maybe separate? We choose spans. coverage splitting arbitrary meaningful. Role for \"顺时针\" as CONTEXT. Could also be quantity? It's direction; context is okay. Need exactly role enum. Fine.\n\nNeed output JSON with keys exactly status, coverage, dimensions. dimensions object exactly seven names. Each value object status/explanation. No extra fields.\n\nNeed ensure JSON valid and no markdown. Chinese text preserved. Let's craft concise.\n\nDimension statuses all UNIQUE. For unresolved_relations UNIQUE because no explicit unresolved relation. For temporal_relations UNIQUE because 然后 and 接着 establish order. Reference_resolution: implicit imperative agent, no pronoun/ordinal, only one robot implied; no external missing context needed. Actually source doesn't mention robot but mission IR imperative typically. Is that considered reference resolution? \"往前走\" command. It doesn't resolve who? But for IR, actions are commands. There's no pronoun. Unique.\n\nPotential ambiguity: \"顺时针转45度\" could mean turn clockwise by 45 degrees or turn clockwise [for?] 45 degrees? In Chinese \"顺时针转45度\" unambiguous angle. Good.\n\n\"往前走六米然后顺时针转45度接着停止\": Order: walk, turn, stop. \"然后\" and \"接着\" both mean then. Good.\n\nAction multiplicity: \"停止\" distinct action, not correction. Unique.\n\nNeed include coverage explanations. Maybe coverage list every action, relation, quantity. All spans exact.\n\nLet's produce. Ensure no trailing text.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source: \"往前走六米然后顺时针转45度接着停止\"\n\nNeed determine status. Let's parse. Actions: walk_forward 6 m, turn clockwise 45 degrees => angle -45. stop. Order explicit: then/then. Unique. Need consider \"顺时针\" clockwise maps negative. Legal. Three steps. No ambiguity? Need check reference resolution: \"往前走六米\" subject omitted but one robot? No prior referent. In Chinese imperative, implicit addressee/agent. Is reference resolution UNIQUE because source commands robot? We are gate for Mission IR. Source only. \"往前走\" imperative. We can treat as action. No ambiguity. Action multiplicity exactly three. Action order: sequential due 然后/接着. Correction none. Repetition none. Temporal relations: \"然后\" then, \"接着\" then. Unique linear order. Unresolved none. status AUTHORIZED_UNIQUE. Need coverage split meaningful spans exact concatenation. Need ensure every character accounted. Source: 往前走六米然后顺时针转45度接着停止\n\nLet's split:\n\"往前走六米\" ACTION? Contains action + quantity. But role only one per span. Could split \"往前走\" ACTION, \"六米\" QUANTITY, \"然后\" SEPARATOR/RELATION? \"然后\" indicates relation order. Role RELATION maybe. \"顺时针\" maybe CONTEXT? Actually turn direction parameter. \"转\" ACTION, \"顺时针\" QUANTITY? Hmm direction isn't quantity. Role CONTEXT perhaps. \"45度\" QUANTITY. \"接着\" RELATION. \"停止\" ACTION.\n\nNeed text concatenation exactly entire source. Let's propose:\n1. text \"往前走\" role ACTION explanation: walk forward command, require positive distance from following quantity.\n2. \"六米\" role QUANTITY: distance six meters, satisfies walk_forward positive finite distance_m.\n3. \"然后\" role RELATION: sequential ordering, next action after previous completion.\n4. \"顺时针\" role CONTEXT: clockwise direction modifier for following turn; maps to negative angle.\n5. \"转\" role ACTION: turn action, requires nonzero angle from following quantity.\n6. \"45度\" role QUANTITY: angle 45 degrees, with clockwise gives -45, within max.\n7. \"接着\" role RELATION: sequential ordering, stop follows turn.\n8. \"停止\" role ACTION: stop action, no params.\n\nConcatenation: 往前走 + 六米 = 往前走六米; +然后 = 往前走六米然后; +顺时针 = ...顺时针; +转; +45度; +接着; +停止. Good. Need no markdown. All dimensions unique. Explanations nonempty. Need mention no corrections, repetition, etc.\n\nNeed be careful: \"往前走六米然后顺时针转45度接着停止\" Could \"往前\" and \"走\" maybe separate? We choose spans. coverage splitting arbitrary meaningful. Role for \"顺时针\" as CONTEXT. Could also be quantity? It's direction; context is okay. Need exactly role enum. Fine.\n\nNeed output JSON with keys exactly status, coverage, dimensions. dimensions object exactly seven names. Each value object status/explanation. No extra fields.\n\nNeed ensure JSON valid and no markdown. Chinese text preserved. Let's craft concise.\n\nDimension statuses all UNIQUE. For unresolved_relations UNIQUE because no explicit unresolved relation. For temporal_relations UNIQUE because 然后 and 接着 establish order. Reference_resolution: implicit imperative agent, no pronoun/ordinal, only one robot implied; no external missing context needed. Actually source doesn't mention robot but mission IR imperative typically. Is that considered reference resolution? \"往前走\" command. It doesn't resolve who? But for IR, actions are commands. There's no pronoun. Unique.\n\nPotential ambiguity: \"顺时针转45度\" could mean turn clockwise by 45 degrees or turn clockwise [for?] 45 degrees? In Chinese \"顺时针转45度\" unambiguous angle. Good.\n\n\"往前走六米然后顺时针转45度接着停止\": Order: walk, turn, stop. \"然后\" and \"接着\" both mean then. Good.\n\nAction multiplicity: \"停止\" distinct action, not correction. Unique.\n\nNeed include coverage explanations. Maybe coverage list every action, relation, quantity. All spans exact.\n\nLet's produce. Ensure no trailing text.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative walk-forward action; its required positive distance is supplied by the immediately following quantity 六米.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a distance of six meters for the preceding walk-forward action, satisfying the positive finite distance_m requirement.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequential relation making the following turn occur after the walk-forward action; it does not modify or replace that action.\"},{\"text\":\"顺时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier for the following turn action, meaning clockwise, which maps to a negative turn angle.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Imperative turn action; its nonzero angle is supplied by the following quantity, with direction fixed by 顺时针.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a 45-degree magnitude for the preceding turn; with clockwise direction this is -45 degrees, nonzero, finite, and within the 180-degree limit.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequential relation making the following stop occur after the turn action; it does not alter the prior actions or their parameters.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Imperative stop action with no parameters, placed last by the preceding sequential relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three distinct actions: walk forward, turn, and stop. No action is repeated, edited, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by the sequential markers 然后 and 接着: walk forward, then turn clockwise, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause; all requested actions and parameters remain in force.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested, so no span is repeated and no repetition scope needs resolution.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns or ordinal references needing an earlier referent. The only omitted arguments are the distance for 往前走 and angle for 转, both supplied by the adjacent quantities 六米 and 45度.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 and 接着 establish a single linear order of completed predecessor actions: walk forward, turn, then stop, with no simultaneity or waiting ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; each action has its required parameter or none.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_8875b783-ecf1-4b78-afbd-6d010a3c66c8",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 146,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1504,
+            "output_tokens_details": {
+              "reasoning_tokens": 909
+            },
+            "total_tokens": 2418
+          }
+        },
+        "request_sha256": "da2735d34d4ad3730bda38223d91e7d41964a3301dea0de38ed400f493746159",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 9.04633079999985,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_8875b783-ecf1-4b78-afbd-6d010a3c66c8",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative walk-forward action; its required positive distance is supplied by the immediately following quantity 六米.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a distance of six meters for the preceding walk-forward action, satisfying the positive finite distance_m requirement.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequential relation making the following turn occur after the walk-forward action; it does not modify or replace that action.\"},{\"text\":\"顺时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier for the following turn action, meaning clockwise, which maps to a negative turn angle.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Imperative turn action; its nonzero angle is supplied by the following quantity, with direction fixed by 顺时针.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a 45-degree magnitude for the preceding turn; with clockwise direction this is -45 degrees, nonzero, finite, and within the 180-degree limit.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequential relation making the following stop occur after the turn action; it does not alter the prior actions or their parameters.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Imperative stop action with no parameters, placed last by the preceding sequential relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three distinct actions: walk forward, turn, and stop. No action is repeated, edited, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by the sequential markers 然后 and 接着: walk forward, then turn clockwise, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause; all requested actions and parameters remain in force.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested, so no span is repeated and no repetition scope needs resolution.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns or ordinal references needing an earlier referent. The only omitted arguments are the distance for 往前走 and angle for 转, both supplied by the adjacent quantities 六米 and 45度.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 and 接着 establish a single linear order of completed predecessor actions: walk forward, turn, then stop, with no simultaneity or waiting ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; each action has its required parameter or none.\"}}}",
+        "usage": {
+          "input_tokens": 146,
+          "output_tokens": 1504,
+          "total_tokens": 2418
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.07031619999907,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-walk6-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 18,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-walk6-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "d222e4f4fdfeb9d8b1ff140605fa64145b9287c8021d5aa6545cba320c8c9b3f",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_577db95c-d2f6-435f-ba3d-6b39ebe29118",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 9.05141150000054,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 9.04633079999985,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative walk-forward action; its required positive distance is supplied by the immediately following quantity 六米.\"},{\"text\":\"六米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a distance of six meters for the preceding walk-forward action, satisfying the positive finite distance_m requirement.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequential relation making the following turn occur after the walk-forward action; it does not modify or replace that action.\"},{\"text\":\"顺时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier for the following turn action, meaning clockwise, which maps to a negative turn angle.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Imperative turn action; its nonzero angle is supplied by the following quantity, with direction fixed by 顺时针.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a 45-degree magnitude for the preceding turn; with clockwise direction this is -45 degrees, nonzero, finite, and within the 180-degree limit.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Explicit sequential relation making the following stop occur after the turn action; it does not alter the prior actions or their parameters.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Imperative stop action with no parameters, placed last by the preceding sequential relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly three distinct actions: walk forward, turn, and stop. No action is repeated, edited, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by the sequential markers 然后 and 接着: walk forward, then turn clockwise, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause; all requested actions and parameters remain in force.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested, so no span is repeated and no repetition scope needs resolution.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns or ordinal references needing an earlier referent. The only omitted arguments are the distance for 往前走 and angle for 转, both supplied by the adjacent quantities 六米 and 45度.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 and 接着 establish a single linear order of completed predecessor actions: walk forward, turn, then stop, with no simultaneity or waiting ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; each action has its required parameter or none.\"}}}",
+          "raw_response_sha256": "29b0dd47ca97658b5c36369e464c6de588cbf4cd50c8699c6186ed83934ca89f",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_8875b783-ecf1-4b78-afbd-6d010a3c66c8",
+          "source_aware": false,
+          "source_sha256": "3cf98abf7ff9b806020799bf13755d23ebe6c764751f0538c84ac52228098fd5",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 146,
+            "output_tokens": 1504,
+            "total_tokens": 2418
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Imperative walk-forward action; its required positive distance is supplied by the immediately following quantity 六米.",
+                "role": "ACTION",
+                "text": "往前走"
+              },
+              {
+                "explanation": "Specifies a distance of six meters for the preceding walk-forward action, satisfying the positive finite distance_m requirement.",
+                "role": "QUANTITY",
+                "text": "六米"
+              },
+              {
+                "explanation": "Explicit sequential relation making the following turn occur after the walk-forward action; it does not modify or replace that action.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Direction modifier for the following turn action, meaning clockwise, which maps to a negative turn angle.",
+                "role": "CONTEXT",
+                "text": "顺时针"
+              },
+              {
+                "explanation": "Imperative turn action; its nonzero angle is supplied by the following quantity, with direction fixed by 顺时针.",
+                "role": "ACTION",
+                "text": "转"
+              },
+              {
+                "explanation": "Specifies a 45-degree magnitude for the preceding turn; with clockwise direction this is -45 degrees, nonzero, finite, and within the 180-degree limit.",
+                "role": "QUANTITY",
+                "text": "45度"
+              },
+              {
+                "explanation": "Explicit sequential relation making the following stop occur after the turn action; it does not alter the prior actions or their parameters.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Imperative stop action with no parameters, placed last by the preceding sequential relation.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly three distinct actions: walk forward, turn, and stop. No action is repeated, edited, or replaced.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The order is fixed by the sequential markers 然后 and 接着: walk forward, then turn clockwise, then stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, edit, or replacement clause; all requested actions and parameters remain in force.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The source contains no pronouns or ordinal references needing an earlier referent. The only omitted arguments are the distance for 往前走 and angle for 转, both supplied by the adjacent quantities 六米 and 45度.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition is requested, so no span is repeated and no repetition scope needs resolution.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "然后 and 接着 establish a single linear order of completed predecessor actions: walk forward, turn, then stop, with no simultaneity or waiting ambiguity.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved; each action has its required parameter or none.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 209,
+        "output_tokens": 302,
+        "total_tokens": 2047
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-walk6-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前走六米然后顺时针转45度接着停止",
+    "status": "SUCCESS"
+  }
+}

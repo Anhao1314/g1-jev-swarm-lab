@@ -1,0 +1,287 @@
+{
+  "added_wall_s": 11.078622100001667,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 11.072810999998183,
+        "provider_document": {
+          "created_at": 1791360037,
+          "id": "resp_04e561f3-22c0-4006-a51b-0afde5f65889",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_04e561f3-22c0-4006-a51b-0afde5f65889",
+              "reasoning_content": "We need answer exactly JSON. Need analyze source Chinese: \"请往前走四米，之后停下\" = Please walk forward 4 meters, then stop. Candidate matches. Need derive authorized plan. Need dimensions all UNIQUE likely. Need coverage split exact text concatenating entire source. Need be careful punctuation and whitespace. Source string: 请往前走四米，之后停下\nCharacters: 请 往 前 走 四 米 ， 之 后 停 下. No spaces. Need split into meaningful spans. We can split \"请往前走四米\" ACTION/ maybe contains quantity. \"，\" SEPARATOR. \"之后\" RELATION. \"停下\" ACTION. Need coverage text concatenation equal source exactly. Could also include QUANTITY for 四米. Need every action, relation, edit clause. No edits. Let's design coverage objects with exact text.\n\nNeed ensure concatenation in order exactly: \"请往前走四米，之后停下\".\n\nPossible coverage:\n1 text \"请往前走四米\" role ACTION explanation: requests walk_forward distance 4m.\n2 text \"，\" role SEPARATOR explanation: separates first action from subsequent relation/action.\n3 text \"之后\" role RELATION explanation: after previous action, imposes order: stop after walking.\n4 text \"停下\" role ACTION explanation: stop with no parameters, second step.\n\nBut requirement: Split source into meaningful spans so every action, relation and edit clause is analyzed. QUANTITY perhaps separate \"四米\". If split 1 as \"请往前走\" ACTION and \"四米\" QUANTITY, that's more meaningful. Need coverage text concatenates exactly. Let's use:\n- \"请往前走\" role ACTION: polite imperative walk_forward; skill chosen.\n- \"四米\" role QUANTITY: distance parameter 4 meters.\n- \"，\" role SEPARATOR\n- \"之后\" role RELATION: after relation, stop follows walk.\n- \"停下\" role ACTION: stop.\nConcatenation: 请往前走四米，之后停下 yes. Need explanations nonempty. That's good.\n\nNeed dimensions:\naction_multiplicity UNIQUE: exactly two actions: walk_forward and stop. No repetition/edit.\naction_order UNIQUE: walk then stop due 之后.\ncorrection_scope UNIQUE: no corrections/edits present; no scope changed.\nrepetition_scope UNIQUE: none; no repetition.\nreference_resolution UNIQUE: 之后 refers to preceding walk action; stop has no args.\ntemporal_relations UNIQUE: single linear order, stop after walk. No waiting/completion? \"之后\" after. Could be \"then\" sequential; no simultaneous. \nunresolved_relations UNIQUE: no explicit unresolved choices.\n\nNeed authorized_plan list with s1 walk_forward distance_m 4.0 depends_on []; s2 stop {} depends_on [\"s1\"]. IDs exactly s1 s2. Parameters exactly. No mission_id in steps. Good.\n\nNeed output exactly one JSON object. Ensure valid JSON, no markdown. Use Chinese text in coverage exactly. Need not include candidate. Status AUTHORIZED_UNIQUE. Since candidate matches, okay.\n\nPotential subtlety: \"四米\" Chinese numeral four = 4. Legal. \"请\" = please. \"往前\" = forward. \"走\" = walk. Skill walk_forward. \"之后\" = after/then. \"停下\" = stop. Unique. \n\nNeed ensure coverage text values concatenated equal entire original source exactly. If I split as above, yes: \"请往前走\" + \"四米\" + \"，\" + \"之后\" + \"停下\" = \"请往前走四米，之后停下\". Good.\n\nNeed exactly keys: status, coverage, dimensions, authorized_plan. Dimensions object keys exactly seven names. Each value exactly status and explanation. Need no extra. Use valid JSON. Ensure all explanations nonempty strings.\n\nLet's craft. Need mention in coverage explanation for \"请往前走\": It requests walking forward; \"请\" politeness does not alter. \"四米\": quantity sets distance 4.0 m. \"，\": separator, clause boundary. \"之后\": temporal relation after preceding walk, determines stop as second step. \"停下\": stop action, no parameters, follows.\n\nDimensions:\naction_multiplicity explanation: source contains two imperative verbs: 走 (walk) and 停 (stop). 四米 modifies walking distance, not additional action. No repetition or replacement.\naction_order: 之后 explicitly places 停下 after 请往前走四米; one order s1 then s2. \ncorrection_scope: no correction markers (not, 改为, 而不是 etc); no prior instruction replaced. \nrepetition_scope: no repetition markers/counts; exactly once each.\nreference_resolution: 之后 has no ambiguous pronoun; refers to immediately preceding walking action; stop no arguments. \"前\" in 往前走 is part of forward direction, not external referent.\ntemporal_relations: sequential after; no simultaneous/waiting/completion constraints; representable as depends_on chain.\nunresolved_relations: no explicit unresolved choice/order/scope; all resolved.\n\nNeed status AUTHORIZED_UNIQUE only if all UNIQUE. Yes.\n\nPotential issue: \"之后\" maybe \"afterwards\" but could mean after walking, stop. Fine.\n\nNeed output with numbers finite. 4.0 valid. stop parameters exactly {}. depends_on s1. \n\nLet's final. Ensure JSON no trailing commas.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON. Need analyze source Chinese: \"请往前走四米，之后停下\" = Please walk forward 4 meters, then stop. Candidate matches. Need derive authorized plan. Need dimensions all UNIQUE likely. Need coverage split exact text concatenating entire source. Need be careful punctuation and whitespace. Source string: 请往前走四米，之后停下\nCharacters: 请 往 前 走 四 米 ， 之 后 停 下. No spaces. Need split into meaningful spans. We can split \"请往前走四米\" ACTION/ maybe contains quantity. \"，\" SEPARATOR. \"之后\" RELATION. \"停下\" ACTION. Need coverage text concatenation equal source exactly. Could also include QUANTITY for 四米. Need every action, relation, edit clause. No edits. Let's design coverage objects with exact text.\n\nNeed ensure concatenation in order exactly: \"请往前走四米，之后停下\".\n\nPossible coverage:\n1 text \"请往前走四米\" role ACTION explanation: requests walk_forward distance 4m.\n2 text \"，\" role SEPARATOR explanation: separates first action from subsequent relation/action.\n3 text \"之后\" role RELATION explanation: after previous action, imposes order: stop after walking.\n4 text \"停下\" role ACTION explanation: stop with no parameters, second step.\n\nBut requirement: Split source into meaningful spans so every action, relation and edit clause is analyzed. QUANTITY perhaps separate \"四米\". If split 1 as \"请往前走\" ACTION and \"四米\" QUANTITY, that's more meaningful. Need coverage text concatenates exactly. Let's use:\n- \"请往前走\" role ACTION: polite imperative walk_forward; skill chosen.\n- \"四米\" role QUANTITY: distance parameter 4 meters.\n- \"，\" role SEPARATOR\n- \"之后\" role RELATION: after relation, stop follows walk.\n- \"停下\" role ACTION: stop.\nConcatenation: 请往前走四米，之后停下 yes. Need explanations nonempty. That's good.\n\nNeed dimensions:\naction_multiplicity UNIQUE: exactly two actions: walk_forward and stop. No repetition/edit.\naction_order UNIQUE: walk then stop due 之后.\ncorrection_scope UNIQUE: no corrections/edits present; no scope changed.\nrepetition_scope UNIQUE: none; no repetition.\nreference_resolution UNIQUE: 之后 refers to preceding walk action; stop has no args.\ntemporal_relations UNIQUE: single linear order, stop after walk. No waiting/completion? \"之后\" after. Could be \"then\" sequential; no simultaneous. \nunresolved_relations UNIQUE: no explicit unresolved choices.\n\nNeed authorized_plan list with s1 walk_forward distance_m 4.0 depends_on []; s2 stop {} depends_on [\"s1\"]. IDs exactly s1 s2. Parameters exactly. No mission_id in steps. Good.\n\nNeed output exactly one JSON object. Ensure valid JSON, no markdown. Use Chinese text in coverage exactly. Need not include candidate. Status AUTHORIZED_UNIQUE. Since candidate matches, okay.\n\nPotential subtlety: \"四米\" Chinese numeral four = 4. Legal. \"请\" = please. \"往前\" = forward. \"走\" = walk. Skill walk_forward. \"之后\" = after/then. \"停下\" = stop. Unique. \n\nNeed ensure coverage text values concatenated equal entire original source exactly. If I split as above, yes: \"请往前走\" + \"四米\" + \"，\" + \"之后\" + \"停下\" = \"请往前走四米，之后停下\". Good.\n\nNeed exactly keys: status, coverage, dimensions, authorized_plan. Dimensions object keys exactly seven names. Each value exactly status and explanation. Need no extra. Use valid JSON. Ensure all explanations nonempty strings.\n\nLet's craft. Need mention in coverage explanation for \"请往前走\": It requests walking forward; \"请\" politeness does not alter. \"四米\": quantity sets distance 4.0 m. \"，\": separator, clause boundary. \"之后\": temporal relation after preceding walk, determines stop as second step. \"停下\": stop action, no parameters, follows.\n\nDimensions:\naction_multiplicity explanation: source contains two imperative verbs: 走 (walk) and 停 (stop). 四米 modifies walking distance, not additional action. No repetition or replacement.\naction_order: 之后 explicitly places 停下 after 请往前走四米; one order s1 then s2. \ncorrection_scope: no correction markers (not, 改为, 而不是 etc); no prior instruction replaced. \nrepetition_scope: no repetition markers/counts; exactly once each.\nreference_resolution: 之后 has no ambiguous pronoun; refers to immediately preceding walking action; stop no arguments. \"前\" in 往前走 is part of forward direction, not external referent.\ntemporal_relations: sequential after; no simultaneous/waiting/completion constraints; representable as depends_on chain.\nunresolved_relations: no explicit unresolved choice/order/scope; all resolved.\n\nNeed status AUTHORIZED_UNIQUE only if all UNIQUE. Yes.\n\nPotential issue: \"之后\" maybe \"afterwards\" but could mean after walking, stop. Fine.\n\nNeed output with numbers finite. 4.0 valid. stop parameters exactly {}. depends_on s1. \n\nLet's final. Ensure JSON no trailing commas.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请往前走\",\"role\":\"ACTION\",\"explanation\":\"礼貌请求执行向前的行走动作；该动词授权使用 walk_forward 技能，礼貌词“请”不改变动作内容。\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"指定向前行走的距离为四米，即 4 米，因此 walk_forward 的 distance_m 为 4.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔前后两个动作子句，表示前一行走动作之后还有后续指令，不自行增加或省略动作。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"表示在先前行走动作完成之后，建立严格的先后顺序；它不产生新动作，只使紧随其后的停下成为第二步。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"请求停止；该动词授权使用 stop 技能，stop 参数为空，按“之后”关系排在行走动作之后。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文只有两个动作请求：往前走和停下。“四米”是行走动作的距离参数，不是额外动作；没有重复、替换或编辑标记。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”明确要求先执行“请往前走四米”，再执行“停下”，因此唯一执行顺序是 walk_forward 后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有否定、改口、替换或修正标记；不存在需要确定被修改或保留的先前指令。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有重复次数、重复范围或“再次”等标记；每个动作只请求执行一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”指代紧邻其前的“请往前走四米”这一动作；停下本身没有省略参数。“往前”中的“前”是方向词，不指向外部对象。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”给出单一的先后关系：行走之后停下。没有同时、等待或额外完成条件，可用线性依赖链表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留未定顺序、未定范围、未定对象或未定选择；两个动作及其顺序均被明确指定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_04e561f3-22c0-4006-a51b-0afde5f65889",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 212,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1725,
+            "output_tokens_details": {
+              "reasoning_tokens": 1138
+            },
+            "total_tokens": 2961
+          }
+        },
+        "request_sha256": "72b3254102b963e9297ac271cd40ff82dc62cb9f0fa6ab9acc30701df3f1125a",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 11.071325199998682,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_04e561f3-22c0-4006-a51b-0afde5f65889",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请往前走\",\"role\":\"ACTION\",\"explanation\":\"礼貌请求执行向前的行走动作；该动词授权使用 walk_forward 技能，礼貌词“请”不改变动作内容。\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"指定向前行走的距离为四米，即 4 米，因此 walk_forward 的 distance_m 为 4.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔前后两个动作子句，表示前一行走动作之后还有后续指令，不自行增加或省略动作。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"表示在先前行走动作完成之后，建立严格的先后顺序；它不产生新动作，只使紧随其后的停下成为第二步。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"请求停止；该动词授权使用 stop 技能，stop 参数为空，按“之后”关系排在行走动作之后。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文只有两个动作请求：往前走和停下。“四米”是行走动作的距离参数，不是额外动作；没有重复、替换或编辑标记。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”明确要求先执行“请往前走四米”，再执行“停下”，因此唯一执行顺序是 walk_forward 后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有否定、改口、替换或修正标记；不存在需要确定被修改或保留的先前指令。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有重复次数、重复范围或“再次”等标记；每个动作只请求执行一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”指代紧邻其前的“请往前走四米”这一动作；停下本身没有省略参数。“往前”中的“前”是方向词，不指向外部对象。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”给出单一的先后关系：行走之后停下。没有同时、等待或额外完成条件，可用线性依赖链表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留未定顺序、未定范围、未定对象或未定选择；两个动作及其顺序均被明确指定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+        "usage": {
+          "input_tokens": 212,
+          "output_tokens": 1725,
+          "total_tokens": 2961
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.907734899999923,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk4-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 10,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk4-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "a9f5a6d4f5786013160bcea74a8f9f935b34e82c664d776552a0f806f5837ec2",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_d7eca415-692d-4294-86ef-3667af4cb3e0",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 11.077960400001757,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 11.071325199998682,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请往前走\",\"role\":\"ACTION\",\"explanation\":\"礼貌请求执行向前的行走动作；该动词授权使用 walk_forward 技能，礼貌词“请”不改变动作内容。\"},{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"指定向前行走的距离为四米，即 4 米，因此 walk_forward 的 distance_m 为 4.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔前后两个动作子句，表示前一行走动作之后还有后续指令，不自行增加或省略动作。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"表示在先前行走动作完成之后，建立严格的先后顺序；它不产生新动作，只使紧随其后的停下成为第二步。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"请求停止；该动词授权使用 stop 技能，stop 参数为空，按“之后”关系排在行走动作之后。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文只有两个动作请求：往前走和停下。“四米”是行走动作的距离参数，不是额外动作；没有重复、替换或编辑标记。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”明确要求先执行“请往前走四米”，再执行“停下”，因此唯一执行顺序是 walk_forward 后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有否定、改口、替换或修正标记；不存在需要确定被修改或保留的先前指令。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有重复次数、重复范围或“再次”等标记；每个动作只请求执行一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”指代紧邻其前的“请往前走四米”这一动作；停下本身没有省略参数。“往前”中的“前”是方向词，不指向外部对象。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“之后”给出单一的先后关系：行走之后停下。没有同时、等待或额外完成条件，可用线性依赖链表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留未定顺序、未定范围、未定对象或未定选择；两个动作及其顺序均被明确指定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+          "raw_response_sha256": "0d9611226b01fcd85cd84bfaf62402638586e8f5e058eed075ba6bf41c2109ba",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_04e561f3-22c0-4006-a51b-0afde5f65889",
+          "source_aware": true,
+          "source_sha256": "ef671f06a79a10faf0f69fe8558922ef8ab46a191ba772004827e6dce7257f9c",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 212,
+            "output_tokens": 1725,
+            "total_tokens": 2961
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "礼貌请求执行向前的行走动作；该动词授权使用 walk_forward 技能，礼貌词“请”不改变动作内容。",
+                "role": "ACTION",
+                "text": "请往前走"
+              },
+              {
+                "explanation": "指定向前行走的距离为四米，即 4 米，因此 walk_forward 的 distance_m 为 4.0。",
+                "role": "QUANTITY",
+                "text": "四米"
+              },
+              {
+                "explanation": "逗号分隔前后两个动作子句，表示前一行走动作之后还有后续指令，不自行增加或省略动作。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "表示在先前行走动作完成之后，建立严格的先后顺序；它不产生新动作，只使紧随其后的停下成为第二步。",
+                "role": "RELATION",
+                "text": "之后"
+              },
+              {
+                "explanation": "请求停止；该动词授权使用 stop 技能，stop 参数为空，按“之后”关系排在行走动作之后。",
+                "role": "ACTION",
+                "text": "停下"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源文只有两个动作请求：往前走和停下。“四米”是行走动作的距离参数，不是额外动作；没有重复、替换或编辑标记。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“之后”明确要求先执行“请往前走四米”，再执行“停下”，因此唯一执行顺序是 walk_forward 后 stop。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源文没有否定、改口、替换或修正标记；不存在需要确定被修改或保留的先前指令。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "“之后”指代紧邻其前的“请往前走四米”这一动作；停下本身没有省略参数。“往前”中的“前”是方向词，不指向外部对象。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源文没有重复次数、重复范围或“再次”等标记；每个动作只请求执行一次。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "“之后”给出单一的先后关系：行走之后停下。没有同时、等待或额外完成条件，可用线性依赖链表示。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源文没有显式保留未定顺序、未定范围、未定对象或未定选择；两个动作及其顺序均被明确指定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 206,
+        "output_tokens": 180,
+        "total_tokens": 1922
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk4-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "请往前走四米之后停下",
+    "status": "SUCCESS"
+  }
+}

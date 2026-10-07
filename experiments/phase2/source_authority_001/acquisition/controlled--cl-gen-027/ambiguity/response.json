@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 12.363526299999648,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_f2e07c88-b85d-490c-9a52-e5e32af34c9a",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走15米\",\"role\":\"ACTION\",\"explanation\":\"First explicit action: walk_forward with distance_m = 15, a positive finite distance expressed in 米. It is not edited, repeated, or replaced by later text.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the first action from the following relation marker; it introduces no executable action or authority change.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequential marker meaning 'then'; it places the next action after the preceding walk action in a single linear order.\"},{\"text\":\"左转30度\",\"role\":\"ACTION\",\"explanation\":\"Second explicit action: turn left by 30 degrees. Under the IR rule left/counterclockwise is positive, so this is angle_deg = +30; the angle is nonzero finite and within the 180-degree legality bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the turn action from the following relation marker; it introduces no executable action or authority change.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequential marker meaning 'next/then'; it places the following walk action after the turn action without changing prior actions.\"},{\"text\":\"向前走400cm\",\"role\":\"ACTION\",\"explanation\":\"Third explicit action: walk_forward with distance_m = 4, because 400 cm converts to 4 m. It is a distinct, positive finite walk action, not a repetition or correction of the first walk.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the third action from the final relation marker; it introduces no executable action or authority change.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Final-order marker meaning 'finally'; it identifies the following stop as the last action in the sequence.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Fourth explicit action: stop, which has no parameters. It is the final action and does not alter earlier parameters or actions.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four discrete actions: 向前走15米, 左转30度, 向前走400cm, and 停下. The second walk action has its own distance and position in the sequence, so it is an additional action rather than a replacement or repetition of the first.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is explicitly serialized by 然后, 接着, and 最后: walk 15 m, then turn left 30 degrees, then walk 400 cm, finally stop. No alternative ordering is stated or left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, replacement, or editing words in the source. No action or parameter is marked as changed, so the correction dimension introduces no ambiguity.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition wording such as again or repeat. The two walk commands are separate actions with different distances, not a repeated span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronouns or unresolved ordinal references appear. 向前 applies to the two walk actions as forward motion, 左 applies to the turn as a left turn, and 最后 resolves to the final stop action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The temporal relations are explicitly sequential: 然后 and 接着 place actions after their predecessors, and 最后 places stop at the end. This yields one linear order with no simultaneity, waiting, or invented timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It fully specifies a single four-step sequence that is representable within the Mission IR 2.0 legality bounds.\"}}}",
+  "usage": {
+    "input_tokens": 155,
+    "output_tokens": 2449,
+    "total_tokens": 3372
+  }
+}

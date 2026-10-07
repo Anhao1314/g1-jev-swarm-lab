@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 18.137851900002715,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_689990bd-03eb-4cc6-beeb-54a7cd4b8a89",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先做甲，\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group A first; A is defined later as stand then left turn, and this clause establishes A before B.\"},{\"text\":\"再做乙。\",\"role\":\"ACTION\",\"explanation\":\"Requests executing group B after the first group; B is defined later as walk then stop, and this clause preserves the second position of B.\"},{\"text\":\"甲是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 甲; it does not add a separate executable action but resolves 甲 to the following stand-and-turn sequence.\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"Specifies the stand action with explicit duration two seconds, so duration_s is 2.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the left turn immediately after the stand within group 甲.\"},{\"text\":\"左转六十度\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn of sixty degrees, so angle_deg is positive 60.0.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the definition of group 甲 from the definition of group 乙; it has no executable effect.\"},{\"text\":\"乙是\",\"role\":\"CONTEXT\",\"explanation\":\"Introduces the definition of placeholder 乙; it does not add a separate executable action but resolves 乙 to the following walk-and-stop sequence.\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"Specifies walking forward ten meters, so distance_m is 10.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders stop immediately after walk_forward within group 乙.\"},{\"text\":\"停止。\",\"role\":\"ACTION\",\"explanation\":\"Specifies the final stop action; the period is sentence punctuation with no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source defines two groups, 甲 and 乙, and each group contains exactly two executable actions: 甲 = stand then left turn, 乙 = walk_forward then stop. No additional action is requested and no action is replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one exact linear order: 先做甲，再做乙 means group 甲 before group 乙; within 甲, 站两秒接着左转六十度 means stand then turn; within 乙, 前进十米接着停止 means walk_forward then stop. Thus the executable order is stand, turn, walk_forward, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no edit or correction clauses. The definitions of 甲 and 乙 resolve placeholders but do not replace any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated. Each action in 甲 and 乙 is specified once, so the plan contains exactly four steps without compression or duplication.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"甲 is resolved uniquely by the following clause 甲是站两秒接着左转六十度; 乙 is resolved uniquely by 乙是前进十米接着停止. The ordering words 先/再 and 接着 resolve to the stated sequential relations.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only sequential relations: group 甲 before group 乙, stand before left turn within 甲, and walk_forward before stop within 乙. This yields a single linear execution order without inventing waiting, events, or alternative timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, reference, or relation unresolved. All requested actions and their sequence are fixed by the definitions of 甲 and 乙.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":10.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+  "usage": {
+    "input_tokens": 418,
+    "output_tokens": 3844,
+    "total_tokens": 5158
+  }
+}

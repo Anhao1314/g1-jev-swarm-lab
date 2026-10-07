@@ -1,0 +1,256 @@
+{
+  "added_wall_s": 5.797597299999325,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 5.791259199999331,
+        "provider_document": {
+          "created_at": 1791360779,
+          "id": "resp_b11831e1-e837-4e34-bf93-2f4ecf271474",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_b11831e1-e837-4e34-bf93-2f4ecf271474",
+              "reasoning_content": "We need answer JSON only. Need derive plan. Source \"前进2.5米\" means walk forward 2.5 meters. One action, parameter distance_m=2.5. Legal. Dimensions unique. coverage split entire source exactly. Need meaningful spans. Source Chinese no spaces. Need coverage text concatenated equals \"前进2.5米\". Could split into \"前进\" ACTION? \"2.5\" QUANTITY? \"米\" UNIT maybe QUANTITY? Role options include ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We need every span. Text values concatenated exactly. \"前进\" role ACTION explanation. \"2.5\" QUANTITY. \"米\" QUANTITY or CONTEXT? likely QUANTITY unit. Each explanation nonempty. Need dimensions exactly seven. status AUTHORIZED_UNIQUE. authorized_plan step s1 walk_forward distance_m 2.5 depends_on [].\n\nNeed be careful action_order etc. Source one action. action_multiplicity UNIQUE: exactly one walk_forward. action_order UNIQUE: single step no ordering ambiguity. correction_scope UNIQUE: no corrections. repetition_scope UNIQUE: no repetition. reference_resolution UNIQUE: no pronouns/ordinals/shared args. temporal_relations UNIQUE: single action no temporal relations. unresolved_relations UNIQUE: none explicit.\n\nPotential issue candidate has mission_id. We ignore. Output exactly JSON object keys status, coverage, dimensions, authorized_plan. No markdown.\n\nNeed ensure coverage text values concatenate entire original source exactly. If split \"前进\" + \"2.5\" + \"米\" equals 前进2.5米. Fine. Could also split \"前进\" and \"2.5米\". role for \"2.5米\" QUANTITY. Simpler maybe two spans. But every action, relation and edit clause. Source has one action and quantity. Use three spans maybe.\n\nNeed ensure explanations state nonexecuting text? \"米\" unit is part of quantity not nonexecuting? Explanation: unit meter indicates distance_m in meters. Good.\n\nLet's formulate JSON. Use proper escaping. No markdown. Need dimension names exactly. \ncoverage list objects with text, role, explanation. Role values exactly. \"前进\" ACTION. \"2.5\" QUANTITY. \"米\" QUANTITY or CONTEXT. I'd use QUANTITY for \"米\" because unit. But perhaps \"2.5米\" as QUANTITY whole. Then \"前进\" ACTION. That concatenates 前进2.5米. Two spans. Is \"2.5米\" quantity includes unit. role QUANTITY. Explanation: specifies distance 2.5 meters. This covers all. That may be better. The requirement \"Split source into meaningful spans so every action, relation and edit clause is analyzed.\" Two spans enough. No separators. Text \"前进\" and \"2.5米\". Concatenate exactly. Good.\n\nNeed maybe \"前进\" is action verb. \"2.5米\" quantity. Source no punctuation. Good.\n\nAuthorized_plan step. JSON numbers finite.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need derive plan. Source \"前进2.5米\" means walk forward 2.5 meters. One action, parameter distance_m=2.5. Legal. Dimensions unique. coverage split entire source exactly. Need meaningful spans. Source Chinese no spaces. Need coverage text concatenated equals \"前进2.5米\". Could split into \"前进\" ACTION? \"2.5\" QUANTITY? \"米\" UNIT maybe QUANTITY? Role options include ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We need every span. Text values concatenated exactly. \"前进\" role ACTION explanation. \"2.5\" QUANTITY. \"米\" QUANTITY or CONTEXT? likely QUANTITY unit. Each explanation nonempty. Need dimensions exactly seven. status AUTHORIZED_UNIQUE. authorized_plan step s1 walk_forward distance_m 2.5 depends_on [].\n\nNeed be careful action_order etc. Source one action. action_multiplicity UNIQUE: exactly one walk_forward. action_order UNIQUE: single step no ordering ambiguity. correction_scope UNIQUE: no corrections. repetition_scope UNIQUE: no repetition. reference_resolution UNIQUE: no pronouns/ordinals/shared args. temporal_relations UNIQUE: single action no temporal relations. unresolved_relations UNIQUE: none explicit.\n\nPotential issue candidate has mission_id. We ignore. Output exactly JSON object keys status, coverage, dimensions, authorized_plan. No markdown.\n\nNeed ensure coverage text values concatenate entire original source exactly. If split \"前进\" + \"2.5\" + \"米\" equals 前进2.5米. Fine. Could also split \"前进\" and \"2.5米\". role for \"2.5米\" QUANTITY. Simpler maybe two spans. But every action, relation and edit clause. Source has one action and quantity. Use three spans maybe.\n\nNeed ensure explanations state nonexecuting text? \"米\" unit is part of quantity not nonexecuting? Explanation: unit meter indicates distance_m in meters. Good.\n\nLet's formulate JSON. Use proper escaping. No markdown. Need dimension names exactly. \ncoverage list objects with text, role, explanation. Role values exactly. \"前进\" ACTION. \"2.5\" QUANTITY. \"米\" QUANTITY or CONTEXT. I'd use QUANTITY for \"米\" because unit. But perhaps \"2.5米\" as QUANTITY whole. Then \"前进\" ACTION. That concatenates 前进2.5米. Two spans. Is \"2.5米\" quantity includes unit. role QUANTITY. Explanation: specifies distance 2.5 meters. This covers all. That may be better. The requirement \"Split source into meaningful spans so every action, relation and edit clause is analyzed.\" Two spans enough. No separators. Text \"前进\" and \"2.5米\". Concatenate exactly. Good.\n\nNeed maybe \"前进\" is action verb. \"2.5米\" quantity. Source no punctuation. Good.\n\nAuthorized_plan step. JSON numbers finite.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Specifies the sole requested action: walk forward. This authorizes one walk_forward step.\"},{\"text\":\"2.5米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance parameter for the walk_forward action as 2.5 meters; 米 is meters, so distance_m is 2.5.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action, 前进, so the plan has one step.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so there is exactly one execution order: s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, replacement, or revision clause appears in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or repeated span is requested in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments needing resolution; the single action takes the explicit distance 2.5米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneous, waiting, or completion relation appears; the single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the only requested action and its distance; no relation, order, scope, or choice is left unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":2.5},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_b11831e1-e837-4e34-bf93-2f4ecf271474",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 317,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 1032,
+            "output_tokens_details": {
+              "reasoning_tokens": 658
+            },
+            "total_tokens": 2245
+          }
+        },
+        "request_sha256": "c98a9ad83c45ae83aa2cece00344dca55ab31a5015a40d7d2d0d2e35f6dc9695",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 5.789713800000754,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_b11831e1-e837-4e34-bf93-2f4ecf271474",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Specifies the sole requested action: walk forward. This authorizes one walk_forward step.\"},{\"text\":\"2.5米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance parameter for the walk_forward action as 2.5 meters; 米 is meters, so distance_m is 2.5.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action, 前进, so the plan has one step.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so there is exactly one execution order: s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, replacement, or revision clause appears in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or repeated span is requested in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments needing resolution; the single action takes the explicit distance 2.5米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneous, waiting, or completion relation appears; the single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the only requested action and its distance; no relation, order, scope, or choice is left unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":2.5},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 317,
+          "output_tokens": 1032,
+          "total_tokens": 2245
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.1594203999993624,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk-2-5m",
+      "model": "deepseek-flash",
+      "normalized_length": 6,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk-2-5m\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":2.5},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "a8b039eac623b2b6bf188ae8f94a3bd7f0335a807ed2e53740753c5b8b2e1883",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_14142540-5836-48d2-8462-80a12ae17db0",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 5.796859699999914,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 5.789713800000754,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Specifies the sole requested action: walk forward. This authorizes one walk_forward step.\"},{\"text\":\"2.5米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance parameter for the walk_forward action as 2.5 meters; 米 is meters, so distance_m is 2.5.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action, 前进, so the plan has one step.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so there is exactly one execution order: s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, replacement, or revision clause appears in the source.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or repeated span is requested in the source.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments needing resolution; the single action takes the explicit distance 2.5米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneous, waiting, or completion relation appears; the single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the only requested action and its distance; no relation, order, scope, or choice is left unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":2.5},\"depends_on\":[]}]}",
+          "raw_response_sha256": "c581f3b74f71c25d3a12d2ef620fac77eb1cb2199d96f91a660a26de63176a38",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_b11831e1-e837-4e34-bf93-2f4ecf271474",
+          "source_aware": true,
+          "source_sha256": "1547f3f148ad68dad99fc2206e196c24542ac7053c7401ac11c6f27576e8af46",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 317,
+            "output_tokens": 1032,
+            "total_tokens": 2245
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 2.5
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the sole requested action: walk forward. This authorizes one walk_forward step.",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "Specifies the distance parameter for the walk_forward action as 2.5 meters; 米 is meters, so distance_m is 2.5.",
+                "role": "QUANTITY",
+                "text": "2.5米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action, 前进, so the plan has one step.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so there is exactly one execution order: s1.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction, edit, replacement, or revision clause appears in the source.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, or omitted shared arguments needing resolution; the single action takes the explicit distance 2.5米.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition or repeated span is requested in the source.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, simultaneous, waiting, or completion relation appears; the single action is representable as one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly resolves the only requested action and its distance; no relation, order, scope, or choice is left unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 65,
+        "total_tokens": 1805
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk-2-5m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 2.5
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "前进2.5米",
+    "status": "SUCCESS"
+  }
+}

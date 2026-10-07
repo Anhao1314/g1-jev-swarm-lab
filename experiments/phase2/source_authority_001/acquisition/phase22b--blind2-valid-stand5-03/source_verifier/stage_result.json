@@ -1,0 +1,256 @@
+{
+  "added_wall_s": 6.1159436000016285,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.110159899999417,
+        "provider_document": {
+          "created_at": 1791359837,
+          "id": "resp_8468c16e-0480-4cf2-960c-713ffed2de06",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_8468c16e-0480-4cf2-960c-713ffed2de06",
+              "reasoning_content": "We need answer JSON only. Need analyze source \"站立五秒\". Need derive plan. Source Chinese: 站立五秒 = stand five seconds. Legal stand duration_s positive finite at most 60, default 2 if none. Here explicit 5 seconds. One action. candidate matches s1 stand duration_s 5.0 depends_on [].\n\nNeed coverage split meaningful spans so concatenated exactly original. Source \"站立五秒\". Need decide spans. Maybe \"站立\" ACTION, \"五秒\" QUANTITY. Entire source exactly. Each explanation nonempty. roles. Need seven dimensions all UNIQUE. status AUTHORIZED_UNIQUE. authorized_plan list one step.\n\nNeed be careful: \"站立五秒\" no punctuation. Coverage list should concatenate exactly. Could split \"站立\" and \"五秒\". Role: 站立 ACTION, meaning stand skill. 五秒 QUANTITY, duration five seconds. No separator. Ensure text values exactly. The source has no whitespace. Concatenation \"站立五秒\". Good.\n\nDimensions:\n- action_multiplicity UNIQUE one requested stand action.\n- action_order UNIQUE single step no ordering ambiguity.\n- correction_scope UNIQUE no edit/correction.\n- repetition_scope UNIQUE no repetition.\n- reference_resolution UNIQUE no pronouns/ordinal/shared args; duration explicit.\n- temporal_relations UNIQUE single action no relative timing; immediate.\n- unresolved_relations UNIQUE no explicit unresolved relation.\n\nauthorized_plan:\n{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}\nNumbers finite. No extra fields. JSON exactly.\n\nNeed output exactly JSON object, no markdown. Make sure keys in order? exactly status, coverage, dimensions, authorized_plan. Coverage nonempty. dimensions exactly seven names. Each value has exactly status and explanation.\n\nNeed maybe include coverage explanation for 站立: \"Chinese verb '站立' authorizes exactly one stand action; it is not a walk/turn/stop.\" For 五秒: \"Chinese '五秒' means five seconds; it supplies stand duration_s=5.0, within positive finite <=60, not default and not vague.\" Good.\n\nPotential issue: \"站立五秒\" maybe \"stand for five seconds\"; duration parameter. Yes.\n\nNeed ensure no extra text. final JSON.\n\nLet's craft compact but sufficient. Ensure all explanations nonempty. Use escaped? We can include Chinese in JSON. Valid. JSON object.\n\nNeed maybe coverage text values: \"站立\" and \"五秒\". Original source exactly \"站立五秒\". Good.\n\nFinal.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source \"站立五秒\". Need derive plan. Source Chinese: 站立五秒 = stand five seconds. Legal stand duration_s positive finite at most 60, default 2 if none. Here explicit 5 seconds. One action. candidate matches s1 stand duration_s 5.0 depends_on [].\n\nNeed coverage split meaningful spans so concatenated exactly original. Source \"站立五秒\". Need decide spans. Maybe \"站立\" ACTION, \"五秒\" QUANTITY. Entire source exactly. Each explanation nonempty. roles. Need seven dimensions all UNIQUE. status AUTHORIZED_UNIQUE. authorized_plan list one step.\n\nNeed be careful: \"站立五秒\" no punctuation. Coverage list should concatenate exactly. Could split \"站立\" and \"五秒\". Role: 站立 ACTION, meaning stand skill. 五秒 QUANTITY, duration five seconds. No separator. Ensure text values exactly. The source has no whitespace. Concatenation \"站立五秒\". Good.\n\nDimensions:\n- action_multiplicity UNIQUE one requested stand action.\n- action_order UNIQUE single step no ordering ambiguity.\n- correction_scope UNIQUE no edit/correction.\n- repetition_scope UNIQUE no repetition.\n- reference_resolution UNIQUE no pronouns/ordinal/shared args; duration explicit.\n- temporal_relations UNIQUE single action no relative timing; immediate.\n- unresolved_relations UNIQUE no explicit unresolved relation.\n\nauthorized_plan:\n{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}\nNumbers finite. No extra fields. JSON exactly.\n\nNeed output exactly JSON object, no markdown. Make sure keys in order? exactly status, coverage, dimensions, authorized_plan. Coverage nonempty. dimensions exactly seven names. Each value has exactly status and explanation.\n\nNeed maybe include coverage explanation for 站立: \"Chinese verb '站立' authorizes exactly one stand action; it is not a walk/turn/stop.\" For 五秒: \"Chinese '五秒' means five seconds; it supplies stand duration_s=5.0, within positive finite <=60, not default and not vague.\" Good.\n\nPotential issue: \"站立五秒\" maybe \"stand for five seconds\"; duration parameter. Yes.\n\nNeed ensure no extra text. final JSON.\n\nLet's craft compact but sufficient. Ensure all explanations nonempty. Use escaped? We can include Chinese in JSON. Valid. JSON object.\n\nNeed maybe coverage text values: \"站立\" and \"五秒\". Original source exactly \"站立五秒\". Good.\n\nFinal.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The Chinese verb '站立' requests exactly one stand action. It does not authorize any other legal skill, and it introduces no correction, repetition, reference, or ordering relation.\"},{\"text\":\"五秒\",\"role\":\"QUANTITY\",\"explanation\":\"'五秒' means five seconds. It supplies the stand duration as duration_s=5.0, which is explicit, positive, finite, and at most 60, so it overrides no default and is not vague or unresolved.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The complete source contains one action span, '站立', so exactly one stand step is requested. There is no conjunction, repetition, or edit adding or replacing actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one possible execution order: the single stand step. No before/after or simultaneous relation appears.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, negation, or replacement clause, so no action or parameter is edited away.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker such as '再', '重复', or a count applied to multiple actions. It requests one stand action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted arguments requiring an external referent. '五秒' directly resolves the duration of '站立' as five seconds.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source describes a single action with no before, after, waiting, or completion relation, so the plan is one linearly ordered step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly states both the action and its duration and leaves no relation, order, parameter, or scope unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_8468c16e-0480-4cf2-960c-713ffed2de06",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 311,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 998,
+            "output_tokens_details": {
+              "reasoning_tokens": 540
+            },
+            "total_tokens": 2205
+          }
+        },
+        "request_sha256": "da72c50a82ca6f9409632c58ee4c59696279c8b3e935837c2601709c09f055c8",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.108679000000848,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_8468c16e-0480-4cf2-960c-713ffed2de06",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The Chinese verb '站立' requests exactly one stand action. It does not authorize any other legal skill, and it introduces no correction, repetition, reference, or ordering relation.\"},{\"text\":\"五秒\",\"role\":\"QUANTITY\",\"explanation\":\"'五秒' means five seconds. It supplies the stand duration as duration_s=5.0, which is explicit, positive, finite, and at most 60, so it overrides no default and is not vague or unresolved.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The complete source contains one action span, '站立', so exactly one stand step is requested. There is no conjunction, repetition, or edit adding or replacing actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one possible execution order: the single stand step. No before/after or simultaneous relation appears.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, negation, or replacement clause, so no action or parameter is edited away.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker such as '再', '重复', or a count applied to multiple actions. It requests one stand action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted arguments requiring an external referent. '五秒' directly resolves the duration of '站立' as five seconds.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source describes a single action with no before, after, waiting, or completion relation, so the plan is one linearly ordered step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly states both the action and its duration and leaves no relation, order, parameter, or scope unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 311,
+          "output_tokens": 998,
+          "total_tokens": 2205
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.5857185999993817,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-5s",
+      "model": "deepseek-flash",
+      "normalized_length": 4,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"stand-5s\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "43ab03ee233d6b45c9c84eff017aed5cb434659582297bd4e948fed9e38c7731",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_9e86276e-2eb5-4d39-b62a-5546d9cf09b1",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 6.1153488000018115,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 6.108679000000848,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"The Chinese verb '站立' requests exactly one stand action. It does not authorize any other legal skill, and it introduces no correction, repetition, reference, or ordering relation.\"},{\"text\":\"五秒\",\"role\":\"QUANTITY\",\"explanation\":\"'五秒' means five seconds. It supplies the stand duration as duration_s=5.0, which is explicit, positive, finite, and at most 60, so it overrides no default and is not vague or unresolved.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The complete source contains one action span, '站立', so exactly one stand step is requested. There is no conjunction, repetition, or edit adding or replacing actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one possible execution order: the single stand step. No before/after or simultaneous relation appears.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, negation, or replacement clause, so no action or parameter is edited away.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker such as '再', '重复', or a count applied to multiple actions. It requests one stand action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted arguments requiring an external referent. '五秒' directly resolves the duration of '站立' as five seconds.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source describes a single action with no before, after, waiting, or completion relation, so the plan is one linearly ordered step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly states both the action and its duration and leaves no relation, order, parameter, or scope unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "8906ff5f2653f381228e42173590019780d4ef2f1c00ade37a458fe027e446af",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_8468c16e-0480-4cf2-960c-713ffed2de06",
+          "source_aware": true,
+          "source_sha256": "93514f13956b64b3ab4abaa9d790a18cd8d2a7cc54aacce57390e9f01ddf85ba",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 311,
+            "output_tokens": 998,
+            "total_tokens": 2205
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 5.0
+                },
+                "skill": "stand"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "The Chinese verb '站立' requests exactly one stand action. It does not authorize any other legal skill, and it introduces no correction, repetition, reference, or ordering relation.",
+                "role": "ACTION",
+                "text": "站立"
+              },
+              {
+                "explanation": "'五秒' means five seconds. It supplies the stand duration as duration_s=5.0, which is explicit, positive, finite, and at most 60, so it overrides no default and is not vague or unresolved.",
+                "role": "QUANTITY",
+                "text": "五秒"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The complete source contains one action span, '站立', so exactly one stand step is requested. There is no conjunction, repetition, or edit adding or replacing actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so there is exactly one possible execution order: the single stand step. No before/after or simultaneous relation appears.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no correction, negation, or replacement clause, so no action or parameter is edited away.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, or omitted arguments requiring an external referent. '五秒' directly resolves the duration of '站立' as five seconds.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker such as '再', '重复', or a count applied to multiple actions. It requests one stand action.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source describes a single action with no before, after, waiting, or completion relation, so the plan is one linearly ordered step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly states both the action and its duration and leaves no relation, order, parameter, or scope unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 202,
+        "output_tokens": 467,
+        "total_tokens": 2205
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-5s",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        }
+      ]
+    },
+    "normalized_text": "站立五秒",
+    "status": "SUCCESS"
+  }
+}

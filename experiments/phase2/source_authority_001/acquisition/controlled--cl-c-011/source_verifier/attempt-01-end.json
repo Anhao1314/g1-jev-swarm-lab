@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.543393600000854,
+  "provider_document": {
+    "created_at": 1791360622,
+    "id": "resp_68c69931-fa65-4c87-a65b-c409914b7bb2",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_68c69931-fa65-4c87-a65b-c409914b7bb2",
+        "reasoning_content": "We need answer JSON only. Need analyze source Chinese \"左转90°\". Need derive plan. Source: 左转90°. Legal skill turn angle_deg. Left/counterclockwise/逆时针 positive. So turn +90.0. Need coverage split entire source exactly. Source has \"左转90°\" maybe split spans? Need concatenated exact. We can split into \"左转\" and \"90°\". role ACTION? \"左转\" is action, \"90°\" quantity. Explanations. Candidate_ir matches. Need dimensions all UNIQUE? Check action_multiplicity: one action turn. action_order: only one step order. correction_scope: none/inapplicable. repetition_scope: none/inapplicable. reference_resolution: no pronoun/reference. temporal_relations: no before/after, single order. unresolved_relations: none. So AUTHORIZED_UNIQUE. authorized_plan: steps id s1 skill turn parameters {\"angle_deg\":90.0} depends_on [].\n\nNeed ensure source contains degree symbol ° after 90. The source is {\"source\":\"左转90°\",\"candidate_ir\":...}. The source string \"左转90°\". Coverage text values concatenated in order equal entire original source. We can split \"左转\" and \"90°\". Role for \"左转\": ACTION. Explanation: specifies turn left, compiles to positive turn. \"90°\": QUANTITY: specifies angle magnitude 90 degrees; 90° => 90.0 angle_deg. Need mention no ambiguity. All dimensions explanations.\n\nNeed output exactly JSON object no markdown. Need exact keys status, coverage, dimensions, authorized_plan. Dimensions exactly seven names. Use statuses. Need nonempty explanations. Ensure valid JSON. Let's craft.\n\nNeed maybe \"left\" in Chinese \"左转\" means left turn. Legal turn parameter angle_deg. Positive for left. Max abs 180, 90 okay. Candidate maybe mission_id irrelevant. We don't include mission_id in authorized_plan. Good.\n\nPotential issue: \"左转90°\" is not explicitly \"turn\", but Chinese \"左转\" maps to turn left. Legal skills only \"turn\", and left/ccw positive. Unique.\n\nNeed coverage maybe every meaningful span. Source has no whitespace. \"左转\" and \"90°\". Text exact. Concatenation: 左转 + 90° = 左转90°. Good.\n\nNeed status AUTHORIZED_UNIQUE. Dimensions: action_multiplicity UNIQUE explanation. action_order UNIQUE. correction_scope UNIQUE? Inapplicable and introduces no alternative. The instructions: UNIQUE means source resolves dimension or inapplicable and introduces no alternative. So yes. For correction_scope explanation \"No correction or edit clause... no alternative.\" repetition_scope similar. reference_resolution \"No pronouns etc.\" temporal \"No temporal relation; single action.\" unresolved \"No explicitly unresolved relation.\"\n\nNeed produce final. Ensure numbers finite: 90.0 is valid JSON number? JSON allows 90.0. Yes.\n\nLet's ensure no extra fields in step. depends_on [].\n\nFinal.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source Chinese \"左转90°\". Need derive plan. Source: 左转90°. Legal skill turn angle_deg. Left/counterclockwise/逆时针 positive. So turn +90.0. Need coverage split entire source exactly. Source has \"左转90°\" maybe split spans? Need concatenated exact. We can split into \"左转\" and \"90°\". role ACTION? \"左转\" is action, \"90°\" quantity. Explanations. Candidate_ir matches. Need dimensions all UNIQUE? Check action_multiplicity: one action turn. action_order: only one step order. correction_scope: none/inapplicable. repetition_scope: none/inapplicable. reference_resolution: no pronoun/reference. temporal_relations: no before/after, single order. unresolved_relations: none. So AUTHORIZED_UNIQUE. authorized_plan: steps id s1 skill turn parameters {\"angle_deg\":90.0} depends_on [].\n\nNeed ensure source contains degree symbol ° after 90. The source is {\"source\":\"左转90°\",\"candidate_ir\":...}. The source string \"左转90°\". Coverage text values concatenated in order equal entire original source. We can split \"左转\" and \"90°\". Role for \"左转\": ACTION. Explanation: specifies turn left, compiles to positive turn. \"90°\": QUANTITY: specifies angle magnitude 90 degrees; 90° => 90.0 angle_deg. Need mention no ambiguity. All dimensions explanations.\n\nNeed output exactly JSON object no markdown. Need exact keys status, coverage, dimensions, authorized_plan. Dimensions exactly seven names. Use statuses. Need nonempty explanations. Ensure valid JSON. Let's craft.\n\nNeed maybe \"left\" in Chinese \"左转\" means left turn. Legal turn parameter angle_deg. Positive for left. Max abs 180, 90 okay. Candidate maybe mission_id irrelevant. We don't include mission_id in authorized_plan. Good.\n\nPotential issue: \"左转90°\" is not explicitly \"turn\", but Chinese \"左转\" maps to turn left. Legal skills only \"turn\", and left/ccw positive. Unique.\n\nNeed coverage maybe every meaningful span. Source has no whitespace. \"左转\" and \"90°\". Text exact. Concatenation: 左转 + 90° = 左转90°. Good.\n\nNeed status AUTHORIZED_UNIQUE. Dimensions: action_multiplicity UNIQUE explanation. action_order UNIQUE. correction_scope UNIQUE? Inapplicable and introduces no alternative. The instructions: UNIQUE means source resolves dimension or inapplicable and introduces no alternative. So yes. For correction_scope explanation \"No correction or edit clause... no alternative.\" repetition_scope similar. reference_resolution \"No pronouns etc.\" temporal \"No temporal relation; single action.\" unresolved \"No explicitly unresolved relation.\"\n\nNeed produce final. Ensure numbers finite: 90.0 is valid JSON number? JSON allows 90.0. Yes.\n\nLet's ensure no extra fields in step. depends_on [].\n\nFinal.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies a left turn. Under the compilation semantics, left/counterclockwise turns are positive for the legal skill turn, so this authorizes exactly one turn action with positive angle.\"},{\"text\":\"90°\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the angle magnitude for the left turn as 90 degrees. This resolves the turn parameter to angle_deg = 90.0, which is nonzero, finite, and within the maximum absolute angle of 180 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action span, 左转, with one quantity, 90°. There is no conjunction, repetition, or edit adding or replacing actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one authorized action, so the execution order is exactly one turn step; no ordering alternatives exist.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction or edit clause, so there is no earlier instruction to replace or preserve. This dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so the single turn action is performed exactly once. This dimension is inapplicable and introduces no alternative.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronoun, ordinal reference, shared argument, or omitted referent requiring external context. The angle 90° directly modifies the one turn action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no before/after, simultaneous, waiting, or completion relation. The plan has a single executable step, so there is one linear order.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, order, scope, or relation unresolved. The direction and angle are both specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_68c69931-fa65-4c87-a65b-c409914b7bb2",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 186,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1124,
+      "output_tokens_details": {
+        "reasoning_tokens": 653
+      },
+      "total_tokens": 2334
+    }
+  },
+  "request_sha256": "5f4309bbb001e79c23979666c424e984e869fbbc9d1bb544d7189c92c9f0a3b8",
+  "status": "SUCCESS"
+}

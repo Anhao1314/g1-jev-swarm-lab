@@ -1,0 +1,259 @@
+{
+  "added_wall_s": 19.514925100000255,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 19.511127699999633,
+        "provider_document": {
+          "created_at": 1791359155,
+          "id": "resp_d5f7e0d6-27d7-4cdf-aed1-6f7e009ed137",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_d5f7e0d6-27d7-4cdf-aed1-6f7e009ed137",
+              "reasoning_content": "We need answer JSON only. Need inspect source: \"站五秒，五秒钟，嗯，五秒。\" Chinese. Need determine ambiguity/unique. Source: \"站五秒，五秒钟，嗯，五秒。\" Means \"stand five seconds, five seconds, um, five seconds.\" Actions? Repetition? Does it request one stand action with duration 5 seconds, repeated three times? Or three stand commands of 5 seconds each? Or correction/filler? Need analyze seven dimensions.\n\nLegal semantics: stand accepts positive finite duration_s, default 2.0. Explicit vague duration unresolved. Here \"五秒\" = 5 seconds. \"五秒钟\" = 5 seconds. \"嗯\" filler. Source: 站五秒，五秒钟，嗯，五秒。 It seems repeated phrases all specify stand 5 seconds. But is it one command repeated/corrected? Could be \"stand five seconds, five seconds, um, five seconds.\" Ambiguity: action multiplicity/repetition scope: Does it mean one stand action of 5 seconds (duplicate restatements), or three stand actions each 5 seconds (sequence of three stands)? The punctuation commas separate. No explicit \"repeat\" or \"again\". Chinese \"站五秒，五秒钟，嗯，五秒。\" repeated duration maybe emphasis or self-correction. Need decide likely AMBIGUOUS because multiple material readings. Need coverage all spans exact concatenation. Need split into spans. Must ensure text values concatenated equal entire original source. Source includes no spaces? Original: 站五秒，五秒钟，嗯，五秒。 Let's copy. We can split:\n\"站五秒\" role ACTION maybe\n\"，\" SEPARATOR\n\"五秒钟\" QUANTITY/ACTION? It is duration phrase not full action? Actually \"五秒钟\" alone can mean five seconds as duration, likely continuation/edit.\n\"，\" SEPARATOR\n\"嗯\" CONTEXT\n\"，\" SEPARATOR\n\"五秒\" QUANTITY\n\"。\" SEPARATOR\nNeed every action, relation, editing clause considered. Text concatenated exact. Role choices. Could split \"站五秒\" ACTION, \"，\" SEPARATOR, \"五秒钟\" QUANTITY, \"，\" SEPARATOR, \"嗯\" CONTEXT, \"，\" SEPARATOR, \"五秒\" QUANTITY, \"。\" SEPARATOR. But \"五秒钟\" and \"五秒\" may also be ACTION omitted verb? Need explanation.\n\nNeed dimensions:\n- action_multiplicity: AMBIGUOUS: source contains one stand verb \"站\" in first phrase and subsequent duration phrases. Could authorize one stand action with repeated duration restatements, or three stand actions (each 5s) if each duration phrase implicitly repeats the stand. But omission of verb? Hmm reference_resolution maybe unresolved. Since no explicit \"再站\" or \"重复\", multiplicity not unique. Need say ambiguous.\n- action_order: If three stand actions, order is linear in listed order? But since multiplicity unresolved, ordering between repeated actions maybe if multiple. Could be AMBIGUOUS due to unclear whether phrases are alternatives/restatements vs sequential. Or UNKNOWN? Need statuses. Overall AMBIGUOUS if any ambiguous.\n- correction_scope: AMBIGUOUS: \"五秒钟\" and final \"五秒\" could be corrections/reformulations of initial duration, preserving one stand action; or independent additional commands; no explicit edit marker. \"嗯\" suggests hesitation maybe correction but not resolved. So ambiguous.\n- repetition_scope: AMBIGUOUS: repeated duration value appears three times. Does repetition repeat one stand action three times? Or restate same duration? Or three separate stand actions? \"never silently narrow repetition to one action or broaden it to a sequence.\" The source doesn't explicitly say repeat. But repetition of phrase. Need mark ambiguous.\n- reference_resolution: Maybe UNIQUE? All duration references \"五秒\"/\"五秒钟\" resolve to 5 sec; no pronouns. But omitted subject/verb for later duration phrases: do they refer to the same stand action? That is ambiguous. Could mark AMBIGUOUS or UNKNOWN. Reference resolution of omitted shared arguments: later duration-only phrases omit the action. It cannot be determined whether they attach to the first \"站\" as restatements or implicitly request additional stand actions. So AMBIGUOUS. But if we classify as reference resolution unresolved. Use source evidence.\n- temporal_relations: Source has no before/after/wait relations. If multiple stands, commas could indicate sequential but not explicit. Since action multiplicity unresolved, exact linear order not representable. Could mark AMBIGUOUS? The temporal relations dimension: identify one exact execution order. If one action, no temporal relation. If three, order listed. But because multiplicity not resolved, cannot establish unique. Maybe UNKNOWN? Need per dimension statuses. Since source explicitly/structurally leaves relation unresolved? Hmm. For dimension temporal_relations, there are no explicit temporal connectives. The only potential order is comma juxtaposition. For one interpretation it's one action; for another three sequential. That's multiple material readings? It overlaps action_order. Mark AMBIGUOUS due to unresolved ordering if repeated actions. Or UNIQUE inapplicable if only one action. But cannot independently know. The gate asks inspect independently. Could mark UNKNOWN? Let's reason.\n\n- unresolved_relations: AMBIGUOUS: explicit? The source has hesitation \"嗯\" and comma-separated restatements, but does it explicitly leave unresolved? It doesn't explicitly say \"either\" or \"or\". However dimension: preserve any explicitly unresolved choice. It doesn't explicitly say unresolved; but ambiguity from lack of resolution. For unresolved_relations, maybe AMBIGUOUS because the relation between \"站五秒\", \"五秒钟\", \"五秒\" is left unresolved (restatement vs repetition vs additional action). This is a relation not resolved. Yes mark AMBIGUOUS.\n\nOverall status AMBIGUOUS.\n\nNeed coverage nonempty list, concatenated exactly equals original source. Need ensure no extra spaces. Original is {\"source\":\"站五秒，五秒钟，嗯，五秒。\"} The source string: 站五秒，五秒钟，嗯，五秒。 Let's count:\n站 五 秒 ， 五 秒 钟 ， 嗯 ， 五 秒 。\nSegments:\n1 \"站五秒\" (3 chars)\n2 \"，\" (1)\n3 \"五秒钟\" (3)\n4 \"，\" (1)\n5 \"嗯\" (1)\n6 \"，\" (1)\n7 \"五秒\" (2)\n8 \"。\" (1)\nConcatenate: 站五秒，五秒钟，嗯，五秒。 yes.\n\nExplanations nonempty, account meaning/effect. Role:\n- \"站五秒\": ACTION; expresses stand for five seconds. It's the only overt action verb.\n- \"，\": SEPARATOR; punctuation separates possible restatements/commands; does not itself authorize action.\n- \"五秒钟\": QUANTITY; duration phrase 5 sec; without verb could be restating first duration, correcting it, or implicit another stand; no unique scope.\n- \"，\": SEPARATOR.\n- \"嗯\": CONTEXT; hesitation filler; may signal reformulation but no defined semantic edit/authority.\n- \"，\": SEPARATOR.\n- \"五秒\": QUANTITY; same duration phrase; could be further restatement/correction/implicit action.\n- \"。\": SEPARATOR; terminator, no action.\n\nNeed maybe role for \"五秒钟\" maybe ACTION? It has quantity only. QUANTITY okay. Explanations include why nonexecuting spans does not modify authority. For separators and context explain no authority.\n\nDimensions explanations need source evidence. Must be nonempty. Need exactly seven keys.\n\nPotential issue: status must be AUTHORIZED_UNIQUE only if all UNIQUE. We have ambiguous.\n\nNeed ensure no markdown. Output one JSON object. It must be valid JSON. Chinese characters okay. Use quotes. Ensure no unescaped newline? Use strings. Need exactly keys status, coverage, dimensions. Could include newline in JSON? Fine. But \"no markdown\". We'll output compact or pretty? Pretty okay. Need valid JSON no trailing commas.\n\nLet's craft.\n\nNeed be careful: The dimension explanations should mention source evidence. We can say source only has one overt \"站\", then two bare duration phrases. If one reads comma-separated duration phrases as restatements, one stand of 5s; if as elliptical repeated commands, three stand actions of 5s. The hesitation \"嗯\" does not explicitly mark an edit. Therefore ambiguous.\n\nFor action_order: Since multiplicity unresolved, exact order cannot be uniquely determined: either no order (one action) or listed order for three actions. But one could say if three, order is listed order. Still multiple readings. Mark AMBIGUOUS.\n\nFor correction_scope: \"五秒钟\" and \"五秒\" could correct/replace first duration but both equal same value, no difference in duration, but scope of whether they replace the action or preserve it unresolved. The same value makes material effect? Hmm if duration same, whether correction or repetition still maybe different action count. Correction scope ambiguous because no explicit correction term. If value same, correction doesn't change parameter, but changes whether additional actions? The correction scope dimension: exactly which action/parameter/relation an edit changes. There is no explicit edit. \"嗯\" could be correction. Because no explicit edit, ambiguous. Good.\n\nFor repetition_scope: The duration \"五秒/五秒钟\" appears three times. Could be rhetorical repetition of same requested duration to clarify, or request to repeat stand three times, or three separate commands. The span and count of repetition cannot be fixed. Ambiguous.\n\nReference_resolution: Later \"五秒钟\" and \"五秒\" lack subject/verb; they may refer to the initial \"站\" as same action or implicitly invoke it as new actions. No pronoun but omitted shared argument. Ambiguous.\n\nTemporal_relations: There are no before/after/wait/completion markers. If multiple actions, comma juxtaposition might be sequential, but source does not specify waiting or simultaneity. Since action count unresolved, a single linear order cannot be established. Ambiguous or UNKNOWN? Hmm. Source doesn't explicitly mention timing except durations. If only one stand, no temporal relation. If three, likely sequential. But because multiplicity ambiguous, temporal relation ambiguous. Mark AMBIGUOUS.\n\nunresolved_relations: The relation among the three duration expressions and the initial \"站\" is left unresolved. The \"嗯\" does not resolve whether it is hesitation/restatement/additional command. Thus AMBIGUOUS. It says preserve explicitly unresolved choice; not exactly explicit but relation unresolved. We can say source leaves it unresolved. Good.\n\nNeed perhaps if any dimension status UNKNOWN? Overall AMBIGUOUS if any ambiguous, no need unknown. Status AMBIGUOUS.\n\nCoverage explanation for \"站五秒\": Overt action \"站\" with duration \"五秒\" (5s), positive finite duration, legal stand candidate. However repeat/restatement scope unresolved. Good.\n\n\"五秒钟\": Bare duration phrase. It could restate/correct the initial 5s duration, or elliptically request another stand 5s. It doesn't itself contain a verb; no unique authority to add an action. Good.\n\n\"嗯\": hesitation/filler. It may indicate pause/self-correction but has no legal action or resolved edit target. Does not modify authority.\n\n\"五秒\": bare duration. Similar. It alone doesn't specify action or whether it replaces prior or adds. Good.\n\nSeparators: commas and period. Explain they delimit possible clauses; do not create actions.\n\nNeed ensure \"text\" values exact. The original source includes Chinese punctuation \"，\" and \"。\". We copy.\n\nPotential issue: role for \"五秒钟\" and \"五秒\" maybe QUANTITY. Fine.\n\nNeed JSON with unicode. Ensure no trailing commas. The coverage list objects have exactly text, role, explanation. Dimensions values exactly status, explanation. Overall object exactly status, coverage, dimensions. No extra.\n\nLet's formulate.\n\nDouble-check valid JSON: strings with Chinese and punctuation, no newlines inside maybe. Use standard.\n\nOne nuance: \"站五秒，五秒钟，嗯，五秒。\" Could some interpret as \"stand five seconds, five seconds, um, five seconds\" which is one action repeated emphasis. Could be AUTHORIZED_UNIQUE? The pilot may expect ambiguous due repeated durations. Need maybe final answer AMBIGUOUS. Yes.\n\nNeed mention \"action_multiplicity\" status AMBIGUOUS. \"action_order\" AMBIGUOUS. \"correction_scope\" AMBIGUOUS. \"repetition_scope\" AMBIGUOUS. \"reference_resolution\" AMBIGUOUS. \"temporal_relations\" AMBIGUOUS. \"unresolved_relations\" AMBIGUOUS. All ambiguous. That's okay.\n\nNeed be cautious: The instruction says \"If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" So all ambiguous fine.\n\nLet's produce JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source: \"站五秒，五秒钟，嗯，五秒。\" Chinese. Need determine ambiguity/unique. Source: \"站五秒，五秒钟，嗯，五秒。\" Means \"stand five seconds, five seconds, um, five seconds.\" Actions? Repetition? Does it request one stand action with duration 5 seconds, repeated three times? Or three stand commands of 5 seconds each? Or correction/filler? Need analyze seven dimensions.\n\nLegal semantics: stand accepts positive finite duration_s, default 2.0. Explicit vague duration unresolved. Here \"五秒\" = 5 seconds. \"五秒钟\" = 5 seconds. \"嗯\" filler. Source: 站五秒，五秒钟，嗯，五秒。 It seems repeated phrases all specify stand 5 seconds. But is it one command repeated/corrected? Could be \"stand five seconds, five seconds, um, five seconds.\" Ambiguity: action multiplicity/repetition scope: Does it mean one stand action of 5 seconds (duplicate restatements), or three stand actions each 5 seconds (sequence of three stands)? The punctuation commas separate. No explicit \"repeat\" or \"again\". Chinese \"站五秒，五秒钟，嗯，五秒。\" repeated duration maybe emphasis or self-correction. Need decide likely AMBIGUOUS because multiple material readings. Need coverage all spans exact concatenation. Need split into spans. Must ensure text values concatenated equal entire original source. Source includes no spaces? Original: 站五秒，五秒钟，嗯，五秒。 Let's copy. We can split:\n\"站五秒\" role ACTION maybe\n\"，\" SEPARATOR\n\"五秒钟\" QUANTITY/ACTION? It is duration phrase not full action? Actually \"五秒钟\" alone can mean five seconds as duration, likely continuation/edit.\n\"，\" SEPARATOR\n\"嗯\" CONTEXT\n\"，\" SEPARATOR\n\"五秒\" QUANTITY\n\"。\" SEPARATOR\nNeed every action, relation, editing clause considered. Text concatenated exact. Role choices. Could split \"站五秒\" ACTION, \"，\" SEPARATOR, \"五秒钟\" QUANTITY, \"，\" SEPARATOR, \"嗯\" CONTEXT, \"，\" SEPARATOR, \"五秒\" QUANTITY, \"。\" SEPARATOR. But \"五秒钟\" and \"五秒\" may also be ACTION omitted verb? Need explanation.\n\nNeed dimensions:\n- action_multiplicity: AMBIGUOUS: source contains one stand verb \"站\" in first phrase and subsequent duration phrases. Could authorize one stand action with repeated duration restatements, or three stand actions (each 5s) if each duration phrase implicitly repeats the stand. But omission of verb? Hmm reference_resolution maybe unresolved. Since no explicit \"再站\" or \"重复\", multiplicity not unique. Need say ambiguous.\n- action_order: If three stand actions, order is linear in listed order? But since multiplicity unresolved, ordering between repeated actions maybe if multiple. Could be AMBIGUOUS due to unclear whether phrases are alternatives/restatements vs sequential. Or UNKNOWN? Need statuses. Overall AMBIGUOUS if any ambiguous.\n- correction_scope: AMBIGUOUS: \"五秒钟\" and final \"五秒\" could be corrections/reformulations of initial duration, preserving one stand action; or independent additional commands; no explicit edit marker. \"嗯\" suggests hesitation maybe correction but not resolved. So ambiguous.\n- repetition_scope: AMBIGUOUS: repeated duration value appears three times. Does repetition repeat one stand action three times? Or restate same duration? Or three separate stand actions? \"never silently narrow repetition to one action or broaden it to a sequence.\" The source doesn't explicitly say repeat. But repetition of phrase. Need mark ambiguous.\n- reference_resolution: Maybe UNIQUE? All duration references \"五秒\"/\"五秒钟\" resolve to 5 sec; no pronouns. But omitted subject/verb for later duration phrases: do they refer to the same stand action? That is ambiguous. Could mark AMBIGUOUS or UNKNOWN. Reference resolution of omitted shared arguments: later duration-only phrases omit the action. It cannot be determined whether they attach to the first \"站\" as restatements or implicitly request additional stand actions. So AMBIGUOUS. But if we classify as reference resolution unresolved. Use source evidence.\n- temporal_relations: Source has no before/after/wait relations. If multiple stands, commas could indicate sequential but not explicit. Since action multiplicity unresolved, exact linear order not representable. Could mark AMBIGUOUS? The temporal relations dimension: identify one exact execution order. If one action, no temporal relation. If three, order listed. But because multiplicity not resolved, cannot establish unique. Maybe UNKNOWN? Need per dimension statuses. Since source explicitly/structurally leaves relation unresolved? Hmm. For dimension temporal_relations, there are no explicit temporal connectives. The only potential order is comma juxtaposition. For one interpretation it's one action; for another three sequential. That's multiple material readings? It overlaps action_order. Mark AMBIGUOUS due to unresolved ordering if repeated actions. Or UNIQUE inapplicable if only one action. But cannot independently know. The gate asks inspect independently. Could mark UNKNOWN? Let's reason.\n\n- unresolved_relations: AMBIGUOUS: explicit? The source has hesitation \"嗯\" and comma-separated restatements, but does it explicitly leave unresolved? It doesn't explicitly say \"either\" or \"or\". However dimension: preserve any explicitly unresolved choice. It doesn't explicitly say unresolved; but ambiguity from lack of resolution. For unresolved_relations, maybe AMBIGUOUS because the relation between \"站五秒\", \"五秒钟\", \"五秒\" is left unresolved (restatement vs repetition vs additional action). This is a relation not resolved. Yes mark AMBIGUOUS.\n\nOverall status AMBIGUOUS.\n\nNeed coverage nonempty list, concatenated exactly equals original source. Need ensure no extra spaces. Original is {\"source\":\"站五秒，五秒钟，嗯，五秒。\"} The source string: 站五秒，五秒钟，嗯，五秒。 Let's count:\n站 五 秒 ， 五 秒 钟 ， 嗯 ， 五 秒 。\nSegments:\n1 \"站五秒\" (3 chars)\n2 \"，\" (1)\n3 \"五秒钟\" (3)\n4 \"，\" (1)\n5 \"嗯\" (1)\n6 \"，\" (1)\n7 \"五秒\" (2)\n8 \"。\" (1)\nConcatenate: 站五秒，五秒钟，嗯，五秒。 yes.\n\nExplanations nonempty, account meaning/effect. Role:\n- \"站五秒\": ACTION; expresses stand for five seconds. It's the only overt action verb.\n- \"，\": SEPARATOR; punctuation separates possible restatements/commands; does not itself authorize action.\n- \"五秒钟\": QUANTITY; duration phrase 5 sec; without verb could be restating first duration, correcting it, or implicit another stand; no unique scope.\n- \"，\": SEPARATOR.\n- \"嗯\": CONTEXT; hesitation filler; may signal reformulation but no defined semantic edit/authority.\n- \"，\": SEPARATOR.\n- \"五秒\": QUANTITY; same duration phrase; could be further restatement/correction/implicit action.\n- \"。\": SEPARATOR; terminator, no action.\n\nNeed maybe role for \"五秒钟\" maybe ACTION? It has quantity only. QUANTITY okay. Explanations include why nonexecuting spans does not modify authority. For separators and context explain no authority.\n\nDimensions explanations need source evidence. Must be nonempty. Need exactly seven keys.\n\nPotential issue: status must be AUTHORIZED_UNIQUE only if all UNIQUE. We have ambiguous.\n\nNeed ensure no markdown. Output one JSON object. It must be valid JSON. Chinese characters okay. Use quotes. Ensure no unescaped newline? Use strings. Need exactly keys status, coverage, dimensions. Could include newline in JSON? Fine. But \"no markdown\". We'll output compact or pretty? Pretty okay. Need valid JSON no trailing commas.\n\nLet's craft.\n\nNeed be careful: The dimension explanations should mention source evidence. We can say source only has one overt \"站\", then two bare duration phrases. If one reads comma-separated duration phrases as restatements, one stand of 5s; if as elliptical repeated commands, three stand actions of 5s. The hesitation \"嗯\" does not explicitly mark an edit. Therefore ambiguous.\n\nFor action_order: Since multiplicity unresolved, exact order cannot be uniquely determined: either no order (one action) or listed order for three actions. But one could say if three, order is listed order. Still multiple readings. Mark AMBIGUOUS.\n\nFor correction_scope: \"五秒钟\" and \"五秒\" could correct/replace first duration but both equal same value, no difference in duration, but scope of whether they replace the action or preserve it unresolved. The same value makes material effect? Hmm if duration same, whether correction or repetition still maybe different action count. Correction scope ambiguous because no explicit correction term. If value same, correction doesn't change parameter, but changes whether additional actions? The correction scope dimension: exactly which action/parameter/relation an edit changes. There is no explicit edit. \"嗯\" could be correction. Because no explicit edit, ambiguous. Good.\n\nFor repetition_scope: The duration \"五秒/五秒钟\" appears three times. Could be rhetorical repetition of same requested duration to clarify, or request to repeat stand three times, or three separate commands. The span and count of repetition cannot be fixed. Ambiguous.\n\nReference_resolution: Later \"五秒钟\" and \"五秒\" lack subject/verb; they may refer to the initial \"站\" as same action or implicitly invoke it as new actions. No pronoun but omitted shared argument. Ambiguous.\n\nTemporal_relations: There are no before/after/wait/completion markers. If multiple actions, comma juxtaposition might be sequential, but source does not specify waiting or simultaneity. Since action count unresolved, a single linear order cannot be established. Ambiguous or UNKNOWN? Hmm. Source doesn't explicitly mention timing except durations. If only one stand, no temporal relation. If three, likely sequential. But because multiplicity ambiguous, temporal relation ambiguous. Mark AMBIGUOUS.\n\nunresolved_relations: The relation among the three duration expressions and the initial \"站\" is left unresolved. The \"嗯\" does not resolve whether it is hesitation/restatement/additional command. Thus AMBIGUOUS. It says preserve explicitly unresolved choice; not exactly explicit but relation unresolved. We can say source leaves it unresolved. Good.\n\nNeed perhaps if any dimension status UNKNOWN? Overall AMBIGUOUS if any ambiguous, no need unknown. Status AMBIGUOUS.\n\nCoverage explanation for \"站五秒\": Overt action \"站\" with duration \"五秒\" (5s), positive finite duration, legal stand candidate. However repeat/restatement scope unresolved. Good.\n\n\"五秒钟\": Bare duration phrase. It could restate/correct the initial 5s duration, or elliptically request another stand 5s. It doesn't itself contain a verb; no unique authority to add an action. Good.\n\n\"嗯\": hesitation/filler. It may indicate pause/self-correction but has no legal action or resolved edit target. Does not modify authority.\n\n\"五秒\": bare duration. Similar. It alone doesn't specify action or whether it replaces prior or adds. Good.\n\nSeparators: commas and period. Explain they delimit possible clauses; do not create actions.\n\nNeed ensure \"text\" values exact. The original source includes Chinese punctuation \"，\" and \"。\". We copy.\n\nPotential issue: role for \"五秒钟\" and \"五秒\" maybe QUANTITY. Fine.\n\nNeed JSON with unicode. Ensure no trailing commas. The coverage list objects have exactly text, role, explanation. Dimensions values exactly status, explanation. Overall object exactly status, coverage, dimensions. No extra.\n\nLet's formulate.\n\nDouble-check valid JSON: strings with Chinese and punctuation, no newlines inside maybe. Use standard.\n\nOne nuance: \"站五秒，五秒钟，嗯，五秒。\" Could some interpret as \"stand five seconds, five seconds, um, five seconds\" which is one action repeated emphasis. Could be AUTHORIZED_UNIQUE? The pilot may expect ambiguous due repeated durations. Need maybe final answer AMBIGUOUS. Yes.\n\nNeed mention \"action_multiplicity\" status AMBIGUOUS. \"action_order\" AMBIGUOUS. \"correction_scope\" AMBIGUOUS. \"repetition_scope\" AMBIGUOUS. \"reference_resolution\" AMBIGUOUS. \"temporal_relations\" AMBIGUOUS. \"unresolved_relations\" AMBIGUOUS. All ambiguous. That's okay.\n\nNeed be cautious: The instruction says \"If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" So all ambiguous fine.\n\nLet's produce JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AMBIGUOUS\",\"coverage\":[{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"This is the only overt action phrase: 站 means stand and 五秒 is a five-second duration, which is a positive finite stand duration. It can authorize a stand action of 5 seconds, but later repeated duration phrases leave unresolved whether this action is restated, corrected, or repeated as additional actions.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates the initial 站五秒 from the following duration phrase. It does not itself authorize or modify any action.\"},{\"text\":\"五秒钟\",\"role\":\"QUANTITY\",\"explanation\":\"This is a bare five-second duration phrase without an explicit verb. It could restate or correct the first duration, or elliptically invoke another stand action, so its scope is not uniquely authorized by the text alone.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates 五秒钟 from the hesitation and final duration phrase. It does not itself create, replace, or order an action.\"},{\"text\":\"嗯\",\"role\":\"CONTEXT\",\"explanation\":\"This is a hesitation filler. It may suggest a pause or reformulation, but it does not define a legal action or resolve which prior span it edits, so it does not modify authority.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates 嗯 from the final duration phrase. It does not itself authorize or modify any action.\"},{\"text\":\"五秒\",\"role\":\"QUANTITY\",\"explanation\":\"This is another bare five-second duration phrase without an explicit verb. It could restate the same stand duration, correct a prior phrasing, or elliptically request another stand action; the source does not uniquely resolve which.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"This sentence-ending period closes the source. It does not itself authorize an action or resolve the relation among the preceding phrases.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The source contains one overt 站 action followed by two bare duration phrases, 五秒钟 and 五秒. It can be read as one stand action with repeated duration restatements, or as three stand actions of five seconds each via ellipsis. No explicit repeat or additional-command marker selects exactly one accounting of actions.\"},\"action_order\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"If the source is one stand action, there is no ordering question; if the comma-separated duration phrases are read as elliptical additional stand actions, the only possible order is their listed order. Because action multiplicity is unresolved, the exact execution order cannot be uniquely established from the source alone.\"},\"correction_scope\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The later phrases 五秒钟 and 五秒 could be corrections or reformulations of the initial 五秒, but there is no explicit edit word such as 改为 or a resolved target. The hesitation 嗯 suggests possible self-correction without specifying which action, parameter, or relation is replaced versus preserved.\"},\"repetition_scope\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The duration content is repeated three times as 五秒, 五秒钟, and 五秒. The source does not specify whether this repetition repeats one stand action for emphasis, repeats the duration specification only, or requests three separate stand actions. The repeated span and count are therefore not uniquely fixed.\"},\"reference_resolution\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The later phrases have no explicit subject or verb, so their omitted shared argument is unresolved: they may refer back to the same 站 action or implicitly invoke new stand actions. No pronoun or explicit reference resolves this to exactly one referent.\"},\"temporal_relations\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"There are no explicit before, after, simultaneous, waiting, or completion relations in the source. If there were multiple stand actions, comma juxtaposition might suggest sequential execution, but because action multiplicity is unresolved, no single linear temporal relation is uniquely authorized.\"},\"unresolved_relations\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The relation among 站五秒, 五秒钟, 嗯, and 五秒 is left unresolved. The source does not establish whether the later phrases restate, correct, or add to the initial command, so selecting one relation would resolve an ambiguity rather than preserve it.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_d5f7e0d6-27d7-4cdf-aed1-6f7e009ed137",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 148,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 3736,
+            "output_tokens_details": {
+              "reasoning_tokens": 2803
+            },
+            "total_tokens": 4652
+          }
+        },
+        "request_sha256": "15e081849f5bd95226237e127793af104176841951cdb4ce92822f6517d2628e",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 19.509525499999654,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_d5f7e0d6-27d7-4cdf-aed1-6f7e009ed137",
+        "text": "{\"status\":\"AMBIGUOUS\",\"coverage\":[{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"This is the only overt action phrase: 站 means stand and 五秒 is a five-second duration, which is a positive finite stand duration. It can authorize a stand action of 5 seconds, but later repeated duration phrases leave unresolved whether this action is restated, corrected, or repeated as additional actions.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates the initial 站五秒 from the following duration phrase. It does not itself authorize or modify any action.\"},{\"text\":\"五秒钟\",\"role\":\"QUANTITY\",\"explanation\":\"This is a bare five-second duration phrase without an explicit verb. It could restate or correct the first duration, or elliptically invoke another stand action, so its scope is not uniquely authorized by the text alone.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates 五秒钟 from the hesitation and final duration phrase. It does not itself create, replace, or order an action.\"},{\"text\":\"嗯\",\"role\":\"CONTEXT\",\"explanation\":\"This is a hesitation filler. It may suggest a pause or reformulation, but it does not define a legal action or resolve which prior span it edits, so it does not modify authority.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates 嗯 from the final duration phrase. It does not itself authorize or modify any action.\"},{\"text\":\"五秒\",\"role\":\"QUANTITY\",\"explanation\":\"This is another bare five-second duration phrase without an explicit verb. It could restate the same stand duration, correct a prior phrasing, or elliptically request another stand action; the source does not uniquely resolve which.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"This sentence-ending period closes the source. It does not itself authorize an action or resolve the relation among the preceding phrases.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The source contains one overt 站 action followed by two bare duration phrases, 五秒钟 and 五秒. It can be read as one stand action with repeated duration restatements, or as three stand actions of five seconds each via ellipsis. No explicit repeat or additional-command marker selects exactly one accounting of actions.\"},\"action_order\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"If the source is one stand action, there is no ordering question; if the comma-separated duration phrases are read as elliptical additional stand actions, the only possible order is their listed order. Because action multiplicity is unresolved, the exact execution order cannot be uniquely established from the source alone.\"},\"correction_scope\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The later phrases 五秒钟 and 五秒 could be corrections or reformulations of the initial 五秒, but there is no explicit edit word such as 改为 or a resolved target. The hesitation 嗯 suggests possible self-correction without specifying which action, parameter, or relation is replaced versus preserved.\"},\"repetition_scope\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The duration content is repeated three times as 五秒, 五秒钟, and 五秒. The source does not specify whether this repetition repeats one stand action for emphasis, repeats the duration specification only, or requests three separate stand actions. The repeated span and count are therefore not uniquely fixed.\"},\"reference_resolution\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The later phrases have no explicit subject or verb, so their omitted shared argument is unresolved: they may refer back to the same 站 action or implicitly invoke new stand actions. No pronoun or explicit reference resolves this to exactly one referent.\"},\"temporal_relations\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"There are no explicit before, after, simultaneous, waiting, or completion relations in the source. If there were multiple stand actions, comma juxtaposition might suggest sequential execution, but because action multiplicity is unresolved, no single linear temporal relation is uniquely authorized.\"},\"unresolved_relations\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The relation among 站五秒, 五秒钟, 嗯, and 五秒 is left unresolved. The source does not establish whether the later phrases restate, correct, or add to the initial command, so selecting one relation would resolve an ambiguity rather than preserve it.\"}}}",
+        "usage": {
+          "input_tokens": 148,
+          "output_tokens": 3736,
+          "total_tokens": 4652
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.488545999998678,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-5s",
+      "model": "deepseek-flash",
+      "normalized_length": 12,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 185,
+      "raw_response_sha256": "43ab03ee233d6b45c9c84eff017aed5cb434659582297bd4e948fed9e38c7731",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": false,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_5e6ee16b-ea6d-4b46-86c4-779cc9da66c6",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AMBIGUOUS",
+          "finish_reason": "completed",
+          "latency_s": 19.514269199999035,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 19.509525499999654,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AMBIGUOUS\",\"coverage\":[{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"This is the only overt action phrase: 站 means stand and 五秒 is a five-second duration, which is a positive finite stand duration. It can authorize a stand action of 5 seconds, but later repeated duration phrases leave unresolved whether this action is restated, corrected, or repeated as additional actions.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates the initial 站五秒 from the following duration phrase. It does not itself authorize or modify any action.\"},{\"text\":\"五秒钟\",\"role\":\"QUANTITY\",\"explanation\":\"This is a bare five-second duration phrase without an explicit verb. It could restate or correct the first duration, or elliptically invoke another stand action, so its scope is not uniquely authorized by the text alone.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates 五秒钟 from the hesitation and final duration phrase. It does not itself create, replace, or order an action.\"},{\"text\":\"嗯\",\"role\":\"CONTEXT\",\"explanation\":\"This is a hesitation filler. It may suggest a pause or reformulation, but it does not define a legal action or resolve which prior span it edits, so it does not modify authority.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"This comma separates 嗯 from the final duration phrase. It does not itself authorize or modify any action.\"},{\"text\":\"五秒\",\"role\":\"QUANTITY\",\"explanation\":\"This is another bare five-second duration phrase without an explicit verb. It could restate the same stand duration, correct a prior phrasing, or elliptically request another stand action; the source does not uniquely resolve which.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"This sentence-ending period closes the source. It does not itself authorize an action or resolve the relation among the preceding phrases.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The source contains one overt 站 action followed by two bare duration phrases, 五秒钟 and 五秒. It can be read as one stand action with repeated duration restatements, or as three stand actions of five seconds each via ellipsis. No explicit repeat or additional-command marker selects exactly one accounting of actions.\"},\"action_order\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"If the source is one stand action, there is no ordering question; if the comma-separated duration phrases are read as elliptical additional stand actions, the only possible order is their listed order. Because action multiplicity is unresolved, the exact execution order cannot be uniquely established from the source alone.\"},\"correction_scope\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The later phrases 五秒钟 and 五秒 could be corrections or reformulations of the initial 五秒, but there is no explicit edit word such as 改为 or a resolved target. The hesitation 嗯 suggests possible self-correction without specifying which action, parameter, or relation is replaced versus preserved.\"},\"repetition_scope\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The duration content is repeated three times as 五秒, 五秒钟, and 五秒. The source does not specify whether this repetition repeats one stand action for emphasis, repeats the duration specification only, or requests three separate stand actions. The repeated span and count are therefore not uniquely fixed.\"},\"reference_resolution\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The later phrases have no explicit subject or verb, so their omitted shared argument is unresolved: they may refer back to the same 站 action or implicitly invoke new stand actions. No pronoun or explicit reference resolves this to exactly one referent.\"},\"temporal_relations\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"There are no explicit before, after, simultaneous, waiting, or completion relations in the source. If there were multiple stand actions, comma juxtaposition might suggest sequential execution, but because action multiplicity is unresolved, no single linear temporal relation is uniquely authorized.\"},\"unresolved_relations\":{\"status\":\"AMBIGUOUS\",\"explanation\":\"The relation among 站五秒, 五秒钟, 嗯, and 五秒 is left unresolved. The source does not establish whether the later phrases restate, correct, or add to the initial command, so selecting one relation would resolve an ambiguity rather than preserve it.\"}}}",
+          "raw_response_sha256": "a1dfb9d0169a526e4a05e3350fbf217490100faff83ff083dca42cab6996b8dc",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_d5f7e0d6-27d7-4cdf-aed1-6f7e009ed137",
+          "source_aware": false,
+          "source_sha256": "3f594682f62ada1fa81665914b143fd4b59ba9ac561cd91d129e4c2fe7b332eb",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 148,
+            "output_tokens": 3736,
+            "total_tokens": 4652
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "This is the only overt action phrase: 站 means stand and 五秒 is a five-second duration, which is a positive finite stand duration. It can authorize a stand action of 5 seconds, but later repeated duration phrases leave unresolved whether this action is restated, corrected, or repeated as additional actions.",
+                "role": "ACTION",
+                "text": "站五秒"
+              },
+              {
+                "explanation": "This comma separates the initial 站五秒 from the following duration phrase. It does not itself authorize or modify any action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "This is a bare five-second duration phrase without an explicit verb. It could restate or correct the first duration, or elliptically invoke another stand action, so its scope is not uniquely authorized by the text alone.",
+                "role": "QUANTITY",
+                "text": "五秒钟"
+              },
+              {
+                "explanation": "This comma separates 五秒钟 from the hesitation and final duration phrase. It does not itself create, replace, or order an action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "This is a hesitation filler. It may suggest a pause or reformulation, but it does not define a legal action or resolve which prior span it edits, so it does not modify authority.",
+                "role": "CONTEXT",
+                "text": "嗯"
+              },
+              {
+                "explanation": "This comma separates 嗯 from the final duration phrase. It does not itself authorize or modify any action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "This is another bare five-second duration phrase without an explicit verb. It could restate the same stand duration, correct a prior phrasing, or elliptically request another stand action; the source does not uniquely resolve which.",
+                "role": "QUANTITY",
+                "text": "五秒"
+              },
+              {
+                "explanation": "This sentence-ending period closes the source. It does not itself authorize an action or resolve the relation among the preceding phrases.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains one overt 站 action followed by two bare duration phrases, 五秒钟 and 五秒. It can be read as one stand action with repeated duration restatements, or as three stand actions of five seconds each via ellipsis. No explicit repeat or additional-command marker selects exactly one accounting of actions.",
+                "status": "AMBIGUOUS"
+              },
+              "action_order": {
+                "explanation": "If the source is one stand action, there is no ordering question; if the comma-separated duration phrases are read as elliptical additional stand actions, the only possible order is their listed order. Because action multiplicity is unresolved, the exact execution order cannot be uniquely established from the source alone.",
+                "status": "AMBIGUOUS"
+              },
+              "correction_scope": {
+                "explanation": "The later phrases 五秒钟 and 五秒 could be corrections or reformulations of the initial 五秒, but there is no explicit edit word such as 改为 or a resolved target. The hesitation 嗯 suggests possible self-correction without specifying which action, parameter, or relation is replaced versus preserved.",
+                "status": "AMBIGUOUS"
+              },
+              "reference_resolution": {
+                "explanation": "The later phrases have no explicit subject or verb, so their omitted shared argument is unresolved: they may refer back to the same 站 action or implicitly invoke new stand actions. No pronoun or explicit reference resolves this to exactly one referent.",
+                "status": "AMBIGUOUS"
+              },
+              "repetition_scope": {
+                "explanation": "The duration content is repeated three times as 五秒, 五秒钟, and 五秒. The source does not specify whether this repetition repeats one stand action for emphasis, repeats the duration specification only, or requests three separate stand actions. The repeated span and count are therefore not uniquely fixed.",
+                "status": "AMBIGUOUS"
+              },
+              "temporal_relations": {
+                "explanation": "There are no explicit before, after, simultaneous, waiting, or completion relations in the source. If there were multiple stand actions, comma juxtaposition might suggest sequential execution, but because action multiplicity is unresolved, no single linear temporal relation is uniquely authorized.",
+                "status": "AMBIGUOUS"
+              },
+              "unresolved_relations": {
+                "explanation": "The relation among 站五秒, 五秒钟, 嗯, and 五秒 is left unresolved. The source does not establish whether the later phrases restate, correct, or add to the initial command, so selecting one relation would resolve an ambiguity rather than preserve it.",
+                "status": "AMBIGUOUS"
+              }
+            },
+            "status": "AMBIGUOUS"
+          }
+        },
+        "reason_code": "SOURCE_NOT_UNIQUE",
+        "status": "AMBIGUOUS"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 211,
+        "output_tokens": 252,
+        "total_tokens": 1999
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": "AMBIGUOUS_COMMAND",
+    "error_message": "source authorization withheld executable Mission: SOURCE_NOT_UNIQUE",
+    "mission": null,
+    "normalized_text": "站五秒,五秒钟,嗯,五秒",
+    "status": "AMBIGUOUS"
+  }
+}

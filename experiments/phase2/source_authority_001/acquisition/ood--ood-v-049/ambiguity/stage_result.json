@@ -1,0 +1,284 @@
+{
+  "added_wall_s": 15.53719529999944,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 15.533607900000789,
+        "provider_document": {
+          "created_at": 1791359515,
+          "id": "resp_2af07c61-d50d-4b46-804b-0121e10db119",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_2af07c61-d50d-4b46-804b-0121e10db119",
+              "reasoning_content": "We need answer JSON only. Need inspect source Chinese: \"停，站1秒。顺序照这两句念的来，停在前头。\"\n\nWe need determine ambiguity gate. Need parse exactly. Source: 停，站1秒。顺序照这两句念的来，停在前头。\n\nMeaning: Stop, stand 1 second. Order follows these two sentences as read, stop at the front. There are two actions: 停 (stop), 站1秒 (stand duration 1s). Then clause \"顺序照这两句念的来，停在前头。\" means \"The order follows the order these two sentences are read/spoken, stop (is) in front.\" This seems explicit order: stop before stand. So unique? Need inspect dimensions. Could be ambiguity: \"顺序照这两句念的来，停在前头。\" It explicitly states order as the two sentences are spoken, stop first. The two sentences: first \"停，站1秒。\" Hmm possibly two sentences? \"停\" and \"站1秒\"? Or \"停，站1秒\" one sentence? Chinese text: \"停，站1秒。顺序照这两句念的来，停在前头。\" The phrase \"这两句\" likely refers to \"停\" and \"站1秒\" as two clauses/sentences? It says order according to these two sentences read: stop at front. So stop then stand. Unique.\n\nNeed consider \"停，站1秒。\" Stop, stand 1 second. There is a comma between. So action sequence: stop, stand 1s. Then order clause confirms stop before. Are there any unresolved? \"停在前头\" maybe \"stop at the front\" not \"stop is first\"? It clarifies stop first. So unique. Need produce coverage list, split into spans with exact concatenation. Need ensure text concatenation equals entire original source exactly.\n\nSource string: 停，站1秒。顺序照这两句念的来，停在前头。\n\nNeed split meaningful spans. Could do:\n1 \"停\" ACTION\n2 \"，\" SEPARATOR\n3 \"站1秒\" ACTION/QUANTITY? It contains action stand and quantity 1秒. Role ACTION maybe, explanation includes duration. But coverage requires every action, relation and editing clause. Could split \"站\" ACTION and \"1秒\" QUANTITY. But concatenation exact. Need meaningful. Let's split:\n- \"停\" ACTION\n- \"，\" SEPARATOR\n- \"站\" ACTION\n- \"1秒\" QUANTITY\n- \"。\" SEPARATOR? punctuation separator.\n- \"顺序照这两句念的来\" RELATION? It establishes order following the two utterances.\n- \"，\" SEPARATOR\n- \"停在前头\" RELATION? Confirms stop first.\n- \"。\" SEPARATOR? Final punctuation.\n\nBut role list exactly: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Can use SEPARATOR for punctuation. Need every text concatenated exact.\n\nCheck text values:\n\"停\" + \"，\" + \"站\" + \"1秒\" + \"。\" + \"顺序照这两句念的来\" + \"，\" + \"停在前头\" + \"。\"\n\nConcatenate: 停，站1秒。顺序照这两句念的来，停在前头。 Yes.\n\nNeed explanations nonempty. For \"顺序照这两句念的来\": This clause specifies sequence follows the two preceding clauses as read. It resolves ordering. \"停在前头\": states stop is first. This relation confirms stop precedes stand.\n\nDimensions:\naction_multiplicity: UNIQUE. Two distinct actions stop and stand, no edits/repetitions.\naction_order: UNIQUE. The clause explicitly says order follows the two sentences as read and stop at front => stop then stand.\ncorrection_scope: UNIQUE? No corrections/edits. Inapplicable? We need status UNIQUE if inapplicable and introduces no alternative. Explanation no corrective or replacement clause; comma not an edit.\nrepetition_scope: UNIQUE. No repetition requested; \"这两句\" refers to two distinct clauses, not repetition. Need maybe \"念的来\" could be interpreted as \"as read\" not repetition. It does not request repeating actions. So UNIQUE.\nreference_resolution: Need resolve \"这两句\" exactly. Refers to the two preceding clauses \"停\" and \"站1秒\". \"停在前头\" refers to \"停\" action. UNIQUE.\ntemporal_relations: UNIQUE. Linear order stop then stand. Stand duration 1s. Stop has no timing/duration? Stop maybe instantaneous? In linear plan, step after depends on predecessor. Stop then stand. No waiting/simultaneity. Need perhaps \"停在前头\" order. Unique.\nunresolved_relations: UNIQUE. No unresolved relation explicitly left. Though \"顺序照这两句念的来\" maybe weird: \"顺序照这两句念的来\" could mean \"the order follows the reading of these two sentences\" and \"停在前头\" confirms. Not unresolved. Unique.\n\nNeed ensure legal interpretation: stand duration 1秒 => duration_s=1.0 positive finite <=60. stop no params. Sequence two steps. Legal. Turn none. Max steps 2. So AUTHORIZED_UNIQUE.\n\nBut let's think deeply: Is there any ambiguity in \"顺序照这两句念的来，停在前头。\" The source includes \"停，站1秒。\" This is itself an ordered pair? The phrase \"顺序照这两句念的来\" could mean the order follows the order of these two sentences \"念的来\" (as they are read). Then \"停在前头\" \"stop at the front\". So definitely stop first. But maybe \"这两句\" could refer to the two sentences: \"停，站1秒。\" and \"顺序照这两句念的来，停在前头。\"? No, \"这两句\" likely two clauses in first sentence. If \"停，站1秒\" is one sentence, then \"这两句\" could refer to \"停\" and \"站1秒\" as two phrases. It resolves. If someone interprets \"这两句\" as the two sentences containing actions: first \"停，站1秒。\" and second \"顺序照这两句念的来，停在前头。\"? The second sentence itself is not an action sentence? It includes \"停在前头\" maybe action? But \"这两句\" before \"停在前头\" likely refers to \"停\" and \"站1秒\" not including itself. Is there potential ambiguity? The source says \"顺序照这两句念的来，停在前头。\" In Chinese, \"这两句\" refers to the two preceding utterances/clauses. Since the first sentence has \"停\" and \"站1秒\", two action clauses. It is clear enough. The pilot wants unique.\n\nNeed perhaps mention stop is first despite punctuation? Yes.\n\nPotential issue: \"停\" can be verb stop, but also \"station\"? No, legal action stop. \"站\" stand. Good.\n\nNeed produce final exactly JSON no markdown. Ensure coverage concatenated equals full source. Need no extra text. Need dimensions exactly seven names. Let's craft.\n\nNeed maybe use \"CONTEXT\" role for some? The clause \"顺序照这两句念的来\" is RELATION. \"停在前头\" is RELATION. Punctuation SEPARATOR. \"站\" ACTION, \"1秒\" QUANTITY. \"停\" ACTION. Comma separator. Period separator. Could maybe use \"顺序照这两句念的来\" and \"停在前头\" as RELATION. Good.\n\nNeed explanations for each span:\n- \"停\": requests stop action; no parameters; part of sequence.\n- \"，\": separator between first and second action clauses; does not alter authority.\n- \"站\": requests stand action; duration supplied by following span.\n- \"1秒\": quantity for stand, 1 second, legal positive finite duration.\n- \"。\": sentence terminator; separates first command from ordering clarification; nonexecuting.\n- \"顺序照这两句念的来\": relation: explicitly fixes execution order to order of the two preceding action clauses as read.\n- \"，\": separator before clarification.\n- \"停在前头\": relation: explicitly puts stop at front, confirming stop precedes stand.\n- \"。\": final punctuation; nonexecuting.\n\nNeed coverage text values concatenate. Note the original source includes \"停，站1秒。顺序照这两句念的来，停在前头。\" The period after 1秒 is Chinese full stop \"。\" and final \"。\". OK.\n\nDimensions explanations:\naction_multiplicity: UNIQUE. Source requests exactly two actions: stop and stand. \"这两句\" refers to these two, no repeated or edited actions, no additional action hidden.\naction_order: UNIQUE. \"顺序照这两句念的来，停在前头\" fixes linear order as read, stop first, then stand. No alternative order.\ncorrection_scope: UNIQUE. No edit/correction/replacement language; the clauses add an ordering clarification rather than modifying action parameters. No prior instruction to replace.\nrepetition_scope: UNIQUE. No repetition of an action or sequence; \"这两句\" denotes the two distinct clauses, not repeated execution. No span is repeated.\nreference_resolution: UNIQUE. \"这两句\" resolves to the two preceding action clauses \"停\" and \"站1秒\"; \"停在前头\" refers to the \"停\" action. No external context needed.\ntemporal_relations: UNIQUE. Linear relation is stop then stand; stand lasts 1s; no waiting, simultaneity, or completion relation beyond predecessor dependency. Representable.\nunresolved_relations: UNIQUE. No relation left explicitly unresolved; the ordering clause resolves the only potential uncertainty by fixing stop first.\n\nStatus AUTHORIZED_UNIQUE. Coverage nonempty.\n\nDouble-check if \"站1秒\" maybe \"stand for 1 second\" and \"停\" stop. Stop then stand. Legal. Stand default not needed. Stop no params. Sequence length 2. Maximum 32. No turn. So authorized unique.\n\nPotential challenge: The gate says \"Explicit vague duration is unresolved, not the default.\" Here duration is explicit 1秒. Good.\n\nPotential challenge: \"顺序照这两句念的来\" maybe \"顺序照这两句念的来\" could be instruction to repeat? \"念的来\" means \"read it out\" maybe \"according to how these two sentences are read\" not \"repeat\". If it meant \"顺序照这两句念的来\" as \"the order follows these two sentences read aloud\", still order. \"念的来\" in Chinese maybe \"念得来\" means \"can read\"? But with \"照...来\" means \"according to ...\". It says \"顺序照这两句念的来\" = order according to these two sentences being read. Not repetition.\n\nCould there be ambiguity: \"停在前头\" could mean \"stop is in front\" spatially rather than order? In context after \"顺序\" it means in the order, stop comes first. So unique.\n\nNeed final JSON. Ensure valid JSON with Chinese characters. No markdown. Use double quotes.\n\nLet's compose.\n\nNeed exactly keys status, coverage, dimensions. Coverage list objects exactly text, role, explanation. No extra fields. Dimensions object exactly seven names. Good.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source Chinese: \"停，站1秒。顺序照这两句念的来，停在前头。\"\n\nWe need determine ambiguity gate. Need parse exactly. Source: 停，站1秒。顺序照这两句念的来，停在前头。\n\nMeaning: Stop, stand 1 second. Order follows these two sentences as read, stop at the front. There are two actions: 停 (stop), 站1秒 (stand duration 1s). Then clause \"顺序照这两句念的来，停在前头。\" means \"The order follows the order these two sentences are read/spoken, stop (is) in front.\" This seems explicit order: stop before stand. So unique? Need inspect dimensions. Could be ambiguity: \"顺序照这两句念的来，停在前头。\" It explicitly states order as the two sentences are spoken, stop first. The two sentences: first \"停，站1秒。\" Hmm possibly two sentences? \"停\" and \"站1秒\"? Or \"停，站1秒\" one sentence? Chinese text: \"停，站1秒。顺序照这两句念的来，停在前头。\" The phrase \"这两句\" likely refers to \"停\" and \"站1秒\" as two clauses/sentences? It says order according to these two sentences read: stop at front. So stop then stand. Unique.\n\nNeed consider \"停，站1秒。\" Stop, stand 1 second. There is a comma between. So action sequence: stop, stand 1s. Then order clause confirms stop before. Are there any unresolved? \"停在前头\" maybe \"stop at the front\" not \"stop is first\"? It clarifies stop first. So unique. Need produce coverage list, split into spans with exact concatenation. Need ensure text concatenation equals entire original source exactly.\n\nSource string: 停，站1秒。顺序照这两句念的来，停在前头。\n\nNeed split meaningful spans. Could do:\n1 \"停\" ACTION\n2 \"，\" SEPARATOR\n3 \"站1秒\" ACTION/QUANTITY? It contains action stand and quantity 1秒. Role ACTION maybe, explanation includes duration. But coverage requires every action, relation and editing clause. Could split \"站\" ACTION and \"1秒\" QUANTITY. But concatenation exact. Need meaningful. Let's split:\n- \"停\" ACTION\n- \"，\" SEPARATOR\n- \"站\" ACTION\n- \"1秒\" QUANTITY\n- \"。\" SEPARATOR? punctuation separator.\n- \"顺序照这两句念的来\" RELATION? It establishes order following the two utterances.\n- \"，\" SEPARATOR\n- \"停在前头\" RELATION? Confirms stop first.\n- \"。\" SEPARATOR? Final punctuation.\n\nBut role list exactly: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Can use SEPARATOR for punctuation. Need every text concatenated exact.\n\nCheck text values:\n\"停\" + \"，\" + \"站\" + \"1秒\" + \"。\" + \"顺序照这两句念的来\" + \"，\" + \"停在前头\" + \"。\"\n\nConcatenate: 停，站1秒。顺序照这两句念的来，停在前头。 Yes.\n\nNeed explanations nonempty. For \"顺序照这两句念的来\": This clause specifies sequence follows the two preceding clauses as read. It resolves ordering. \"停在前头\": states stop is first. This relation confirms stop precedes stand.\n\nDimensions:\naction_multiplicity: UNIQUE. Two distinct actions stop and stand, no edits/repetitions.\naction_order: UNIQUE. The clause explicitly says order follows the two sentences as read and stop at front => stop then stand.\ncorrection_scope: UNIQUE? No corrections/edits. Inapplicable? We need status UNIQUE if inapplicable and introduces no alternative. Explanation no corrective or replacement clause; comma not an edit.\nrepetition_scope: UNIQUE. No repetition requested; \"这两句\" refers to two distinct clauses, not repetition. Need maybe \"念的来\" could be interpreted as \"as read\" not repetition. It does not request repeating actions. So UNIQUE.\nreference_resolution: Need resolve \"这两句\" exactly. Refers to the two preceding clauses \"停\" and \"站1秒\". \"停在前头\" refers to \"停\" action. UNIQUE.\ntemporal_relations: UNIQUE. Linear order stop then stand. Stand duration 1s. Stop has no timing/duration? Stop maybe instantaneous? In linear plan, step after depends on predecessor. Stop then stand. No waiting/simultaneity. Need perhaps \"停在前头\" order. Unique.\nunresolved_relations: UNIQUE. No unresolved relation explicitly left. Though \"顺序照这两句念的来\" maybe weird: \"顺序照这两句念的来\" could mean \"the order follows the reading of these two sentences\" and \"停在前头\" confirms. Not unresolved. Unique.\n\nNeed ensure legal interpretation: stand duration 1秒 => duration_s=1.0 positive finite <=60. stop no params. Sequence two steps. Legal. Turn none. Max steps 2. So AUTHORIZED_UNIQUE.\n\nBut let's think deeply: Is there any ambiguity in \"顺序照这两句念的来，停在前头。\" The source includes \"停，站1秒。\" This is itself an ordered pair? The phrase \"顺序照这两句念的来\" could mean the order follows the order of these two sentences \"念的来\" (as they are read). Then \"停在前头\" \"stop at the front\". So definitely stop first. But maybe \"这两句\" could refer to the two sentences: \"停，站1秒。\" and \"顺序照这两句念的来，停在前头。\"? No, \"这两句\" likely two clauses in first sentence. If \"停，站1秒\" is one sentence, then \"这两句\" could refer to \"停\" and \"站1秒\" as two phrases. It resolves. If someone interprets \"这两句\" as the two sentences containing actions: first \"停，站1秒。\" and second \"顺序照这两句念的来，停在前头。\"? The second sentence itself is not an action sentence? It includes \"停在前头\" maybe action? But \"这两句\" before \"停在前头\" likely refers to \"停\" and \"站1秒\" not including itself. Is there potential ambiguity? The source says \"顺序照这两句念的来，停在前头。\" In Chinese, \"这两句\" refers to the two preceding utterances/clauses. Since the first sentence has \"停\" and \"站1秒\", two action clauses. It is clear enough. The pilot wants unique.\n\nNeed perhaps mention stop is first despite punctuation? Yes.\n\nPotential issue: \"停\" can be verb stop, but also \"station\"? No, legal action stop. \"站\" stand. Good.\n\nNeed produce final exactly JSON no markdown. Ensure coverage concatenated equals full source. Need no extra text. Need dimensions exactly seven names. Let's craft.\n\nNeed maybe use \"CONTEXT\" role for some? The clause \"顺序照这两句念的来\" is RELATION. \"停在前头\" is RELATION. Punctuation SEPARATOR. \"站\" ACTION, \"1秒\" QUANTITY. \"停\" ACTION. Comma separator. Period separator. Could maybe use \"顺序照这两句念的来\" and \"停在前头\" as RELATION. Good.\n\nNeed explanations for each span:\n- \"停\": requests stop action; no parameters; part of sequence.\n- \"，\": separator between first and second action clauses; does not alter authority.\n- \"站\": requests stand action; duration supplied by following span.\n- \"1秒\": quantity for stand, 1 second, legal positive finite duration.\n- \"。\": sentence terminator; separates first command from ordering clarification; nonexecuting.\n- \"顺序照这两句念的来\": relation: explicitly fixes execution order to order of the two preceding action clauses as read.\n- \"，\": separator before clarification.\n- \"停在前头\": relation: explicitly puts stop at front, confirming stop precedes stand.\n- \"。\": final punctuation; nonexecuting.\n\nNeed coverage text values concatenate. Note the original source includes \"停，站1秒。顺序照这两句念的来，停在前头。\" The period after 1秒 is Chinese full stop \"。\" and final \"。\". OK.\n\nDimensions explanations:\naction_multiplicity: UNIQUE. Source requests exactly two actions: stop and stand. \"这两句\" refers to these two, no repeated or edited actions, no additional action hidden.\naction_order: UNIQUE. \"顺序照这两句念的来，停在前头\" fixes linear order as read, stop first, then stand. No alternative order.\ncorrection_scope: UNIQUE. No edit/correction/replacement language; the clauses add an ordering clarification rather than modifying action parameters. No prior instruction to replace.\nrepetition_scope: UNIQUE. No repetition of an action or sequence; \"这两句\" denotes the two distinct clauses, not repeated execution. No span is repeated.\nreference_resolution: UNIQUE. \"这两句\" resolves to the two preceding action clauses \"停\" and \"站1秒\"; \"停在前头\" refers to the \"停\" action. No external context needed.\ntemporal_relations: UNIQUE. Linear relation is stop then stand; stand lasts 1s; no waiting, simultaneity, or completion relation beyond predecessor dependency. Representable.\nunresolved_relations: UNIQUE. No relation left explicitly unresolved; the ordering clause resolves the only potential uncertainty by fixing stop first.\n\nStatus AUTHORIZED_UNIQUE. Coverage nonempty.\n\nDouble-check if \"站1秒\" maybe \"stand for 1 second\" and \"停\" stop. Stop then stand. Legal. Stand default not needed. Stop no params. Sequence length 2. Maximum 32. No turn. So authorized unique.\n\nPotential challenge: The gate says \"Explicit vague duration is unresolved, not the default.\" Here duration is explicit 1秒. Good.\n\nPotential challenge: \"顺序照这两句念的来\" maybe \"顺序照这两句念的来\" could be instruction to repeat? \"念的来\" means \"read it out\" maybe \"according to how these two sentences are read\" not \"repeat\". If it meant \"顺序照这两句念的来\" as \"the order follows these two sentences read aloud\", still order. \"念的来\" in Chinese maybe \"念得来\" means \"can read\"? But with \"照...来\" means \"according to ...\". It says \"顺序照这两句念的来\" = order according to these two sentences being read. Not repetition.\n\nCould there be ambiguity: \"停在前头\" could mean \"stop is in front\" spatially rather than order? In context after \"顺序\" it means in the order, stop comes first. So unique.\n\nNeed final JSON. Ensure valid JSON with Chinese characters. No markdown. Use double quotes.\n\nLet's compose.\n\nNeed exactly keys status, coverage, dimensions. Coverage list objects exactly text, role, explanation. No extra fields. Dimensions object exactly seven names. Good.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 无参数，并且是后续排序子句所指向的两个动作之一。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔“停”和“站1秒”两个动作子句；仅作标点分隔，不改变动作或授权。\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作；其持续时间由紧随其后的数量“1秒”提供。\"},{\"text\":\"1秒\",\"role\":\"QUANTITY\",\"explanation\":\"将 stand 的持续时间指定为 1 秒，即 1.0 秒；这是明确、正且有限的时长。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束第一句动作描述，并把其后的排序说明分开；该标点本身不执行动作。\"},{\"text\":\"顺序照这两句念的来\",\"role\":\"RELATION\",\"explanation\":\"明确要求执行顺序按照前面两个动作子句被念出的顺序来定，从而给出唯一排序依据。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔排序依据与“停在前头”这一确认性说明；不新增动作。\"},{\"text\":\"停在前头\",\"role\":\"RELATION\",\"explanation\":\"明确说明“停”在前，确认 stop 先于 stand 执行，排除相反顺序。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束整个源句；仅作最终标点，不改变动作、顺序或授权。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文请求且仅请求两个不同动作：stop 和 stand。没有编辑动作、重复动作或替换动作；“这两句”指向前述两个动作子句。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“顺序照这两句念的来，停在前头”明确把执行顺序固定为按两个动作子句的念出顺序，并进一步说明“停”在前，因此唯一顺序是 stop 后 stand。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有更正、编辑或替换任何动作、参数或分组；后续语句只是补充排序说明，未改变先前动作参数。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有要求重复任何动作或序列；“这两句”指两个不同动作子句，而不是重复执行同一动作或序列。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“这两句”在源文内唯一指向“停”和“站1秒”两个动作子句；“停在前头”唯一指向其中的“停”动作。无需外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"时间/顺序关系是线性的：先 stop，后 stand；stand 持续 1 秒。没有等待、同时执行或额外完成事件，可由线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确保留未决的顺序、范围或关系；“停在前头”已解决顺序，未留下可选择的其他关系。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_2af07c61-d50d-4b46-804b-0121e10db119",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 154,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 3071,
+            "output_tokens_details": {
+              "reasoning_tokens": 2381
+            },
+            "total_tokens": 3993
+          }
+        },
+        "request_sha256": "f2928e33ab3324f91e25735776f7bb25a77dc769ca4423cb5b23715a02bf0a8d",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 15.5321600999996,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_2af07c61-d50d-4b46-804b-0121e10db119",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 无参数，并且是后续排序子句所指向的两个动作之一。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔“停”和“站1秒”两个动作子句；仅作标点分隔，不改变动作或授权。\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作；其持续时间由紧随其后的数量“1秒”提供。\"},{\"text\":\"1秒\",\"role\":\"QUANTITY\",\"explanation\":\"将 stand 的持续时间指定为 1 秒，即 1.0 秒；这是明确、正且有限的时长。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束第一句动作描述，并把其后的排序说明分开；该标点本身不执行动作。\"},{\"text\":\"顺序照这两句念的来\",\"role\":\"RELATION\",\"explanation\":\"明确要求执行顺序按照前面两个动作子句被念出的顺序来定，从而给出唯一排序依据。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔排序依据与“停在前头”这一确认性说明；不新增动作。\"},{\"text\":\"停在前头\",\"role\":\"RELATION\",\"explanation\":\"明确说明“停”在前，确认 stop 先于 stand 执行，排除相反顺序。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束整个源句；仅作最终标点，不改变动作、顺序或授权。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文请求且仅请求两个不同动作：stop 和 stand。没有编辑动作、重复动作或替换动作；“这两句”指向前述两个动作子句。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“顺序照这两句念的来，停在前头”明确把执行顺序固定为按两个动作子句的念出顺序，并进一步说明“停”在前，因此唯一顺序是 stop 后 stand。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有更正、编辑或替换任何动作、参数或分组；后续语句只是补充排序说明，未改变先前动作参数。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有要求重复任何动作或序列；“这两句”指两个不同动作子句，而不是重复执行同一动作或序列。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“这两句”在源文内唯一指向“停”和“站1秒”两个动作子句；“停在前头”唯一指向其中的“停”动作。无需外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"时间/顺序关系是线性的：先 stop，后 stand；stand 持续 1 秒。没有等待、同时执行或额外完成事件，可由线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确保留未决的顺序、范围或关系；“停在前头”已解决顺序，未留下可选择的其他关系。\"}}}",
+        "usage": {
+          "input_tokens": 154,
+          "output_tokens": 3071,
+          "total_tokens": 3993
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.1720399999994697,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stop-stand1",
+      "model": "deepseek-flash",
+      "normalized_length": 20,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 251,
+      "raw_response_sha256": "5f356627f09a1cbbabb7407da07a5faed633e45c0677f6f3de06f6ee99627ed2",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_a439e426-b35f-4688-b0c9-46ae0a3fa20d",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 15.536511599999358,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 15.5321600999996,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 无参数，并且是后续排序子句所指向的两个动作之一。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔“停”和“站1秒”两个动作子句；仅作标点分隔，不改变动作或授权。\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作；其持续时间由紧随其后的数量“1秒”提供。\"},{\"text\":\"1秒\",\"role\":\"QUANTITY\",\"explanation\":\"将 stand 的持续时间指定为 1 秒，即 1.0 秒；这是明确、正且有限的时长。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束第一句动作描述，并把其后的排序说明分开；该标点本身不执行动作。\"},{\"text\":\"顺序照这两句念的来\",\"role\":\"RELATION\",\"explanation\":\"明确要求执行顺序按照前面两个动作子句被念出的顺序来定，从而给出唯一排序依据。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔排序依据与“停在前头”这一确认性说明；不新增动作。\"},{\"text\":\"停在前头\",\"role\":\"RELATION\",\"explanation\":\"明确说明“停”在前，确认 stop 先于 stand 执行，排除相反顺序。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束整个源句；仅作最终标点，不改变动作、顺序或授权。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文请求且仅请求两个不同动作：stop 和 stand。没有编辑动作、重复动作或替换动作；“这两句”指向前述两个动作子句。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“顺序照这两句念的来，停在前头”明确把执行顺序固定为按两个动作子句的念出顺序，并进一步说明“停”在前，因此唯一顺序是 stop 后 stand。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有更正、编辑或替换任何动作、参数或分组；后续语句只是补充排序说明，未改变先前动作参数。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有要求重复任何动作或序列；“这两句”指两个不同动作子句，而不是重复执行同一动作或序列。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“这两句”在源文内唯一指向“停”和“站1秒”两个动作子句；“停在前头”唯一指向其中的“停”动作。无需外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"时间/顺序关系是线性的：先 stop，后 stand；stand 持续 1 秒。没有等待、同时执行或额外完成事件，可由线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确保留未决的顺序、范围或关系；“停在前头”已解决顺序，未留下可选择的其他关系。\"}}}",
+          "raw_response_sha256": "549cbe4d4c53714657351537f583d87fe6dcc49e6db62a85ef44c7ee3dd0e281",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_2af07c61-d50d-4b46-804b-0121e10db119",
+          "source_aware": false,
+          "source_sha256": "6d964dc88206779c4243dc506163fd38f34173a4eecdc8a1ad01b3c64f60e87a",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 154,
+            "output_tokens": 3071,
+            "total_tokens": 3993
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "请求执行 stop 动作；stop 无参数，并且是后续排序子句所指向的两个动作之一。",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "分隔“停”和“站1秒”两个动作子句；仅作标点分隔，不改变动作或授权。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "请求执行 stand 动作；其持续时间由紧随其后的数量“1秒”提供。",
+                "role": "ACTION",
+                "text": "站"
+              },
+              {
+                "explanation": "将 stand 的持续时间指定为 1 秒，即 1.0 秒；这是明确、正且有限的时长。",
+                "role": "QUANTITY",
+                "text": "1秒"
+              },
+              {
+                "explanation": "结束第一句动作描述，并把其后的排序说明分开；该标点本身不执行动作。",
+                "role": "SEPARATOR",
+                "text": "。"
+              },
+              {
+                "explanation": "明确要求执行顺序按照前面两个动作子句被念出的顺序来定，从而给出唯一排序依据。",
+                "role": "RELATION",
+                "text": "顺序照这两句念的来"
+              },
+              {
+                "explanation": "分隔排序依据与“停在前头”这一确认性说明；不新增动作。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "明确说明“停”在前，确认 stop 先于 stand 执行，排除相反顺序。",
+                "role": "RELATION",
+                "text": "停在前头"
+              },
+              {
+                "explanation": "结束整个源句；仅作最终标点，不改变动作、顺序或授权。",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源文请求且仅请求两个不同动作：stop 和 stand。没有编辑动作、重复动作或替换动作；“这两句”指向前述两个动作子句。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“顺序照这两句念的来，停在前头”明确把执行顺序固定为按两个动作子句的念出顺序，并进一步说明“停”在前，因此唯一顺序是 stop 后 stand。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源文没有更正、编辑或替换任何动作、参数或分组；后续语句只是补充排序说明，未改变先前动作参数。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "“这两句”在源文内唯一指向“停”和“站1秒”两个动作子句；“停在前头”唯一指向其中的“停”动作。无需外部上下文。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源文没有要求重复任何动作或序列；“这两句”指两个不同动作子句，而不是重复执行同一动作或序列。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "时间/顺序关系是线性的：先 stop，后 stand；stand 持续 1 秒。没有等待、同时执行或额外完成事件，可由线性计划表示。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源文没有明确保留未决的顺序、范围或关系；“停在前头”已解决顺序，未留下可选择的其他关系。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 217,
+        "output_tokens": 200,
+        "total_tokens": 1953
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stop-stand1",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {},
+          "skill": "stop"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "duration_s": 1.0
+          },
+          "skill": "stand"
+        }
+      ]
+    },
+    "normalized_text": "停,站1秒,顺序照这两句念的来,停在前头",
+    "status": "SUCCESS"
+  }
+}

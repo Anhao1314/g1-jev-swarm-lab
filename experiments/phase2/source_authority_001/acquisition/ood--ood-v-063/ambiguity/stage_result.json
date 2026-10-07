@@ -1,0 +1,251 @@
+{
+  "added_wall_s": 20.19478629999867,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 20.191236100001333,
+        "provider_document": {
+          "created_at": 1791359636,
+          "id": "resp_33ef7ab2-de75-4f1b-895e-424e7b0a9801",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_33ef7ab2-de75-4f1b-895e-424e7b0a9801",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"右↷90°。\" Means \"right turn 90 degrees.\" Legal actions: turn requires nonzero finite angle_deg, left/counterclockwise positive, right/clockwise negative. Source has 右 (right), ↷ symbol? Need interpret. \"右↷90°。\" Does it authorize exactly one turn? Need dimension analysis.\n\nWe must output status, coverage, dimensions. Need decide unique/ambiguous/unknown.\n\nSource: 右↷90°。 In Chinese. \"右\" right; \"↷\" clockwise rotation arrow? U+21B7? Actually ↷ is \"clockwise top semicircle arrow\" maybe indicates turn clockwise/right? 90° angle. Sentence \"右↷90°。\" Could mean \"turn right 90 degrees\" or \"right clockwise 90 degrees.\" Legal turn. Right means negative angle -90. Unique? Need consider action_multiplicity: one turn. action_order: single action, order inapplicable unique. correction_scope none. repetition_scope none. reference_resolution none. temporal none. unresolved none. Should be AUTHORIZED_UNIQUE? Need be careful: the symbol ↷ may be ambiguous? It is a clockwise arrow. \"右↷90°\" maybe \"right turn 90° clockwise\" with redundant \"右\" and ↷. Does \"右\" attached to ↷? Could mean turn right by 90 degrees. Legal semantics: right/clockwise negative. There is exactly one turn angle 90°, direction right/clockwise. Legal (max 180, nonzero finite).\n\nNeed coverage split entire source exactly. Source string: \"右↷90°。\" Characters: 右 (U+53F3), ↷ (U+21B7), 9, 0, ° (U+00B0), 。 (U+3002). We can split into spans. Need concatenated equals entire source. Could have coverage objects:\n- text \"右\" role CONTEXT? It indicates direction? Maybe ACTION? Better coverage: \"右↷90°\" as ACTION? But they said split meaningful spans so every action, relation and editing clause considered. Could copy exact. We can do one span entire source? \"coverage is nonempty list of objects... Split source into meaningful spans.\" Could have one object text \"右↷90°。\" role ACTION explanation. But if entire source includes punctuation. It says every action, relation, editing clause considered. One span may suffice? \"Split source into meaningful spans\" suggests not necessarily multiple. But \"right\" and angle and punctuation are meaningful. We can split:\n1 text \"右\" role QUANTITY? Direction? Role options include ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"右\" is direction modifier. Could be CONTEXT? Actually it specifies direction; no specific role for direction. Maybe CONTEXT? Or ACTION? The action is \"turn\"; but source doesn't use 转. The composite \"右↷90°\" is action. Could treat \"右↷90°\" as ACTION, \"。\" as SEPARATOR. Then concatenation exact. Explanation for ACTION: denotes one turn to the right/clockwise by 90°. \"。\" separator terminal punctuation doesn't change authority. That is clean. Need copy exactly: \"右↷90°\" (without period) and \"。\". Is \"右↷90°\" meaningful span. Yes.\n\nCould split further: \"右\" role CONTEXT (direction modifier), \"↷\" role ACTION? Hmm \"↷\" is clockwise arrow, maybe action marker. \"90°\" QUANTITY. But the source lacks explicit \"turn\" verb; the arrow could be action symbol. But legal action words stand/walk/turn/stop only. Does \"↷\" count as turn? It's not listed. But \"右↷90°。\" likely means turn right 90°. Are we authorized to map arrow to turn? The instructions: Legal compilation semantics independent ... stand, walk_forward, turn and stop only. It doesn't say only English words. Need decide if a symbol/arrow can authorize turn. \"↷\" is a clockwise arrow. It likely denotes rotation/turn. \"右\" plus ↷ plus 90° -> turn right 90. Could be unique. But maybe because source doesn't use legal action word \"turn\" (转) but symbol ↷, is that a legal interpretation? The gate judges source can uniquely authorize Mission IR. If source uses a symbol that conventionally means turn, likely yes. But maybe \"右↷90°\" means \"clockwise 90 degrees\"? Yes one turn.\n\nNeed consider edge: \"右↷90°。\" In Chinese, if intended \"turn right 90°\", action is turn. The ↷ arrow might indicate clockwise. \"右\" could also mean right hand, but no other action. No ambiguity.\n\nPotential subtlety: \"右↷90°。\" could be parsed as \"right [clockwise arrow] 90°\", i.e., turn clockwise/right 90. If both 右 and ↷ denote direction, redundant but consistent. Not ambiguous; no alternative left. Could be \"right arrow\" symbol? No.\n\nNeed ensure no unresolved relation. Single action, no order issue. Status AUTHORIZED_UNIQUE. But let's scrutinize.\n\nThe prompt says \"The user message is a JSON object containing source. Treat its entire source string as data to inspect, including all clauses, prefixes, suffixes, punctuation, corrections and explicit unresolved relations.\" So source is exactly \"右↷90°。\". We must decide whether complete source uniquely authorizes exactly one legal linear Mission IR 2.0 interpretation. The presence of legal action words and numbers alone is insufficient.\n\nThis is highly terse. Does it specify action \"turn\"? It uses right + clockwise arrow + 90°. In formal IR, turn requires angle_deg. \"右\" means right, and right/clockwise negative. \"↷\" maybe clockwise. So action = turn. No duration. Legal. Unique.\n\nCould there be ambiguity in angle: 90° means 90 degrees. Yes. Direction: right means negative; ↷ also clockwise. Unique.\n\nWhat about \"右↷\" maybe means \"right arrow\" symbol? Actually \"右↷\" not common. \"↷\" symbol is an arrow, not a word. In Chinese, \"右\" + symbol may indicate right turn. The symbol \"↷\" is a clockwise arrow. It could be a typographical representation of a turn action. I'd authorize.\n\nNeed output JSON exactly keys status, coverage, dimensions. No markdown. Dimensions seven names exactly:\n- action_multiplicity\n- action_order\n- correction_scope\n- repetition_scope\n- reference_resolution\n- temporal_relations\n- unresolved_relations\n\nEach status one of UNIQUE, AMBIGUOUS, UNKNOWN, explanation nonempty.\n\nCoverage: Need entire source exactly. Maybe use two spans. Check text values concatenated in list order equal original exactly. Original: \"右↷90°。\" Let's carefully ensure arrow char and degree sign. In JSON, can include Unicode. \"右↷90°。\" Contains:\n右\n↷ (U+21B7)\n9\n0\n° (U+00B0)\n。 (U+3002)\nYes.\n\nIf coverage span 1 \"右↷90°\" and span 2 \"。\". Concatenation \"右↷90°。\". Good.\n\nRole for span 1: ACTION. Explanation: \"Combines the right/clockwise direction marker with the 90-degree quantity to denote the single requested turn action; right/clockwise corresponds to a negative angle in IR.\" Good. Role for \"。\": SEPARATOR. Explanation: \"Sentence-final punctuation; it delimits the instruction and does not add, repeat, or modify any action or relation.\"\n\nBut \"右\" and \"↷\" maybe distinct. Maybe coverage with three spans: \"右\" CONTEXT, \"↷\" ACTION, \"90°\" QUANTITY, \"。\" SEPARATOR. Then concatenation exact. Does \"右\" role CONTEXT explaining direction. \"↷\" role ACTION explaining clockwise turn symbol. \"90°\" QUANTITY. That might be more meaningful. But action \"↷\" alone? The action span could be \"右↷90°\" composite. The role options don't have DIRECTION. \"右\" could be CONTEXT. \"↷\" could be ACTION (turn symbol). \"90°\" QUANTITY. However, if we split, every action, relation, editing clause considered. That is fine. But \"↷\" as ACTION may be a symbol, not legal action word. The explanation can say it supplies the turn/rotation action. The direction \"右\" modifies it. The angle \"90°\" quantifies it. Does this create ambiguity? No. But coverage \"ACTION\" for arrow only and \"CONTEXT\" for right. Hmm.\n\nMaybe better: one span entire source as ACTION, explanation includes all. But \"Split source into meaningful spans\" suggests at least multiple? It says \"a nonempty list of objects... Split source into meaningful spans so every action, relation and editing clause is considered.\" One span can be meaningful but doesn't demonstrate considering parts. To be safe, use four spans:\n- text \"右\" role CONTEXT\n- text \"↷\" role ACTION\n- text \"90°\" role QUANTITY\n- text \"。\" role SEPARATOR\n\nConcatenation exact. Does \"右\" role CONTEXT: identifies direction as right. Does not by itself execute; modifies the turn action. \"↷\": denotes a clockwise turn/rotation action. \"90°\": quantity, angle 90 degrees. \"。\": separator. That is good. But is \"↷\" an ACTION? It denotes rotation. The legal action is turn. Explanation: \"The clockwise rotation symbol supplies the single turn/rotation action; combined with the direction and angle it is the only requested action.\" Good.\n\nPotential issue: If \"↷\" is not in legal action words, does it uniquely authorize turn? It is an arrow indicating clockwise rotation. Reasonable. The gate likely expects recognizing one turn. Could there be ambiguity because \"右\" also means right and \"↷\" clockwise could be redundant, but if 右 means \"right\" as in rightward? Turn right is clockwise? Wait, \"right turn\" in navigation vs \"clockwise\" orientation. There's a subtle ambiguity: \"turn right\" (rotate clockwise from current heading) vs \"right ↷\" maybe rotate clockwise? Both same? Let's think. In 2D, turning right means clockwise. Turning left means counterclockwise. So \"右\" and ↷ both indicate clockwise. Consistent.\n\nWhat if the arrow ↷ denotes \"clockwise\" and 右 means \"right\" as in \"right side\" but not necessarily turn direction? Still clockwise.\n\nCould \"右↷90°。\" be a correction? No. Repetition? no. Temporal? no.\n\nNeed not mention robot capability. Good.\n\nNeed status AUTHORIZED_UNIQUE. Dimensions all UNIQUE.\n\nLet's draft JSON.\n\nNeed ensure valid JSON escaping? We can include Unicode directly. Keys exactly. No extra fields. Coverage list objects exactly text, role, explanation. Explanation nonempty.\n\nLet's formulate explanations:\n\naction_multiplicity: \"The source contains exactly one action span: the clockwise rotation symbol ↷ quantified by 90° and directed by 右 (right). There is no conjunction, repetition, correction, or second verb that would request another action or replace an action.\" UNIQUE.\n\naction_order: \"There is only one requested action, so no execution order among multiple actions is required or left open. A single-step linear plan satisfies the source.\" UNIQUE.\n\ncorrection_scope: \"No editing, replacement, or correction clause is present, so there is no prior action, parameter, group, or relation for an edit to change.\" UNIQUE.\n\nrepetition_scope: \"No repetition word, count, or iterative construction appears; the single turn is requested once, not repeatedly.\" UNIQUE. But wait, \"90°\" is a quantity but not repetition. Fine.\n\nreference_resolution: \"No pronoun, ordinal, omitted shared argument, or reference to an earlier command appears; the only direction and angle are explicit in this instruction.\" UNIQUE. Is omitted shared argument? The action \"turn\" is implicit via arrow, but no reference to earlier command. The turn action has no subject; it's command. That's okay. The target? Not needed for IR. Angle explicit. Direction explicit. Unique.\n\ntemporal_relations: \"No before/after, simultaneity, waiting, or completion relation is stated; with one action there is a single linear step and no timing relation to resolve.\" UNIQUE.\n\nunresolved_relations: \"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The only direction and angle are settled by 右 and 90°, and there are no alternative actions.\" UNIQUE.\n\nCoverage:\n1 text \"右\", role CONTEXT, explanation \"Direction modifier: right. It constrains the rotation to the right/clockwise direction; it does not add a separate action.\"\n2 text \"↷\", role ACTION, explanation \"Clockwise rotation symbol; supplies the single requested turn action (turn) in combination with the direction and angle.\"\n3 text \"90°\", role QUANTITY, explanation \"Angle quantity of 90 degrees for the single turn; it is a finite nonzero legal turn angle.\"\n4 text \"。\", role SEPARATOR, explanation \"Sentence-final punctuation; it delimits the instruction and does not modify, repeat, or add any action or relation.\"\n\nConcatenation \"右↷90°。\". Great.\n\nBut wait, the output must be exactly one JSON object, no markdown. Ensure no trailing text. Good.\n\nLet's consider if there is any hidden issue: The source \"右↷90°。\" might be read as \"right arrow 90°\" not \"turn\". But in context of mission IR, symbols? The legal action words are English but source Chinese. The arrow ↷ is not a word; could be ambiguous between clockwise rotation and some other symbol. But no alternative action. Could be \"turn clockwise 90°\" vs \"turn right 90°\"—these are same under convention. If \"right\" and clockwise are not necessarily same? Wait, in a coordinate system, \"right\" could mean positive x direction if walking? But action is turn, not move. For turn, right means clockwise. So consistent.\n\nWhat about \"右↷\" maybe \"right-turn arrow\" icon? Still turn right. Unique.\n\nNeed perhaps mention \"right/clockwise positive? Actually legal semantics: left/counterclockwise positive, right/clockwise negative. So angle_deg = -90. Explanation can mention. But not necessary? It helps.\n\nPotential risk: The source uses \"右↷90°\" which is not \"turn right 90 degrees\" but \"right clockwise 90°\". The action word \"turn\" is not explicit. Is that enough? The gate likely treats symbols as action? The prompt says \"Legal action words and numbers alone insufficient\" but not \"only legal action words.\" It says legal compilation semantics are stand, walk_forward, turn and stop only. Does ↷ count as legal action word? It's a symbol. However, Mission IR 2.0 interpretation can map \"右↷90°\" to turn. If it were ambiguous whether ↷ means \"turn\" vs \"rotate\" vs something else, but rotate and turn same. The allowed action is turn. So unique. Good.\n\nLet's think about coverage role for \"↷\" as ACTION. If an evaluator expects the whole \"右↷90°\" as ACTION, our split still covers. Text values concatenate. Role choices can be broad. Explanation says supplies action. Good.\n\nNeed not include \"source\" field. Only status, coverage, dimensions.\n\nLet's ensure JSON valid. Use double quotes. Unicode arrow and degree. Fine. No newline? Can be pretty printed. It says exactly one JSON object, no markdown. Pretty printed is fine. Ensure no comments.\n\nLet's prepare final.\n\nDouble-check dimension names exactly:\n\"action_multiplicity\"\n\"action_order\"\n\"correction_scope\"\n\"repetition_scope\"\n\"reference_resolution\"\n\"temporal_relations\"\n\"unresolved_relations\"\n\nStatus for all UNIQUE. Status overall AUTHORIZED_UNIQUE.\n\nOne concern: The prompt says \"If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" So if all unique, authorized unique. Good.\n\nLet's produce final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"右↷90°。\" Means \"right turn 90 degrees.\" Legal actions: turn requires nonzero finite angle_deg, left/counterclockwise positive, right/clockwise negative. Source has 右 (right), ↷ symbol? Need interpret. \"右↷90°。\" Does it authorize exactly one turn? Need dimension analysis.\n\nWe must output status, coverage, dimensions. Need decide unique/ambiguous/unknown.\n\nSource: 右↷90°。 In Chinese. \"右\" right; \"↷\" clockwise rotation arrow? U+21B7? Actually ↷ is \"clockwise top semicircle arrow\" maybe indicates turn clockwise/right? 90° angle. Sentence \"右↷90°。\" Could mean \"turn right 90 degrees\" or \"right clockwise 90 degrees.\" Legal turn. Right means negative angle -90. Unique? Need consider action_multiplicity: one turn. action_order: single action, order inapplicable unique. correction_scope none. repetition_scope none. reference_resolution none. temporal none. unresolved none. Should be AUTHORIZED_UNIQUE? Need be careful: the symbol ↷ may be ambiguous? It is a clockwise arrow. \"右↷90°\" maybe \"right turn 90° clockwise\" with redundant \"右\" and ↷. Does \"右\" attached to ↷? Could mean turn right by 90 degrees. Legal semantics: right/clockwise negative. There is exactly one turn angle 90°, direction right/clockwise. Legal (max 180, nonzero finite).\n\nNeed coverage split entire source exactly. Source string: \"右↷90°。\" Characters: 右 (U+53F3), ↷ (U+21B7), 9, 0, ° (U+00B0), 。 (U+3002). We can split into spans. Need concatenated equals entire source. Could have coverage objects:\n- text \"右\" role CONTEXT? It indicates direction? Maybe ACTION? Better coverage: \"右↷90°\" as ACTION? But they said split meaningful spans so every action, relation and editing clause considered. Could copy exact. We can do one span entire source? \"coverage is nonempty list of objects... Split source into meaningful spans.\" Could have one object text \"右↷90°。\" role ACTION explanation. But if entire source includes punctuation. It says every action, relation, editing clause considered. One span may suffice? \"Split source into meaningful spans\" suggests not necessarily multiple. But \"right\" and angle and punctuation are meaningful. We can split:\n1 text \"右\" role QUANTITY? Direction? Role options include ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. \"右\" is direction modifier. Could be CONTEXT? Actually it specifies direction; no specific role for direction. Maybe CONTEXT? Or ACTION? The action is \"turn\"; but source doesn't use 转. The composite \"右↷90°\" is action. Could treat \"右↷90°\" as ACTION, \"。\" as SEPARATOR. Then concatenation exact. Explanation for ACTION: denotes one turn to the right/clockwise by 90°. \"。\" separator terminal punctuation doesn't change authority. That is clean. Need copy exactly: \"右↷90°\" (without period) and \"。\". Is \"右↷90°\" meaningful span. Yes.\n\nCould split further: \"右\" role CONTEXT (direction modifier), \"↷\" role ACTION? Hmm \"↷\" is clockwise arrow, maybe action marker. \"90°\" QUANTITY. But the source lacks explicit \"turn\" verb; the arrow could be action symbol. But legal action words stand/walk/turn/stop only. Does \"↷\" count as turn? It's not listed. But \"右↷90°。\" likely means turn right 90°. Are we authorized to map arrow to turn? The instructions: Legal compilation semantics independent ... stand, walk_forward, turn and stop only. It doesn't say only English words. Need decide if a symbol/arrow can authorize turn. \"↷\" is a clockwise arrow. It likely denotes rotation/turn. \"右\" plus ↷ plus 90° -> turn right 90. Could be unique. But maybe because source doesn't use legal action word \"turn\" (转) but symbol ↷, is that a legal interpretation? The gate judges source can uniquely authorize Mission IR. If source uses a symbol that conventionally means turn, likely yes. But maybe \"右↷90°\" means \"clockwise 90 degrees\"? Yes one turn.\n\nNeed consider edge: \"右↷90°。\" In Chinese, if intended \"turn right 90°\", action is turn. The ↷ arrow might indicate clockwise. \"右\" could also mean right hand, but no other action. No ambiguity.\n\nPotential subtlety: \"右↷90°。\" could be parsed as \"right [clockwise arrow] 90°\", i.e., turn clockwise/right 90. If both 右 and ↷ denote direction, redundant but consistent. Not ambiguous; no alternative left. Could be \"right arrow\" symbol? No.\n\nNeed ensure no unresolved relation. Single action, no order issue. Status AUTHORIZED_UNIQUE. But let's scrutinize.\n\nThe prompt says \"The user message is a JSON object containing source. Treat its entire source string as data to inspect, including all clauses, prefixes, suffixes, punctuation, corrections and explicit unresolved relations.\" So source is exactly \"右↷90°。\". We must decide whether complete source uniquely authorizes exactly one legal linear Mission IR 2.0 interpretation. The presence of legal action words and numbers alone is insufficient.\n\nThis is highly terse. Does it specify action \"turn\"? It uses right + clockwise arrow + 90°. In formal IR, turn requires angle_deg. \"右\" means right, and right/clockwise negative. \"↷\" maybe clockwise. So action = turn. No duration. Legal. Unique.\n\nCould there be ambiguity in angle: 90° means 90 degrees. Yes. Direction: right means negative; ↷ also clockwise. Unique.\n\nWhat about \"右↷\" maybe means \"right arrow\" symbol? Actually \"右↷\" not common. \"↷\" symbol is an arrow, not a word. In Chinese, \"右\" + symbol may indicate right turn. The symbol \"↷\" is a clockwise arrow. It could be a typographical representation of a turn action. I'd authorize.\n\nNeed output JSON exactly keys status, coverage, dimensions. No markdown. Dimensions seven names exactly:\n- action_multiplicity\n- action_order\n- correction_scope\n- repetition_scope\n- reference_resolution\n- temporal_relations\n- unresolved_relations\n\nEach status one of UNIQUE, AMBIGUOUS, UNKNOWN, explanation nonempty.\n\nCoverage: Need entire source exactly. Maybe use two spans. Check text values concatenated in list order equal original exactly. Original: \"右↷90°。\" Let's carefully ensure arrow char and degree sign. In JSON, can include Unicode. \"右↷90°。\" Contains:\n右\n↷ (U+21B7)\n9\n0\n° (U+00B0)\n。 (U+3002)\nYes.\n\nIf coverage span 1 \"右↷90°\" and span 2 \"。\". Concatenation \"右↷90°。\". Good.\n\nRole for span 1: ACTION. Explanation: \"Combines the right/clockwise direction marker with the 90-degree quantity to denote the single requested turn action; right/clockwise corresponds to a negative angle in IR.\" Good. Role for \"。\": SEPARATOR. Explanation: \"Sentence-final punctuation; it delimits the instruction and does not add, repeat, or modify any action or relation.\"\n\nBut \"右\" and \"↷\" maybe distinct. Maybe coverage with three spans: \"右\" CONTEXT, \"↷\" ACTION, \"90°\" QUANTITY, \"。\" SEPARATOR. Then concatenation exact. Does \"右\" role CONTEXT explaining direction. \"↷\" role ACTION explaining clockwise turn symbol. \"90°\" QUANTITY. That might be more meaningful. But action \"↷\" alone? The action span could be \"右↷90°\" composite. The role options don't have DIRECTION. \"右\" could be CONTEXT. \"↷\" could be ACTION (turn symbol). \"90°\" QUANTITY. However, if we split, every action, relation, editing clause considered. That is fine. But \"↷\" as ACTION may be a symbol, not legal action word. The explanation can say it supplies the turn/rotation action. The direction \"右\" modifies it. The angle \"90°\" quantifies it. Does this create ambiguity? No. But coverage \"ACTION\" for arrow only and \"CONTEXT\" for right. Hmm.\n\nMaybe better: one span entire source as ACTION, explanation includes all. But \"Split source into meaningful spans\" suggests at least multiple? It says \"a nonempty list of objects... Split source into meaningful spans so every action, relation and editing clause is considered.\" One span can be meaningful but doesn't demonstrate considering parts. To be safe, use four spans:\n- text \"右\" role CONTEXT\n- text \"↷\" role ACTION\n- text \"90°\" role QUANTITY\n- text \"。\" role SEPARATOR\n\nConcatenation exact. Does \"右\" role CONTEXT: identifies direction as right. Does not by itself execute; modifies the turn action. \"↷\": denotes a clockwise turn/rotation action. \"90°\": quantity, angle 90 degrees. \"。\": separator. That is good. But is \"↷\" an ACTION? It denotes rotation. The legal action is turn. Explanation: \"The clockwise rotation symbol supplies the single turn/rotation action; combined with the direction and angle it is the only requested action.\" Good.\n\nPotential issue: If \"↷\" is not in legal action words, does it uniquely authorize turn? It is an arrow indicating clockwise rotation. Reasonable. The gate likely expects recognizing one turn. Could there be ambiguity because \"右\" also means right and \"↷\" clockwise could be redundant, but if 右 means \"right\" as in rightward? Turn right is clockwise? Wait, \"right turn\" in navigation vs \"clockwise\" orientation. There's a subtle ambiguity: \"turn right\" (rotate clockwise from current heading) vs \"right ↷\" maybe rotate clockwise? Both same? Let's think. In 2D, turning right means clockwise. Turning left means counterclockwise. So \"右\" and ↷ both indicate clockwise. Consistent.\n\nWhat if the arrow ↷ denotes \"clockwise\" and 右 means \"right\" as in \"right side\" but not necessarily turn direction? Still clockwise.\n\nCould \"右↷90°。\" be a correction? No. Repetition? no. Temporal? no.\n\nNeed not mention robot capability. Good.\n\nNeed status AUTHORIZED_UNIQUE. Dimensions all UNIQUE.\n\nLet's draft JSON.\n\nNeed ensure valid JSON escaping? We can include Unicode directly. Keys exactly. No extra fields. Coverage list objects exactly text, role, explanation. Explanation nonempty.\n\nLet's formulate explanations:\n\naction_multiplicity: \"The source contains exactly one action span: the clockwise rotation symbol ↷ quantified by 90° and directed by 右 (right). There is no conjunction, repetition, correction, or second verb that would request another action or replace an action.\" UNIQUE.\n\naction_order: \"There is only one requested action, so no execution order among multiple actions is required or left open. A single-step linear plan satisfies the source.\" UNIQUE.\n\ncorrection_scope: \"No editing, replacement, or correction clause is present, so there is no prior action, parameter, group, or relation for an edit to change.\" UNIQUE.\n\nrepetition_scope: \"No repetition word, count, or iterative construction appears; the single turn is requested once, not repeatedly.\" UNIQUE. But wait, \"90°\" is a quantity but not repetition. Fine.\n\nreference_resolution: \"No pronoun, ordinal, omitted shared argument, or reference to an earlier command appears; the only direction and angle are explicit in this instruction.\" UNIQUE. Is omitted shared argument? The action \"turn\" is implicit via arrow, but no reference to earlier command. The turn action has no subject; it's command. That's okay. The target? Not needed for IR. Angle explicit. Direction explicit. Unique.\n\ntemporal_relations: \"No before/after, simultaneity, waiting, or completion relation is stated; with one action there is a single linear step and no timing relation to resolve.\" UNIQUE.\n\nunresolved_relations: \"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The only direction and angle are settled by 右 and 90°, and there are no alternative actions.\" UNIQUE.\n\nCoverage:\n1 text \"右\", role CONTEXT, explanation \"Direction modifier: right. It constrains the rotation to the right/clockwise direction; it does not add a separate action.\"\n2 text \"↷\", role ACTION, explanation \"Clockwise rotation symbol; supplies the single requested turn action (turn) in combination with the direction and angle.\"\n3 text \"90°\", role QUANTITY, explanation \"Angle quantity of 90 degrees for the single turn; it is a finite nonzero legal turn angle.\"\n4 text \"。\", role SEPARATOR, explanation \"Sentence-final punctuation; it delimits the instruction and does not modify, repeat, or add any action or relation.\"\n\nConcatenation \"右↷90°。\". Great.\n\nBut wait, the output must be exactly one JSON object, no markdown. Ensure no trailing text. Good.\n\nLet's consider if there is any hidden issue: The source \"右↷90°。\" might be read as \"right arrow 90°\" not \"turn\". But in context of mission IR, symbols? The legal action words are English but source Chinese. The arrow ↷ is not a word; could be ambiguous between clockwise rotation and some other symbol. But no alternative action. Could be \"turn clockwise 90°\" vs \"turn right 90°\"—these are same under convention. If \"right\" and clockwise are not necessarily same? Wait, in a coordinate system, \"right\" could mean positive x direction if walking? But action is turn, not move. For turn, right means clockwise. So consistent.\n\nWhat about \"右↷\" maybe \"right-turn arrow\" icon? Still turn right. Unique.\n\nNeed perhaps mention \"right/clockwise positive? Actually legal semantics: left/counterclockwise positive, right/clockwise negative. So angle_deg = -90. Explanation can mention. But not necessary? It helps.\n\nPotential risk: The source uses \"右↷90°\" which is not \"turn right 90 degrees\" but \"right clockwise 90°\". The action word \"turn\" is not explicit. Is that enough? The gate likely treats symbols as action? The prompt says \"Legal action words and numbers alone insufficient\" but not \"only legal action words.\" It says legal compilation semantics are stand, walk_forward, turn and stop only. Does ↷ count as legal action word? It's a symbol. However, Mission IR 2.0 interpretation can map \"右↷90°\" to turn. If it were ambiguous whether ↷ means \"turn\" vs \"rotate\" vs something else, but rotate and turn same. The allowed action is turn. So unique. Good.\n\nLet's think about coverage role for \"↷\" as ACTION. If an evaluator expects the whole \"右↷90°\" as ACTION, our split still covers. Text values concatenate. Role choices can be broad. Explanation says supplies action. Good.\n\nNeed not include \"source\" field. Only status, coverage, dimensions.\n\nLet's ensure JSON valid. Use double quotes. Unicode arrow and degree. Fine. No newline? Can be pretty printed. It says exactly one JSON object, no markdown. Pretty printed is fine. Ensure no comments.\n\nLet's prepare final.\n\nDouble-check dimension names exactly:\n\"action_multiplicity\"\n\"action_order\"\n\"correction_scope\"\n\"repetition_scope\"\n\"reference_resolution\"\n\"temporal_relations\"\n\"unresolved_relations\"\n\nStatus for all UNIQUE. Status overall AUTHORIZED_UNIQUE.\n\nOne concern: The prompt says \"If any dimension is AMBIGUOUS, use AMBIGUOUS. Otherwise if any dimension is UNKNOWN, use UNKNOWN.\" So if all unique, authorized unique. Good.\n\nLet's produce final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning right. It constrains the rotation to the right/clockwise direction and does not add a separate action.\"},{\"text\":\"↷\",\"role\":\"ACTION\",\"explanation\":\"Clockwise rotation symbol. Combined with 右 and 90°, it supplies the single requested turn action, corresponding to one turn with angle_deg = -90.\"},{\"text\":\"90°\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity of 90 degrees for the single turn. It is a finite nonzero legal turn angle.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation. It delimits the instruction and does not modify, repeat, or add any action or relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: one clockwise/right rotation quantified by 90°. There is no conjunction, repetition, correction, or second verb that would request another action or replace an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so no execution order among multiple actions is required or left open. A single-step linear plan satisfies the source.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No editing, replacement, or correction clause is present, so there is no prior action, parameter, group, or relation for an edit to change.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition word, count, or iterative construction appears. The single turn is requested once, not repeatedly.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, omitted shared argument, or reference to an earlier command appears. The direction and angle are explicit in this instruction.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated. With one action there is a single linear step and no timing relation to resolve.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The direction and angle are settled by 右 and 90°, and there are no alternative actions.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_33ef7ab2-de75-4f1b-895e-424e7b0a9801",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 142,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 4011,
+            "output_tokens_details": {
+              "reasoning_tokens": 3520
+            },
+            "total_tokens": 4921
+          }
+        },
+        "request_sha256": "9ba1293bd5234883459c2690fbd778c2fd846b5e083f06c796573fbb48ba1446",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 20.18969610000022,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_33ef7ab2-de75-4f1b-895e-424e7b0a9801",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning right. It constrains the rotation to the right/clockwise direction and does not add a separate action.\"},{\"text\":\"↷\",\"role\":\"ACTION\",\"explanation\":\"Clockwise rotation symbol. Combined with 右 and 90°, it supplies the single requested turn action, corresponding to one turn with angle_deg = -90.\"},{\"text\":\"90°\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity of 90 degrees for the single turn. It is a finite nonzero legal turn angle.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation. It delimits the instruction and does not modify, repeat, or add any action or relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: one clockwise/right rotation quantified by 90°. There is no conjunction, repetition, correction, or second verb that would request another action or replace an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so no execution order among multiple actions is required or left open. A single-step linear plan satisfies the source.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No editing, replacement, or correction clause is present, so there is no prior action, parameter, group, or relation for an edit to change.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition word, count, or iterative construction appears. The single turn is requested once, not repeatedly.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, omitted shared argument, or reference to an earlier command appears. The direction and angle are explicit in this instruction.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated. With one action there is a single linear step and no timing relation to resolve.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The direction and angle are settled by 右 and 90°, and there are no alternative actions.\"}}}",
+        "usage": {
+          "input_tokens": 142,
+          "output_tokens": 4011,
+          "total_tokens": 4921
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.051127099999576,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "right-turn-90",
+      "model": "deepseek-flash",
+      "normalized_length": 5,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 190,
+      "raw_response_sha256": "58e3cc1a97ab264d4b832886fb97f0c3067d0c5d5e1cfed8582aeeeec623ef55",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_bfa277a7-23f9-47da-9625-43d76b1435d5",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 20.19416470000033,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 20.18969610000022,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning right. It constrains the rotation to the right/clockwise direction and does not add a separate action.\"},{\"text\":\"↷\",\"role\":\"ACTION\",\"explanation\":\"Clockwise rotation symbol. Combined with 右 and 90°, it supplies the single requested turn action, corresponding to one turn with angle_deg = -90.\"},{\"text\":\"90°\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity of 90 degrees for the single turn. It is a finite nonzero legal turn angle.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation. It delimits the instruction and does not modify, repeat, or add any action or relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action: one clockwise/right rotation quantified by 90°. There is no conjunction, repetition, correction, or second verb that would request another action or replace an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so no execution order among multiple actions is required or left open. A single-step linear plan satisfies the source.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No editing, replacement, or correction clause is present, so there is no prior action, parameter, group, or relation for an edit to change.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition word, count, or iterative construction appears. The single turn is requested once, not repeatedly.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun, ordinal, omitted shared argument, or reference to an earlier command appears. The direction and angle are explicit in this instruction.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated. With one action there is a single linear step and no timing relation to resolve.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The direction and angle are settled by 右 and 90°, and there are no alternative actions.\"}}}",
+          "raw_response_sha256": "01bed144180ec65cb3189b4d2bec1eb31a0a7286149dd28992ee1e6effcb8507",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_33ef7ab2-de75-4f1b-895e-424e7b0a9801",
+          "source_aware": false,
+          "source_sha256": "ad7dadcf52655eebd2a7b440197911a00bc9e79520ee09984abc39d62c518275",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 142,
+            "output_tokens": 4011,
+            "total_tokens": 4921
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Direction modifier meaning right. It constrains the rotation to the right/clockwise direction and does not add a separate action.",
+                "role": "CONTEXT",
+                "text": "右"
+              },
+              {
+                "explanation": "Clockwise rotation symbol. Combined with 右 and 90°, it supplies the single requested turn action, corresponding to one turn with angle_deg = -90.",
+                "role": "ACTION",
+                "text": "↷"
+              },
+              {
+                "explanation": "Angle quantity of 90 degrees for the single turn. It is a finite nonzero legal turn angle.",
+                "role": "QUANTITY",
+                "text": "90°"
+              },
+              {
+                "explanation": "Sentence-final punctuation. It delimits the instruction and does not modify, repeat, or add any action or relation.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action: one clockwise/right rotation quantified by 90°. There is no conjunction, repetition, correction, or second verb that would request another action or replace an action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one requested action, so no execution order among multiple actions is required or left open. A single-step linear plan satisfies the source.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No editing, replacement, or correction clause is present, so there is no prior action, parameter, group, or relation for an edit to change.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "No pronoun, ordinal, omitted shared argument, or reference to an earlier command appears. The direction and angle are explicit in this instruction.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition word, count, or iterative construction appears. The single turn is requested once, not repeatedly.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, simultaneity, waiting, or completion relation is stated. With one action there is a single linear step and no timing relation to resolve.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The direction and angle are settled by 右 and 90°, and there are no alternative actions.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 205,
+        "output_tokens": 151,
+        "total_tokens": 1892
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "right-turn-90",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "右↷90°",
+    "status": "SUCCESS"
+  }
+}

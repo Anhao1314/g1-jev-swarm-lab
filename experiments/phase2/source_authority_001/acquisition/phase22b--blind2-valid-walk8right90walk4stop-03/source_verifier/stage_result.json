@@ -1,0 +1,357 @@
+{
+  "added_wall_s": 18.07731210000202,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 18.071158099999593,
+        "provider_document": {
+          "created_at": 1791360168,
+          "id": "resp_5b65322f-9d52-4228-b6c9-e03f4d65fd79",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_5b65322f-9d52-4228-b6c9-e03f4d65fd79",
+              "reasoning_content": "We need answer JSON only. Need derive source plan. Source Chinese: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nNeed analyze seven dimensions. Candidate matches? Let's derive.\n\nActions:\n1. 先向前走800厘米 = first walk forward 800 cm = 8 m. skill walk_forward distance_m 8.0.\n2. 再向右转90° = then turn right 90 deg. Right/clockwise negative => angle_deg -90. legal max abs 90 <=180.\n3. 然后向前移动4米 = then move forward 4 m. walk_forward distance 4.0.\n4. 最后停住 = finally stop. stop {}.\n\nOrder exact via 先, 再, 然后, 最后 sequential. depends_on as chain. Unique. No corrections/repetitions/references/temporal unresolved. Stand not involved. Coverage must split source exactly concatenated. Need include all punctuation and whitespace exactly. Source string: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nNeed coverage spans meaningful. We can split by clauses and punctuation? Need text values concatenated exactly equal original. We can choose spans. Ensure all original punctuation and whitespace. There is no whitespace. Characters:\n先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\n\nLet's index for exact: \n\"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\nSegments:\n1 \"先向前走800厘米\" \n2 \"，\" \n3 \"再向右转90°\"\n4 \"，\" \n5 \"然后向前移动4米\"\n6 \"，\" \n7 \"最后停住\"\n\nThis covers exact. Need roles: ACTION for clauses, SEPARATOR for commas. But perhaps quantity within action. We can make combined role ACTION explains quantity. Fine. Every action relation edit. There are no edits. The commas are separators. Need every explanation nonempty, meaning effect.\n\nCould include \"先\" relation in action span? The span \"先向前走800厘米\" includes temporal marker 先 and action. Role maybe ACTION with explanation includes first. \"再向右转90°\" includes 再. \"然后向前移动4米\". \"最后停住\". Commas separators.\n\nDimensions:\naction_multiplicity: UNIQUE: exactly four actions: walk 8m, turn right 90, walk 4m, stop. No repetition/edit.\naction_order: UNIQUE: 先...再...然后...最后 linear.\ncorrection_scope: UNIQUE inapplicable no correction.\nrepetition_scope: UNIQUE inapplicable no repetition.\nreference_resolution: UNIQUE? Source has no pronouns? Some omitted subject? Action sequence implicit same agent; no external referent needed. \"向前\" relative to robot current heading, standard. Unique. Or could say no ambiguous reference. \ntemporal_relations: UNIQUE sequential before/after; \"最后\" final; no waiting/completion beyond order.\nunresolved_relations: UNIQUE no explicit unresolved choices. Need maybe \"right\" relative? Not unresolved, turn right standard.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed output exactly one JSON object. Ensure keys exactly status, coverage, dimensions, authorized_plan. No markdown. Need maybe candidate_ir not used? We can mention? Output only. Need dims exactly named. Values status explanation.\n\nNeed ensure JSON valid with Chinese. Strings.\n\nLet's consider any subtlety: Source \"先向前走800厘米\" first forward 800 cm = 8m. Legal. \"向右转90°\" right turn 90. \"然后向前移动4米\" move forward 4m. \"最后停住\" stop. Plan IDs s1-s4. depends_on chain.\n\nCheck stand default irrelevant.\n\nPotential issue: \"停住\" maps stop? Legal skills include stop. Yes.\n\nCould action order be \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\" includes commas. Unique.\n\nCoverage concatenation: Need text values exactly. Let's construct:\n[\n{\"text\":\"先向前走800厘米\",\"role\":\"ACTION\",\"explanation\":\"...\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"...\"},\n{\"text\":\"再向右转90°\",\"role\":\"ACTION\",\"explanation\":\"...\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"...\"},\n{\"text\":\"然后向前移动4米\",\"role\":\"ACTION\",\"explanation\":\"...\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"...\"},\n{\"text\":\"最后停住\",\"role\":\"ACTION\",\"explanation\":\"...\"}\n]\nConcatenated equals source? Let's concatenate: 先向前走800厘米 + ， + 再向右转90° + ， + 然后向前移动4米 + ， + 最后停住 = yes.\n\nNeed explanations: first action \"先 indicates first and walk_forward distance 800 cm converted to 8.0 m; generates s1.\" Second \"再 indicates next action after s1; right turn is clockwise -> -90; generates s2.\" Third \"然后 indicates next after s2; walk 4 m -> s3.\" Fourth \"最后 indicates final action; stop {} -> s4.\" Separator \"punctuation separates clauses; no action or relation beyond ordering already in clauses.\" Maybe separator role explains no semantic action? Good.\n\nDimensions:\naction_multiplicity: \"The source requests four distinct actions: walk forward 800 cm, turn right 90°, walk forward 4 m, and stop. There is no conjunction of simultaneous actions nor any edit/replacement/repetition. The two walk_forward actions are distinct because they are separated by the turn and have different distances.\" status UNIQUE.\naction_order: \"先...再...然后...最后 establishes exactly one linear order: walk 800 cm, turn right 90°, walk 4 m, stop. No alternative order is permitted.\" UNIQUE.\ncorrection_scope: \"No correction marker or replacement clause appears; nothing earlier is edited or rescinded.\" UNIQUE.\nrepetition_scope: \"No repetition marker or count appears; each action occurs once.\" UNIQUE.\nreference_resolution: \"There are no pronouns or ordinal references requiring external resolution; implicit subject is the same robot and forward/right are resolved by the specified turn convention. No missing external context.\" UNIQUE. Actually \"再\" means then, \"然后\" then. No refs.\ntemporal_relations: \"The sequence markers 先/再/然后/最后 plus the stop at the end establish a single sequential chain with strict before/after relations and no waiting/simultaneous requirements. Represented by depends_on chain.\" UNIQUE.\nunresolved_relations: \"No explicit unresolved choice, optional order, alternative scope, or unresolved parameter is present; 90° and distances are definite.\" UNIQUE.\n\nauthorized_plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},\n{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},\n{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}\n]\nNeed numbers finite. angle -90. distance 8.0 etc. Stop params {}.\n\nCheck \"No mission_id is needed\" authorized plan list only. The step objects exactly id, skill, parameters, depends_on. Yes.\n\nCould there be requirement \"parameters contain ...\" no extra. Good.\n\nNeed maybe mention candidate? Since output only plan, no. If candidate matches, status AUTHORIZED_UNIQUE.\n\nEnsure no trailing markdown. Final JSON. Use double quotes. Chinese okay. Need escape? None. ° okay. cm Chinese okay.\n\nLet's craft exact JSON. Ensure coverage text exactly copied. The source contains fullwidth comma \"，\" U+FF0C. We'll copy. \"90°\" degree symbol. Good.\n\nNeed concern: The coverage text concatenated with all original punctuation and whitespace. There is no whitespace. Good.\n\nPotential issue with coverage role for \"先向前走800厘米\" includes \"先\" which is relation not action? The role could be ACTION or RELATION. We have relation markers within action spans. The prompt wants split source into meaningful spans so every action, relation and edit clause analyzed. Could split \"先\" as RELATION and \"向前走800厘米\" as ACTION etc. But then coverage concatenation. Maybe better split markers? Need every relation analyzed. If we include relation in action span explanation, role ACTION may still analyze relation. But role for \"先\" could be RELATION if separate. To be safe, split into relation markers and action clauses separately? Then text values: \"先\", \"向前走800厘米\", \"，\", \"再\", \"向右转90°\", \"，\", \"然后\", \"向前移动4米\", \"，\", \"最后\", \"停住\". This covers exact. Then roles:\n\"先\" RELATION\n\"向前走800厘米\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"向右转90°\" ACTION\n...\n\"最后\" RELATION\n\"停住\" ACTION.\nThis more granular and every relation analyzed. Need ensure concatenation exact. Yes. Let's consider \"向右转90°\" includes direction and angle. Fine.\n\nMaybe \"向前\" in \"向前走800厘米\" is action argument not relation. Same.\n\nNeed choose coverage. More spans perhaps okay. The prompt says split into meaningful spans so every action, relation and edit clause analyzed. It doesn't require maximal splitting. But including relation separate is good. Let's do 11 spans. Need explanations nonempty. The \"先\" relation explanation no action, just order. Separators. This avoids role ACTION for relation marker. However, \"最后\" relation? \"最后\" means finally, final order relation. Good.\n\nBut \"先向前走800厘米\" could be one ACTION span and \"先\" maybe relation. Granular is safer for coverage. Need all text values concatenate exactly:\n\"先\" + \"向前走800厘米\" + \"，\" + \"再\" + \"向右转90°\" + \"，\" + \"然后\" + \"向前移动4米\" + \"，\" + \"最后\" + \"停住\"\n= 先向前走800厘米，再向右转90°，然后向前移动4米，最后停住. Yes.\n\nCoverage roles:\n1 先 RELATION: indicates first position before all other actions; doesn't itself create a step.\n2 向前走800厘米 ACTION: walk_forward 800 cm = 8.0 m -> s1.\n3 ， SEPARATOR: separates clauses; no action.\n4 再 RELATION: then/next; establishes s2 after s1.\n5 向右转90° ACTION: turn right 90 -> angle -90 -> s2.\n6 ， SEPARATOR\n7 然后 RELATION\n8 向前移动4米 ACTION: walk_forward 4m -> s3.\n9 ， SEPARATOR\n10 最后 RELATION: final; stop last.\n11 停住 ACTION: stop {} -> s4.\n\nNeed dimension explanations mention these.\n\nPotential subtlety: \"向右转90°\" right turn = clockwise = negative. legal max 180. yes.\n\nPotential subtlety: \"向前走800厘米\" Chinese \"走\" could mean walk, \"向前移动\" also move; both map to walk_forward. legal only walk_forward. Good.\n\nPotential subtlety: \"停住\" could be stop; yes.\n\nNeed output exactly one JSON object. Let's ensure no newline? Fine.\n\nDouble-check all keys exactly. dimensions keys exactly:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nFor each status and explanation. status string.\n\nauthorized_plan array.\n\nLet's formulate explanations concise but complete.\n\nNeed maybe mention no correction despite candidate? No.\n\nLet's final. Ensure JSON valid: Chinese quotes? We're using ASCII double quotes. The degree symbol is valid UTF-8. Commas.\n\nOne issue: JSON strings cannot contain literal newline. We'll use single line? We can output pretty JSON with newlines outside strings. That's okay. No markdown. Strings don't contain newlines.\n\nLet's compose. Ensure no extra fields in coverage objects. Exactly text, role, explanation. Role values include ACTION, RELATION, SEPARATOR. Allowed roles also EDIT, QUANTITY, CONTEXT, but not required. Good.\n\nCould role for \"，\" be SEPARATOR. Explanation nonempty.\n\nNeed maybe coverage text values concatenated exactly, including no space. There is no space. Good.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need derive source plan. Source Chinese: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nNeed analyze seven dimensions. Candidate matches? Let's derive.\n\nActions:\n1. 先向前走800厘米 = first walk forward 800 cm = 8 m. skill walk_forward distance_m 8.0.\n2. 再向右转90° = then turn right 90 deg. Right/clockwise negative => angle_deg -90. legal max abs 90 <=180.\n3. 然后向前移动4米 = then move forward 4 m. walk_forward distance 4.0.\n4. 最后停住 = finally stop. stop {}.\n\nOrder exact via 先, 再, 然后, 最后 sequential. depends_on as chain. Unique. No corrections/repetitions/references/temporal unresolved. Stand not involved. Coverage must split source exactly concatenated. Need include all punctuation and whitespace exactly. Source string: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nNeed coverage spans meaningful. We can split by clauses and punctuation? Need text values concatenated exactly equal original. We can choose spans. Ensure all original punctuation and whitespace. There is no whitespace. Characters:\n先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\n\nLet's index for exact: \n\"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\nSegments:\n1 \"先向前走800厘米\" \n2 \"，\" \n3 \"再向右转90°\"\n4 \"，\" \n5 \"然后向前移动4米\"\n6 \"，\" \n7 \"最后停住\"\n\nThis covers exact. Need roles: ACTION for clauses, SEPARATOR for commas. But perhaps quantity within action. We can make combined role ACTION explains quantity. Fine. Every action relation edit. There are no edits. The commas are separators. Need every explanation nonempty, meaning effect.\n\nCould include \"先\" relation in action span? The span \"先向前走800厘米\" includes temporal marker 先 and action. Role maybe ACTION with explanation includes first. \"再向右转90°\" includes 再. \"然后向前移动4米\". \"最后停住\". Commas separators.\n\nDimensions:\naction_multiplicity: UNIQUE: exactly four actions: walk 8m, turn right 90, walk 4m, stop. No repetition/edit.\naction_order: UNIQUE: 先...再...然后...最后 linear.\ncorrection_scope: UNIQUE inapplicable no correction.\nrepetition_scope: UNIQUE inapplicable no repetition.\nreference_resolution: UNIQUE? Source has no pronouns? Some omitted subject? Action sequence implicit same agent; no external referent needed. \"向前\" relative to robot current heading, standard. Unique. Or could say no ambiguous reference. \ntemporal_relations: UNIQUE sequential before/after; \"最后\" final; no waiting/completion beyond order.\nunresolved_relations: UNIQUE no explicit unresolved choices. Need maybe \"right\" relative? Not unresolved, turn right standard.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed output exactly one JSON object. Ensure keys exactly status, coverage, dimensions, authorized_plan. No markdown. Need maybe candidate_ir not used? We can mention? Output only. Need dims exactly named. Values status explanation.\n\nNeed ensure JSON valid with Chinese. Strings.\n\nLet's consider any subtlety: Source \"先向前走800厘米\" first forward 800 cm = 8m. Legal. \"向右转90°\" right turn 90. \"然后向前移动4米\" move forward 4m. \"最后停住\" stop. Plan IDs s1-s4. depends_on chain.\n\nCheck stand default irrelevant.\n\nPotential issue: \"停住\" maps stop? Legal skills include stop. Yes.\n\nCould action order be \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\" includes commas. Unique.\n\nCoverage concatenation: Need text values exactly. Let's construct:\n[\n{\"text\":\"先向前走800厘米\",\"role\":\"ACTION\",\"explanation\":\"...\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"...\"},\n{\"text\":\"再向右转90°\",\"role\":\"ACTION\",\"explanation\":\"...\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"...\"},\n{\"text\":\"然后向前移动4米\",\"role\":\"ACTION\",\"explanation\":\"...\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"...\"},\n{\"text\":\"最后停住\",\"role\":\"ACTION\",\"explanation\":\"...\"}\n]\nConcatenated equals source? Let's concatenate: 先向前走800厘米 + ， + 再向右转90° + ， + 然后向前移动4米 + ， + 最后停住 = yes.\n\nNeed explanations: first action \"先 indicates first and walk_forward distance 800 cm converted to 8.0 m; generates s1.\" Second \"再 indicates next action after s1; right turn is clockwise -> -90; generates s2.\" Third \"然后 indicates next after s2; walk 4 m -> s3.\" Fourth \"最后 indicates final action; stop {} -> s4.\" Separator \"punctuation separates clauses; no action or relation beyond ordering already in clauses.\" Maybe separator role explains no semantic action? Good.\n\nDimensions:\naction_multiplicity: \"The source requests four distinct actions: walk forward 800 cm, turn right 90°, walk forward 4 m, and stop. There is no conjunction of simultaneous actions nor any edit/replacement/repetition. The two walk_forward actions are distinct because they are separated by the turn and have different distances.\" status UNIQUE.\naction_order: \"先...再...然后...最后 establishes exactly one linear order: walk 800 cm, turn right 90°, walk 4 m, stop. No alternative order is permitted.\" UNIQUE.\ncorrection_scope: \"No correction marker or replacement clause appears; nothing earlier is edited or rescinded.\" UNIQUE.\nrepetition_scope: \"No repetition marker or count appears; each action occurs once.\" UNIQUE.\nreference_resolution: \"There are no pronouns or ordinal references requiring external resolution; implicit subject is the same robot and forward/right are resolved by the specified turn convention. No missing external context.\" UNIQUE. Actually \"再\" means then, \"然后\" then. No refs.\ntemporal_relations: \"The sequence markers 先/再/然后/最后 plus the stop at the end establish a single sequential chain with strict before/after relations and no waiting/simultaneous requirements. Represented by depends_on chain.\" UNIQUE.\nunresolved_relations: \"No explicit unresolved choice, optional order, alternative scope, or unresolved parameter is present; 90° and distances are definite.\" UNIQUE.\n\nauthorized_plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},\n{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},\n{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}\n]\nNeed numbers finite. angle -90. distance 8.0 etc. Stop params {}.\n\nCheck \"No mission_id is needed\" authorized plan list only. The step objects exactly id, skill, parameters, depends_on. Yes.\n\nCould there be requirement \"parameters contain ...\" no extra. Good.\n\nNeed maybe mention candidate? Since output only plan, no. If candidate matches, status AUTHORIZED_UNIQUE.\n\nEnsure no trailing markdown. Final JSON. Use double quotes. Chinese okay. Need escape? None. ° okay. cm Chinese okay.\n\nLet's craft exact JSON. Ensure coverage text exactly copied. The source contains fullwidth comma \"，\" U+FF0C. We'll copy. \"90°\" degree symbol. Good.\n\nNeed concern: The coverage text concatenated with all original punctuation and whitespace. There is no whitespace. Good.\n\nPotential issue with coverage role for \"先向前走800厘米\" includes \"先\" which is relation not action? The role could be ACTION or RELATION. We have relation markers within action spans. The prompt wants split source into meaningful spans so every action, relation and edit clause analyzed. Could split \"先\" as RELATION and \"向前走800厘米\" as ACTION etc. But then coverage concatenation. Maybe better split markers? Need every relation analyzed. If we include relation in action span explanation, role ACTION may still analyze relation. But role for \"先\" could be RELATION if separate. To be safe, split into relation markers and action clauses separately? Then text values: \"先\", \"向前走800厘米\", \"，\", \"再\", \"向右转90°\", \"，\", \"然后\", \"向前移动4米\", \"，\", \"最后\", \"停住\". This covers exact. Then roles:\n\"先\" RELATION\n\"向前走800厘米\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"向右转90°\" ACTION\n...\n\"最后\" RELATION\n\"停住\" ACTION.\nThis more granular and every relation analyzed. Need ensure concatenation exact. Yes. Let's consider \"向右转90°\" includes direction and angle. Fine.\n\nMaybe \"向前\" in \"向前走800厘米\" is action argument not relation. Same.\n\nNeed choose coverage. More spans perhaps okay. The prompt says split into meaningful spans so every action, relation and edit clause analyzed. It doesn't require maximal splitting. But including relation separate is good. Let's do 11 spans. Need explanations nonempty. The \"先\" relation explanation no action, just order. Separators. This avoids role ACTION for relation marker. However, \"最后\" relation? \"最后\" means finally, final order relation. Good.\n\nBut \"先向前走800厘米\" could be one ACTION span and \"先\" maybe relation. Granular is safer for coverage. Need all text values concatenate exactly:\n\"先\" + \"向前走800厘米\" + \"，\" + \"再\" + \"向右转90°\" + \"，\" + \"然后\" + \"向前移动4米\" + \"，\" + \"最后\" + \"停住\"\n= 先向前走800厘米，再向右转90°，然后向前移动4米，最后停住. Yes.\n\nCoverage roles:\n1 先 RELATION: indicates first position before all other actions; doesn't itself create a step.\n2 向前走800厘米 ACTION: walk_forward 800 cm = 8.0 m -> s1.\n3 ， SEPARATOR: separates clauses; no action.\n4 再 RELATION: then/next; establishes s2 after s1.\n5 向右转90° ACTION: turn right 90 -> angle -90 -> s2.\n6 ， SEPARATOR\n7 然后 RELATION\n8 向前移动4米 ACTION: walk_forward 4m -> s3.\n9 ， SEPARATOR\n10 最后 RELATION: final; stop last.\n11 停住 ACTION: stop {} -> s4.\n\nNeed dimension explanations mention these.\n\nPotential subtlety: \"向右转90°\" right turn = clockwise = negative. legal max 180. yes.\n\nPotential subtlety: \"向前走800厘米\" Chinese \"走\" could mean walk, \"向前移动\" also move; both map to walk_forward. legal only walk_forward. Good.\n\nPotential subtlety: \"停住\" could be stop; yes.\n\nNeed output exactly one JSON object. Let's ensure no newline? Fine.\n\nDouble-check all keys exactly. dimensions keys exactly:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nFor each status and explanation. status string.\n\nauthorized_plan array.\n\nLet's formulate explanations concise but complete.\n\nNeed maybe mention no correction despite candidate? No.\n\nLet's final. Ensure JSON valid: Chinese quotes? We're using ASCII double quotes. The degree symbol is valid UTF-8. Commas.\n\nOne issue: JSON strings cannot contain literal newline. We'll use single line? We can output pretty JSON with newlines outside strings. That's okay. No markdown. Strings don't contain newlines.\n\nLet's compose. Ensure no extra fields in coverage objects. Exactly text, role, explanation. Role values include ACTION, RELATION, SEPARATOR. Allowed roles also EDIT, QUANTITY, CONTEXT, but not required. Good.\n\nCould role for \"，\" be SEPARATOR. Explanation nonempty.\n\nNeed maybe coverage text values concatenated exactly, including no space. There is no space. Good.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning first; it establishes that the following action occupies the first position and does not itself create an executable step.\"},{\"text\":\"向前走800厘米\",\"role\":\"ACTION\",\"explanation\":\"Requests forward walking 800 centimeters; 800 cm converts to 8.0 meters, so this authorizes s1 as walk_forward with distance_m 8.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning then/next; it places the following turn immediately after the first walking action.\"},{\"text\":\"向右转90°\",\"role\":\"ACTION\",\"explanation\":\"Requests a right turn of 90 degrees; right/clockwise is negative, so this authorizes s2 as turn with angle_deg -90.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning then; it places the following walking action immediately after the turn action.\"},{\"text\":\"向前移动4米\",\"role\":\"ACTION\",\"explanation\":\"Requests forward movement of 4 meters; this authorizes s3 as walk_forward with distance_m 4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning finally; it establishes that the following stop is the last action in the sequence.\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"Requests stopping; this authorizes s4 as stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four distinct actions: walk forward 800 cm, turn right 90 degrees, walk forward 4 m, and stop. The two walk actions are separate because they are separated by a turn and have different distances. There is no added simultaneous action, no repeated count, and no replacement or edit.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 然后, and 最后 establish one exact linear order: walk_forward 800 cm, turn right 90 degrees, walk_forward 4 m, stop. No alternative order is authorized.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or edit marker appears anywhere in the source, so no earlier action, parameter, group, or relation is changed or rescinded.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repetition count appears; each of the four requested actions occurs exactly once, and no span is compressed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns or ordinal references needing external resolution. The implicit actor is the same robot throughout, and forward/right are fixed by the turn convention and the sequence, so no missing external context affects the plan.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers plus the final stop require a single strict chain, with each later action after the previous one and no waiting, simultaneous, or completion relation beyond that linear order. This is represented by depends_on links s2 after s1, s3 after s2, and s4 after s3.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation, order, scope, or parameter is explicitly left unresolved. The distances, angle, direction, sequence, and final stop are all definite.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_5b65322f-9d52-4228-b6c9-e03f4d65fd79",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 159,
+            "input_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "output_tokens": 3697,
+            "output_tokens_details": {
+              "reasoning_tokens": 2743
+            },
+            "total_tokens": 5008
+          }
+        },
+        "request_sha256": "9896688f84f83bae13c406b9187884a7d633e3be1571c213c065cd3040b3764d",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 18.069599300000846,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_5b65322f-9d52-4228-b6c9-e03f4d65fd79",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning first; it establishes that the following action occupies the first position and does not itself create an executable step.\"},{\"text\":\"向前走800厘米\",\"role\":\"ACTION\",\"explanation\":\"Requests forward walking 800 centimeters; 800 cm converts to 8.0 meters, so this authorizes s1 as walk_forward with distance_m 8.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning then/next; it places the following turn immediately after the first walking action.\"},{\"text\":\"向右转90°\",\"role\":\"ACTION\",\"explanation\":\"Requests a right turn of 90 degrees; right/clockwise is negative, so this authorizes s2 as turn with angle_deg -90.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning then; it places the following walking action immediately after the turn action.\"},{\"text\":\"向前移动4米\",\"role\":\"ACTION\",\"explanation\":\"Requests forward movement of 4 meters; this authorizes s3 as walk_forward with distance_m 4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning finally; it establishes that the following stop is the last action in the sequence.\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"Requests stopping; this authorizes s4 as stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four distinct actions: walk forward 800 cm, turn right 90 degrees, walk forward 4 m, and stop. The two walk actions are separate because they are separated by a turn and have different distances. There is no added simultaneous action, no repeated count, and no replacement or edit.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 然后, and 最后 establish one exact linear order: walk_forward 800 cm, turn right 90 degrees, walk_forward 4 m, stop. No alternative order is authorized.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or edit marker appears anywhere in the source, so no earlier action, parameter, group, or relation is changed or rescinded.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repetition count appears; each of the four requested actions occurs exactly once, and no span is compressed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns or ordinal references needing external resolution. The implicit actor is the same robot throughout, and forward/right are fixed by the turn convention and the sequence, so no missing external context affects the plan.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers plus the final stop require a single strict chain, with each later action after the previous one and no waiting, simultaneous, or completion relation beyond that linear order. This is represented by depends_on links s2 after s1, s3 after s2, and s4 after s3.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation, order, scope, or parameter is explicitly left unresolved. The distances, angle, direction, sequence, and final stop are all definite.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+        "usage": {
+          "input_tokens": 159,
+          "output_tokens": 3697,
+          "total_tokens": 5008
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.2863605999991705,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 28,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "1b0b6fc8c853f0a08cd2cf06c5e1e653b06aa96a81c48e1c648cb288d221ab7b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b57abee8-32de-4e96-8880-9fc46fd1dad3",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 18.076597899998887,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 18.069599300000846,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning first; it establishes that the following action occupies the first position and does not itself create an executable step.\"},{\"text\":\"向前走800厘米\",\"role\":\"ACTION\",\"explanation\":\"Requests forward walking 800 centimeters; 800 cm converts to 8.0 meters, so this authorizes s1 as walk_forward with distance_m 8.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning then/next; it places the following turn immediately after the first walking action.\"},{\"text\":\"向右转90°\",\"role\":\"ACTION\",\"explanation\":\"Requests a right turn of 90 degrees; right/clockwise is negative, so this authorizes s2 as turn with angle_deg -90.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning then; it places the following walking action immediately after the turn action.\"},{\"text\":\"向前移动4米\",\"role\":\"ACTION\",\"explanation\":\"Requests forward movement of 4 meters; this authorizes s3 as walk_forward with distance_m 4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning finally; it establishes that the following stop is the last action in the sequence.\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"Requests stopping; this authorizes s4 as stop with empty parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four distinct actions: walk forward 800 cm, turn right 90 degrees, walk forward 4 m, and stop. The two walk actions are separate because they are separated by a turn and have different distances. There is no added simultaneous action, no repeated count, and no replacement or edit.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 再, 然后, and 最后 establish one exact linear order: walk_forward 800 cm, turn right 90 degrees, walk_forward 4 m, stop. No alternative order is authorized.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, replacement, or edit marker appears anywhere in the source, so no earlier action, parameter, group, or relation is changed or rescinded.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repetition count appears; each of the four requested actions occurs exactly once, and no span is compressed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns or ordinal references needing external resolution. The implicit actor is the same robot throughout, and forward/right are fixed by the turn convention and the sequence, so no missing external context affects the plan.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers plus the final stop require a single strict chain, with each later action after the previous one and no waiting, simultaneous, or completion relation beyond that linear order. This is represented by depends_on links s2 after s1, s3 after s2, and s4 after s3.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No relation, order, scope, or parameter is explicitly left unresolved. The distances, angle, direction, sequence, and final stop are all definite.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+          "raw_response_sha256": "4ac54f186f2eebe1e04f54e06b387adcbc1aa8b623bb88e582dad7b8545af983",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_5b65322f-9d52-4228-b6c9-e03f4d65fd79",
+          "source_aware": true,
+          "source_sha256": "f407d5ee6b605aaa4a6ea5d7cc64238b00950db57012528c0971629c3127eaef",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 159,
+            "output_tokens": 3697,
+            "total_tokens": 5008
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 8.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "angle_deg": -90.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s3"
+                ],
+                "id": "s4",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Temporal marker meaning first; it establishes that the following action occupies the first position and does not itself create an executable step.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Requests forward walking 800 centimeters; 800 cm converts to 8.0 meters, so this authorizes s1 as walk_forward with distance_m 8.0.",
+                "role": "ACTION",
+                "text": "向前走800厘米"
+              },
+              {
+                "explanation": "Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Temporal marker meaning then/next; it places the following turn immediately after the first walking action.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Requests a right turn of 90 degrees; right/clockwise is negative, so this authorizes s2 as turn with angle_deg -90.0.",
+                "role": "ACTION",
+                "text": "向右转90°"
+              },
+              {
+                "explanation": "Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Temporal marker meaning then; it places the following walking action immediately after the turn action.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Requests forward movement of 4 meters; this authorizes s3 as walk_forward with distance_m 4.0.",
+                "role": "ACTION",
+                "text": "向前移动4米"
+              },
+              {
+                "explanation": "Clause separator punctuation; it adds no action, parameter, or relation beyond the ordering expressed by the surrounding words.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Temporal marker meaning finally; it establishes that the following stop is the last action in the sequence.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Requests stopping; this authorizes s4 as stop with empty parameters.",
+                "role": "ACTION",
+                "text": "停住"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly four distinct actions: walk forward 800 cm, turn right 90 degrees, walk forward 4 m, and stop. The two walk actions are separate because they are separated by a turn and have different distances. There is no added simultaneous action, no repeated count, and no replacement or edit.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The markers 先, 再, 然后, and 最后 establish one exact linear order: walk_forward 800 cm, turn right 90 degrees, walk_forward 4 m, stop. No alternative order is authorized.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction, replacement, or edit marker appears anywhere in the source, so no earlier action, parameter, group, or relation is changed or rescinded.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The source contains no pronouns or ordinal references needing external resolution. The implicit actor is the same robot throughout, and forward/right are fixed by the turn convention and the sequence, so no missing external context affects the plan.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or repetition count appears; each of the four requested actions occurs exactly once, and no span is compressed or broadened.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The sequence markers plus the final stop require a single strict chain, with each later action after the previous one and no waiting, simultaneous, or completion relation beyond that linear order. This is represented by depends_on links s2 after s1, s3 after s2, and s4 after s3.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No relation, order, scope, or parameter is explicitly left unresolved. The distances, angle, direction, sequence, and final stop are all definite.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 326,
+        "total_tokens": 2081
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先向前走800厘米再向右转90°然后向前移动4米最后停住",
+    "status": "SUCCESS"
+  }
+}

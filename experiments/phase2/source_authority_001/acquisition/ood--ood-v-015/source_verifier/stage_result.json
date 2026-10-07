@@ -1,0 +1,342 @@
+{
+  "added_wall_s": 13.122762599999987,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 13.118761900001118,
+        "provider_document": {
+          "created_at": 1791359240,
+          "id": "resp_7e127a05-d733-421f-8f8d-9006127628c0",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_7e127a05-d733-421f-8f8d-9006127628c0",
+              "reasoning_content": "We need answer JSON only. Need analyze source Chinese. We must derive complete authorized plan. Source: \"恁先向左转九十度，再往前走十五米，末了停住。\"\n\nNeed parse: 恁 maybe dialect \"you\" or \"such\"? Source meaning likely \"You first turn left 90 degrees, then walk forward 15 meters, finally stop.\" Need inspect every clause. Candidate matches: turn 90 left, walk 15, stop. Need evaluate dimensions unique? Need be careful: \"恁\" maybe typo? \"恁先\" perhaps \"您先\"? It is untrusted. Does \"恁\" create ambiguity? Probably pronoun not relevant. Action \"向左转九十度\" turn left 90. \"再往前走十五米\" walk forward 15m. \"末了停住\" stop. \"先...再...末了...\" order: turn, walk, stop. Unique.\n\nNeed consider \"转九十度\" maybe \"turn 90 degrees\" with left, positive 90. Legal max 180. \"往前走十五米\" walk_forward distance 15. \"停住\" stop. All legal. stand default not relevant. No repetitions/corrections/ref unresolved. Temporal relations: sequential via 先, 再, 末了. Unique. Action multiplicity exactly three. Action order turn, walk, stop. Correction none. Repetition none. Reference resolution: omitted subjects? The pronoun \"恁\" refers user/addressee, actions imperative. \"往\" forward no object. Unique. Temporal before/after explicit. Unresolved none.\n\nNeed output coverage: list spans concatenating exactly entire original source. Need split source into meaningful spans so every action, relation, edit clause analyzed. Source string: \"恁先向左转九十度，再往前走十五米，末了停住。\"\nNeed coverage text values concatenated equal entire source. Need decide splits. Include punctuation as SEPARATOR maybe. Every span explanation nonempty.\n\nWe must preserve exact whitespace. Source no spaces. Chinese punctuation.\n\nPossible segments:\n1. \"恁\" CONTEXT - pronoun/addressee, not action. Does not alter plan. But maybe \"恁\" dialect second-person; imperative subject.\n2. \"先\" RELATION - temporal \"first\", starts sequence.\n3. \"向左转九十度\" ACTION/QUANTITY? Contains action and parameter. Need maybe split \"向左转\" ACTION, \"九十度\" QUANTITY. But coverage text values concatenated in order. We can split:\n- \"恁\" CONTEXT\n- \"先\" RELATION\n- \"向左转\" ACTION\n- \"九十度\" QUANTITY\n- \"，\" SEPARATOR\n- \"再\" RELATION\n- \"往前走\" ACTION? Actually \"往前走\" = walk forward. Could split \"往前\" maybe direction and \"走\" action. But legal skill walk_forward. \"往前走十五米\" whole action+quantity. Could split \"往前走\" ACTION, \"十五米\" QUANTITY.\n- \"，\" SEPARATOR\n- \"末了\" RELATION\n- \"停住\" ACTION\n- \"。\" SEPARATOR\n\nNeed ensure concatenation: \"恁\" + \"先\" + \"向左转\" + \"九十度\" + \"，\" + \"再\" + \"往前走\" + \"十五米\" + \"，\" + \"末了\" + \"停住\" + \"。\" = original. Yes.\n\nNeed explanations. Each nonempty, state meaning/effect. For separator punctuation: separates clauses; no action, preserves order. Context: \"恁\" second-person/dialect pronoun/address, imperative subject, no parameters. Relation: \"先\" marks first step in sequence. Action \"向左转\": turn skill; left indicates positive angle; requires angle parameter from next quantity. Quantity \"九十度\": 90 degrees, finite, max 180, maps angle_deg=90.0. Separator \"，\" separates clauses. Relation \"再\": then/next, after prior. Action \"往前走\": walk_forward, forward direction. Quantity \"十五米\": 15 meters, distance_m=15.0. Separator. Relation \"末了\": finally, last. Action \"停住\": stop skill, no parameters. Separator.\n\nNeed dimensions:\n- action_multiplicity UNIQUE: exactly three imperative actions: turn left 90, walk forward 15, stop. No repeated/edited actions.\n- action_order UNIQUE: 先 ... 再 ... 末了 yields linear order turn, walk, stop.\n- correction_scope UNIQUE: no corrections/edits; no clause replaces/preserves another. Inapplicable? We can state no correction, so unique.\n- repetition_scope UNIQUE: no repetition or iteration; each action once.\n- reference_resolution UNIQUE: pronoun \"恁\" is addressee/agent of all imperatives; omitted forward direction resolved by walk_forward; no ordinal refs. No external context needed.\n- temporal_relations UNIQUE: explicit sequential markers 先, 再, 末了 create single linear order; no simultaneity/waiting/completion issues. stop after walk after turn.\n- unresolved_relations UNIQUE: no explicit unresolved choices/scopes/orders; all relations resolved.\n\nauthorized_plan list exactly steps with id s1 etc.\ns1 turn angle_deg 90.0 depends_on []\ns2 walk_forward distance_m 15.0 depends_on [\"s1\"]\ns3 stop {} depends_on [\"s2\"]\n\nNeed status AUTHORIZED_UNIQUE.\n\nNeed be cautious: Chinese \"九十度\" = 90 degrees. \"十五米\" = 15 meters. \"米\" meters. Good.\n\nPotential issue: \"恁先向左转九十度\" Could \"恁\" mean \"that\"? In some dialect \"恁\" = \"you\" (plural) or \"so\". But as source in Chinese, likely \"you first turn left 90 degrees\". The pronoun doesn't matter. Could \"恁\" be a typo for \"您\"? No effect. If \"恁\" dialect \"you\", imperative subject.\n\nPotential issue: \"末了停住\" Could mean \"at the end stop\" not necessarily final action? It is final. Unique.\n\nPotential issue: \"往前走\" maybe \"walk_forward\" exactly. Yes.\n\nPotential issue: \"向左转九十度\" angle 90. \"向左\" positive. Good.\n\nNeed output exactly JSON object no markdown. Use proper escaping. Ensure coverage text values concatenated exactly equal source. Need not include candidate. Use Chinese punctuation. Ensure all keys exactly. Dimensions object exactly seven names. Explanation strings nonempty. authorized_plan steps each exactly id, skill, parameters, depends_on. No extra fields. JSON numbers finite. 90.0 and 15.0.\n\nNeed consider \"coverage is nonempty list of objects with exactly text, role, explanation.\" The role for quantity \"九十度\" and \"十五米\" okay. For punctuation role SEPARATOR.\n\nNeed ensure \"coverage\" concatenated in order equals entire original source exactly. Let's verify with segments:\n1 \"恁\"\n2 \"先\"\n3 \"向左转\"\n4 \"九十度\"\n5 \"，\"\n6 \"再\"\n7 \"往前走\"\n8 \"十五米\"\n9 \"，\"\n10 \"末了\"\n11 \"停住\"\n12 \"。\"\nConcatenate: 恁先向左转九十度，再往前走十五米，末了停住。Original: 恁先向左转九十度，再往前走十五米，末了停住。\nYes.\n\nNeed maybe \"末了\" can be split \"末\" and \"了\"? No, whole.\n\nNeed \"停住\" includes stop. Good.\n\nNeed include all explanations state effect on plan. For CONTEXT \"恁\": \"Dialect/second-person address; serves as imperative subject for all clauses, no separate skill or parameter.\" Good.\n\nFor RELATION \"先\": \"Temporal marker 'first'; establishes turn as first action and precedes later 再/末了.\" Good.\n\nFor ACTION \"向左转\": \"Turn action with left direction; left maps to positive angle, parameter supplied by 九十度.\" Good.\n\nFor QUANTITY \"九十度\": \"90 degrees; finite nonzero and <=180; maps to angle_deg=90.0 for preceding turn.\" Good.\n\nFor SEPARATOR \"，\": \"Clause separator; no action, preserves sequence.\" Good.\n\nFor RELATION \"再\": \"Temporal 'then/next'; places walk after turn.\" Good.\n\nFor ACTION \"往前走\": \"Walk-forward action; 'forward' resolves to walk_forward; parameter supplied by 十五米.\" Good.\n\nFor QUANTITY \"十五米\": \"15 meters; positive finite; maps distance_m=15.0.\" Good.\n\nFor SEPARATOR second.\n\nFor RELATION \"末了\": \"Temporal 'finally/at the end'; places stop after walk.\" Good.\n\nFor ACTION \"停住\": \"Stop action; no parameters; final step.\" Good.\n\nFor SEPARATOR \"。\" sentence terminator.\n\nNeed maybe mention no unresolved relation.\n\nNeed JSON object. Ensure no markdown.\n\nLet's craft final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source Chinese. We must derive complete authorized plan. Source: \"恁先向左转九十度，再往前走十五米，末了停住。\"\n\nNeed parse: 恁 maybe dialect \"you\" or \"such\"? Source meaning likely \"You first turn left 90 degrees, then walk forward 15 meters, finally stop.\" Need inspect every clause. Candidate matches: turn 90 left, walk 15, stop. Need evaluate dimensions unique? Need be careful: \"恁\" maybe typo? \"恁先\" perhaps \"您先\"? It is untrusted. Does \"恁\" create ambiguity? Probably pronoun not relevant. Action \"向左转九十度\" turn left 90. \"再往前走十五米\" walk forward 15m. \"末了停住\" stop. \"先...再...末了...\" order: turn, walk, stop. Unique.\n\nNeed consider \"转九十度\" maybe \"turn 90 degrees\" with left, positive 90. Legal max 180. \"往前走十五米\" walk_forward distance 15. \"停住\" stop. All legal. stand default not relevant. No repetitions/corrections/ref unresolved. Temporal relations: sequential via 先, 再, 末了. Unique. Action multiplicity exactly three. Action order turn, walk, stop. Correction none. Repetition none. Reference resolution: omitted subjects? The pronoun \"恁\" refers user/addressee, actions imperative. \"往\" forward no object. Unique. Temporal before/after explicit. Unresolved none.\n\nNeed output coverage: list spans concatenating exactly entire original source. Need split source into meaningful spans so every action, relation, edit clause analyzed. Source string: \"恁先向左转九十度，再往前走十五米，末了停住。\"\nNeed coverage text values concatenated equal entire source. Need decide splits. Include punctuation as SEPARATOR maybe. Every span explanation nonempty.\n\nWe must preserve exact whitespace. Source no spaces. Chinese punctuation.\n\nPossible segments:\n1. \"恁\" CONTEXT - pronoun/addressee, not action. Does not alter plan. But maybe \"恁\" dialect second-person; imperative subject.\n2. \"先\" RELATION - temporal \"first\", starts sequence.\n3. \"向左转九十度\" ACTION/QUANTITY? Contains action and parameter. Need maybe split \"向左转\" ACTION, \"九十度\" QUANTITY. But coverage text values concatenated in order. We can split:\n- \"恁\" CONTEXT\n- \"先\" RELATION\n- \"向左转\" ACTION\n- \"九十度\" QUANTITY\n- \"，\" SEPARATOR\n- \"再\" RELATION\n- \"往前走\" ACTION? Actually \"往前走\" = walk forward. Could split \"往前\" maybe direction and \"走\" action. But legal skill walk_forward. \"往前走十五米\" whole action+quantity. Could split \"往前走\" ACTION, \"十五米\" QUANTITY.\n- \"，\" SEPARATOR\n- \"末了\" RELATION\n- \"停住\" ACTION\n- \"。\" SEPARATOR\n\nNeed ensure concatenation: \"恁\" + \"先\" + \"向左转\" + \"九十度\" + \"，\" + \"再\" + \"往前走\" + \"十五米\" + \"，\" + \"末了\" + \"停住\" + \"。\" = original. Yes.\n\nNeed explanations. Each nonempty, state meaning/effect. For separator punctuation: separates clauses; no action, preserves order. Context: \"恁\" second-person/dialect pronoun/address, imperative subject, no parameters. Relation: \"先\" marks first step in sequence. Action \"向左转\": turn skill; left indicates positive angle; requires angle parameter from next quantity. Quantity \"九十度\": 90 degrees, finite, max 180, maps angle_deg=90.0. Separator \"，\" separates clauses. Relation \"再\": then/next, after prior. Action \"往前走\": walk_forward, forward direction. Quantity \"十五米\": 15 meters, distance_m=15.0. Separator. Relation \"末了\": finally, last. Action \"停住\": stop skill, no parameters. Separator.\n\nNeed dimensions:\n- action_multiplicity UNIQUE: exactly three imperative actions: turn left 90, walk forward 15, stop. No repeated/edited actions.\n- action_order UNIQUE: 先 ... 再 ... 末了 yields linear order turn, walk, stop.\n- correction_scope UNIQUE: no corrections/edits; no clause replaces/preserves another. Inapplicable? We can state no correction, so unique.\n- repetition_scope UNIQUE: no repetition or iteration; each action once.\n- reference_resolution UNIQUE: pronoun \"恁\" is addressee/agent of all imperatives; omitted forward direction resolved by walk_forward; no ordinal refs. No external context needed.\n- temporal_relations UNIQUE: explicit sequential markers 先, 再, 末了 create single linear order; no simultaneity/waiting/completion issues. stop after walk after turn.\n- unresolved_relations UNIQUE: no explicit unresolved choices/scopes/orders; all relations resolved.\n\nauthorized_plan list exactly steps with id s1 etc.\ns1 turn angle_deg 90.0 depends_on []\ns2 walk_forward distance_m 15.0 depends_on [\"s1\"]\ns3 stop {} depends_on [\"s2\"]\n\nNeed status AUTHORIZED_UNIQUE.\n\nNeed be cautious: Chinese \"九十度\" = 90 degrees. \"十五米\" = 15 meters. \"米\" meters. Good.\n\nPotential issue: \"恁先向左转九十度\" Could \"恁\" mean \"that\"? In some dialect \"恁\" = \"you\" (plural) or \"so\". But as source in Chinese, likely \"you first turn left 90 degrees\". The pronoun doesn't matter. Could \"恁\" be a typo for \"您\"? No effect. If \"恁\" dialect \"you\", imperative subject.\n\nPotential issue: \"末了停住\" Could mean \"at the end stop\" not necessarily final action? It is final. Unique.\n\nPotential issue: \"往前走\" maybe \"walk_forward\" exactly. Yes.\n\nPotential issue: \"向左转九十度\" angle 90. \"向左\" positive. Good.\n\nNeed output exactly JSON object no markdown. Use proper escaping. Ensure coverage text values concatenated exactly equal source. Need not include candidate. Use Chinese punctuation. Ensure all keys exactly. Dimensions object exactly seven names. Explanation strings nonempty. authorized_plan steps each exactly id, skill, parameters, depends_on. No extra fields. JSON numbers finite. 90.0 and 15.0.\n\nNeed consider \"coverage is nonempty list of objects with exactly text, role, explanation.\" The role for quantity \"九十度\" and \"十五米\" okay. For punctuation role SEPARATOR.\n\nNeed ensure \"coverage\" concatenated in order equals entire original source exactly. Let's verify with segments:\n1 \"恁\"\n2 \"先\"\n3 \"向左转\"\n4 \"九十度\"\n5 \"，\"\n6 \"再\"\n7 \"往前走\"\n8 \"十五米\"\n9 \"，\"\n10 \"末了\"\n11 \"停住\"\n12 \"。\"\nConcatenate: 恁先向左转九十度，再往前走十五米，末了停住。Original: 恁先向左转九十度，再往前走十五米，末了停住。\nYes.\n\nNeed maybe \"末了\" can be split \"末\" and \"了\"? No, whole.\n\nNeed \"停住\" includes stop. Good.\n\nNeed include all explanations state effect on plan. For CONTEXT \"恁\": \"Dialect/second-person address; serves as imperative subject for all clauses, no separate skill or parameter.\" Good.\n\nFor RELATION \"先\": \"Temporal marker 'first'; establishes turn as first action and precedes later 再/末了.\" Good.\n\nFor ACTION \"向左转\": \"Turn action with left direction; left maps to positive angle, parameter supplied by 九十度.\" Good.\n\nFor QUANTITY \"九十度\": \"90 degrees; finite nonzero and <=180; maps to angle_deg=90.0 for preceding turn.\" Good.\n\nFor SEPARATOR \"，\": \"Clause separator; no action, preserves sequence.\" Good.\n\nFor RELATION \"再\": \"Temporal 'then/next'; places walk after turn.\" Good.\n\nFor ACTION \"往前走\": \"Walk-forward action; 'forward' resolves to walk_forward; parameter supplied by 十五米.\" Good.\n\nFor QUANTITY \"十五米\": \"15 meters; positive finite; maps distance_m=15.0.\" Good.\n\nFor SEPARATOR second.\n\nFor RELATION \"末了\": \"Temporal 'finally/at the end'; places stop after walk.\" Good.\n\nFor ACTION \"停住\": \"Stop action; no parameters; final step.\" Good.\n\nFor SEPARATOR \"。\" sentence terminator.\n\nNeed maybe mention no unresolved relation.\n\nNeed JSON object. Ensure no markdown.\n\nLet's craft final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"恁\",\"role\":\"CONTEXT\",\"explanation\":\"Dialect/second-person address; it identifies the imperative addressee for all clauses but adds no separate skill or parameter, so it does not change the action plan.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'first'; it establishes the following turn as the first action and sets up the later sequence markers.\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Turn action with left direction; left maps to a positive angle, whose value is supplied by the following quantity 九十度.\"},{\"text\":\"九十度\",\"role\":\"QUANTITY\",\"explanation\":\"Ninety degrees; finite, nonzero, and not exceeding 180, so it maps to angle_deg=90.0 for the preceding turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; it has no action semantics and merely separates the first instruction from the next.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'then/next'; it places the following walk action after the preceding turn action.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Walk-forward action; 'forward' resolves to the walk_forward skill, with distance supplied by the following quantity 十五米.\"},{\"text\":\"十五米\",\"role\":\"QUANTITY\",\"explanation\":\"Fifteen meters; positive finite distance, so it maps to distance_m=15.0 for the preceding walk_forward action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; it has no action semantics and merely separates the walk instruction from the final instruction.\"},{\"text\":\"末了\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'finally/at the end'; it places the following stop action last, after both preceding actions.\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"Stop action; it resolves to the stop skill with no parameters and is the final step.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it has no action semantics and does not alter the plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly three actions: turn left 90 degrees, walk forward 15 meters, and stop. No action is repeated, added, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先 ('first'), 再 ('then'), and 末了 ('finally') establish one linear order: turn, then walk, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause; no earlier instruction is modified or superseded.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition or iteration marker; each of the three actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The pronoun 恁 is the imperative addressee and agent for the actions. '左' resolves to left turn, '往前' resolves to forward walking, and no ordinal or external referent is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence 先 ... 再 ... 末了 gives a single complete temporal order with no simultaneity, waiting, or unresolved timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, order, scope, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_7e127a05-d733-421f-8f8d-9006127628c0",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 380,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 2765,
+            "output_tokens_details": {
+              "reasoning_tokens": 1920
+            },
+            "total_tokens": 4041
+          }
+        },
+        "request_sha256": "7f8caca9f9941b936074acce246418a3a2c18c41045812a4eeb36d6158b0b222",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 13.117084100000284,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_7e127a05-d733-421f-8f8d-9006127628c0",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"恁\",\"role\":\"CONTEXT\",\"explanation\":\"Dialect/second-person address; it identifies the imperative addressee for all clauses but adds no separate skill or parameter, so it does not change the action plan.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'first'; it establishes the following turn as the first action and sets up the later sequence markers.\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Turn action with left direction; left maps to a positive angle, whose value is supplied by the following quantity 九十度.\"},{\"text\":\"九十度\",\"role\":\"QUANTITY\",\"explanation\":\"Ninety degrees; finite, nonzero, and not exceeding 180, so it maps to angle_deg=90.0 for the preceding turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; it has no action semantics and merely separates the first instruction from the next.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'then/next'; it places the following walk action after the preceding turn action.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Walk-forward action; 'forward' resolves to the walk_forward skill, with distance supplied by the following quantity 十五米.\"},{\"text\":\"十五米\",\"role\":\"QUANTITY\",\"explanation\":\"Fifteen meters; positive finite distance, so it maps to distance_m=15.0 for the preceding walk_forward action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; it has no action semantics and merely separates the walk instruction from the final instruction.\"},{\"text\":\"末了\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'finally/at the end'; it places the following stop action last, after both preceding actions.\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"Stop action; it resolves to the stop skill with no parameters and is the final step.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it has no action semantics and does not alter the plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly three actions: turn left 90 degrees, walk forward 15 meters, and stop. No action is repeated, added, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先 ('first'), 再 ('then'), and 末了 ('finally') establish one linear order: turn, then walk, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause; no earlier instruction is modified or superseded.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition or iteration marker; each of the three actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The pronoun 恁 is the imperative addressee and agent for the actions. '左' resolves to left turn, '往前' resolves to forward walking, and no ordinal or external referent is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence 先 ... 再 ... 末了 gives a single complete temporal order with no simultaneity, waiting, or unresolved timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, order, scope, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+        "usage": {
+          "input_tokens": 380,
+          "output_tokens": 2765,
+          "total_tokens": 4041
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.2914409000004525,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-left-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 20,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 346,
+      "raw_response_sha256": "fc152cd165f9eadcd6522e3dcd0ae95bc1bebb8cd697ab7b2837c2326c42e78c",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_8318b677-9db7-4542-8d2f-1c701b29d56c",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 13.122082699999737,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 13.117084100000284,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"恁\",\"role\":\"CONTEXT\",\"explanation\":\"Dialect/second-person address; it identifies the imperative addressee for all clauses but adds no separate skill or parameter, so it does not change the action plan.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'first'; it establishes the following turn as the first action and sets up the later sequence markers.\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Turn action with left direction; left maps to a positive angle, whose value is supplied by the following quantity 九十度.\"},{\"text\":\"九十度\",\"role\":\"QUANTITY\",\"explanation\":\"Ninety degrees; finite, nonzero, and not exceeding 180, so it maps to angle_deg=90.0 for the preceding turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; it has no action semantics and merely separates the first instruction from the next.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'then/next'; it places the following walk action after the preceding turn action.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Walk-forward action; 'forward' resolves to the walk_forward skill, with distance supplied by the following quantity 十五米.\"},{\"text\":\"十五米\",\"role\":\"QUANTITY\",\"explanation\":\"Fifteen meters; positive finite distance, so it maps to distance_m=15.0 for the preceding walk_forward action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; it has no action semantics and merely separates the walk instruction from the final instruction.\"},{\"text\":\"末了\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning 'finally/at the end'; it places the following stop action last, after both preceding actions.\"},{\"text\":\"停住\",\"role\":\"ACTION\",\"explanation\":\"Stop action; it resolves to the stop skill with no parameters and is the final step.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it has no action semantics and does not alter the plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly three actions: turn left 90 degrees, walk forward 15 meters, and stop. No action is repeated, added, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先 ('first'), 再 ('then'), and 末了 ('finally') establish one linear order: turn, then walk, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, or replacement clause; no earlier instruction is modified or superseded.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition or iteration marker; each of the three actions is requested exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The pronoun 恁 is the imperative addressee and agent for the actions. '左' resolves to left turn, '往前' resolves to forward walking, and no ordinal or external referent is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence 先 ... 再 ... 末了 gives a single complete temporal order with no simultaneity, waiting, or unresolved timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, order, scope, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+          "raw_response_sha256": "f72f7f7db190b026524c0f2a7fdcc5be1711a3d0a4d56456cfc6d2896a18810b",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_7e127a05-d733-421f-8f8d-9006127628c0",
+          "source_aware": true,
+          "source_sha256": "09124c31dba8fc40876594b99d1509c562de0f4fe2ebce5b749029ad24740bb6",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 380,
+            "output_tokens": 2765,
+            "total_tokens": 4041
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": 90.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "distance_m": 15.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Dialect/second-person address; it identifies the imperative addressee for all clauses but adds no separate skill or parameter, so it does not change the action plan.",
+                "role": "CONTEXT",
+                "text": "恁"
+              },
+              {
+                "explanation": "Temporal marker meaning 'first'; it establishes the following turn as the first action and sets up the later sequence markers.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Turn action with left direction; left maps to a positive angle, whose value is supplied by the following quantity 九十度.",
+                "role": "ACTION",
+                "text": "向左转"
+              },
+              {
+                "explanation": "Ninety degrees; finite, nonzero, and not exceeding 180, so it maps to angle_deg=90.0 for the preceding turn.",
+                "role": "QUANTITY",
+                "text": "九十度"
+              },
+              {
+                "explanation": "Clause separator; it has no action semantics and merely separates the first instruction from the next.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Temporal marker meaning 'then/next'; it places the following walk action after the preceding turn action.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Walk-forward action; 'forward' resolves to the walk_forward skill, with distance supplied by the following quantity 十五米.",
+                "role": "ACTION",
+                "text": "往前走"
+              },
+              {
+                "explanation": "Fifteen meters; positive finite distance, so it maps to distance_m=15.0 for the preceding walk_forward action.",
+                "role": "QUANTITY",
+                "text": "十五米"
+              },
+              {
+                "explanation": "Clause separator; it has no action semantics and merely separates the walk instruction from the final instruction.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Temporal marker meaning 'finally/at the end'; it places the following stop action last, after both preceding actions.",
+                "role": "RELATION",
+                "text": "末了"
+              },
+              {
+                "explanation": "Stop action; it resolves to the stop skill with no parameters and is the final step.",
+                "role": "ACTION",
+                "text": "停住"
+              },
+              {
+                "explanation": "Sentence terminator; it has no action semantics and does not alter the plan.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly three actions: turn left 90 degrees, walk forward 15 meters, and stop. No action is repeated, added, or replaced.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The markers 先 ('first'), 再 ('then'), and 末了 ('finally') establish one linear order: turn, then walk, then stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, edit, or replacement clause; no earlier instruction is modified or superseded.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The pronoun 恁 is the imperative addressee and agent for the actions. '左' resolves to left turn, '往前' resolves to forward walking, and no ordinal or external referent is required.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition or iteration marker; each of the three actions is requested exactly once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The sequence 先 ... 再 ... 末了 gives a single complete temporal order with no simultaneity, waiting, or unresolved timing.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any action, parameter, order, scope, or relation unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 217,
+        "output_tokens": 331,
+        "total_tokens": 2084
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-left-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 15.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "恁先向左转九十度再往前走十五米,末了停住",
+    "status": "SUCCESS"
+  }
+}

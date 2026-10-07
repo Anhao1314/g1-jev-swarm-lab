@@ -1,0 +1,291 @@
+{
+  "added_wall_s": 18.312804799999867,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 18.306910600000265,
+        "provider_document": {
+          "created_at": 1791359616,
+          "id": "resp_2972cecb-7b61-4b90-a90f-59ac6c1f05ca",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_2972cecb-7b61-4b90-a90f-59ac6c1f05ca",
+              "reasoning_content": "We need answer only JSON object. Need analyze source and candidate. Need derive source plan. Source Chinese: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\n\nNeed parse. \"往前 twenty 米，也就是20米。\" = Move forward twenty meters, i.e., 20 meters. \"只说一个动作，走一次。\" = Only say one action, walk once. So action walk_forward distance_m 20. Only one step. Candidate matches. Need assess dimensions. Action multiplicity: one action, explicit \"只说一个动作，走一次\" reinforces. Order: one step. Correction? \"也就是20米\" is clarification/equivalence, not correction replacing? Could be edit? It says twenty meters, that is 20 meters. It clarifies quantity, not correction. Need coverage split exact spans. Must concatenate exactly entire source. We can split into spans with exact text including punctuation and whitespace. Need preserve original. Source string: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\n\nLet's enumerate characters: 往 前  space? It's \"往前 twenty 米，也就是20米。只说一个动作，走一次。\" There is space after 前 before twenty? Yes \"往前 twenty 米，...\" Let's copy exact. Need coverage list spans. Need text values concatenated equal entire original source. We can split meaningfully. Need no omission. We can choose spans:\n1 \"往前 \"? Actually \"往前 twenty 米，也就是20米。\" Maybe split:\n- \"往前 \" (ACTION? maybe RELATION? action direction plus space)\n- \"twenty \" (QUANTITY)\n- \"米，\" (QUANTITY? unit and punctuation separator)\n- \"也就是20米。\" (EDIT/QUANTITY clarification)\n- \"只说一个动作，\" (CONTEXT/EDIT? action multiplicity)\n- \"走一次。\" (ACTION or QUANTITY? It requests action walk once)\n\nBut coverage must include every action relation edit clause. Role values allowed ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Text can include punctuation. Need concatenate exactly. Need ensure spaces. Source: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\n\nIf split as above:\n1 \"往前 \" -> includes trailing space. role ACTION? It specifies forward movement. Explanation.\n2 \"twenty \" -> includes trailing space. role QUANTITY.\n3 \"米，\" -> role QUANTITY? unit meters and comma? But comma separator maybe. Could split \"米\" and \"，\" but text must concatenate. \"米\" quantity, \"，\" separator.\n4 \"也就是20米。\" -> role EDIT or QUANTITY. It clarifies \"twenty\" equals 20 meters, no change. Could be EDIT. But correction_scope? It is an equivalence clarification, not replacing previous instruction. It changes? Let's examine: \"往前 twenty 米，也就是20米。\" It says forward twenty meters, that is 20 meters. If \"twenty\" already means 20, no correction. If \"也就是\" clarifies same quantity. It doesn't replace action. Role EDIT maybe. Explanation: clarification, not a correction; preserves prior quantity. In dimensions correction_scope UNIQUE with explanation.\n5 \"只说一个动作，\" -> role CONTEXT or EDIT. It constrains multiplicity: only one action. \"只说一个动作，\" meaning \"Only say one action,\". Could be CONTEXT about output? It also says \"走一次\" walk once. It authorizes one step. Role CONTEXT perhaps. Explanation: restricts plan to one action; does not alter skill/parameters.\n6 \"走一次。\" -> role ACTION? It says walk once. It reinforces one repetition of walk. Could be ACTION and repetition. Explanation: one walk action.\n\nNeed perhaps split \"twenty\" without space? Source has \"往前 twenty 米\". Let's verify exact source: `\"往前 twenty 米，也就是20米。只说一个动作，走一次。\"` There is a space between 前 and twenty, and between twenty and 米, likely. So coverage must include those spaces. If we split \"往前 \" and \"twenty \" and \"米，...\" yes.\n\nBut coverage list text concatenated in order must equal entire source exactly. Need no missing: \n\"往前 \" + \"twenty \" + \"米，\" + \"也就是20米。\" + \"只说一个动作，\" + \"走一次。\" = \"往前 twenty 米，也就是20米。只说一个动作，走一次。\" Yes.\n\nNeed output JSON exactly keys status, coverage, dimensions, authorized_plan. Need dimensions seven names:\n- action_multiplicity\n- action_order\n- correction_scope\n- repetition_scope\n- reference_resolution\n- temporal_relations\n- unresolved_relations\n\nFor each status UNIQUE etc. Here likely all UNIQUE because source explicit one action, walk once, no ambiguity. Need check if \"只说一个动作，走一次。\" Could be ambiguous? \"只说一个动作\" maybe directs the assistant to output only one action, and \"走一次\" maybe says walk once. Both same. No unresolved. \"往前 twenty 米，也就是20米\" no ambiguity. \"twenty\" English word, known as 20. No issue. It's a correction? Actually \"twenty\" is a word, \"也就是20米\" clarifies numeric equivalence. It doesn't replace a previous action. Need correction_scope UNIQUE: \"也就是20米\" is a clarification/equivalence, not a correction to a different quantity; it preserves twenty as 20 meters. If considered edit, scope is quantity only. The source explicitly gives same value in Arabic digits. No conflict.\n\nNeed authorized_plan list one step:\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[]}\nNeed exactly no extra fields. status AUTHORIZED_UNIQUE.\n\nNeed ensure JSON valid, no markdown. The final answer only JSON. Need explanations nonempty. Need coverage text exact including spaces. Need be careful JSON escaping? Chinese fine. Need no newline? It can be one line or pretty. Output exactly JSON object. We can pretty print.\n\nPotential concern: \"twenty\" plus \"也就是20米\" maybe \"也就是20米\" is a correction/edit. If role EDIT, action_multiplicity etc. dimensions okay. But \"也就是20米。\" If text includes \"20米\" and \"。\" okay.\n\nLet's craft coverage spans and explanations.\n\nCoverage objects exactly text, role, explanation. Nonempty. Need every span meaningful. Let's make maybe 8 spans to separate punctuation? But every text value concatenated exact. We can choose roles:\n\n1. text: \"往前 \" role: ACTION. Explanation: Specifies forward direction for the single walk action; trailing space is separator, not separate semantics. Hmm if role ACTION for only \"往前 \" plus space. But action skill walk_forward is forward. Fine.\n2. text: \"twenty \" role: QUANTITY. Explanation: Gives distance quantity as English word twenty; trailing space separates quantity from unit. Determines distance_m = 20.\n3. text: \"米，\" role: QUANTITY. Explanation: Supplies meters unit for twenty and comma separator; meters are used directly, so distance remains 20. Actually text includes comma. The comma is punctuation separator. Role QUANTITY okay? It includes comma; maybe role SEPARATOR for \"，\"? Better split:\n- \"米\" role QUANTITY\n- \"，\" role SEPARATOR\nThen \"也就是20米。\" etc. Need concatenate. Let's do finer:\n1 \"往前 \" ACTION\n2 \"twenty \" QUANTITY\n3 \"米\" QUANTITY\n4 \"，\" SEPARATOR\n5 \"也就是20米。\" EDIT/QUANTITY? Could split \"也就是\" EDIT, \"20米\" QUANTITY, \"。\" SEPARATOR. But source \"也就是20米。\" We can have \"也就是\" as EDIT, \"20米\" QUANTITY, \"。\" SEPARATOR. Then \"只说一个动作，\" etc. Need all spans exact.\nLet's design full coverage:\n\nSource: 往前 twenty 米，也就是20米。只说一个动作，走一次。\n\nSpans:\n- \"往前 \" role ACTION. Explanation: States forward movement for one action; trailing space separates it from the distance.\n- \"twenty \" role QUANTITY. Explanation: Sets the distance quantity to twenty; trailing space separates number from unit. \n- \"米\" role QUANTITY. Explanation: Specifies meters as unit; combined with twenty gives distance_m 20.\n- \"，\" role SEPARATOR. Explanation: Punctuation separating first distance phrase from clarifying phrase; no action effect.\n- \"也就是\" role EDIT. Explanation: Introduces an equivalence clarification of the immediately preceding distance, not a replacement action or different quantity.\n- \"20米\" role QUANTITY. Explanation: Restates the same distance in digits and meters, confirming distance_m 20.\n- \"。\" role SEPARATOR. Explanation: Sentence punctuation; no action or parameter change.\n- \"只说一个动作，\" role CONTEXT. Explanation: Constrains the plan to exactly one action, so no additional actions may be added; comma separates from next clause. Wait text includes comma at end? Source \"只说一个动作，\" yes includes \"，\" at end. Good.\n- \"走一次。\" role ACTION. Explanation: Requests walking once, confirming a single repetition of the forward walk action; period ends instruction.\n\nConcatenate: \"往前 \" + \"twenty \" + \"米\" + \"，\" + \"也就是\" + \"20米\" + \"。\" + \"只说一个动作，\" + \"走一次。\" = \"往前 twenty 米，也就是20米。只说一个动作，走一次。\" Yes.\n\nRole for \"走一次。\" as ACTION maybe okay. It includes \"走\" (walk) and \"一次\" (once). It confirms action/repetition. Good.\n\nNeed dimensions explanations.\n\naction_multiplicity: UNIQUE. Evidence: \"只说一个动作，走一次\" specifies exactly one action and one walk repetition. The first clause \"往前 twenty 米\" requests forward walking. No additional action verbs or edit adding another action. The clarification does not add action. So exactly one step.\n\naction_order: UNIQUE. Single step s1, no ordering relation. No before/after. Order is trivially one step.\n\ncorrection_scope: UNIQUE. \"也就是20米\" clarifies/equates \"twenty 米\" with 20 meters; it does not replace the forward action or change it to another distance. It preserves distance 20. No earlier instruction is canceled. If considered edit, scope is quantity only.\n\nrepetition_scope: UNIQUE. \"走一次\" specifies exactly one execution of the walk; \"只说一个动作\" also limits to one action. No repetition beyond one. No span to repeat multiple times.\n\nreference_resolution: UNIQUE. \"往前\" refers to the requested walking action; \"也就是20米\" refers to the immediately preceding \"twenty 米\"; \"走一次\" refers to that same action. No missing external referents. Distance unit \"米\" is explicit. Need maybe \"twenty\" is resolved to 20. Good.\n\ntemporal_relations: UNIQUE. Only one action; no before/after/wait/completion relations. Single linear order of one step. Maybe \"走一次\" no timing.\n\nunresolved_relations: UNIQUE. No explicit unresolved choices, order, or scope. The equivalence clarification resolves \"twenty\" as 20. Single action.\n\nauthorized_plan: one step.\n\nPotential issue: \"只说一个动作\" maybe context: \"only say one action\" may refer to output constraint, not plan? It still says exactly one action. Good.\n\nNeed verify candidate has distance 20.0. Source says 20米. Good.\n\nShould status AUTHORIZED_UNIQUE. Since all dimensions UNIQUE. Candidate matches. Good.\n\nNeed output exactly one JSON object. Could pretty print. No markdown. Ensure no trailing commas. Let's formulate.\n\nDouble-check \"coverage is a nonempty list of objects with exactly text, role, explanation.\" We need exactly those keys. Good.\n\n\"coverage text concatenated in order must equal entire original source exactly\" We must include all spaces. Let's write source in JSON with Chinese and spaces. Need ensure the final coverage concatenation exact. We can test mentally:\nSource: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\nOur spans:\n1 \"往前 \" -> 往 前 space\n2 \"twenty \" -> t w e n t y space\n3 \"米\" -> 米\n4 \"，\" -> Chinese comma\n5 \"也就是\" -> 也 就 是\n6 \"20米\" -> 2 0 米\n7 \"。\" -> 。 \n8 \"只说一个动作，\" -> 只 说 一 个 动 作 ，\n9 \"走一次。\" -> 走 一 次 。\nConcatenate: 往前[space]twenty[space]米，也就是20米。只说一个动作，走一次。 Matches.\n\nNeed maybe \"20\" in span 6 and \"米\" after, okay. \"也就是20米。\" has \"也就是\" + \"20米\" + \"。\". Good.\n\nCould there be a correction relation: \"也就是20米\" maybe is an edit changing \"twenty\" to \"20\"? It doesn't change semantics, just clarifies. In correction_scope explanation can mention it is an equivalence clarification, not a correction replacing a different value. Good.\n\nNeed ensure all explanations nonempty. Yes.\n\nNow final JSON. Use Chinese quotes? No. Need escape? JSON can contain Unicode. Fine.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON object. Need analyze source and candidate. Need derive source plan. Source Chinese: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\n\nNeed parse. \"往前 twenty 米，也就是20米。\" = Move forward twenty meters, i.e., 20 meters. \"只说一个动作，走一次。\" = Only say one action, walk once. So action walk_forward distance_m 20. Only one step. Candidate matches. Need assess dimensions. Action multiplicity: one action, explicit \"只说一个动作，走一次\" reinforces. Order: one step. Correction? \"也就是20米\" is clarification/equivalence, not correction replacing? Could be edit? It says twenty meters, that is 20 meters. It clarifies quantity, not correction. Need coverage split exact spans. Must concatenate exactly entire source. We can split into spans with exact text including punctuation and whitespace. Need preserve original. Source string: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\n\nLet's enumerate characters: 往 前  space? It's \"往前 twenty 米，也就是20米。只说一个动作，走一次。\" There is space after 前 before twenty? Yes \"往前 twenty 米，...\" Let's copy exact. Need coverage list spans. Need text values concatenated equal entire original source. We can split meaningfully. Need no omission. We can choose spans:\n1 \"往前 \"? Actually \"往前 twenty 米，也就是20米。\" Maybe split:\n- \"往前 \" (ACTION? maybe RELATION? action direction plus space)\n- \"twenty \" (QUANTITY)\n- \"米，\" (QUANTITY? unit and punctuation separator)\n- \"也就是20米。\" (EDIT/QUANTITY clarification)\n- \"只说一个动作，\" (CONTEXT/EDIT? action multiplicity)\n- \"走一次。\" (ACTION or QUANTITY? It requests action walk once)\n\nBut coverage must include every action relation edit clause. Role values allowed ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Text can include punctuation. Need concatenate exactly. Need ensure spaces. Source: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\n\nIf split as above:\n1 \"往前 \" -> includes trailing space. role ACTION? It specifies forward movement. Explanation.\n2 \"twenty \" -> includes trailing space. role QUANTITY.\n3 \"米，\" -> role QUANTITY? unit meters and comma? But comma separator maybe. Could split \"米\" and \"，\" but text must concatenate. \"米\" quantity, \"，\" separator.\n4 \"也就是20米。\" -> role EDIT or QUANTITY. It clarifies \"twenty\" equals 20 meters, no change. Could be EDIT. But correction_scope? It is an equivalence clarification, not replacing previous instruction. It changes? Let's examine: \"往前 twenty 米，也就是20米。\" It says forward twenty meters, that is 20 meters. If \"twenty\" already means 20, no correction. If \"也就是\" clarifies same quantity. It doesn't replace action. Role EDIT maybe. Explanation: clarification, not a correction; preserves prior quantity. In dimensions correction_scope UNIQUE with explanation.\n5 \"只说一个动作，\" -> role CONTEXT or EDIT. It constrains multiplicity: only one action. \"只说一个动作，\" meaning \"Only say one action,\". Could be CONTEXT about output? It also says \"走一次\" walk once. It authorizes one step. Role CONTEXT perhaps. Explanation: restricts plan to one action; does not alter skill/parameters.\n6 \"走一次。\" -> role ACTION? It says walk once. It reinforces one repetition of walk. Could be ACTION and repetition. Explanation: one walk action.\n\nNeed perhaps split \"twenty\" without space? Source has \"往前 twenty 米\". Let's verify exact source: `\"往前 twenty 米，也就是20米。只说一个动作，走一次。\"` There is a space between 前 and twenty, and between twenty and 米, likely. So coverage must include those spaces. If we split \"往前 \" and \"twenty \" and \"米，...\" yes.\n\nBut coverage list text concatenated in order must equal entire source exactly. Need no missing: \n\"往前 \" + \"twenty \" + \"米，\" + \"也就是20米。\" + \"只说一个动作，\" + \"走一次。\" = \"往前 twenty 米，也就是20米。只说一个动作，走一次。\" Yes.\n\nNeed output JSON exactly keys status, coverage, dimensions, authorized_plan. Need dimensions seven names:\n- action_multiplicity\n- action_order\n- correction_scope\n- repetition_scope\n- reference_resolution\n- temporal_relations\n- unresolved_relations\n\nFor each status UNIQUE etc. Here likely all UNIQUE because source explicit one action, walk once, no ambiguity. Need check if \"只说一个动作，走一次。\" Could be ambiguous? \"只说一个动作\" maybe directs the assistant to output only one action, and \"走一次\" maybe says walk once. Both same. No unresolved. \"往前 twenty 米，也就是20米\" no ambiguity. \"twenty\" English word, known as 20. No issue. It's a correction? Actually \"twenty\" is a word, \"也就是20米\" clarifies numeric equivalence. It doesn't replace a previous action. Need correction_scope UNIQUE: \"也就是20米\" is a clarification/equivalence, not a correction to a different quantity; it preserves twenty as 20 meters. If considered edit, scope is quantity only. The source explicitly gives same value in Arabic digits. No conflict.\n\nNeed authorized_plan list one step:\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[]}\nNeed exactly no extra fields. status AUTHORIZED_UNIQUE.\n\nNeed ensure JSON valid, no markdown. The final answer only JSON. Need explanations nonempty. Need coverage text exact including spaces. Need be careful JSON escaping? Chinese fine. Need no newline? It can be one line or pretty. Output exactly JSON object. We can pretty print.\n\nPotential concern: \"twenty\" plus \"也就是20米\" maybe \"也就是20米\" is a correction/edit. If role EDIT, action_multiplicity etc. dimensions okay. But \"也就是20米。\" If text includes \"20米\" and \"。\" okay.\n\nLet's craft coverage spans and explanations.\n\nCoverage objects exactly text, role, explanation. Nonempty. Need every span meaningful. Let's make maybe 8 spans to separate punctuation? But every text value concatenated exact. We can choose roles:\n\n1. text: \"往前 \" role: ACTION. Explanation: Specifies forward direction for the single walk action; trailing space is separator, not separate semantics. Hmm if role ACTION for only \"往前 \" plus space. But action skill walk_forward is forward. Fine.\n2. text: \"twenty \" role: QUANTITY. Explanation: Gives distance quantity as English word twenty; trailing space separates quantity from unit. Determines distance_m = 20.\n3. text: \"米，\" role: QUANTITY. Explanation: Supplies meters unit for twenty and comma separator; meters are used directly, so distance remains 20. Actually text includes comma. The comma is punctuation separator. Role QUANTITY okay? It includes comma; maybe role SEPARATOR for \"，\"? Better split:\n- \"米\" role QUANTITY\n- \"，\" role SEPARATOR\nThen \"也就是20米。\" etc. Need concatenate. Let's do finer:\n1 \"往前 \" ACTION\n2 \"twenty \" QUANTITY\n3 \"米\" QUANTITY\n4 \"，\" SEPARATOR\n5 \"也就是20米。\" EDIT/QUANTITY? Could split \"也就是\" EDIT, \"20米\" QUANTITY, \"。\" SEPARATOR. But source \"也就是20米。\" We can have \"也就是\" as EDIT, \"20米\" QUANTITY, \"。\" SEPARATOR. Then \"只说一个动作，\" etc. Need all spans exact.\nLet's design full coverage:\n\nSource: 往前 twenty 米，也就是20米。只说一个动作，走一次。\n\nSpans:\n- \"往前 \" role ACTION. Explanation: States forward movement for one action; trailing space separates it from the distance.\n- \"twenty \" role QUANTITY. Explanation: Sets the distance quantity to twenty; trailing space separates number from unit. \n- \"米\" role QUANTITY. Explanation: Specifies meters as unit; combined with twenty gives distance_m 20.\n- \"，\" role SEPARATOR. Explanation: Punctuation separating first distance phrase from clarifying phrase; no action effect.\n- \"也就是\" role EDIT. Explanation: Introduces an equivalence clarification of the immediately preceding distance, not a replacement action or different quantity.\n- \"20米\" role QUANTITY. Explanation: Restates the same distance in digits and meters, confirming distance_m 20.\n- \"。\" role SEPARATOR. Explanation: Sentence punctuation; no action or parameter change.\n- \"只说一个动作，\" role CONTEXT. Explanation: Constrains the plan to exactly one action, so no additional actions may be added; comma separates from next clause. Wait text includes comma at end? Source \"只说一个动作，\" yes includes \"，\" at end. Good.\n- \"走一次。\" role ACTION. Explanation: Requests walking once, confirming a single repetition of the forward walk action; period ends instruction.\n\nConcatenate: \"往前 \" + \"twenty \" + \"米\" + \"，\" + \"也就是\" + \"20米\" + \"。\" + \"只说一个动作，\" + \"走一次。\" = \"往前 twenty 米，也就是20米。只说一个动作，走一次。\" Yes.\n\nRole for \"走一次。\" as ACTION maybe okay. It includes \"走\" (walk) and \"一次\" (once). It confirms action/repetition. Good.\n\nNeed dimensions explanations.\n\naction_multiplicity: UNIQUE. Evidence: \"只说一个动作，走一次\" specifies exactly one action and one walk repetition. The first clause \"往前 twenty 米\" requests forward walking. No additional action verbs or edit adding another action. The clarification does not add action. So exactly one step.\n\naction_order: UNIQUE. Single step s1, no ordering relation. No before/after. Order is trivially one step.\n\ncorrection_scope: UNIQUE. \"也就是20米\" clarifies/equates \"twenty 米\" with 20 meters; it does not replace the forward action or change it to another distance. It preserves distance 20. No earlier instruction is canceled. If considered edit, scope is quantity only.\n\nrepetition_scope: UNIQUE. \"走一次\" specifies exactly one execution of the walk; \"只说一个动作\" also limits to one action. No repetition beyond one. No span to repeat multiple times.\n\nreference_resolution: UNIQUE. \"往前\" refers to the requested walking action; \"也就是20米\" refers to the immediately preceding \"twenty 米\"; \"走一次\" refers to that same action. No missing external referents. Distance unit \"米\" is explicit. Need maybe \"twenty\" is resolved to 20. Good.\n\ntemporal_relations: UNIQUE. Only one action; no before/after/wait/completion relations. Single linear order of one step. Maybe \"走一次\" no timing.\n\nunresolved_relations: UNIQUE. No explicit unresolved choices, order, or scope. The equivalence clarification resolves \"twenty\" as 20. Single action.\n\nauthorized_plan: one step.\n\nPotential issue: \"只说一个动作\" maybe context: \"only say one action\" may refer to output constraint, not plan? It still says exactly one action. Good.\n\nNeed verify candidate has distance 20.0. Source says 20米. Good.\n\nShould status AUTHORIZED_UNIQUE. Since all dimensions UNIQUE. Candidate matches. Good.\n\nNeed output exactly one JSON object. Could pretty print. No markdown. Ensure no trailing commas. Let's formulate.\n\nDouble-check \"coverage is a nonempty list of objects with exactly text, role, explanation.\" We need exactly those keys. Good.\n\n\"coverage text concatenated in order must equal entire original source exactly\" We must include all spaces. Let's write source in JSON with Chinese and spaces. Need ensure the final coverage concatenation exact. We can test mentally:\nSource: \"往前 twenty 米，也就是20米。只说一个动作，走一次。\"\nOur spans:\n1 \"往前 \" -> 往 前 space\n2 \"twenty \" -> t w e n t y space\n3 \"米\" -> 米\n4 \"，\" -> Chinese comma\n5 \"也就是\" -> 也 就 是\n6 \"20米\" -> 2 0 米\n7 \"。\" -> 。 \n8 \"只说一个动作，\" -> 只 说 一 个 动 作 ，\n9 \"走一次。\" -> 走 一 次 。\nConcatenate: 往前[space]twenty[space]米，也就是20米。只说一个动作，走一次。 Matches.\n\nNeed maybe \"20\" in span 6 and \"米\" after, okay. \"也就是20米。\" has \"也就是\" + \"20米\" + \"。\". Good.\n\nCould there be a correction relation: \"也就是20米\" maybe is an edit changing \"twenty\" to \"20\"? It doesn't change semantics, just clarifies. In correction_scope explanation can mention it is an equivalence clarification, not a correction replacing a different value. Good.\n\nNeed ensure all explanations nonempty. Yes.\n\nNow final JSON. Use Chinese quotes? No. Need escape? JSON can contain Unicode. Fine.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前 \",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests forward movement for one action; the trailing space separates it from the distance phrase and has no independent action effect.\"\n    },\n    {\n      \"text\": \"twenty \",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the distance quantity as twenty; the trailing space separates the number from its unit.\"\n    },\n    {\n      \"text\": \"米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies meters as the unit, so the preceding twenty becomes twenty meters.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the initial distance phrase from the clarification phrase; it does not change the action or parameter.\"\n    },\n    {\n      \"text\": \"也就是\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"Introduces an equivalence clarification of the immediately preceding distance phrase, not a replacement action or a different quantity.\"\n    },\n    {\n      \"text\": \"20米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Restates the same distance in digits and meters, confirming distance_m as 20.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence-ending punctuation; it does not alter the action or parameters.\"\n    },\n    {\n      \"text\": \"只说一个动作，\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Explicitly constrains the request to exactly one action, so no additional action may be added; the comma separates this constraint from the following clause.\"\n    },\n    {\n      \"text\": \"走一次。\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests one execution of walking, confirming a single forward-walk repetition; the final period ends the instruction.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests forward walking and then explicitly says only one action and walking once: '只说一个动作，走一次。' The clarification '也就是20米' does not add an action. Therefore exactly one action is authorized.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one step exists, so the execution order is trivially a single linear step s1. There is no before/after relation among multiple actions.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'也就是20米' clarifies that 'twenty 米' equals 20 meters. It does not replace the forward walk with another action or change the distance to a different value; it preserves distance_m = 20.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走一次' specifies exactly one walk repetition, and '只说一个动作' independently limits the plan to one action. No broader repetition span is present.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'往前' refers to the single forward walking action; '也就是20米' refers to the immediately preceding 'twenty 米'; '走一次' refers to that same walk action. The unit '米' is explicit, and 'twenty' resolves to 20.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action and no before/after, waiting, simultaneous, or completion relation. A single linear order with one step represents the source exactly.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit unresolved choice, order, or scope. 'twenty' and '也就是20米' resolve the distance, and the plan contains exactly one action.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 20.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_2972cecb-7b61-4b90-a90f-59ac6c1f05ca",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 324,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 3806,
+            "output_tokens_details": {
+              "reasoning_tokens": 2872
+            },
+            "total_tokens": 5026
+          }
+        },
+        "request_sha256": "26aea47ce8987d34786388880ba2ed7ed328e2c5efe6b167c7f62e610d8ede9a",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 18.305412399999113,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_2972cecb-7b61-4b90-a90f-59ac6c1f05ca",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前 \",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests forward movement for one action; the trailing space separates it from the distance phrase and has no independent action effect.\"\n    },\n    {\n      \"text\": \"twenty \",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the distance quantity as twenty; the trailing space separates the number from its unit.\"\n    },\n    {\n      \"text\": \"米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies meters as the unit, so the preceding twenty becomes twenty meters.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the initial distance phrase from the clarification phrase; it does not change the action or parameter.\"\n    },\n    {\n      \"text\": \"也就是\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"Introduces an equivalence clarification of the immediately preceding distance phrase, not a replacement action or a different quantity.\"\n    },\n    {\n      \"text\": \"20米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Restates the same distance in digits and meters, confirming distance_m as 20.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence-ending punctuation; it does not alter the action or parameters.\"\n    },\n    {\n      \"text\": \"只说一个动作，\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Explicitly constrains the request to exactly one action, so no additional action may be added; the comma separates this constraint from the following clause.\"\n    },\n    {\n      \"text\": \"走一次。\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests one execution of walking, confirming a single forward-walk repetition; the final period ends the instruction.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests forward walking and then explicitly says only one action and walking once: '只说一个动作，走一次。' The clarification '也就是20米' does not add an action. Therefore exactly one action is authorized.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one step exists, so the execution order is trivially a single linear step s1. There is no before/after relation among multiple actions.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'也就是20米' clarifies that 'twenty 米' equals 20 meters. It does not replace the forward walk with another action or change the distance to a different value; it preserves distance_m = 20.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走一次' specifies exactly one walk repetition, and '只说一个动作' independently limits the plan to one action. No broader repetition span is present.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'往前' refers to the single forward walking action; '也就是20米' refers to the immediately preceding 'twenty 米'; '走一次' refers to that same walk action. The unit '米' is explicit, and 'twenty' resolves to 20.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action and no before/after, waiting, simultaneous, or completion relation. A single linear order with one step represents the source exactly.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit unresolved choice, order, or scope. 'twenty' and '也就是20米' resolve the distance, and the plan contains exactly one action.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 20.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+        "usage": {
+          "input_tokens": 324,
+          "output_tokens": 3806,
+          "total_tokens": 5026
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.9854625999996642,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk20",
+      "model": "deepseek-flash",
+      "normalized_length": 27,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 191,
+      "raw_response_sha256": "ec74be074d258ceb1c1bc513869510a54442e514251e50f704ba5c7c81eb886d",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_a63d2a26-a77e-4239-9d59-da11ea9a8285",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 18.312190000000555,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 18.305412399999113,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前 \",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests forward movement for one action; the trailing space separates it from the distance phrase and has no independent action effect.\"\n    },\n    {\n      \"text\": \"twenty \",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the distance quantity as twenty; the trailing space separates the number from its unit.\"\n    },\n    {\n      \"text\": \"米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies meters as the unit, so the preceding twenty becomes twenty meters.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the initial distance phrase from the clarification phrase; it does not change the action or parameter.\"\n    },\n    {\n      \"text\": \"也就是\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"Introduces an equivalence clarification of the immediately preceding distance phrase, not a replacement action or a different quantity.\"\n    },\n    {\n      \"text\": \"20米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Restates the same distance in digits and meters, confirming distance_m as 20.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence-ending punctuation; it does not alter the action or parameters.\"\n    },\n    {\n      \"text\": \"只说一个动作，\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Explicitly constrains the request to exactly one action, so no additional action may be added; the comma separates this constraint from the following clause.\"\n    },\n    {\n      \"text\": \"走一次。\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests one execution of walking, confirming a single forward-walk repetition; the final period ends the instruction.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests forward walking and then explicitly says only one action and walking once: '只说一个动作，走一次。' The clarification '也就是20米' does not add an action. Therefore exactly one action is authorized.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one step exists, so the execution order is trivially a single linear step s1. There is no before/after relation among multiple actions.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'也就是20米' clarifies that 'twenty 米' equals 20 meters. It does not replace the forward walk with another action or change the distance to a different value; it preserves distance_m = 20.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走一次' specifies exactly one walk repetition, and '只说一个动作' independently limits the plan to one action. No broader repetition span is present.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'往前' refers to the single forward walking action; '也就是20米' refers to the immediately preceding 'twenty 米'; '走一次' refers to that same walk action. The unit '米' is explicit, and 'twenty' resolves to 20.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action and no before/after, waiting, simultaneous, or completion relation. A single linear order with one step represents the source exactly.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit unresolved choice, order, or scope. 'twenty' and '也就是20米' resolve the distance, and the plan contains exactly one action.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 20.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+          "raw_response_sha256": "8d7cb591512cc126849bba7abb0f5b37e09f349e21c6f6f6f151307d112936fa",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_2972cecb-7b61-4b90-a90f-59ac6c1f05ca",
+          "source_aware": true,
+          "source_sha256": "1225e5bae7cf91bd5b58d6dc7ee40e7189cfc29eb26979600e6011da43c1d687",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 324,
+            "output_tokens": 3806,
+            "total_tokens": 5026
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 20.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Requests forward movement for one action; the trailing space separates it from the distance phrase and has no independent action effect.",
+                "role": "ACTION",
+                "text": "往前 "
+              },
+              {
+                "explanation": "Specifies the distance quantity as twenty; the trailing space separates the number from its unit.",
+                "role": "QUANTITY",
+                "text": "twenty "
+              },
+              {
+                "explanation": "Specifies meters as the unit, so the preceding twenty becomes twenty meters.",
+                "role": "QUANTITY",
+                "text": "米"
+              },
+              {
+                "explanation": "Punctuation separating the initial distance phrase from the clarification phrase; it does not change the action or parameter.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Introduces an equivalence clarification of the immediately preceding distance phrase, not a replacement action or a different quantity.",
+                "role": "EDIT",
+                "text": "也就是"
+              },
+              {
+                "explanation": "Restates the same distance in digits and meters, confirming distance_m as 20.",
+                "role": "QUANTITY",
+                "text": "20米"
+              },
+              {
+                "explanation": "Sentence-ending punctuation; it does not alter the action or parameters.",
+                "role": "SEPARATOR",
+                "text": "。"
+              },
+              {
+                "explanation": "Explicitly constrains the request to exactly one action, so no additional action may be added; the comma separates this constraint from the following clause.",
+                "role": "CONTEXT",
+                "text": "只说一个动作，"
+              },
+              {
+                "explanation": "Requests one execution of walking, confirming a single forward-walk repetition; the final period ends the instruction.",
+                "role": "ACTION",
+                "text": "走一次。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests forward walking and then explicitly says only one action and walking once: '只说一个动作，走一次。' The clarification '也就是20米' does not add an action. Therefore exactly one action is authorized.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one step exists, so the execution order is trivially a single linear step s1. There is no before/after relation among multiple actions.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "'也就是20米' clarifies that 'twenty 米' equals 20 meters. It does not replace the forward walk with another action or change the distance to a different value; it preserves distance_m = 20.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "'往前' refers to the single forward walking action; '也就是20米' refers to the immediately preceding 'twenty 米'; '走一次' refers to that same walk action. The unit '米' is explicit, and 'twenty' resolves to 20.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "'走一次' specifies exactly one walk repetition, and '只说一个动作' independently limits the plan to one action. No broader repetition span is present.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "There is only one action and no before/after, waiting, simultaneous, or completion relation. A single linear order with one step represents the source exactly.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit unresolved choice, order, or scope. 'twenty' and '也就是20米' resolve the distance, and the plan contains exactly one action.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 215,
+        "output_tokens": 612,
+        "total_tokens": 2363
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk20",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 20.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "往前twenty米,也就是20米,只说一个动作,走一次",
+    "status": "SUCCESS"
+  }
+}

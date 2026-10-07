@@ -1,0 +1,188 @@
+{
+  "added_wall_s": 4.4718434999995225,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 4.423700600000302,
+        "provider_document": {
+          "created_at": 1791360987,
+          "id": "resp_390e4f28-6dda-4793-abc3-0a599be4a3b5",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_390e4f28-6dda-4793-abc3-0a599be4a3b5",
+              "reasoning_content": "We need answer JSON only. Need parse Chinese command. Need determine mission steps.\n\nUser: \"往前移动4.0米，然后向左转60度，接着往前移动四米，最后向右转60度，再立即停止\"\n\nTranslate:\n- walk forward 4.0 m\n- turn left 60 deg -> positive 60\n- walk forward 4 m (四米 = 4)\n- turn right 60 deg -> negative -60\n- stop immediately\n\nNeed mission_id path safe. Use e.g. \"mission-walk-turn-walk-turn-stop\" or \"cmd-walk-turn-walk-turn-stop\". Must match [A-Za-z0-9][A-Za-z0-9._-]{0,63} not ending dot. Good.\n\nSteps s1 walk_forward distance_m 4.0, depends []\ns2 turn angle_deg 60.0 depends [\"s1\"]\ns3 walk_forward distance_m 4.0 depends [\"s2\"]\ns4 turn angle_deg -60.0 depends [\"s3\"]\ns5 stop parameters {} depends [\"s4\"]\n\nCheck \"往前移动\" equivalent walk_forward. \"立即停止\" stop. No contradictions. Numbers: 4.0, 四, 60. All valid.\n\nNeed output exactly JSON object no markdown. Ensure no extra. error_code null. status SUCCESS.\n\nNeed decide mission_id safe. e.g. \"chained-walk-turn-stop\". Let's use \"mission-walk-turn-walk-turn-stop\". Length fine <64. Starts letter. No dot end. Good.\n\nFinal JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need parse Chinese command. Need determine mission steps.\n\nUser: \"往前移动4.0米，然后向左转60度，接着往前移动四米，最后向右转60度，再立即停止\"\n\nTranslate:\n- walk forward 4.0 m\n- turn left 60 deg -> positive 60\n- walk forward 4 m (四米 = 4)\n- turn right 60 deg -> negative -60\n- stop immediately\n\nNeed mission_id path safe. Use e.g. \"mission-walk-turn-walk-turn-stop\" or \"cmd-walk-turn-walk-turn-stop\". Must match [A-Za-z0-9][A-Za-z0-9._-]{0,63} not ending dot. Good.\n\nSteps s1 walk_forward distance_m 4.0, depends []\ns2 turn angle_deg 60.0 depends [\"s1\"]\ns3 walk_forward distance_m 4.0 depends [\"s2\"]\ns4 turn angle_deg -60.0 depends [\"s3\"]\ns5 stop parameters {} depends [\"s4\"]\n\nCheck \"往前移动\" equivalent walk_forward. \"立即停止\" stop. No contradictions. Numbers: 4.0, 四, 60. All valid.\n\nNeed output exactly JSON object no markdown. Ensure no extra. error_code null. status SUCCESS.\n\nNeed decide mission_id safe. e.g. \"chained-walk-turn-stop\". Let's use \"mission-walk-turn-walk-turn-stop\". Length fine <64. Starts letter. No dot end. Good.\n\nFinal JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_390e4f28-6dda-4793-abc3-0a599be4a3b5",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 227,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 512,
+            "output_tokens_details": {
+              "reasoning_tokens": 334
+            },
+            "total_tokens": 2275
+          }
+        },
+        "request_sha256": "a1c225504c39e3108361946436bd258dca85d814769e087ef570bf90004279f2",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 4.421935800000938,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_390e4f28-6dda-4793-abc3-0a599be4a3b5",
+        "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+        "usage": {
+          "input_tokens": 227,
+          "output_tokens": 512,
+          "total_tokens": 2275
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 1,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 4.421935800000938,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 37,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "a6ca42f9400bb1de4ea0c8bc6cd7580e0d25361e313a1bb08def3f76288f566f",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_390e4f28-6dda-4793-abc3-0a599be4a3b5",
+      "route": "GUARDED_DIRECT_LLM",
+      "step_count": 5,
+      "usage": {
+        "input_tokens": 227,
+        "output_tokens": 512,
+        "total_tokens": 2275
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "angle_deg": -60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止",
+    "status": "SUCCESS"
+  }
+}

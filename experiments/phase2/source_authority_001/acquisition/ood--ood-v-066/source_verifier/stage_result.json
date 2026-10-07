@@ -1,0 +1,310 @@
+{
+  "added_wall_s": 77.07421580000118,
+  "live_evidence": {
+    "events": [
+      {
+        "error_type": "LLMBackendError",
+        "http_status": null,
+        "index": 1,
+        "latency_s": 60.007166000001234,
+        "request_sha256": "5d4cb81764bfa1293f28ab02e1e96aaeb796dc6886af9a2bb5a559bbe9e42a38",
+        "status": "TIMEOUT"
+      },
+      {
+        "index": 2,
+        "latency_s": 16.556651499999134,
+        "provider_document": {
+          "created_at": 1791359715,
+          "id": "resp_8db4ee90-a7fd-4f83-b533-ec3adc3cf910",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_8db4ee90-a7fd-4f83-b533-ec3adc3cf910",
+              "reasoning_content": "We need answer as JSON only. Need analyze source Chinese: \"走 six 米，方向就正前方；走完停止。\"\n\nNeed derive plan. Source clauses:\n- 走 six 米 = walk forward six meters? \"走\" means walk, \"six\" numeral English inside Chinese, 米 meters. Parameters distance_m 6.0.\n- ，方向就正前方； = direction just straight ahead. \"方向就正前方\" maybe direction is straight ahead. Does this affect skill? walk_forward inherently forward. Is \"正前方\" extra parameter? Legal walk_forward params exactly distance_m only. No direction parameter. Does source authorize walk_forward? \"走...方向正前方\" yes walk forward. Direction \"正前方\" is consistent but not a parameter? Need consider if direction mention unresolved? \"方向就正前方\" means direction is directly ahead. Since legal skill walk_forward is forward. This is context, no extra param.\n- 走完停止 = after finishing walking, stop. \"走完\" completion relation; stop after walk. So s1 walk_forward distance 6; s2 stop depends_on s1.\nCandidate matches. Need output coverage exact concatenation equal source. Need split meaningful spans. Source string exactly: 走 six 米，方向就正前方；走完停止。\nNeed coverage list objects with text exactly and concat equals entire original. Need choose split spans. We can split characters and phrases. Need roles.\n\nNeed ensure text values concatenated in order exactly equal original source. So if we split \"走 six 米\" maybe include spaces: original has \"走 six 米，方向就正前方；走完停止。\" There is a space between 走 and six? JSON string: \"走 six 米，方向就正前方；走完停止。\" Let's count: 走 + space + six + space + 米 + ， + 方向就正前方 + ； + 走完停止 + 。 Yes.\n\nNeed every action/relation/edit clause analyzed. We can have spans:\n1 text \"走 six 米\" role ACTION explanation walk_forward distance 6m; English six = 6, 米=meters.\n2 text \"，\" role SEPARATOR punctuation between action and direction; no plan effect.\n3 text \"方向就正前方\" role CONTEXT or RELATION? It specifies direction straight ahead; consistent with walk_forward. But role? CONTEXT maybe. Explanation: direction is directly forward, no separate skill/parameter authorized; walk_forward skill already means forward, so no parameter.\n4 text \"；\" separator.\n5 text \"走完停止\" role RELATION? It includes action stop and completion relation. Maybe split \"走完\" and \"停止\". Need analyze both. Could do:\n5 \"走完\" role RELATION: completion of previous walking.\n6 \"停止\" role ACTION: stop after completion.\n7 \"。\" separator.\nThen concat: \"走 six 米\" + \"，\" + \"方向就正前方\" + \"；\" + \"走完\" + \"停止\" + \"。\" = \"走 six 米，方向就正前方；走完停止。\" Yes.\n\nNeed roles:\n- \"走 six 米\": ACTION. Explanation: Requests one walk_forward action with distance_m 6.0; \"six\" is English numeral and \"米\" meters. Does \"走\" alone mean walk_forward. \n- \"，\": SEPARATOR. Explanation: punctuation separates clauses; no action.\n- \"方向就正前方\": CONTEXT. Explanation: states direction straight ahead; aligns with walk_forward's forward motion; no legal parameter for direction, so no independent action/parameter.\n- \"；\": SEPARATOR. Explanation: separates walking clause from stopping clause; no action.\n- \"走完\": RELATION. Explanation: establishes completion relation: stop occurs after walking is finished; creates dependency of later stop on prior walk.\n- \"停止\": ACTION. Explanation: requests one stop action with empty params.\n- \"。\": SEPARATOR. Explanation: sentence terminator; no plan effect.\n\nNeed dimensions:\naction_multiplicity UNIQUE? Source requests two actions: one walk, one stop. No corrections/repetitions. Direction not action. yes.\naction_order UNIQUE? walk then stop after completion. yes.\ncorrection_scope UNIQUE? No edits/corrections. Inapplicable, no alternatives. UNIQUE.\nrepetition_scope UNIQUE? No repetitions. Inapplicable. UNIQUE.\nreference_resolution UNIQUE? \"走完\" refers to preceding walking action; \"停止\" no object. Direction \"正前方\" context. Need maybe \"走完\" pronoun? Resolved to walk. yes.\ntemporal_relations UNIQUE? \"走完停止\": stop after completion of walk; single order. yes.\nunresolved_relations UNIQUE? None explicit. Direction is resolved to forward. yes.\n\nStatus AUTHORIZED_UNIQUE.\n\nAuthorized plan steps:\ns1 walk_forward parameters {\"distance_m\":6.0} depends_on []\ns2 stop parameters {} depends_on [\"s1\"]\n\nNeed JSON exactly. Ensure no markdown. Use valid JSON. All text exact. Need be careful with Chinese punctuation. Coverage text values concatenated exactly. Let's verify concatenation no missing spaces. Original: \"走 six 米，方向就正前方；走完停止。\"\n\nOur coverage:\n\"走 six 米\" -> includes 走, space, six, space, 米. yes.\n\"，\"\n\"方向就正前方\"\n\"；\"\n\"走完\"\n\"停止\"\n\"。\"\n\nConcatenate: 走 six 米，方向就正前方；走完停止。 yes.\n\nNeed maybe role for \"走 six 米\" could be ACTION and QUANTITY? But each object one role. The instruction says split source into meaningful spans so every action, relation, edit clause analyzed. QUANTITY role for quantity spans. We can split \"走\" and \" six 米\"? But coverage concat. Maybe better split:\n- \"走\" ACTION\n- \" six 米\" QUANTITY\n- \"，\" SEPARATOR\n...\nBut then \"走 six 米\" action with quantity. Role ACTION for 走, QUANTITY for \" six 米\". Need every action, relation, edit clause. That might be more semantically precise. But object text \" six 米\" includes leading space and \"six 米\". Explanation quantity 6 meters. Then \"走\" explanation skill walk_forward. Let's see concatenation:\n\"走\" + \" six 米\" + \"，\" + \"方向就正前方\" + \"；\" + \"走完\" + \"停止\" + \"。\" = \"走 six 米，方向就正前方；走完停止。\" yes. That's okay.\n\nWould we need analyze \"six\" as QUANTITY and \"米\" units? Could split \" six \" and \"米\"? But coverage can have multiple. Maybe simpler:\n1 \"走\" role ACTION\n2 \" six \" role QUANTITY? Actually \"six\" quantity, spaces separators. But we can include \" six 米\" as QUANTITY. It includes numeral+unit. Good.\n3 \"，\" SEPARATOR\n4 \"方向就正前方\" CONTEXT\n5 \"；\" SEPARATOR\n6 \"走完\" RELATION\n7 \"停止\" ACTION\n8 \"。\" SEPARATOR\n\nThis covers action and quantity. Need explanation for \"走\": requests walk_forward skill; direction later consistent. \" six 米\": distance parameter 6.0 meters. The English \"six\" resolves to 6. 米=meters. This is a quantity not a separate action. Good.\n\nBut the source phrase \"走 six 米，方向就正前方；走完停止。\" includes \"走\" twice? Actually first 走, then 走完. We split first \"走\" and second \"走完\". Good.\n\nNeed maybe \"方向就正前方\" role RELATION? It's a direction clause, not temporal. CONTEXT better. Explanation: \"方向就正前方\" states direction straight ahead. In compilation, walk_forward is inherently forward; no direction parameter exists. It does not alter action count/order. Good.\n\nDimension explanations:\n- action_multiplicity: Source has exactly two requested actions: \"走 six 米\" (walk_forward) and \"停止\" (stop). \"走完\" is completion reference, not another action; direction clause no action. No repetition/edit. UNIQUE.\n- action_order: First walk, then stop after walk completed. Single linear execution order s1->s2. UNIQUE.\n- correction_scope: No correction or replacement words (e.g., 不是/而是/改为) present; no earlier parameter/action edited. Thus no correction scope to resolve; no alternatives. UNIQUE.\n- repetition_scope: No repetition markers (再/重复/两次 etc.); each action occurs once. UNIQUE.\n- reference_resolution: \"走完\" refers to completion of immediately preceding walking action; \"停止\" has no object and is an independent stop action; \"方向就正前方\" resolves direction as forward, consistent with walk_forward. No missing external context. UNIQUE.\n- temporal_relations: \"走完停止\" establishes stop after completion of walking. Represented by s2 depends_on s1. No simultaneous/waiting. UNIQUE.\n- unresolved_relations: No explicit unresolved choice, scope, order or relation. Direction is not unresolved; it is fixed as straight ahead. UNIQUE.\n\nPotential issue: \"方向就正前方\" - \"就\" can mean \"then\" or \"just\"? \"方向就正前方\" maybe \"the direction is exactly straight ahead\". It might be context. If source says \"方向就正前方\" maybe there is no \"turn\" action. Good.\n\nNeed ensure no extra keys. authorized_plan list. Step objects exactly id, skill, parameters, depends_on. No mission_id. candidate had mission_id but authorized plan no.\n\nNeed output exactly one JSON object. No markdown.\n\nLet's craft JSON. Ensure proper escaping? Chinese characters fine. JSON strings with Chinese and punctuation. Need no newline? Fine. But output exactly JSON. Could be compact or pretty. Pretty acceptable. \"exactly one JSON object, no markdown\" okay.\n\nNeed be careful coverage text \" six 米\" includes leading and trailing? Original after \"走\": space then six then space then 米. So text should be \" six 米\". Our first text \"走\" plus second \" six 米\" gives \"走 six 米\". Yes. The second text starts with space. JSON string: \" six 米\". Good. Then \"，\" immediately after 米. Good.\n\nCould also include role QUANTITY explanation: \"Quantifies first action as 6 meters. 'six' is an English numeral, '米' is meters, producing distance_m=6.0; no other parameter.\"\n\nNeed coverage role for \"方向就正前方\": CONTEXT. Explanation: \"Specifies direction as straight ahead. Since legal walk_forward has no direction parameter and already denotes forward motion, this is consistent context and does not create another action, parameter, or unresolved choice.\"\n\nRole for \"走完\": RELATION. Explanation: \"Expresses completion of the preceding walking action; it sets the temporal relation that the following stop happens after walking is complete. It is not a separate skill.\"\n\nRole for \"停止\": ACTION. Explanation: \"Requests a stop action with parameters {} as the second step.\"\n\nRole for \"。\": SEPARATOR. \"Sentence terminator; no action or relation.\"\n\nRole for \"；\": SEPARATOR. \"Separates the walking/direction clause from the stopping clause; no plan effect beyond delimiting relation.\"\n\nRole for \"，\": SEPARATOR. \"Separates the walk action from its direction context; no plan effect.\"\n\nPotential issue: The instructions say \"Every explanation is nonempty and states the span's meaning and effect on the plan, including why nonexecuting text does not alter authorization.\" For separators, explain no plan effect. Good.\n\nNeed dimensions statuses exactly strings. \"UNIQUE\", \"AMBIGUOUS\", \"UNKNOWN\". All UNIQUE.\n\nLet's ensure JSON valid with no trailing commas. Use double quotes. Chinese punctuation okay.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer as JSON only. Need analyze source Chinese: \"走 six 米，方向就正前方；走完停止。\"\n\nNeed derive plan. Source clauses:\n- 走 six 米 = walk forward six meters? \"走\" means walk, \"six\" numeral English inside Chinese, 米 meters. Parameters distance_m 6.0.\n- ，方向就正前方； = direction just straight ahead. \"方向就正前方\" maybe direction is straight ahead. Does this affect skill? walk_forward inherently forward. Is \"正前方\" extra parameter? Legal walk_forward params exactly distance_m only. No direction parameter. Does source authorize walk_forward? \"走...方向正前方\" yes walk forward. Direction \"正前方\" is consistent but not a parameter? Need consider if direction mention unresolved? \"方向就正前方\" means direction is directly ahead. Since legal skill walk_forward is forward. This is context, no extra param.\n- 走完停止 = after finishing walking, stop. \"走完\" completion relation; stop after walk. So s1 walk_forward distance 6; s2 stop depends_on s1.\nCandidate matches. Need output coverage exact concatenation equal source. Need split meaningful spans. Source string exactly: 走 six 米，方向就正前方；走完停止。\nNeed coverage list objects with text exactly and concat equals entire original. Need choose split spans. We can split characters and phrases. Need roles.\n\nNeed ensure text values concatenated in order exactly equal original source. So if we split \"走 six 米\" maybe include spaces: original has \"走 six 米，方向就正前方；走完停止。\" There is a space between 走 and six? JSON string: \"走 six 米，方向就正前方；走完停止。\" Let's count: 走 + space + six + space + 米 + ， + 方向就正前方 + ； + 走完停止 + 。 Yes.\n\nNeed every action/relation/edit clause analyzed. We can have spans:\n1 text \"走 six 米\" role ACTION explanation walk_forward distance 6m; English six = 6, 米=meters.\n2 text \"，\" role SEPARATOR punctuation between action and direction; no plan effect.\n3 text \"方向就正前方\" role CONTEXT or RELATION? It specifies direction straight ahead; consistent with walk_forward. But role? CONTEXT maybe. Explanation: direction is directly forward, no separate skill/parameter authorized; walk_forward skill already means forward, so no parameter.\n4 text \"；\" separator.\n5 text \"走完停止\" role RELATION? It includes action stop and completion relation. Maybe split \"走完\" and \"停止\". Need analyze both. Could do:\n5 \"走完\" role RELATION: completion of previous walking.\n6 \"停止\" role ACTION: stop after completion.\n7 \"。\" separator.\nThen concat: \"走 six 米\" + \"，\" + \"方向就正前方\" + \"；\" + \"走完\" + \"停止\" + \"。\" = \"走 six 米，方向就正前方；走完停止。\" Yes.\n\nNeed roles:\n- \"走 six 米\": ACTION. Explanation: Requests one walk_forward action with distance_m 6.0; \"six\" is English numeral and \"米\" meters. Does \"走\" alone mean walk_forward. \n- \"，\": SEPARATOR. Explanation: punctuation separates clauses; no action.\n- \"方向就正前方\": CONTEXT. Explanation: states direction straight ahead; aligns with walk_forward's forward motion; no legal parameter for direction, so no independent action/parameter.\n- \"；\": SEPARATOR. Explanation: separates walking clause from stopping clause; no action.\n- \"走完\": RELATION. Explanation: establishes completion relation: stop occurs after walking is finished; creates dependency of later stop on prior walk.\n- \"停止\": ACTION. Explanation: requests one stop action with empty params.\n- \"。\": SEPARATOR. Explanation: sentence terminator; no plan effect.\n\nNeed dimensions:\naction_multiplicity UNIQUE? Source requests two actions: one walk, one stop. No corrections/repetitions. Direction not action. yes.\naction_order UNIQUE? walk then stop after completion. yes.\ncorrection_scope UNIQUE? No edits/corrections. Inapplicable, no alternatives. UNIQUE.\nrepetition_scope UNIQUE? No repetitions. Inapplicable. UNIQUE.\nreference_resolution UNIQUE? \"走完\" refers to preceding walking action; \"停止\" no object. Direction \"正前方\" context. Need maybe \"走完\" pronoun? Resolved to walk. yes.\ntemporal_relations UNIQUE? \"走完停止\": stop after completion of walk; single order. yes.\nunresolved_relations UNIQUE? None explicit. Direction is resolved to forward. yes.\n\nStatus AUTHORIZED_UNIQUE.\n\nAuthorized plan steps:\ns1 walk_forward parameters {\"distance_m\":6.0} depends_on []\ns2 stop parameters {} depends_on [\"s1\"]\n\nNeed JSON exactly. Ensure no markdown. Use valid JSON. All text exact. Need be careful with Chinese punctuation. Coverage text values concatenated exactly. Let's verify concatenation no missing spaces. Original: \"走 six 米，方向就正前方；走完停止。\"\n\nOur coverage:\n\"走 six 米\" -> includes 走, space, six, space, 米. yes.\n\"，\"\n\"方向就正前方\"\n\"；\"\n\"走完\"\n\"停止\"\n\"。\"\n\nConcatenate: 走 six 米，方向就正前方；走完停止。 yes.\n\nNeed maybe role for \"走 six 米\" could be ACTION and QUANTITY? But each object one role. The instruction says split source into meaningful spans so every action, relation, edit clause analyzed. QUANTITY role for quantity spans. We can split \"走\" and \" six 米\"? But coverage concat. Maybe better split:\n- \"走\" ACTION\n- \" six 米\" QUANTITY\n- \"，\" SEPARATOR\n...\nBut then \"走 six 米\" action with quantity. Role ACTION for 走, QUANTITY for \" six 米\". Need every action, relation, edit clause. That might be more semantically precise. But object text \" six 米\" includes leading space and \"six 米\". Explanation quantity 6 meters. Then \"走\" explanation skill walk_forward. Let's see concatenation:\n\"走\" + \" six 米\" + \"，\" + \"方向就正前方\" + \"；\" + \"走完\" + \"停止\" + \"。\" = \"走 six 米，方向就正前方；走完停止。\" yes. That's okay.\n\nWould we need analyze \"six\" as QUANTITY and \"米\" units? Could split \" six \" and \"米\"? But coverage can have multiple. Maybe simpler:\n1 \"走\" role ACTION\n2 \" six \" role QUANTITY? Actually \"six\" quantity, spaces separators. But we can include \" six 米\" as QUANTITY. It includes numeral+unit. Good.\n3 \"，\" SEPARATOR\n4 \"方向就正前方\" CONTEXT\n5 \"；\" SEPARATOR\n6 \"走完\" RELATION\n7 \"停止\" ACTION\n8 \"。\" SEPARATOR\n\nThis covers action and quantity. Need explanation for \"走\": requests walk_forward skill; direction later consistent. \" six 米\": distance parameter 6.0 meters. The English \"six\" resolves to 6. 米=meters. This is a quantity not a separate action. Good.\n\nBut the source phrase \"走 six 米，方向就正前方；走完停止。\" includes \"走\" twice? Actually first 走, then 走完. We split first \"走\" and second \"走完\". Good.\n\nNeed maybe \"方向就正前方\" role RELATION? It's a direction clause, not temporal. CONTEXT better. Explanation: \"方向就正前方\" states direction straight ahead. In compilation, walk_forward is inherently forward; no direction parameter exists. It does not alter action count/order. Good.\n\nDimension explanations:\n- action_multiplicity: Source has exactly two requested actions: \"走 six 米\" (walk_forward) and \"停止\" (stop). \"走完\" is completion reference, not another action; direction clause no action. No repetition/edit. UNIQUE.\n- action_order: First walk, then stop after walk completed. Single linear execution order s1->s2. UNIQUE.\n- correction_scope: No correction or replacement words (e.g., 不是/而是/改为) present; no earlier parameter/action edited. Thus no correction scope to resolve; no alternatives. UNIQUE.\n- repetition_scope: No repetition markers (再/重复/两次 etc.); each action occurs once. UNIQUE.\n- reference_resolution: \"走完\" refers to completion of immediately preceding walking action; \"停止\" has no object and is an independent stop action; \"方向就正前方\" resolves direction as forward, consistent with walk_forward. No missing external context. UNIQUE.\n- temporal_relations: \"走完停止\" establishes stop after completion of walking. Represented by s2 depends_on s1. No simultaneous/waiting. UNIQUE.\n- unresolved_relations: No explicit unresolved choice, scope, order or relation. Direction is not unresolved; it is fixed as straight ahead. UNIQUE.\n\nPotential issue: \"方向就正前方\" - \"就\" can mean \"then\" or \"just\"? \"方向就正前方\" maybe \"the direction is exactly straight ahead\". It might be context. If source says \"方向就正前方\" maybe there is no \"turn\" action. Good.\n\nNeed ensure no extra keys. authorized_plan list. Step objects exactly id, skill, parameters, depends_on. No mission_id. candidate had mission_id but authorized plan no.\n\nNeed output exactly one JSON object. No markdown.\n\nLet's craft JSON. Ensure proper escaping? Chinese characters fine. JSON strings with Chinese and punctuation. Need no newline? Fine. But output exactly JSON. Could be compact or pretty. Pretty acceptable. \"exactly one JSON object, no markdown\" okay.\n\nNeed be careful coverage text \" six 米\" includes leading and trailing? Original after \"走\": space then six then space then 米. So text should be \" six 米\". Our first text \"走\" plus second \" six 米\" gives \"走 six 米\". Yes. The second text starts with space. JSON string: \" six 米\". Good. Then \"，\" immediately after 米. Good.\n\nCould also include role QUANTITY explanation: \"Quantifies first action as 6 meters. 'six' is an English numeral, '米' is meters, producing distance_m=6.0; no other parameter.\"\n\nNeed coverage role for \"方向就正前方\": CONTEXT. Explanation: \"Specifies direction as straight ahead. Since legal walk_forward has no direction parameter and already denotes forward motion, this is consistent context and does not create another action, parameter, or unresolved choice.\"\n\nRole for \"走完\": RELATION. Explanation: \"Expresses completion of the preceding walking action; it sets the temporal relation that the following stop happens after walking is complete. It is not a separate skill.\"\n\nRole for \"停止\": ACTION. Explanation: \"Requests a stop action with parameters {} as the second step.\"\n\nRole for \"。\": SEPARATOR. \"Sentence terminator; no action or relation.\"\n\nRole for \"；\": SEPARATOR. \"Separates the walking/direction clause from the stopping clause; no plan effect beyond delimiting relation.\"\n\nRole for \"，\": SEPARATOR. \"Separates the walk action from its direction context; no plan effect.\"\n\nPotential issue: The instructions say \"Every explanation is nonempty and states the span's meaning and effect on the plan, including why nonexecuting text does not alter authorization.\" For separators, explain no plan effect. Good.\n\nNeed dimensions statuses exactly strings. \"UNIQUE\", \"AMBIGUOUS\", \"UNKNOWN\". All UNIQUE.\n\nLet's ensure JSON valid with no trailing commas. Use double quotes. Chinese punctuation okay.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the walk_forward action. It is the first requested action and is later completed by the stop clause.\"\n    },\n    {\n      \"text\": \" six 米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Quantifies the walk_forward action as six meters. 'six' is the numeral 6 and '米' is meters, so distance_m is 6.0; this introduces no additional action.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the walking quantity from the following direction clause; it has no plan effect.\"\n    },\n    {\n      \"text\": \"方向就正前方\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"States that the direction is straight ahead. The legal walk_forward skill already denotes forward motion and has no direction parameter, so this context does not create another action, parameter, or unresolved choice.\"\n    },\n    {\n      \"text\": \"；\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the walking clause from the stopping clause; it has no plan effect beyond delimiting the clauses.\"\n    },\n    {\n      \"text\": \"走完\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Refers to completion of the preceding walking action and establishes that the following stop occurs after walking is finished; it is not a separate skill.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a stop action with empty parameters as the second and final step.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence terminator; it has no plan effect.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly two actions: one walk_forward action quantified by six meters and one stop action. '走完' is a completion reference, not another action; the direction clause is context and does not add an action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source gives a single linear order: first walk six meters, then stop after the walk is completed.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is no correction, replacement, or edit wording in the source. No earlier action, parameter, group, or relation is revised, so correction scope is inapplicable and introduces no alternative.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no repetition markers or repeated action spans. Each requested action occurs once, so repetition scope is inapplicable and introduces no alternative.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走完' resolves to the immediately preceding walking action, and '停止' is an independent stop action with no object. '方向就正前方' resolves the walking direction as straight ahead, consistent with walk_forward, with no missing external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走完停止' establishes that stopping occurs after completion of the walking action. This is representable as a single linear order with the stop depending on the walk.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any action, order, scope, or relation unresolved. The direction is fixed as straight ahead, the order is walk-then-stop, and no alternatives are presented.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 6.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_8db4ee90-a7fd-4f83-b533-ec3adc3cf910",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 219,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 3524,
+            "output_tokens_details": {
+              "reasoning_tokens": 2575
+            },
+            "total_tokens": 4767
+          }
+        },
+        "request_sha256": "5d4cb81764bfa1293f28ab02e1e96aaeb796dc6886af9a2bb5a559bbe9e42a38",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 2,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 2,
+        "finish_reason": "completed",
+        "latency_s": 16.554556999999477,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_8db4ee90-a7fd-4f83-b533-ec3adc3cf910",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the walk_forward action. It is the first requested action and is later completed by the stop clause.\"\n    },\n    {\n      \"text\": \" six 米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Quantifies the walk_forward action as six meters. 'six' is the numeral 6 and '米' is meters, so distance_m is 6.0; this introduces no additional action.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the walking quantity from the following direction clause; it has no plan effect.\"\n    },\n    {\n      \"text\": \"方向就正前方\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"States that the direction is straight ahead. The legal walk_forward skill already denotes forward motion and has no direction parameter, so this context does not create another action, parameter, or unresolved choice.\"\n    },\n    {\n      \"text\": \"；\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the walking clause from the stopping clause; it has no plan effect beyond delimiting the clauses.\"\n    },\n    {\n      \"text\": \"走完\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Refers to completion of the preceding walking action and establishes that the following stop occurs after walking is finished; it is not a separate skill.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a stop action with empty parameters as the second and final step.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence terminator; it has no plan effect.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly two actions: one walk_forward action quantified by six meters and one stop action. '走完' is a completion reference, not another action; the direction clause is context and does not add an action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source gives a single linear order: first walk six meters, then stop after the walk is completed.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is no correction, replacement, or edit wording in the source. No earlier action, parameter, group, or relation is revised, so correction scope is inapplicable and introduces no alternative.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no repetition markers or repeated action spans. Each requested action occurs once, so repetition scope is inapplicable and introduces no alternative.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走完' resolves to the immediately preceding walking action, and '停止' is an independent stop action with no object. '方向就正前方' resolves the walking direction as straight ahead, consistent with walk_forward, with no missing external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走完停止' establishes that stopping occurs after completion of the walking action. This is representable as a single linear order with the stop depending on the walk.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any action, order, scope, or relation unresolved. The direction is fixed as straight ahead, the order is walk-then-stop, and no alternatives are presented.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 6.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+        "usage": {
+          "input_tokens": 219,
+          "output_tokens": 3524,
+          "total_tokens": 4767
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.2584338000015123,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk6-then-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 17,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 262,
+      "raw_response_sha256": "2437c7ca2386d6cb806a2dcb1e5aceedf627608b4155418015cff4dcdcda35cb",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_6438c1cf-ab4c-490c-b219-301feaa1dfb0",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 2,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 77.07352050000009,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 16.554556999999477,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the walk_forward action. It is the first requested action and is later completed by the stop clause.\"\n    },\n    {\n      \"text\": \" six 米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Quantifies the walk_forward action as six meters. 'six' is the numeral 6 and '米' is meters, so distance_m is 6.0; this introduces no additional action.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the walking quantity from the following direction clause; it has no plan effect.\"\n    },\n    {\n      \"text\": \"方向就正前方\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"States that the direction is straight ahead. The legal walk_forward skill already denotes forward motion and has no direction parameter, so this context does not create another action, parameter, or unresolved choice.\"\n    },\n    {\n      \"text\": \"；\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the walking clause from the stopping clause; it has no plan effect beyond delimiting the clauses.\"\n    },\n    {\n      \"text\": \"走完\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Refers to completion of the preceding walking action and establishes that the following stop occurs after walking is finished; it is not a separate skill.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a stop action with empty parameters as the second and final step.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence terminator; it has no plan effect.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly two actions: one walk_forward action quantified by six meters and one stop action. '走完' is a completion reference, not another action; the direction clause is context and does not add an action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source gives a single linear order: first walk six meters, then stop after the walk is completed.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is no correction, replacement, or edit wording in the source. No earlier action, parameter, group, or relation is revised, so correction scope is inapplicable and introduces no alternative.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no repetition markers or repeated action spans. Each requested action occurs once, so repetition scope is inapplicable and introduces no alternative.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走完' resolves to the immediately preceding walking action, and '停止' is an independent stop action with no object. '方向就正前方' resolves the walking direction as straight ahead, consistent with walk_forward, with no missing external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"'走完停止' establishes that stopping occurs after completion of the walking action. This is representable as a single linear order with the stop depending on the walk.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any action, order, scope, or relation unresolved. The direction is fixed as straight ahead, the order is walk-then-stop, and no alternatives are presented.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 6.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+          "raw_response_sha256": "4ba684b994eaeab345dfc3c93174e1291b15959458b9ae62f8456b9b1216251f",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_8db4ee90-a7fd-4f83-b533-ec3adc3cf910",
+          "source_aware": true,
+          "source_sha256": "c228b105144f01818aaa7eee56529a80e5566113ec8af576567c5cd330a5ba7e",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 219,
+            "output_tokens": 3524,
+            "total_tokens": 4767
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 6.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Requests the walk_forward action. It is the first requested action and is later completed by the stop clause.",
+                "role": "ACTION",
+                "text": "走"
+              },
+              {
+                "explanation": "Quantifies the walk_forward action as six meters. 'six' is the numeral 6 and '米' is meters, so distance_m is 6.0; this introduces no additional action.",
+                "role": "QUANTITY",
+                "text": " six 米"
+              },
+              {
+                "explanation": "Punctuation separating the walking quantity from the following direction clause; it has no plan effect.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "States that the direction is straight ahead. The legal walk_forward skill already denotes forward motion and has no direction parameter, so this context does not create another action, parameter, or unresolved choice.",
+                "role": "CONTEXT",
+                "text": "方向就正前方"
+              },
+              {
+                "explanation": "Punctuation separating the walking clause from the stopping clause; it has no plan effect beyond delimiting the clauses.",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "Refers to completion of the preceding walking action and establishes that the following stop occurs after walking is finished; it is not a separate skill.",
+                "role": "RELATION",
+                "text": "走完"
+              },
+              {
+                "explanation": "Requests a stop action with empty parameters as the second and final step.",
+                "role": "ACTION",
+                "text": "停止"
+              },
+              {
+                "explanation": "Sentence terminator; it has no plan effect.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly two actions: one walk_forward action quantified by six meters and one stop action. '走完' is a completion reference, not another action; the direction clause is context and does not add an action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The source gives a single linear order: first walk six meters, then stop after the walk is completed.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, replacement, or edit wording in the source. No earlier action, parameter, group, or relation is revised, so correction scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "'走完' resolves to the immediately preceding walking action, and '停止' is an independent stop action with no object. '方向就正前方' resolves the walking direction as straight ahead, consistent with walk_forward, with no missing external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There are no repetition markers or repeated action spans. Each requested action occurs once, so repetition scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "'走完停止' establishes that stopping occurs after completion of the walking action. This is representable as a single linear order with the stop depending on the walk.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any action, order, scope, or relation unresolved. The direction is fixed as straight ahead, the order is walk-then-stop, and no alternatives are presented.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 213,
+        "output_tokens": 222,
+        "total_tokens": 1971
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk6-then-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "走six米,方向就正前方,走完停止",
+    "status": "SUCCESS"
+  }
+}

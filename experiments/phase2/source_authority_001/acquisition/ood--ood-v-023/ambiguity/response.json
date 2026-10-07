@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 16.37391370000114,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_88b376ae-703e-472f-b832-ad0892040c1e",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走8米。\",\"role\":\"ACTION\",\"explanation\":\"Initial instruction to walk forward 8 meters; it supplies the walk_forward action and an initial distance_m of 8, which is later corrected by the following span.\"},{\"text\":\"呃，\",\"role\":\"SEPARATOR\",\"explanation\":\"Filler pause introducing the correction; it contains no action, parameter, relation, or authority and does not change the plan.\"},{\"text\":\"不是8，\",\"role\":\"EDIT\",\"explanation\":\"Explicitly rejects the prior 8-meter quantity, so 8 is not an additional action and is not the final distance; it edits the distance parameter of the same walk_forward action.\"},{\"text\":\"是10米，\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the corrected distance of 10 meters, replacing the rejected 8-meter value for the same walk_forward action; 10 is positive and finite.\"},{\"text\":\"其他不用加。\",\"role\":\"EDIT\",\"explanation\":\"Restricts the correction to the distance only and forbids adding other actions or parameters; it confirms there is no additional requested action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests one forward-walking action. The clause 不是8，是10米 corrects that action's distance rather than requesting a second action, and 其他不用加 excludes additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, walk_forward with corrected distance 10 meters, so no ordering among multiple actions is introduced. The correction applies to the single action before execution.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"不是8 negates the initial 8-meter distance, and 是10米 sets the same walk_forward action to 10 meters. 其他不用加 preserves the rest and forbids adding other changes.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. 不是8 is a correction of a parameter, not a repeated action, and 其他不用加 does not broaden or repeat the plan.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The 8 in 不是8 refers to the immediately preceding 8米, and 其他 in 其他不用加 refers to anything other than the corrected action/distance, resolving to no additional items. No external context is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains a single action and no before/after, simultaneity, waiting, or completion relation among multiple steps. The correction is semantic, not a second timed event.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not leave an unresolved choice, scope, order, or relation. It fully resolves the action as walk_forward for 10 meters with no other additions.\"}}}",
+  "usage": {
+    "input_tokens": 153,
+    "output_tokens": 3123,
+    "total_tokens": 4044
+  }
+}

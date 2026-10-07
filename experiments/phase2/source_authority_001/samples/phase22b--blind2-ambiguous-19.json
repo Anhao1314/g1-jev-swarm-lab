@@ -1,0 +1,312 @@
+{
+  "B": {
+    "added_wall_s": 5.344909399998869,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 5.278467100000853,
+          "provider_document": {
+            "created_at": 1791360207,
+            "id": "resp_8af114d1-f98a-4226-8703-f801c26639cd",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_8af114d1-f98a-4226-8703-f801c26639cd",
+                "reasoning_content": "We need answer only JSON. Need parse Chinese command \"往前一直走\" = walk forward continuously/keep walking. This is vague/under-specified no distance. Likely AMBIGUOUS_COMMAND? It's a motion request with no quantity. Could be ambiguous vague. \"一直走\" = keep walking, unsupported? It maps to walk_forward but no distance. Missing required distance -> per rule 1 missing distance is AMBIGUOUS with MISSING_PARAMETER. However \"一直\" implies continuous/indefinite, vague quantity? Rule: vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS_COMMAND. \"一直走\" no distance, maybe MISSING_PARAMETER? Need decide.\n\nThe command is \"往前走一点\" example -> AMBIGUOUS_COMMAND. \"右转\" -> MISSING_PARAMETER. \"往前走\" without distance likely MISSING_PARAMETER? But \"一直\" adds vagueness. \"往前一直走\" means walk forward continuously. It's under-specified distance. If missing required distance/angle absent -> MISSING_PARAMETER. But also vague. Which is correct? The instruction says: \"Missing distance or angle is AMBIGUOUS with MISSING_PARAMETER. Vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS with AMBIGUOUS_COMMAND.\"\n\n\"一直\" is a vague duration/distance, maybe akin \"一会\". But it's not a quantity. It is unsupported capability? walk_forward only fixed distance, continuous walking could be stop condition missing. Could be AMBIGUOUS_COMMAND.\n\nNeed infer expected from dataset. \"往前走一点\" -> AMBIGUOUS_COMMAND. \"右转\" -> MISSING_PARAMETER. \"往前一直走\" no explicit quantity. It's a command to walk forward, but indefinite. Since walk_forward requires distance_m exactly. No distance specified. I'd lean AMBIGUOUS_COMMAND because \"一直\" is vague/under-specified and no unique mission. But the \"MISSING_PARAMETER\" is specifically for required distance/angle absent. Here distance absent. Yet \"一直\" indicates continuous, which cannot map to finite distance. Could be AMBIGUOUS_COMMAND. Which error code likely?\n\nLet's inspect wording: \"Missing distance or angle is AMBIGUOUS with MISSING_PARAMETER.\" That applies if user says \"前进\" or \"右转\". If they add \"一直\" (continuously), still missing distance. But \"一直\" is a vague quantity? It doesn't specify a quantity at all; it specifies indefinite. I'd consider AMBIGUOUS_COMMAND because \"一直\" makes no unique mission.\n\nExamples: \"往前走一点\" -> AMBIGUOUS_COMMAND. \"右转\" -> MISSING_PARAMETER. \"往前一直走\" resembles \"往前走\" plus \"一直\". If \"往前走\" would be MISSING_PARAMETER? Or AMBIGUOUS? The only similar is \"往前走一点\" which is ambiguous. \"一直\" is similar vagueness. So AMBIGUOUS_COMMAND likely.\n\nNeed output JSON: {\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}.\n\nLet's ensure no extra.",
+                "summary": [
+                  {
+                    "text": "We need answer only JSON. Need parse Chinese command \"往前一直走\" = walk forward continuously/keep walking. This is vague/under-specified no distance. Likely AMBIGUOUS_COMMAND? It's a motion request with no quantity. Could be ambiguous vague. \"一直走\" = keep walking, unsupported? It maps to walk_forward but no distance. Missing required distance -> per rule 1 missing distance is AMBIGUOUS with MISSING_PARAMETER. However \"一直\" implies continuous/indefinite, vague quantity? Rule: vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS_COMMAND. \"一直走\" no distance, maybe MISSING_PARAMETER? Need decide.\n\nThe command is \"往前走一点\" example -> AMBIGUOUS_COMMAND. \"右转\" -> MISSING_PARAMETER. \"往前走\" without distance likely MISSING_PARAMETER? But \"一直\" adds vagueness. \"往前一直走\" means walk forward continuously. It's under-specified distance. If missing required distance/angle absent -> MISSING_PARAMETER. But also vague. Which is correct? The instruction says: \"Missing distance or angle is AMBIGUOUS with MISSING_PARAMETER. Vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS with AMBIGUOUS_COMMAND.\"\n\n\"一直\" is a vague duration/distance, maybe akin \"一会\". But it's not a quantity. It is unsupported capability? walk_forward only fixed distance, continuous walking could be stop condition missing. Could be AMBIGUOUS_COMMAND.\n\nNeed infer expected from dataset. \"往前走一点\" -> AMBIGUOUS_COMMAND. \"右转\" -> MISSING_PARAMETER. \"往前一直走\" no explicit quantity. It's a command to walk forward, but indefinite. Since walk_forward requires distance_m exactly. No distance specified. I'd lean AMBIGUOUS_COMMAND because \"一直\" is vague/under-specified and no unique mission. But the \"MISSING_PARAMETER\" is specifically for required distance/angle absent. Here distance absent. Yet \"一直\" indicates continuous, which cannot map to finite distance. Could be AMBIGUOUS_COMMAND. Which error code likely?\n\nLet's inspect wording: \"Missing distance or angle is AMBIGUOUS with MISSING_PARAMETER.\" That applies if user says \"前进\" or \"右转\". If they add \"一直\" (continuously), still missing distance. But \"一直\" is a vague quantity? It doesn't specify a quantity at all; it specifies indefinite. I'd consider AMBIGUOUS_COMMAND because \"一直\" makes no unique mission.\n\nExamples: \"往前走一点\" -> AMBIGUOUS_COMMAND. \"右转\" -> MISSING_PARAMETER. \"往前一直走\" resembles \"往前走\" plus \"一直\". If \"往前走\" would be MISSING_PARAMETER? Or AMBIGUOUS? The only similar is \"往前走一点\" which is ambiguous. \"一直\" is similar vagueness. So AMBIGUOUS_COMMAND likely.\n\nNeed output JSON: {\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}.\n\nLet's ensure no extra.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_8af114d1-f98a-4226-8703-f801c26639cd",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 202,
+              "input_tokens_details": {
+                "cached_tokens": 1536
+              },
+              "output_tokens": 748,
+              "output_tokens_details": {
+                "reasoning_tokens": 725
+              },
+              "total_tokens": 2486
+            }
+          },
+          "request_sha256": "940884cce45f5b5d8b4d28ba660ddf3e2b34a3cf74b80d0f69f29d1610294fdc",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 5.276729900000646,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_8af114d1-f98a-4226-8703-f801c26639cd",
+          "text": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 748,
+            "total_tokens": 2486
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_v1",
+        "attempts": 1,
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 5.276729900000646,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "model": "deepseek-flash",
+        "normalized_length": 5,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+        "raw_response_sha256": "954691d873bc5faa5b8b13bd5f64082a85a610821026714efb4bde19e30f09c7",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_8af114d1-f98a-4226-8703-f801c26639cd",
+        "route": "GUARDED_DIRECT_LLM",
+        "usage": {
+          "input_tokens": 202,
+          "output_tokens": 748,
+          "total_tokens": 2486
+        },
+        "validation": null
+      },
+      "error_code": "AMBIGUOUS_COMMAND",
+      "error_message": "model returned AMBIGUOUS (AMBIGUOUS_COMMAND)",
+      "mission": null,
+      "normalized_text": "往前一直走",
+      "status": "AMBIGUOUS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": false,
+      "status": "AMBIGUOUS",
+      "unauthorized_release": false,
+      "valid_exact": false,
+      "wrong_ir": false
+    }
+  },
+  "baseline_kind": "new_frozen_B_first_response",
+  "gate_order": [
+    "source_verifier",
+    "ambiguity"
+  ],
+  "sample": {
+    "baseline_recorded": null,
+    "expected_mission": null,
+    "expected_status": "AMBIGUOUS",
+    "family": "ambiguous",
+    "population": "phase22b",
+    "sample_id": "blind2-ambiguous-19",
+    "source": "往前一直走",
+    "split": "already_seen_regression"
+  },
+  "treatments": {
+    "ambiguity": {
+      "added_wall_s": 0.0006224999997357372,
+      "live_evidence": {
+        "events": [],
+        "provider_attempts": 0,
+        "provider_calls": 0,
+        "responses": []
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+          "attempts": 1,
+          "baseline_status": "AMBIGUOUS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 5.276729900000646,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "model": "deepseek-flash",
+          "normalized_length": 5,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+          "raw_response_sha256": "954691d873bc5faa5b8b13bd5f64082a85a610821026714efb4bde19e30f09c7",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "released_executable": false,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_8af114d1-f98a-4226-8703-f801c26639cd",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "provider_calls": 0
+            },
+            "reason_code": "NO_LEGAL_CANDIDATE",
+            "status": "UNKNOWN"
+          },
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 748,
+            "total_tokens": 2486
+          },
+          "validation": null
+        },
+        "error_code": "AMBIGUOUS_COMMAND",
+        "error_message": "model returned AMBIGUOUS (AMBIGUOUS_COMMAND)",
+        "mission": null,
+        "normalized_text": "往前一直走",
+        "status": "AMBIGUOUS"
+      },
+      "score": {
+        "false_rejection": false,
+        "released": false,
+        "status": "AMBIGUOUS",
+        "unauthorized_release": false,
+        "valid_exact": false,
+        "wrong_ir": false
+      }
+    },
+    "source_verifier": {
+      "added_wall_s": 0.0005175000005692709,
+      "live_evidence": {
+        "events": [],
+        "provider_attempts": 0,
+        "provider_calls": 0,
+        "responses": []
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_source_authority_v1",
+          "attempts": 1,
+          "baseline_status": "AMBIGUOUS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 5.276729900000646,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "model": "deepseek-flash",
+          "normalized_length": 5,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+          "raw_response_sha256": "954691d873bc5faa5b8b13bd5f64082a85a610821026714efb4bde19e30f09c7",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "released_executable": false,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_8af114d1-f98a-4226-8703-f801c26639cd",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "provider_calls": 0
+            },
+            "reason_code": "NO_LEGAL_CANDIDATE",
+            "status": "UNKNOWN"
+          },
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 748,
+            "total_tokens": 2486
+          },
+          "validation": null
+        },
+        "error_code": "AMBIGUOUS_COMMAND",
+        "error_message": "model returned AMBIGUOUS (AMBIGUOUS_COMMAND)",
+        "mission": null,
+        "normalized_text": "往前一直走",
+        "status": "AMBIGUOUS"
+      },
+      "score": {
+        "false_rejection": false,
+        "released": false,
+        "status": "AMBIGUOUS",
+        "unauthorized_release": false,
+        "valid_exact": false,
+        "wrong_ir": false
+      }
+    }
+  }
+}

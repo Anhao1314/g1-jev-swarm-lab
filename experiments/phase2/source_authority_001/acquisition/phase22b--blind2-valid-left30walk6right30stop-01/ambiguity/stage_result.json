@@ -1,0 +1,294 @@
+{
+  "added_wall_s": 9.966169699997408,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 9.962788000000728,
+        "provider_document": {
+          "created_at": 1791360116,
+          "id": "resp_015e5e60-3045-4f4f-b0d5-ef2fd38498f0",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_015e5e60-3045-4f4f-b0d5-ef2fd38498f0",
+              "reasoning_content": "We need answer exactly JSON. Need inspect source. Need determine authorization. Source Chinese: \"请先向左转30度，然后往前走6米，再向右转30度，最后停下\"\n\nTranslate: Please first turn left 30 degrees, then walk forward 6 meters, then turn right 30 degrees, finally stop.\n\nNeed decide dimensions. Actions:\n1 turn left 30 deg -> turn angle -30? left positive? Wait legal semantics: turn requires nonzero finite angle_deg (度 or degrees; left/counterclockwise positive, right/clockwise negative). So left 30 => +30. right 30 => -30. stand no.\n2 walk_forward distance_m 6 (6米)\n3 turn right 30\n4 stop.\n\nOrder explicit: 先...然后...再...最后. Uniquely linear.\n\nAction multiplicity: exactly four actions. No edits/repetitions. Unique.\nAction order: unique.\nCorrection scope: inapplicable/no corrections. UNIQUE.\nRepetition scope: no repetition. UNIQUE.\nReference resolution: no pronouns? \"先...然后...再...最后\" no ambiguous. Unique.\nTemporal relations: sequential. Unique.\nUnresolved relations: none. Unique.\n\nNeed coverage list splitting entire source exactly. We need ensure concatenated equals source. We can split into spans. Need meaningful spans every action relation editing clause. No editing. We can include characters. Need exact copy preserving whitespace/punctuation. Source string: 请先向左转30度，然后往前走6米，再向右转30度，最后停下\n\nLet's count segments:\n\"请先向左转30度\" then \"，\" then \"然后往前走6米\" then \"，\" then \"再向右转30度\" then \"，\" then \"最后停下\"\n\nBut actions: \"请先向左转30度\" includes action and order; \"然后往前走6米\"; \"再向右转30度\"; \"最后停下\". Separators commas.\n\nNeed role ACTION for action spans, SEPARATOR for punctuation. Maybe \"请先\" is context/order? But coverage should every action relation and editing clause. Could split \"请先\" and \"向左转30度\" etc. But text concatenation.\n\nI think simpler:\n1 text: \"请先向左转30度\" role ACTION explanation: Requests first action: turn left 30 degrees. 请 polite, 先 establishes first. Hmm role includes action and sequence. Fine.\n2 \"，\" SEPARATOR.\n3 \"然后往前走6米\" ACTION: then walk forward 6 meters.\n4 \"，\" SEPARATOR.\n5 \"再向右转30度\" ACTION.\n6 \"，\" SEPARATOR.\n7 \"最后停下\" ACTION: finally stop.\n\nNeed perhaps mention \"先\" relation; but role can be ACTION. Dimensions handle temporal.\n\nNeed output JSON exactly with keys status, coverage, dimensions. coverage list nonempty. dimensions object exactly seven names. Status likely AUTHORIZED_UNIQUE.\n\nNeed be careful: Is there any ambiguity about \"向左转30度\": left positive according to semantics. Unique. \"向右转30度\": right negative. Unique. \"往前走6米\": walk_forward distance_m 6. \"停下\": stop. Good.\n\nCould there be issue with \"请先向左转30度，然后往前走6米，再向右转30度，最后停下\" as a single sentence; no explicit \"after completing\"? Sequential then. \"然后\" and \"再\" and \"最后\" imply order. Unique.\n\nNeed perhaps mention not using runtime capabilities. Fine.\n\nNeed produce valid JSON no markdown. Ensure Chinese chars fine. Need include explanations nonempty.\n\nLet's draft.\n\nCoverage exact:\n[\n{\"text\":\"请先向左转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action, a left turn of 30 degrees; 请 is polite, 先 fixes it as the initial step. Under the given semantics left is positive, so this is turn(+30).\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the first action from the next sequential action; it introduces no executable action.\"},\n{\"text\":\"然后往前走6米\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after the first: walk forward 6 meters; 然后 marks succession. This is walk_forward(distance_m=6).\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the walk action from the next sequential action; it adds no action.\"},\n{\"text\":\"再向右转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after walking: turn right 30 degrees; 再 marks the following step. Under the given semantics right is negative, so this is turn(angle_deg=-30).\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the right turn from the final action; it adds no action.\"},\n{\"text\":\"最后停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the final action, stop; 最后 fixes it as the last step. This is stop with no parameters.\"}\n]\n\nCheck concatenation: \"请先向左转30度\" + \"，\" + \"然后往前走6米\" + \"，\" + \"再向右转30度\" + \"，\" + \"最后停下\" = original. Good.\n\nDimensions:\naction_multiplicity UNIQUE explanation: lists four actions, no repeated/edited actions.\naction_order UNIQUE: 先, 然后, 再, 最后 explicit single order: turn left, walk, turn right, stop.\ncorrection_scope UNIQUE: no correction/edit clause; no prior instruction replaced or preserved; inapplicable.\nrepetition_scope UNIQUE: no repetition quantifier/span; each action occurs once.\nreference_resolution UNIQUE: no pronouns, ordinals beyond explicit sequence markers; shared arguments none? turn angles explicit, walk distance explicit, stop no params. The temporal markers refer to explicit steps in order.\ntemporal_relations UNIQUE: pure linear sequence, no simultaneity/waiting; each next after previous. Representable as s1 turn +30, s2 walk 6, s3 turn -30, s4 stop, each depending on predecessor.\nunresolved_relations UNIQUE: no unresolved choice/scope/ordering; all parameters finite and within IR? Need maybe max turn angle <=180, 30 ok; steps 4 <=32. Fine.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure no extra fields. Exactly JSON object. Use no markdown. Good.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON. Need inspect source. Need determine authorization. Source Chinese: \"请先向左转30度，然后往前走6米，再向右转30度，最后停下\"\n\nTranslate: Please first turn left 30 degrees, then walk forward 6 meters, then turn right 30 degrees, finally stop.\n\nNeed decide dimensions. Actions:\n1 turn left 30 deg -> turn angle -30? left positive? Wait legal semantics: turn requires nonzero finite angle_deg (度 or degrees; left/counterclockwise positive, right/clockwise negative). So left 30 => +30. right 30 => -30. stand no.\n2 walk_forward distance_m 6 (6米)\n3 turn right 30\n4 stop.\n\nOrder explicit: 先...然后...再...最后. Uniquely linear.\n\nAction multiplicity: exactly four actions. No edits/repetitions. Unique.\nAction order: unique.\nCorrection scope: inapplicable/no corrections. UNIQUE.\nRepetition scope: no repetition. UNIQUE.\nReference resolution: no pronouns? \"先...然后...再...最后\" no ambiguous. Unique.\nTemporal relations: sequential. Unique.\nUnresolved relations: none. Unique.\n\nNeed coverage list splitting entire source exactly. We need ensure concatenated equals source. We can split into spans. Need meaningful spans every action relation editing clause. No editing. We can include characters. Need exact copy preserving whitespace/punctuation. Source string: 请先向左转30度，然后往前走6米，再向右转30度，最后停下\n\nLet's count segments:\n\"请先向左转30度\" then \"，\" then \"然后往前走6米\" then \"，\" then \"再向右转30度\" then \"，\" then \"最后停下\"\n\nBut actions: \"请先向左转30度\" includes action and order; \"然后往前走6米\"; \"再向右转30度\"; \"最后停下\". Separators commas.\n\nNeed role ACTION for action spans, SEPARATOR for punctuation. Maybe \"请先\" is context/order? But coverage should every action relation and editing clause. Could split \"请先\" and \"向左转30度\" etc. But text concatenation.\n\nI think simpler:\n1 text: \"请先向左转30度\" role ACTION explanation: Requests first action: turn left 30 degrees. 请 polite, 先 establishes first. Hmm role includes action and sequence. Fine.\n2 \"，\" SEPARATOR.\n3 \"然后往前走6米\" ACTION: then walk forward 6 meters.\n4 \"，\" SEPARATOR.\n5 \"再向右转30度\" ACTION.\n6 \"，\" SEPARATOR.\n7 \"最后停下\" ACTION: finally stop.\n\nNeed perhaps mention \"先\" relation; but role can be ACTION. Dimensions handle temporal.\n\nNeed output JSON exactly with keys status, coverage, dimensions. coverage list nonempty. dimensions object exactly seven names. Status likely AUTHORIZED_UNIQUE.\n\nNeed be careful: Is there any ambiguity about \"向左转30度\": left positive according to semantics. Unique. \"向右转30度\": right negative. Unique. \"往前走6米\": walk_forward distance_m 6. \"停下\": stop. Good.\n\nCould there be issue with \"请先向左转30度，然后往前走6米，再向右转30度，最后停下\" as a single sentence; no explicit \"after completing\"? Sequential then. \"然后\" and \"再\" and \"最后\" imply order. Unique.\n\nNeed perhaps mention not using runtime capabilities. Fine.\n\nNeed produce valid JSON no markdown. Ensure Chinese chars fine. Need include explanations nonempty.\n\nLet's draft.\n\nCoverage exact:\n[\n{\"text\":\"请先向左转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action, a left turn of 30 degrees; 请 is polite, 先 fixes it as the initial step. Under the given semantics left is positive, so this is turn(+30).\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the first action from the next sequential action; it introduces no executable action.\"},\n{\"text\":\"然后往前走6米\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after the first: walk forward 6 meters; 然后 marks succession. This is walk_forward(distance_m=6).\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the walk action from the next sequential action; it adds no action.\"},\n{\"text\":\"再向右转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after walking: turn right 30 degrees; 再 marks the following step. Under the given semantics right is negative, so this is turn(angle_deg=-30).\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the right turn from the final action; it adds no action.\"},\n{\"text\":\"最后停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the final action, stop; 最后 fixes it as the last step. This is stop with no parameters.\"}\n]\n\nCheck concatenation: \"请先向左转30度\" + \"，\" + \"然后往前走6米\" + \"，\" + \"再向右转30度\" + \"，\" + \"最后停下\" = original. Good.\n\nDimensions:\naction_multiplicity UNIQUE explanation: lists four actions, no repeated/edited actions.\naction_order UNIQUE: 先, 然后, 再, 最后 explicit single order: turn left, walk, turn right, stop.\ncorrection_scope UNIQUE: no correction/edit clause; no prior instruction replaced or preserved; inapplicable.\nrepetition_scope UNIQUE: no repetition quantifier/span; each action occurs once.\nreference_resolution UNIQUE: no pronouns, ordinals beyond explicit sequence markers; shared arguments none? turn angles explicit, walk distance explicit, stop no params. The temporal markers refer to explicit steps in order.\ntemporal_relations UNIQUE: pure linear sequence, no simultaneity/waiting; each next after previous. Representable as s1 turn +30, s2 walk 6, s3 turn -30, s4 stop, each depending on predecessor.\nunresolved_relations UNIQUE: no unresolved choice/scope/ordering; all parameters finite and within IR? Need maybe max turn angle <=180, 30 ok; steps 4 <=32. Fine.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure no extra fields. Exactly JSON object. Use no markdown. Good.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请先向左转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action, a left turn of 30 degrees; 请 is polite, and 先 fixes it as the initial step. Under the given semantics left is positive, so this is turn(+30).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the first action from the next sequential action; it introduces no executable action.\"},{\"text\":\"然后往前走6米\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after the first: walk forward 6 meters; 然后 marks succession. This is walk_forward(distance_m=6).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the walk action from the next sequential action; it adds no action.\"},{\"text\":\"再向右转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after walking: turn right 30 degrees; 再 marks the following step. Under the given semantics right is negative, so this is turn(angle_deg=-30).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the right turn from the final action; it adds no action.\"},{\"text\":\"最后停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the final action, stop; 最后 fixes it as the last step. This is stop with no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: 向左转30度, 往前走6米, 向右转30度, and 停下. No action is edited, repeated, or left as an alternative.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 然后, 再, and 最后 explicitly establish one linear order: left turn 30 degrees, walk forward 6 meters, right turn 30 degrees, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or editing clause, such as 改为, 不要, or 而是. No prior instruction is replaced or preserved, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span. Each requested action occurs once, and no repetition is silently narrowed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or omitted shared argument creates ambiguity. The turn angles and walk distance are explicit, stop takes no parameters, and the sequence markers refer to the ordered steps directly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single sequential relation: each listed action follows the preceding one. There is no simultaneity, waiting, or completion ambiguity, so the plan can be represented linearly as turn +30, walk_forward 6, turn -30, stop.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. All requested parameters and the action order are fixed by the text.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_015e5e60-3045-4f4f-b0d5-ef2fd38498f0",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 156,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2035,
+            "output_tokens_details": {
+              "reasoning_tokens": 1359
+            },
+            "total_tokens": 2959
+          }
+        },
+        "request_sha256": "93986201b921d37894ea98086091d1cd221ba2604768eec8e1e841ec05c3c668",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 9.961154399999941,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_015e5e60-3045-4f4f-b0d5-ef2fd38498f0",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请先向左转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action, a left turn of 30 degrees; 请 is polite, and 先 fixes it as the initial step. Under the given semantics left is positive, so this is turn(+30).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the first action from the next sequential action; it introduces no executable action.\"},{\"text\":\"然后往前走6米\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after the first: walk forward 6 meters; 然后 marks succession. This is walk_forward(distance_m=6).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the walk action from the next sequential action; it adds no action.\"},{\"text\":\"再向右转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after walking: turn right 30 degrees; 再 marks the following step. Under the given semantics right is negative, so this is turn(angle_deg=-30).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the right turn from the final action; it adds no action.\"},{\"text\":\"最后停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the final action, stop; 最后 fixes it as the last step. This is stop with no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: 向左转30度, 往前走6米, 向右转30度, and 停下. No action is edited, repeated, or left as an alternative.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 然后, 再, and 最后 explicitly establish one linear order: left turn 30 degrees, walk forward 6 meters, right turn 30 degrees, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or editing clause, such as 改为, 不要, or 而是. No prior instruction is replaced or preserved, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span. Each requested action occurs once, and no repetition is silently narrowed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or omitted shared argument creates ambiguity. The turn angles and walk distance are explicit, stop takes no parameters, and the sequence markers refer to the ordered steps directly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single sequential relation: each listed action follows the preceding one. There is no simultaneity, waiting, or completion ambiguity, so the plan can be represented linearly as turn +30, walk_forward 6, turn -30, stop.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. All requested parameters and the action order are fixed by the text.\"}}}",
+        "usage": {
+          "input_tokens": 156,
+          "output_tokens": 2035,
+          "total_tokens": 2959
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.3039523999977973,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 26,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "b4c4447d08418d987f09486225a20acdbb52857bea869c9e19a6c70e6975dcdf",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_507aae0c-9c47-419e-a425-59b91bc1db69",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 9.965421400000196,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 9.961154399999941,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请先向左转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first action, a left turn of 30 degrees; 请 is polite, and 先 fixes it as the initial step. Under the given semantics left is positive, so this is turn(+30).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the first action from the next sequential action; it introduces no executable action.\"},{\"text\":\"然后往前走6米\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after the first: walk forward 6 meters; 然后 marks succession. This is walk_forward(distance_m=6).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the walk action from the next sequential action; it adds no action.\"},{\"text\":\"再向右转30度\",\"role\":\"ACTION\",\"explanation\":\"Requests the next action after walking: turn right 30 degrees; 再 marks the following step. Under the given semantics right is negative, so this is turn(angle_deg=-30).\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the right turn from the final action; it adds no action.\"},{\"text\":\"最后停下\",\"role\":\"ACTION\",\"explanation\":\"Requests the final action, stop; 最后 fixes it as the last step. This is stop with no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly four actions: 向左转30度, 往前走6米, 向右转30度, and 停下. No action is edited, repeated, or left as an alternative.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 然后, 再, and 最后 explicitly establish one linear order: left turn 30 degrees, walk forward 6 meters, right turn 30 degrees, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or editing clause, such as 改为, 不要, or 而是. No prior instruction is replaced or preserved, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span. Each requested action occurs once, and no repetition is silently narrowed or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No pronoun or omitted shared argument creates ambiguity. The turn angles and walk distance are explicit, stop takes no parameters, and the sequence markers refer to the ordered steps directly.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives a single sequential relation: each listed action follows the preceding one. There is no simultaneity, waiting, or completion ambiguity, so the plan can be represented linearly as turn +30, walk_forward 6, turn -30, stop.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. All requested parameters and the action order are fixed by the text.\"}}}",
+          "raw_response_sha256": "8f96c7297a561d7809281ce52e5c5fd408cff2ba6690822556e7ebedbd2a4016",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_015e5e60-3045-4f4f-b0d5-ef2fd38498f0",
+          "source_aware": false,
+          "source_sha256": "016f24a2a345ad6be7964b3b4a89b3eeebaacb08b4981dea36e1b0f75a9eefd1",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 156,
+            "output_tokens": 2035,
+            "total_tokens": 2959
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Requests the first action, a left turn of 30 degrees; 请 is polite, and 先 fixes it as the initial step. Under the given semantics left is positive, so this is turn(+30).",
+                "role": "ACTION",
+                "text": "请先向左转30度"
+              },
+              {
+                "explanation": "Chinese comma separating the first action from the next sequential action; it introduces no executable action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Requests the next action after the first: walk forward 6 meters; 然后 marks succession. This is walk_forward(distance_m=6).",
+                "role": "ACTION",
+                "text": "然后往前走6米"
+              },
+              {
+                "explanation": "Chinese comma separating the walk action from the next sequential action; it adds no action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Requests the next action after walking: turn right 30 degrees; 再 marks the following step. Under the given semantics right is negative, so this is turn(angle_deg=-30).",
+                "role": "ACTION",
+                "text": "再向右转30度"
+              },
+              {
+                "explanation": "Chinese comma separating the right turn from the final action; it adds no action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Requests the final action, stop; 最后 fixes it as the last step. This is stop with no parameters.",
+                "role": "ACTION",
+                "text": "最后停下"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly four actions: 向左转30度, 往前走6米, 向右转30度, and 停下. No action is edited, repeated, or left as an alternative.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The sequence markers 先, 然后, 再, and 最后 explicitly establish one linear order: left turn 30 degrees, walk forward 6 meters, right turn 30 degrees, stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction or editing clause, such as 改为, 不要, or 而是. No prior instruction is replaced or preserved, so correction scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "No pronoun or omitted shared argument creates ambiguity. The turn angles and walk distance are explicit, stop takes no parameters, and the sequence markers refer to the ordered steps directly.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition marker or repeated span. Each requested action occurs once, and no repetition is silently narrowed or broadened.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source gives a single sequential relation: each listed action follows the preceding one. There is no simultaneity, waiting, or completion ambiguity, so the plan can be represented linearly as turn +30, walk_forward 6, turn -30, stop.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. All requested parameters and the action order are fixed by the text.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 335,
+        "total_tokens": 2090
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "请先向左转30度然后往前走6米再向右转30度最后停下",
+    "status": "SUCCESS"
+  }
+}

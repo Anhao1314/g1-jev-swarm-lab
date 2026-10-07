@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 12.702511600000435,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_77bc58be-9f2f-458c-8a83-86957a8ad8d7",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"请求执行向前移动动作；这是第一步，需要后续距离量使其成为合法的 walk_forward。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的向前移动指定距离为 4 米；正且有限，因此 walk_forward 的 distance_m=4。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔向前移动与其后的顺序关系标点；它不请求任何动作，也不改变授权。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"标记下一个动作发生在向前移动之后，确立线性顺序而不是同时执行。\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行转向动作且方向为左；左/逆时针为正，需结合后续角度量。\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"将转向角度指定为 45 度；非零、有限且在 180 度合法范围内，因此 turn 的 angle_deg=+45。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔转向与最终顺序关系的标点；它不请求任何动作，也不修改授权。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"标记停止动作位于前述动作之后并作为最后一步，保持先移动、再转向、后停止的顺序。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行无参数的停止动作；它是该线性计划中的最后一步。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中正好请求三个动作：向前移动 4 米、向左转 45 度、停止。没有动作被重复、编辑或替换；“然后”和“最后”只对动作排序，不引入另一动作或替代关系。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”表明转向在向前移动之后，“最后”表明停止在转向之后；唯一线性顺序为 walk_forward、turn、stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有“改为”“不是而是”等更正或编辑词，也没有可被替换的先前动作、参数、组或关系。该维度不适用并引入任何备选解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有“再次”“重复”等重复标记；每个动作均只出现一次，没有任何跨度被隐含重复或扩张。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"没有代词或歧义序数需要外部消解。“向前”解析为移动方向，“向左”解析为转向方向，“然后”和“最后”解析为相邻顺序位置，停止没有缺失参数。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“然后”和“最后”共同给出单一线性时间顺序：先向前移动，再向左转，最后停止；不存在同时、等待或完成关系歧义。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有明确留下任何选择、范围、排序或关系未决；全部关系均由“然后”和“最后”固定。\"}}}",
+  "usage": {
+    "input_tokens": 149,
+    "output_tokens": 2630,
+    "total_tokens": 3547
+  }
+}

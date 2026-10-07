@@ -1,0 +1,332 @@
+{
+  "added_wall_s": 14.443435499999396,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 14.437018600001466,
+        "provider_document": {
+          "created_at": 1791359263,
+          "id": "resp_7d72d766-578b-49a3-a3b6-c2c1c2fa9cd6",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_7d72d766-578b-49a3-a3b6-c2c1c2fa9cd6",
+              "reasoning_content": "We need answer JSON only. Need analyze source Chinese. Need decide status. Source: \"动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\"\n\nNeed parse. It says action list contains stop, stand two seconds, turn left 30 degrees, walk forward 10 meters, stop, execute one by one in listed order. Seems unique? Need inspect dimensions.\n\nActions: 停 = stop. 站两秒 = stand duration 2s. 左转三十度 = turn left 30 deg (left positive +30). 前进十米 = walk_forward 10m. 停 = stop. 按列出的先后一个一个来 = in listed order one by one.\n\nPotential ambiguity: \"动作清单里有...\" list contains. \"按列出的先后一个一个来\" indicates order. Actions 5. \"站两秒\" stand accepts positive finite duration_s. \"两秒\" = 2 seconds. \"三十度\" = 30. \"十米\"=10m. All legal. Max steps 5 <=32. Turn 30 <=180. Stand 2 <=60. Stop no params.\n\nNeed check action_multiplicity: every requested action accounted, repeated stop twice distinct? Source lists 停 twice. Does \"动作清单里有停、站两秒、左转三十度、前进十米、停\" contain two stops. One at start, one at end. Could there be ambiguity whether two stops duplicate/redundant? It says list contains stop ... stop. \"一个一个来\" execute each. That's two stop actions. Is it ambiguous? Repetition? No explicit repetition, two occurrences listed. Need account both.\n\nAction_order: \"按列出的先后一个一个来\" exactly listed order. Unique.\n\nCorrection_scope: no corrections/edits. Inapplicable unique.\n\nRepetition_scope: no repetition? \"一个一个来\" means one by one, not repeat. No repetition spans. Unique/inapplicable. But \"停\" appears twice, not repetition instruction, just two listed actions. Could some reading treat \"停...停\" as same? No, action multiplicity says account every requested action. Listed twice. Unique.\n\nReference_resolution: pronouns? \"按列出的\" refers to list previously. Resolve to actions listed. Unique. \"一个一个来\" omitted subject maybe robot. Fine. No external.\n\nTemporal_relations: \"先后\" before/after, \"一个一个来\" sequential. Unique linear order.\n\nUnresolved_relations: none explicit. Unique.\n\nPotential issue: Chinese \"站两秒\" maybe stand for two seconds. Legal. \"停\" at beginning and end. What about \"动作清单里有...\" not exactly command? But user says source authorizes Mission IR. This is a directive? It says list contains ... execute in listed order. It's a command. Need authorize. Could \"动作清单里有\" be merely asserting a list, not requesting? Then \"按列出的先后一个一个来\" = do them in order. Yes.\n\nPotential ambiguity: \"停、站两秒、左转三十度、前进十米、停\" There is \"停\" at start and end. Could comma after final? It ends \"停，按...\" The first stop and last stop both. Unique.\n\nNeed output coverage split meaningful spans so concatenated equals entire original source exactly. Need preserve punctuation/whitespace. Source is Chinese with commas and Chinese period. We can split into spans exactly. Need include every character. Let's list source characters:\n\n动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\n\nWe need coverage list text values concatenated exactly. Could split:\n1 \"动作清单里有\" CONTEXT? Then \"停\" ACTION, \"、\" SEPARATOR, \"站两秒\" ACTION, \"、\", \"左转三十度\" ACTION, \"、\", \"前进十米\" ACTION, \"、\", \"停\" ACTION, \"，\" SEPARATOR, \"按列出的先后一个一个来\" RELATION, \"。\" SEPARATOR maybe.\n\nNeed ensure concatenation equals. Let's map:\n\"动作清单里有\" + \"停\" + \"、\" + \"站两秒\" + \"、\" + \"左转三十度\" + \"、\" + \"前进十米\" + \"、\" + \"停\" + \"，\" + \"按列出的先后一个一个来\" + \"。\" = original. Check there is comma after final 停: original \"停，按...\" yes. No comma after \"来\" except \"。\" at end.\n\nRoles:\n- \"动作清单里有\" CONTEXT? It introduces list; nonexecuting, but describes list. Explanation.\n- \"停\" ACTION first stop.\n- \"、\" SEPARATOR\n- \"站两秒\" ACTION\n- \"、\" SEPARATOR\n- \"左转三十度\" ACTION\n- \"、\" SEPARATOR\n- \"前进十米\" ACTION\n- \"、\" SEPARATOR\n- \"停\" ACTION second stop\n- \"，\" SEPARATOR\n- \"按列出的先后一个一个来\" RELATION\n- \"。\" SEPARATOR? It's punctuation, nonexecuting. Role SEPARATOR maybe.\n\nNeed maybe coverage every action, relation, editing clause. There are no edits. Fine.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: source lists exactly five actions: stop, stand 2s, turn left 30°, walk_forward 10m, stop; \"停\" appears twice as separate list items, both accounted. No substitution/editing.\naction_order: UNIQUE. Explanation: \"按列出的先后一个一个来\" specifies one-by-one in listed order: stop -> stand -> turn -> walk -> stop.\ncorrection_scope: UNIQUE. Explanation: no correction/edit clause; no prior instruction replaced. Inapplicable.\nrepetition_scope: UNIQUE. Explanation: no repetition command; \"一个一个来\" means sequential execution, not repeating any span. Two 停 tokens are distinct listed actions.\nreference_resolution: UNIQUE. Explanation: \"列出的\" refers to immediately preceding action list; omitted subject for \"来\" is the agent executing the listed actions; no external referent needed.\ntemporal_relations: UNIQUE. Explanation: \"先后\" and \"一个一个来\" require strict sequential order; each action after predecessor; no simultaneity/waiting beyond stand duration.\nunresolved_relations: UNIQUE. Explanation: no explicitly unresolved choice/scope/order; the list plus order phrase resolves all.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed be careful: \"站两秒\" stand with duration. \"左转三十度\" turn left 30. Legal. \"前进十米\" walk_forward positive finite. \"停\" no params. Maximum steps etc. Good.\n\nPotential hidden issue: \"动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\" There is a comma after 停 and phrase. Does \"按列出的先后一个一个来\" apply to all list. Yes.\n\nCould there be an ambiguity about whether \"停\" at beginning is part of action list or just a word \"动作清单里有停\" = list includes stop. It is list item. The final \"停\" before comma is also list item. Yes.\n\nNeed output exactly JSON, no markdown. Ensure keys exactly status, coverage, dimensions. coverage nonempty list of objects with exactly text, role, explanation. Each explanation nonempty. Dimensions exactly seven names.\n\nNeed maybe \"coverage copying alone does not establish semantic authorization\" but explanations account.\n\nLet's craft JSON valid. Chinese characters. Ensure no extra whitespace? JSON can have normal.\n\nNeed ensure text values concatenated exactly equal source. Let's verify string:\nOriginal: 动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\nOur concatenation:\n动作清单里有\n停\n、\n站两秒\n、\n左转三十度\n、\n前进十米\n、\n停\n，\n按列出的先后一个一个来\n。\nConcatenate: 动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。 Yes.\n\nNeed decide role for \"动作清单里有\": CONTEXT. Explanation says introduces the list and does not itself execute, but is followed by listed actions. \"。\" separator. \"，\" separator.\n\nPotential issue: \"按列出的先后一个一个来\" contains \"一个一个来\" maybe could be interpreted as repeat each action once? It's relation. Fine.\n\nNeed maybe action_multiplicity includes both stops. Good.\n\nLet's consider if status could be AMBIGUOUS due to \"站两秒\" stand for two seconds. Legal. \"停\" no parameters. \"左转三十度\" angle left positive. \"前进十米\" distance. \"按列出的先后\" order. Unique.\n\nWhat about \"动作清单里有\" says there is a list, not necessarily command. But \"按列出的先后一个一个来\" imperative. It instructs to execute actions in order. So action authorization. Unique.\n\nWhat about \"停、站两秒、左转三十度、前进十米、停\" maybe \"停\" first and last both stop. There is no \"开始\" or \"结束\" distinction. But two stop actions identical; executing stop twice. Is having two consecutive? Not consecutive. Unique linear plan with stop at step1, stand step2, turn step3, walk step4, stop step5. That's legal. Could there be an issue that a stop at start before any motion is meaningful? Legal semantics independent capability. Stop no params. Fine.\n\nNeed maybe maximum steps: 5. Max turn 30. Max stand 2. Good.\n\nNeed final only JSON. Ensure no markdown. Use proper quoting. Let's produce.\n\nNeed maybe dimensions explanation not too long. Nonempty.\n\nLet's ensure valid JSON: all keys quoted, strings. Chinese punctuation okay. No newline? It's fine. Could output one line or pretty. \"exactly one JSON object, no markdown or other text.\" Pretty JSON is okay. We'll output compact? Fine.\n\nLet's prepare final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source Chinese. Need decide status. Source: \"动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\"\n\nNeed parse. It says action list contains stop, stand two seconds, turn left 30 degrees, walk forward 10 meters, stop, execute one by one in listed order. Seems unique? Need inspect dimensions.\n\nActions: 停 = stop. 站两秒 = stand duration 2s. 左转三十度 = turn left 30 deg (left positive +30). 前进十米 = walk_forward 10m. 停 = stop. 按列出的先后一个一个来 = in listed order one by one.\n\nPotential ambiguity: \"动作清单里有...\" list contains. \"按列出的先后一个一个来\" indicates order. Actions 5. \"站两秒\" stand accepts positive finite duration_s. \"两秒\" = 2 seconds. \"三十度\" = 30. \"十米\"=10m. All legal. Max steps 5 <=32. Turn 30 <=180. Stand 2 <=60. Stop no params.\n\nNeed check action_multiplicity: every requested action accounted, repeated stop twice distinct? Source lists 停 twice. Does \"动作清单里有停、站两秒、左转三十度、前进十米、停\" contain two stops. One at start, one at end. Could there be ambiguity whether two stops duplicate/redundant? It says list contains stop ... stop. \"一个一个来\" execute each. That's two stop actions. Is it ambiguous? Repetition? No explicit repetition, two occurrences listed. Need account both.\n\nAction_order: \"按列出的先后一个一个来\" exactly listed order. Unique.\n\nCorrection_scope: no corrections/edits. Inapplicable unique.\n\nRepetition_scope: no repetition? \"一个一个来\" means one by one, not repeat. No repetition spans. Unique/inapplicable. But \"停\" appears twice, not repetition instruction, just two listed actions. Could some reading treat \"停...停\" as same? No, action multiplicity says account every requested action. Listed twice. Unique.\n\nReference_resolution: pronouns? \"按列出的\" refers to list previously. Resolve to actions listed. Unique. \"一个一个来\" omitted subject maybe robot. Fine. No external.\n\nTemporal_relations: \"先后\" before/after, \"一个一个来\" sequential. Unique linear order.\n\nUnresolved_relations: none explicit. Unique.\n\nPotential issue: Chinese \"站两秒\" maybe stand for two seconds. Legal. \"停\" at beginning and end. What about \"动作清单里有...\" not exactly command? But user says source authorizes Mission IR. This is a directive? It says list contains ... execute in listed order. It's a command. Need authorize. Could \"动作清单里有\" be merely asserting a list, not requesting? Then \"按列出的先后一个一个来\" = do them in order. Yes.\n\nPotential ambiguity: \"停、站两秒、左转三十度、前进十米、停\" There is \"停\" at start and end. Could comma after final? It ends \"停，按...\" The first stop and last stop both. Unique.\n\nNeed output coverage split meaningful spans so concatenated equals entire original source exactly. Need preserve punctuation/whitespace. Source is Chinese with commas and Chinese period. We can split into spans exactly. Need include every character. Let's list source characters:\n\n动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\n\nWe need coverage list text values concatenated exactly. Could split:\n1 \"动作清单里有\" CONTEXT? Then \"停\" ACTION, \"、\" SEPARATOR, \"站两秒\" ACTION, \"、\", \"左转三十度\" ACTION, \"、\", \"前进十米\" ACTION, \"、\", \"停\" ACTION, \"，\" SEPARATOR, \"按列出的先后一个一个来\" RELATION, \"。\" SEPARATOR maybe.\n\nNeed ensure concatenation equals. Let's map:\n\"动作清单里有\" + \"停\" + \"、\" + \"站两秒\" + \"、\" + \"左转三十度\" + \"、\" + \"前进十米\" + \"、\" + \"停\" + \"，\" + \"按列出的先后一个一个来\" + \"。\" = original. Check there is comma after final 停: original \"停，按...\" yes. No comma after \"来\" except \"。\" at end.\n\nRoles:\n- \"动作清单里有\" CONTEXT? It introduces list; nonexecuting, but describes list. Explanation.\n- \"停\" ACTION first stop.\n- \"、\" SEPARATOR\n- \"站两秒\" ACTION\n- \"、\" SEPARATOR\n- \"左转三十度\" ACTION\n- \"、\" SEPARATOR\n- \"前进十米\" ACTION\n- \"、\" SEPARATOR\n- \"停\" ACTION second stop\n- \"，\" SEPARATOR\n- \"按列出的先后一个一个来\" RELATION\n- \"。\" SEPARATOR? It's punctuation, nonexecuting. Role SEPARATOR maybe.\n\nNeed maybe coverage every action, relation, editing clause. There are no edits. Fine.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: source lists exactly five actions: stop, stand 2s, turn left 30°, walk_forward 10m, stop; \"停\" appears twice as separate list items, both accounted. No substitution/editing.\naction_order: UNIQUE. Explanation: \"按列出的先后一个一个来\" specifies one-by-one in listed order: stop -> stand -> turn -> walk -> stop.\ncorrection_scope: UNIQUE. Explanation: no correction/edit clause; no prior instruction replaced. Inapplicable.\nrepetition_scope: UNIQUE. Explanation: no repetition command; \"一个一个来\" means sequential execution, not repeating any span. Two 停 tokens are distinct listed actions.\nreference_resolution: UNIQUE. Explanation: \"列出的\" refers to immediately preceding action list; omitted subject for \"来\" is the agent executing the listed actions; no external referent needed.\ntemporal_relations: UNIQUE. Explanation: \"先后\" and \"一个一个来\" require strict sequential order; each action after predecessor; no simultaneity/waiting beyond stand duration.\nunresolved_relations: UNIQUE. Explanation: no explicitly unresolved choice/scope/order; the list plus order phrase resolves all.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed be careful: \"站两秒\" stand with duration. \"左转三十度\" turn left 30. Legal. \"前进十米\" walk_forward positive finite. \"停\" no params. Maximum steps etc. Good.\n\nPotential hidden issue: \"动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\" There is a comma after 停 and phrase. Does \"按列出的先后一个一个来\" apply to all list. Yes.\n\nCould there be an ambiguity about whether \"停\" at beginning is part of action list or just a word \"动作清单里有停\" = list includes stop. It is list item. The final \"停\" before comma is also list item. Yes.\n\nNeed output exactly JSON, no markdown. Ensure keys exactly status, coverage, dimensions. coverage nonempty list of objects with exactly text, role, explanation. Each explanation nonempty. Dimensions exactly seven names.\n\nNeed maybe \"coverage copying alone does not establish semantic authorization\" but explanations account.\n\nLet's craft JSON valid. Chinese characters. Ensure no extra whitespace? JSON can have normal.\n\nNeed ensure text values concatenated exactly equal source. Let's verify string:\nOriginal: 动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。\nOur concatenation:\n动作清单里有\n停\n、\n站两秒\n、\n左转三十度\n、\n前进十米\n、\n停\n，\n按列出的先后一个一个来\n。\nConcatenate: 动作清单里有停、站两秒、左转三十度、前进十米、停，按列出的先后一个一个来。 Yes.\n\nNeed decide role for \"动作清单里有\": CONTEXT. Explanation says introduces the list and does not itself execute, but is followed by listed actions. \"。\" separator. \"，\" separator.\n\nPotential issue: \"按列出的先后一个一个来\" contains \"一个一个来\" maybe could be interpreted as repeat each action once? It's relation. Fine.\n\nNeed maybe action_multiplicity includes both stops. Good.\n\nLet's consider if status could be AMBIGUOUS due to \"站两秒\" stand for two seconds. Legal. \"停\" no parameters. \"左转三十度\" angle left positive. \"前进十米\" distance. \"按列出的先后\" order. Unique.\n\nWhat about \"动作清单里有\" says there is a list, not necessarily command. But \"按列出的先后一个一个来\" imperative. It instructs to execute actions in order. So action authorization. Unique.\n\nWhat about \"停、站两秒、左转三十度、前进十米、停\" maybe \"停\" first and last both stop. There is no \"开始\" or \"结束\" distinction. But two stop actions identical; executing stop twice. Is having two consecutive? Not consecutive. Unique linear plan with stop at step1, stand step2, turn step3, walk step4, stop step5. That's legal. Could there be an issue that a stop at start before any motion is meaningful? Legal semantics independent capability. Stop no params. Fine.\n\nNeed maybe maximum steps: 5. Max turn 30. Max stand 2. Good.\n\nNeed final only JSON. Ensure no markdown. Use proper quoting. Let's produce.\n\nNeed maybe dimensions explanation not too long. Nonempty.\n\nLet's ensure valid JSON: all keys quoted, strings. Chinese punctuation okay. No newline? It's fine. Could output one line or pretty. \"exactly one JSON object, no markdown or other text.\" Pretty JSON is okay. We'll output compact? Fine.\n\nLet's prepare final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"动作清单里有\",\"role\":\"CONTEXT\",\"explanation\":\"引入随后列出的动作清单；它本身不执行动作，只界定清单内容。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"清单第一个动作：stop，无参数。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"清单第二个动作：stand，持续 2 秒；两秒是明确的正有限时长。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"左转三十度\",\"role\":\"ACTION\",\"explanation\":\"清单第三个动作：turn，左转 30 度；左转为正，角度 30 度且非零、有限。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"清单第四个动作：walk_forward，距离 10 米，为正有限距离。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"清单第五个动作：第二个 stop，无参数；与第一个停是分别列出的两个动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"将动作清单与后续执行顺序说明分开，不改变执行语义。\"},{\"text\":\"按列出的先后一个一个来\",\"role\":\"RELATION\",\"explanation\":\"规定执行关系：严格按照上述列出的先后顺序，一个一个依次执行全部动作。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，结束指令；不引入新动作或新关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文列出的动作共有五个：停、站两秒、左转三十度、前进十米、停。两个“停”分别作为清单项出现，都应作为独立动作计入；没有编辑、替换或隐藏的额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“按列出的先后一个一个来”明确指定唯一顺序：先停，再站两秒，再左转三十度，再前进十米，最后再停。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有修正、编辑或改写先前指令的语句；不存在需要确定编辑作用范围的关系，因此该维度不适用且不引入替代读法。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有要求重复执行某个动作或某个序列；“一个一个来”表示依次执行，而不是扩大或缩小重复范围。两个“停”是清单中的两个独立动作，不是重复指令。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“列出的”唯一指向紧接其前的动作清单；“一个一个来”的省略执行主体按语境是执行该清单的同一主体。无需外部缺失上下文即可解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“先后”和“一个一个来”要求严格线性、逐个执行，每个动作之后才执行下一个；没有同时、等待或额外时间事件需要发明，可表示为五个依序步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留未决的选择、范围、顺序或关系；动作清单和执行顺序短语已确定唯一线性解释。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_7d72d766-578b-49a3-a3b6-c2c1c2fa9cd6",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 163,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2919,
+            "output_tokens_details": {
+              "reasoning_tokens": 2139
+            },
+            "total_tokens": 3850
+          }
+        },
+        "request_sha256": "345862e657afce6350e4459cff54af5aee845b8a9c749eaea04e8c01d19e80cd",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 14.435503900000185,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_7d72d766-578b-49a3-a3b6-c2c1c2fa9cd6",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"动作清单里有\",\"role\":\"CONTEXT\",\"explanation\":\"引入随后列出的动作清单；它本身不执行动作，只界定清单内容。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"清单第一个动作：stop，无参数。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"清单第二个动作：stand，持续 2 秒；两秒是明确的正有限时长。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"左转三十度\",\"role\":\"ACTION\",\"explanation\":\"清单第三个动作：turn，左转 30 度；左转为正，角度 30 度且非零、有限。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"清单第四个动作：walk_forward，距离 10 米，为正有限距离。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"清单第五个动作：第二个 stop，无参数；与第一个停是分别列出的两个动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"将动作清单与后续执行顺序说明分开，不改变执行语义。\"},{\"text\":\"按列出的先后一个一个来\",\"role\":\"RELATION\",\"explanation\":\"规定执行关系：严格按照上述列出的先后顺序，一个一个依次执行全部动作。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，结束指令；不引入新动作或新关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文列出的动作共有五个：停、站两秒、左转三十度、前进十米、停。两个“停”分别作为清单项出现，都应作为独立动作计入；没有编辑、替换或隐藏的额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“按列出的先后一个一个来”明确指定唯一顺序：先停，再站两秒，再左转三十度，再前进十米，最后再停。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有修正、编辑或改写先前指令的语句；不存在需要确定编辑作用范围的关系，因此该维度不适用且不引入替代读法。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有要求重复执行某个动作或某个序列；“一个一个来”表示依次执行，而不是扩大或缩小重复范围。两个“停”是清单中的两个独立动作，不是重复指令。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“列出的”唯一指向紧接其前的动作清单；“一个一个来”的省略执行主体按语境是执行该清单的同一主体。无需外部缺失上下文即可解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“先后”和“一个一个来”要求严格线性、逐个执行，每个动作之后才执行下一个；没有同时、等待或额外时间事件需要发明，可表示为五个依序步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留未决的选择、范围、顺序或关系；动作清单和执行顺序短语已确定唯一线性解释。\"}}}",
+        "usage": {
+          "input_tokens": 163,
+          "output_tokens": 2919,
+          "total_tokens": 3850
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.9526107000001502,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stop-stand-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 36,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 503,
+      "raw_response_sha256": "bd65ccba6b072a58c56342ffbb9d6621ea3bade78c2a5ca378b0e12486d64bab",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_050ac321-1f12-4351-b810-8cc202657eb8",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 14.442673499999728,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 14.435503900000185,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"动作清单里有\",\"role\":\"CONTEXT\",\"explanation\":\"引入随后列出的动作清单；它本身不执行动作，只界定清单内容。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"清单第一个动作：stop，无参数。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"站两秒\",\"role\":\"ACTION\",\"explanation\":\"清单第二个动作：stand，持续 2 秒；两秒是明确的正有限时长。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"左转三十度\",\"role\":\"ACTION\",\"explanation\":\"清单第三个动作：turn，左转 30 度；左转为正，角度 30 度且非零、有限。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"前进十米\",\"role\":\"ACTION\",\"explanation\":\"清单第四个动作：walk_forward，距离 10 米，为正有限距离。\"},{\"text\":\"、\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔清单中的相邻动作项，不改变执行语义。\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"清单第五个动作：第二个 stop，无参数；与第一个停是分别列出的两个动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"将动作清单与后续执行顺序说明分开，不改变执行语义。\"},{\"text\":\"按列出的先后一个一个来\",\"role\":\"RELATION\",\"explanation\":\"规定执行关系：严格按照上述列出的先后顺序，一个一个依次执行全部动作。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，结束指令；不引入新动作或新关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文列出的动作共有五个：停、站两秒、左转三十度、前进十米、停。两个“停”分别作为清单项出现，都应作为独立动作计入；没有编辑、替换或隐藏的额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“按列出的先后一个一个来”明确指定唯一顺序：先停，再站两秒，再左转三十度，再前进十米，最后再停。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有修正、编辑或改写先前指令的语句；不存在需要确定编辑作用范围的关系，因此该维度不适用且不引入替代读法。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有要求重复执行某个动作或某个序列；“一个一个来”表示依次执行，而不是扩大或缩小重复范围。两个“停”是清单中的两个独立动作，不是重复指令。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"“列出的”唯一指向紧接其前的动作清单；“一个一个来”的省略执行主体按语境是执行该清单的同一主体。无需外部缺失上下文即可解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“先后”和“一个一个来”要求严格线性、逐个执行，每个动作之后才执行下一个；没有同时、等待或额外时间事件需要发明，可表示为五个依序步骤。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留未决的选择、范围、顺序或关系；动作清单和执行顺序短语已确定唯一线性解释。\"}}}",
+          "raw_response_sha256": "b7e01605fc20062be6b682ae85f57149904f9573ecefd33107e4ea409e4290fd",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_7d72d766-578b-49a3-a3b6-c2c1c2fa9cd6",
+          "source_aware": false,
+          "source_sha256": "9e80c5f65556192776f44f1fe407d390977d8e9b94a4d0eec12ff3514670cb75",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 163,
+            "output_tokens": 2919,
+            "total_tokens": 3850
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "引入随后列出的动作清单；它本身不执行动作，只界定清单内容。",
+                "role": "CONTEXT",
+                "text": "动作清单里有"
+              },
+              {
+                "explanation": "清单第一个动作：stop，无参数。",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "分隔清单中的相邻动作项，不改变执行语义。",
+                "role": "SEPARATOR",
+                "text": "、"
+              },
+              {
+                "explanation": "清单第二个动作：stand，持续 2 秒；两秒是明确的正有限时长。",
+                "role": "ACTION",
+                "text": "站两秒"
+              },
+              {
+                "explanation": "分隔清单中的相邻动作项，不改变执行语义。",
+                "role": "SEPARATOR",
+                "text": "、"
+              },
+              {
+                "explanation": "清单第三个动作：turn，左转 30 度；左转为正，角度 30 度且非零、有限。",
+                "role": "ACTION",
+                "text": "左转三十度"
+              },
+              {
+                "explanation": "分隔清单中的相邻动作项，不改变执行语义。",
+                "role": "SEPARATOR",
+                "text": "、"
+              },
+              {
+                "explanation": "清单第四个动作：walk_forward，距离 10 米，为正有限距离。",
+                "role": "ACTION",
+                "text": "前进十米"
+              },
+              {
+                "explanation": "分隔清单中的相邻动作项，不改变执行语义。",
+                "role": "SEPARATOR",
+                "text": "、"
+              },
+              {
+                "explanation": "清单第五个动作：第二个 stop，无参数；与第一个停是分别列出的两个动作。",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "将动作清单与后续执行顺序说明分开，不改变执行语义。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "规定执行关系：严格按照上述列出的先后顺序，一个一个依次执行全部动作。",
+                "role": "RELATION",
+                "text": "按列出的先后一个一个来"
+              },
+              {
+                "explanation": "句末标点，结束指令；不引入新动作或新关系。",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源文列出的动作共有五个：停、站两秒、左转三十度、前进十米、停。两个“停”分别作为清单项出现，都应作为独立动作计入；没有编辑、替换或隐藏的额外动作。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“按列出的先后一个一个来”明确指定唯一顺序：先停，再站两秒，再左转三十度，再前进十米，最后再停。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源文没有修正、编辑或改写先前指令的语句；不存在需要确定编辑作用范围的关系，因此该维度不适用且不引入替代读法。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "“列出的”唯一指向紧接其前的动作清单；“一个一个来”的省略执行主体按语境是执行该清单的同一主体。无需外部缺失上下文即可解析。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源文没有要求重复执行某个动作或某个序列；“一个一个来”表示依次执行，而不是扩大或缩小重复范围。两个“停”是清单中的两个独立动作，不是重复指令。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "“先后”和“一个一个来”要求严格线性、逐个执行，每个动作之后才执行下一个；没有同时、等待或额外时间事件需要发明，可表示为五个依序步骤。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源文没有显式保留未决的选择、范围、顺序或关系；动作清单和执行顺序短语已确定唯一线性解释。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 5,
+      "usage": {
+        "input_tokens": 226,
+        "output_tokens": 431,
+        "total_tokens": 2193
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stop-stand-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {},
+          "skill": "stop"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 10.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "动作清单里有停,站两秒,左转三十度,前进十米,停,按列出的先后一个一个来",
+    "status": "SUCCESS"
+  }
+}

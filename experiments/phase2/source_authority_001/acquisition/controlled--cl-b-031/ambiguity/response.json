@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 13.363663500000257,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_26503bf2-b448-4dba-9334-2986d591a7da",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"标记有序动作序列的第一项，作用于紧随其后的“前进”，表明前进发生在后续动作之前。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行 walk_forward 动作；该跨度本身不包含距离参数，参数由后面的“4米”提供。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的“前进”提供距离参数，即正有限距离 4 米，可合法解释为 distance_m=4。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"标记前一个动作之后的下一项，使后面的“左转45度”发生在“前进4米”之后。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，并明确方向为左；左转按合法 turn 语义映射为正角度，角度由后面的“45度”提供。\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的“左转”提供角度参数，即非零有限角度 +45 度，绝对值不超过 180 度。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"标记整个序列的最后一项，使后面的“停止”发生在“左转45度”之后并位于序列末端。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 不接受参数，因此该动作到此结束，并且不引入额外等待、重复或其他未声明关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文只请求三个动作：前进、左转、停止；每个动作出现一次，没有编辑或重复造成的额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“然后”“最后”唯一确定执行顺序为前进4米，然后左转45度，最后停止；不存在其他可能顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有修正、替换或编辑词语，因此没有动作、参数、组或关系被修改，也没有需要判断保留还是替换的先前指令。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有重复标记或重复结构，三个动作均只出现一次，不能把任何跨度解释为重复执行。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有代词或外部指代；“先”“然后”“最后”只指向序列中的局部位置，左转方向明确为左，停止无需参数，因此无需外部缺失上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"“先……然后……最后……”给出严格线性先后关系：前进完成后左转，左转完成后停止；没有同时、等待或其他不可表示的时序要求。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确留下未解决的选择、范围、顺序或关系；动作数量、顺序、方向、距离、角度和终止动作均已确定。\"}}}",
+  "usage": {
+    "input_tokens": 147,
+    "output_tokens": 2571,
+    "total_tokens": 3486
+  }
+}

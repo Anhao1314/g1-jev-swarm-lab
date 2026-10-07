@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 13.340265599999839,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_45c7037e-4370-4be8-8a96-9e8be46c88fc",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"站五秒\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"这是源中唯一的站 action，初始携带 5 秒时长；后续编辑子句会将其时长修正为 2 秒，但不新增或替换为另一个 action。\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔前一个站 action 与后续修正性话语，本身不授予执行语义。\"\n    },\n    {\n      \"text\": \"呃\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"这是犹豫填充语，不表达 action、参数、修正或关系，因此不改变可执行内容。\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔填充语与修正子句，本身不授予执行语义。\"\n    },\n    {\n      \"text\": \"改成两秒\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"该编辑子句紧接前文唯一的站 action，将其 duration_s 从 5 秒改为 2 秒；它替换前一时长参数，并保留站这个 action 及单次性。\"\n    },\n    {\n      \"text\": \"；\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔时长修正与次数限定子句，本身不授予执行语义。\"\n    },\n    {\n      \"text\": \"就站这一次\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"该子句限定前文同一个站 action 只执行一次；它不新增 action，也不把重复范围扩大到其他 action。\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"句末标点结束整个指令，本身不授予执行语义。\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源仅请求一个站 action：‘站五秒’被‘改成两秒’调整持续时长，而‘就站这一次’明确限定该站 action 只发生一次。没有第二个 action，也不存在把编辑理解为新增 action 的依据。\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"只有一个站 action，因此没有需要排序的多个 action；不存在先后、同时或等待关系，线性计划可理解为单步 s1。\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"‘改成两秒’紧接在被修正的‘站五秒’之后，唯一可解析的修正对象是前一个站的 duration_s；它把 5 秒替换为 2 秒，保留站这个 action 和单次性。\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"‘就站这一次’中的‘这一次’指整个站 action 的执行次数；它明确为一次，不重复多次，也不把重复范围扩大到其他 action。\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"‘改成’的省略宾语由前文唯一的‘站五秒’解析为站 action 的时长；‘这’在‘这一次’中指刚被修正后的同一个站 action，源内没有其他候选。\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源没有给出多个 action 之间的先后、同时、等待或完成关系；2 秒是站 action 的 duration_s 参数，不是额外时间事件，单步计划无需发明时序。\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源中的‘呃’是填充语；‘改成两秒’与‘就站这一次’已分别解决时长修正和重复次数，没有留下显式未决的选择、范围或先后关系。\"\n    }\n  }\n}",
+  "usage": {
+    "input_tokens": 150,
+    "output_tokens": 2818,
+    "total_tokens": 3736
+  }
+}

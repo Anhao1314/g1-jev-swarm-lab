@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 12.824077499997657,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_899aa8f4-4444-4a7a-8c77-23cbfc003ecb",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"First action clause: walk forward. This authorizes a walk_forward step, with its distance supplied by the following quantity.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the preceding walk action: 4 meters, so distance_m is 4.0.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector meaning 'then'; it orders the following turn after the initial walk.\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Second action clause: turn left. Left/counterclockwise maps to a positive turn angle, with magnitude supplied by the following quantity.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity for the preceding turn: 45 degrees positive because the turn is left, so angle_deg is 45.0.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Sequential connector meaning 'next/then'; it orders the following walk after the turn.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Third action clause: another distinct walk forward, not a repetition of the first walk. Its distance is supplied by the following quantity.\"},{\"text\":\"400厘米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the preceding walk: 400 centimeters converts exactly to 4 meters, so distance_m is 4.0.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Final-ordering connector meaning 'finally'; it places the following stop after the preceding walk.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Fourth and final action clause: stop, authorized with empty parameters {}.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly contains four action clauses: walk forward 4 meters, turn left 45 degrees, walk forward 400 centimeters, and stop. The two walk_forward actions are separate requested actions, not one repeated or edited action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"然后, 接着, and 最后 establish a single linear order: initial walk, then turn left, then second walk, finally stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, replacement, cancellation, or edit clause in the source. No earlier action or parameter is modified by a later instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or iterative wording is present. Each of the four requested actions occurs exactly once; the second 前进 is a new action, not a repetition of the first.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or shared omitted arguments requiring external resolution. Each action's parameter is supplied locally: 4米 for the first walk, 45度 for the turn, 400厘米 for the second walk, and stop has no parameters.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The connectors 然后, 接着, and 最后 impose strict sequential completion order with no simultaneity, waiting, or timing gaps. This is representable as one linear chain of steps.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, order, scope, or relationship unresolved. The only sequencing relations are resolved by 然后, 接着, and 最后.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]}",
+  "usage": {
+    "input_tokens": 152,
+    "output_tokens": 2787,
+    "total_tokens": 4091
+  }
+}

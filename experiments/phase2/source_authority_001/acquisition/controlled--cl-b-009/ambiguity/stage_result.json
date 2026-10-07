@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 8.597343400000682,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.593863099998998,
+        "provider_document": {
+          "created_at": 1791360448,
+          "id": "resp_fa5c5f23-5adc-424d-aa67-06fb29f6a942",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_fa5c5f23-5adc-424d-aa67-06fb29f6a942",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"逆时针转四十五度\". Means \"turn counterclockwise 45 degrees\". Need decide dimensions.\n\nWe must split source into meaningful spans covering entire exact source. Source one phrase. Actions: turn with angle_deg positive for counterclockwise, 45. Legal. Is it unique? Need seven dimensions.\n\naction_multiplicity: one action turn. unique.\naction_order: one action, order trivial. unique.\ncorrection_scope: no edits. inapplicable unique.\nrepetition_scope: no repetition. unique.\nreference_resolution: no pronouns etc. unique.\ntemporal_relations: no timing relations. unique.\nunresolved_relations: none. unique.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed coverage. Source text \"逆时针转四十五度\". We need split into spans exactly concatenated. Could just one span role ACTION. Explanation: requests single turn counterclockwise 45 degrees; Chinese numeral. Is \"逆时针\" direction, \"转四十五度\" action angle. Whole span ACTION. But meaningful spans every action relation considered. We can make one span. But requirement \"Split source into meaningful spans so every action, relation and editing clause is considered.\" One span is acceptable? It considers whole action. text exact. role ACTION. Explanation nonempty. But maybe better split into \"逆时针\" QUANTITY? Hmm role choices. \"逆时针\" is direction modifier not quantity. Could be ACTION? \"转四十五度\" ACTION. But if split, \"逆时针\" role CONTEXT? However concatenation exact. Need every span. Simpler one ACTION. But maybe also split into \"逆时针\" and \"转四十五度\"; but role for direction? CONTEXT maybe. That's okay: \"逆时针\" specifies direction, executes as part of turn; \"转四十五度\" action. But if role CONTEXT, explanation says direction modifier affects angle sign. Both accepted. Need ensure no duplication, concatenation \"逆时针\"+\"转四十五度\" exactly source. Yes. But \"四十五度\" is quantity within action. Could split further \"逆时针\" / \"转\" / \"四十五度\". \"转\" ACTION, \"四十五度\" QUANTITY. That might be more meaningful. Let's decide coverage list.\n\nNeed output exactly JSON object. No markdown. Keys status, coverage, dimensions.\n\nUse exact source. Chinese punctuation none. \"逆时针转四十五度\". Could split:\n1 \"逆时针\" role CONTEXT? Explanation: direction qualifier; means counterclockwise, making angle positive per legal semantics. It does not add a separate action.\n2 \"转\" role ACTION? Explanation: verb specifying a single turn action.\n3 \"四十五度\" role QUANTITY? Explanation: angle 45 degrees, finite nonzero within bounds. Combined, one legal turn.\n\nConcatenation: 逆时针 + 转 + 四十五度 = 逆时针转四十五度. Good. Is \"逆时针\" a CONTEXT or RELATION? It's modifier. CONTEXT okay. Could role QUANTITY? Direction not quantity. CONTEXT.\n\nNeed dimensions explanations. For each status UNIQUE. Include source evidence. Mention no alternative.\n\nNeed be careful: Legal semantics turn left/counterclockwise positive, right/clockwise negative. \"四十五度\" 45. \"逆时针\" specifies positive +45. Maximum absolute turn 180, within. One step.\n\nStatus AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation. Yes.\n\nPotential issue: \"四十五度\" in Chinese means 45 degrees. No ambiguity. \"转\" could mean turn. No other action.\n\nNow write JSON with dimensions exactly. Explanations nonempty. Ensure no extra fields.\n\nNeed perhaps coverage role choices: CONTEXT for direction, ACTION for 转, QUANTITY for 四十五度. Every explanation account.\n\nLet's craft:\n\n{\n \"status\": \"AUTHORIZED_UNIQUE\",\n \"coverage\": [\n  {\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction qualifier for the single turn action; per legal turn semantics it makes the angle counterclockwise-positive. It adds no separate action or unresolved relation.\"},\n  {\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"The verb identifies exactly one turn action. There is no repeated, edited, or additional action in the source.\"},\n  {\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 45 degrees, a nonzero finite value within the 180-degree IR legality bound. Combined with the direction, this yields one legal turn of +45 degrees.\"}\n ],\n \"dimensions\": {\n   \"action_multiplicity\": {\"status\":\"UNIQUE\",\"explanation\":\"Source contains only the single action 转 (turn), with no conjunction, repetition, or edit introducing another action.\"},\n   \"action_order\": {\"status\":\"UNIQUE\",\"explanation\":\"Because only one action is requested, there is exactly one possible linear order: that turn.\"},\n   \"correction_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, or replacement clause appears; no prior action or parameter is modified.\"},\n   \"repetition_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No repetition word or construction appears, so no span is repeated.\"},\n   \"reference_resolution\": {\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands requiring resolution; the direction and angle attach directly to 转.\"},\n   \"temporal_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; the single turn can be represented as one step.\"},\n   \"unresolved_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved; it fully specifies one counterclockwise 45-degree turn.\"}\n }\n}\n\nNeed ensure \"status is AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation.\" Good.\n\nPotential nuance: \"逆时针转四十五度\" is a command. Does \"逆时针\" specify turn direction? yes. Legal semantics mention left/counterclockwise positive. Good.\n\nNo markdown. Final only.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"逆时针转四十五度\". Means \"turn counterclockwise 45 degrees\". Need decide dimensions.\n\nWe must split source into meaningful spans covering entire exact source. Source one phrase. Actions: turn with angle_deg positive for counterclockwise, 45. Legal. Is it unique? Need seven dimensions.\n\naction_multiplicity: one action turn. unique.\naction_order: one action, order trivial. unique.\ncorrection_scope: no edits. inapplicable unique.\nrepetition_scope: no repetition. unique.\nreference_resolution: no pronouns etc. unique.\ntemporal_relations: no timing relations. unique.\nunresolved_relations: none. unique.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed coverage. Source text \"逆时针转四十五度\". We need split into spans exactly concatenated. Could just one span role ACTION. Explanation: requests single turn counterclockwise 45 degrees; Chinese numeral. Is \"逆时针\" direction, \"转四十五度\" action angle. Whole span ACTION. But meaningful spans every action relation considered. We can make one span. But requirement \"Split source into meaningful spans so every action, relation and editing clause is considered.\" One span is acceptable? It considers whole action. text exact. role ACTION. Explanation nonempty. But maybe better split into \"逆时针\" QUANTITY? Hmm role choices. \"逆时针\" is direction modifier not quantity. Could be ACTION? \"转四十五度\" ACTION. But if split, \"逆时针\" role CONTEXT? However concatenation exact. Need every span. Simpler one ACTION. But maybe also split into \"逆时针\" and \"转四十五度\"; but role for direction? CONTEXT maybe. That's okay: \"逆时针\" specifies direction, executes as part of turn; \"转四十五度\" action. But if role CONTEXT, explanation says direction modifier affects angle sign. Both accepted. Need ensure no duplication, concatenation \"逆时针\"+\"转四十五度\" exactly source. Yes. But \"四十五度\" is quantity within action. Could split further \"逆时针\" / \"转\" / \"四十五度\". \"转\" ACTION, \"四十五度\" QUANTITY. That might be more meaningful. Let's decide coverage list.\n\nNeed output exactly JSON object. No markdown. Keys status, coverage, dimensions.\n\nUse exact source. Chinese punctuation none. \"逆时针转四十五度\". Could split:\n1 \"逆时针\" role CONTEXT? Explanation: direction qualifier; means counterclockwise, making angle positive per legal semantics. It does not add a separate action.\n2 \"转\" role ACTION? Explanation: verb specifying a single turn action.\n3 \"四十五度\" role QUANTITY? Explanation: angle 45 degrees, finite nonzero within bounds. Combined, one legal turn.\n\nConcatenation: 逆时针 + 转 + 四十五度 = 逆时针转四十五度. Good. Is \"逆时针\" a CONTEXT or RELATION? It's modifier. CONTEXT okay. Could role QUANTITY? Direction not quantity. CONTEXT.\n\nNeed dimensions explanations. For each status UNIQUE. Include source evidence. Mention no alternative.\n\nNeed be careful: Legal semantics turn left/counterclockwise positive, right/clockwise negative. \"四十五度\" 45. \"逆时针\" specifies positive +45. Maximum absolute turn 180, within. One step.\n\nStatus AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation. Yes.\n\nPotential issue: \"四十五度\" in Chinese means 45 degrees. No ambiguity. \"转\" could mean turn. No other action.\n\nNow write JSON with dimensions exactly. Explanations nonempty. Ensure no extra fields.\n\nNeed perhaps coverage role choices: CONTEXT for direction, ACTION for 转, QUANTITY for 四十五度. Every explanation account.\n\nLet's craft:\n\n{\n \"status\": \"AUTHORIZED_UNIQUE\",\n \"coverage\": [\n  {\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction qualifier for the single turn action; per legal turn semantics it makes the angle counterclockwise-positive. It adds no separate action or unresolved relation.\"},\n  {\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"The verb identifies exactly one turn action. There is no repeated, edited, or additional action in the source.\"},\n  {\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 45 degrees, a nonzero finite value within the 180-degree IR legality bound. Combined with the direction, this yields one legal turn of +45 degrees.\"}\n ],\n \"dimensions\": {\n   \"action_multiplicity\": {\"status\":\"UNIQUE\",\"explanation\":\"Source contains only the single action 转 (turn), with no conjunction, repetition, or edit introducing another action.\"},\n   \"action_order\": {\"status\":\"UNIQUE\",\"explanation\":\"Because only one action is requested, there is exactly one possible linear order: that turn.\"},\n   \"correction_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, or replacement clause appears; no prior action or parameter is modified.\"},\n   \"repetition_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No repetition word or construction appears, so no span is repeated.\"},\n   \"reference_resolution\": {\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands requiring resolution; the direction and angle attach directly to 转.\"},\n   \"temporal_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; the single turn can be represented as one step.\"},\n   \"unresolved_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved; it fully specifies one counterclockwise 45-degree turn.\"}\n }\n}\n\nNeed ensure \"status is AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation.\" Good.\n\nPotential nuance: \"逆时针转四十五度\" is a command. Does \"逆时针\" specify turn direction? yes. Legal semantics mention left/counterclockwise positive. Good.\n\nNo markdown. Final only.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction qualifier for the single turn action; under the legal turn semantics it makes the angle counterclockwise-positive. It adds no separate action or unresolved relation.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"The verb identifies exactly one turn action. There is no repeated, edited, or additional action in the source.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 45 degrees, a nonzero finite value within the 180-degree IR legality bound. Combined with the direction, this yields one legal turn of +45 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source contains only the single action 转 (turn), with no conjunction, repetition, or edit introducing another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because only one action is requested, there is exactly one possible linear order: that turn.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, or replacement clause appears; no prior action or parameter is modified.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition word or construction appears, so no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands requiring resolution; the direction and angle attach directly to 转.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; the single turn can be represented as one step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved; it fully specifies one counterclockwise 45-degree turn.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_fa5c5f23-5adc-424d-aa67-06fb29f6a942",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 142,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1726,
+            "output_tokens_details": {
+              "reasoning_tokens": 1319
+            },
+            "total_tokens": 2636
+          }
+        },
+        "request_sha256": "94f63385c61610a2f3e45f4ab73ec3d50a58a4773a3e5f9fb9c2843b2239cc8d",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.592383299997891,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_fa5c5f23-5adc-424d-aa67-06fb29f6a942",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction qualifier for the single turn action; under the legal turn semantics it makes the angle counterclockwise-positive. It adds no separate action or unresolved relation.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"The verb identifies exactly one turn action. There is no repeated, edited, or additional action in the source.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 45 degrees, a nonzero finite value within the 180-degree IR legality bound. Combined with the direction, this yields one legal turn of +45 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source contains only the single action 转 (turn), with no conjunction, repetition, or edit introducing another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because only one action is requested, there is exactly one possible linear order: that turn.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, or replacement clause appears; no prior action or parameter is modified.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition word or construction appears, so no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands requiring resolution; the direction and angle attach directly to 转.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; the single turn can be represented as one step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved; it fully specifies one counterclockwise 45-degree turn.\"}}}",
+        "usage": {
+          "input_tokens": 142,
+          "output_tokens": 1726,
+          "total_tokens": 2636
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.7344784999986587,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-ccw-45deg",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-ccw-45deg\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "350fd386fe5a9473f6deb938e9d6b4b31a65dc6df2f4760a8af62c4dad411dca",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_16afd5fa-e723-4d8c-8adb-5a8d5f9c5e9b",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.596551299997373,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.592383299997891,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"逆时针\",\"role\":\"CONTEXT\",\"explanation\":\"Direction qualifier for the single turn action; under the legal turn semantics it makes the angle counterclockwise-positive. It adds no separate action or unresolved relation.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"The verb identifies exactly one turn action. There is no repeated, edited, or additional action in the source.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 45 degrees, a nonzero finite value within the 180-degree IR legality bound. Combined with the direction, this yields one legal turn of +45 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source contains only the single action 转 (turn), with no conjunction, repetition, or edit introducing another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because only one action is requested, there is exactly one possible linear order: that turn.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction, edit, or replacement clause appears; no prior action or parameter is modified.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition word or construction appears, so no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands requiring resolution; the direction and angle attach directly to 转.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneity, or completion relation is stated; the single turn can be represented as one step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice, scope, ordering, or relationship unresolved; it fully specifies one counterclockwise 45-degree turn.\"}}}",
+          "raw_response_sha256": "cffdf4f7cc5361b1c557c5e94ab8616469b7b9d69e2d53f7e62827a3b66f0796",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_fa5c5f23-5adc-424d-aa67-06fb29f6a942",
+          "source_aware": false,
+          "source_sha256": "494eb3cab6f2e07faf0c4851ebce8ddcf87bdadf78b0dfc03e8ed6b768498daf",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 142,
+            "output_tokens": 1726,
+            "total_tokens": 2636
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Direction qualifier for the single turn action; under the legal turn semantics it makes the angle counterclockwise-positive. It adds no separate action or unresolved relation.",
+                "role": "CONTEXT",
+                "text": "逆时针"
+              },
+              {
+                "explanation": "The verb identifies exactly one turn action. There is no repeated, edited, or additional action in the source.",
+                "role": "ACTION",
+                "text": "转"
+              },
+              {
+                "explanation": "Specifies the turn angle as 45 degrees, a nonzero finite value within the 180-degree IR legality bound. Combined with the direction, this yields one legal turn of +45 degrees.",
+                "role": "QUANTITY",
+                "text": "四十五度"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Source contains only the single action 转 (turn), with no conjunction, repetition, or edit introducing another action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Because only one action is requested, there is exactly one possible linear order: that turn.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction, edit, or replacement clause appears; no prior action or parameter is modified.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands requiring resolution; the direction and angle attach directly to 转.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition word or construction appears, so no span is repeated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, waiting, simultaneity, or completion relation is stated; the single turn can be represented as one step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no choice, scope, ordering, or relationship unresolved; it fully specifies one counterclockwise 45-degree turn.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 205,
+        "output_tokens": 106,
+        "total_tokens": 1847
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-ccw-45deg",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "逆时针转四十五度",
+    "status": "SUCCESS"
+  }
+}

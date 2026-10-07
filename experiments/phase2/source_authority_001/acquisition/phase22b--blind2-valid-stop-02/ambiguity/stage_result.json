@@ -1,0 +1,244 @@
+{
+  "added_wall_s": 9.745831700001872,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 9.74124700000175,
+        "provider_document": {
+          "created_at": 1791359860,
+          "id": "resp_64aa2f4a-b8ac-4249-8e9b-d519a2334510",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_64aa2f4a-b8ac-4249-8e9b-d519a2334510",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"请立即停止\" Chinese meaning \"Please stop immediately\". Need decide dimensions. Source only. Actions: stop. Legal action stop no parameters. Does \"立即\" (immediately) affect temporal relation? It says stop immediately. This is one action. Action multiplicity: one stop. Order: single action. Correction none. Repetition none. Reference none. Temporal: immediate? Does \"immediately\" introduce timing? IR linear plan has no timing for stop. But \"立即\" is adverb indicating start now/immediate execution, not a temporal relation between steps. Could be CONTEXT/QUANTITY? Need assess if ambiguity. It authorizes exactly one stop. \"立即\" maybe \"immediately\" but stop has no params and linear execution immediate. Is there unresolved timing? The IR cannot represent delays, but immediate is effectively no wait, so okay. Need status AUTHORIZED_UNIQUE.\n\nNeed coverage split entire source exactly. Source: \"请立即停止\" characters: 请 立即 停止. Could split into spans. Must concatenate exactly. Could have one span? coverage list nonempty; split meaningful spans. We can split \"请\" (context polite/imperative), \"立即\" (temporal/context modifier), \"停止\" (ACTION). Or \"请\" separator? Role CONTEXT or SEPARATOR. \"立即\" CONTEXT/QUANTITY? It's an adverb. The roles allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Use CONTEXT for 请 and 立即? Need explanation why nonexecuting doesn't modify authority. Stop action. \"请\" polite marker. \"立即\" immediacy. If \"立即\" is temporal relation? There's only one action, so no ordering. It may indicate no delay; IR execution is linear and begins when authorized. Does immediate require temporal relation not representable? Hmm.\n\nQuestion: If explicit vague duration is unresolved. But \"immediately\" is not duration. It could be a temporal qualifier. Does the IR support \"immediate\" vs after delay? The IR steps have no timing; stop has no parameters. \"Immediately\" likely means execute now, which is default. No alternative. Not unresolved.\n\nNeed perhaps note \"请\" is not legal action, but courteous imperative marker. \"立即\" is modifier, not separate action. Combined source supports one legal interpretation: stop.\n\nNeed dimensions exactly:\n\naction_multiplicity: UNIQUE. Source requests exactly one action: stop. 请 and 立即 don't introduce other actions.\naction_order: UNIQUE. Single action has trivial order; no competing order.\ncorrection_scope: UNIQUE. No edit/correction.\nrepetition_scope: UNIQUE. No repetition.\nreference_resolution: UNIQUE. No pronouns/ordinals/omitted args. Stop no args.\ntemporal_relations: UNIQUE? \"立即\" demands immediate execution. Since only one step and IR has sequential dependence, immediate/no delay can be represented as the single stop step; no before/after/waiting relation among actions. Need be careful: \"immediate\" could be an explicit temporal relation. Does \"immediate\" require represent timing? IR linear plan has no explicit timestamps. But \"stop immediately\" does not require a delay or waiting; no relation between steps. So inapplicable; no alternative. UNIQUE.\nunresolved_relations: UNIQUE. No explicit unresolved choice/scope/order.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output JSON object exactly. Ensure coverage text concatenates exactly original source. If source \"请立即停止\", split:\n- text \"请\" role CONTEXT explanation \"Polite imperative marker; does not add action or alter the single stop command.\"\n- text \"立即\" role CONTEXT or RELATION? It is an adverb meaning immediately. If role RELATION, explanation \"Immediate timing qualifier applies to the stop action; with only one action it introduces no inter-step order.\" But \"RELATION\" maybe temporal relation. Let's use CONTEXT? The dimension temporal is about before/after. But coverage role could be QUANTITY? No. Use CONTEXT for \"立即\" and explain it modifies timing but only one action.\n- text \"停止\" role ACTION. Explanation \"Requests stop; legal parameterless stop action, sole executable action.\"\n\nNeed concatenated equal \"请立即停止\". Yes.\n\nNeed keys exactly status, coverage, dimensions. Dimensions object with exactly seven dimensions. Each value exactly status and explanation. No extra.\n\nNeed JSON valid. Chinese characters okay. No markdown. Let's produce.\n\nDouble-check if \"请立即停止\" perhaps ambiguous because \"请\" could be a request, not command? But semantic content is clear. \"请\" politely requests stop. Authorization? We treat as command. Is it a \"please\" maybe optional; still source authorizes stop. No ambiguity.\n\nPotential issue: \"立即\" implies timing \"immediately\"; IR linear plan without timing. Could some might mark UNKNOWN because requested relation cannot be represented. The instruction says temporal_relations: honor before/after, simultaneity, waiting and completion relations; require a single linear order representable without inventing timing or events. \"Immediately\" is not before/after etc. It's an urgency modifier, not a relation. It can be represented by executing single stop step first (only step). No timing invented. So unique.\n\nPotential issue: action_order for single action. UNIQUE.\n\nNeed maybe mention no parameter for stop. Good.\n\nOutput only JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"请立即停止\" Chinese meaning \"Please stop immediately\". Need decide dimensions. Source only. Actions: stop. Legal action stop no parameters. Does \"立即\" (immediately) affect temporal relation? It says stop immediately. This is one action. Action multiplicity: one stop. Order: single action. Correction none. Repetition none. Reference none. Temporal: immediate? Does \"immediately\" introduce timing? IR linear plan has no timing for stop. But \"立即\" is adverb indicating start now/immediate execution, not a temporal relation between steps. Could be CONTEXT/QUANTITY? Need assess if ambiguity. It authorizes exactly one stop. \"立即\" maybe \"immediately\" but stop has no params and linear execution immediate. Is there unresolved timing? The IR cannot represent delays, but immediate is effectively no wait, so okay. Need status AUTHORIZED_UNIQUE.\n\nNeed coverage split entire source exactly. Source: \"请立即停止\" characters: 请 立即 停止. Could split into spans. Must concatenate exactly. Could have one span? coverage list nonempty; split meaningful spans. We can split \"请\" (context polite/imperative), \"立即\" (temporal/context modifier), \"停止\" (ACTION). Or \"请\" separator? Role CONTEXT or SEPARATOR. \"立即\" CONTEXT/QUANTITY? It's an adverb. The roles allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Use CONTEXT for 请 and 立即? Need explanation why nonexecuting doesn't modify authority. Stop action. \"请\" polite marker. \"立即\" immediacy. If \"立即\" is temporal relation? There's only one action, so no ordering. It may indicate no delay; IR execution is linear and begins when authorized. Does immediate require temporal relation not representable? Hmm.\n\nQuestion: If explicit vague duration is unresolved. But \"immediately\" is not duration. It could be a temporal qualifier. Does the IR support \"immediate\" vs after delay? The IR steps have no timing; stop has no parameters. \"Immediately\" likely means execute now, which is default. No alternative. Not unresolved.\n\nNeed perhaps note \"请\" is not legal action, but courteous imperative marker. \"立即\" is modifier, not separate action. Combined source supports one legal interpretation: stop.\n\nNeed dimensions exactly:\n\naction_multiplicity: UNIQUE. Source requests exactly one action: stop. 请 and 立即 don't introduce other actions.\naction_order: UNIQUE. Single action has trivial order; no competing order.\ncorrection_scope: UNIQUE. No edit/correction.\nrepetition_scope: UNIQUE. No repetition.\nreference_resolution: UNIQUE. No pronouns/ordinals/omitted args. Stop no args.\ntemporal_relations: UNIQUE? \"立即\" demands immediate execution. Since only one step and IR has sequential dependence, immediate/no delay can be represented as the single stop step; no before/after/waiting relation among actions. Need be careful: \"immediate\" could be an explicit temporal relation. Does \"immediate\" require represent timing? IR linear plan has no explicit timestamps. But \"stop immediately\" does not require a delay or waiting; no relation between steps. So inapplicable; no alternative. UNIQUE.\nunresolved_relations: UNIQUE. No explicit unresolved choice/scope/order.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output JSON object exactly. Ensure coverage text concatenates exactly original source. If source \"请立即停止\", split:\n- text \"请\" role CONTEXT explanation \"Polite imperative marker; does not add action or alter the single stop command.\"\n- text \"立即\" role CONTEXT or RELATION? It is an adverb meaning immediately. If role RELATION, explanation \"Immediate timing qualifier applies to the stop action; with only one action it introduces no inter-step order.\" But \"RELATION\" maybe temporal relation. Let's use CONTEXT? The dimension temporal is about before/after. But coverage role could be QUANTITY? No. Use CONTEXT for \"立即\" and explain it modifies timing but only one action.\n- text \"停止\" role ACTION. Explanation \"Requests stop; legal parameterless stop action, sole executable action.\"\n\nNeed concatenated equal \"请立即停止\". Yes.\n\nNeed keys exactly status, coverage, dimensions. Dimensions object with exactly seven dimensions. Each value exactly status and explanation. No extra.\n\nNeed JSON valid. Chinese characters okay. No markdown. Let's produce.\n\nDouble-check if \"请立即停止\" perhaps ambiguous because \"请\" could be a request, not command? But semantic content is clear. \"请\" politely requests stop. Authorization? We treat as command. Is it a \"please\" maybe optional; still source authorizes stop. No ambiguity.\n\nPotential issue: \"立即\" implies timing \"immediately\"; IR linear plan without timing. Could some might mark UNKNOWN because requested relation cannot be represented. The instruction says temporal_relations: honor before/after, simultaneity, waiting and completion relations; require a single linear order representable without inventing timing or events. \"Immediately\" is not before/after etc. It's an urgency modifier, not a relation. It can be represented by executing single stop step first (only step). No timing invented. So unique.\n\nPotential issue: action_order for single action. UNIQUE.\n\nNeed maybe mention no parameter for stop. Good.\n\nOutput only JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite imperative marker. It does not introduce a separate action, parameter, order, edit, repetition, or unresolved relation; it only frames the following command as a request to act.\"},{\"text\":\"立即\",\"role\":\"CONTEXT\",\"explanation\":\"Adverb meaning immediately. It modifies the timing of the single requested action but does not create a second action or an inter-step before/after relation; with only one step, immediate execution is represented by executing that sole stop step.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the legal parameterless stop action. It is the sole executable action authorized by the source.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action word, 停止, which maps to stop. 请 and 立即 are non-action framing/timing modifiers and do not request additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so there is no choice among multiple possible execution orders. The single stop action forms the trivial linear order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or cancellation clause. Nothing modifies or replaces a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repeated action or repetition marker. 停止 occurs once and no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, omitted shared arguments, or references to earlier commands. stop has no parameters, so no referent needs resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"立即 indicates immediate execution of the single stop action. No before, after, simultaneous, waiting, or completion relation between distinct actions is requested, so the single linear step is the unique representable interpretation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It authorizes one parameterless stop action without alternatives.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_64aa2f4a-b8ac-4249-8e9b-d519a2334510",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 139,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1614,
+            "output_tokens_details": {
+              "reasoning_tokens": 1150
+            },
+            "total_tokens": 2521
+          }
+        },
+        "request_sha256": "b6bc406b2e3fa708433b31f2e73fc36179ad4571cf40d656f8855ce1f0958d69",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 9.739761700002418,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_64aa2f4a-b8ac-4249-8e9b-d519a2334510",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite imperative marker. It does not introduce a separate action, parameter, order, edit, repetition, or unresolved relation; it only frames the following command as a request to act.\"},{\"text\":\"立即\",\"role\":\"CONTEXT\",\"explanation\":\"Adverb meaning immediately. It modifies the timing of the single requested action but does not create a second action or an inter-step before/after relation; with only one step, immediate execution is represented by executing that sole stop step.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the legal parameterless stop action. It is the sole executable action authorized by the source.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action word, 停止, which maps to stop. 请 and 立即 are non-action framing/timing modifiers and do not request additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so there is no choice among multiple possible execution orders. The single stop action forms the trivial linear order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or cancellation clause. Nothing modifies or replaces a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repeated action or repetition marker. 停止 occurs once and no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, omitted shared arguments, or references to earlier commands. stop has no parameters, so no referent needs resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"立即 indicates immediate execution of the single stop action. No before, after, simultaneous, waiting, or completion relation between distinct actions is requested, so the single linear step is the unique representable interpretation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It authorizes one parameterless stop action without alternatives.\"}}}",
+        "usage": {
+          "input_tokens": 139,
+          "output_tokens": 1614,
+          "total_tokens": 2521
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.7906866000012087,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-stop-1",
+      "model": "deepseek-flash",
+      "normalized_length": 5,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-stop-1\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "6dfecb31159c89455b9382050df9034487ff4e855eb5bccd591a03af2355b7f7",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_a69acd99-150f-4ebe-8a97-036fafe329c1",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 9.745181199999934,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 9.739761700002418,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite imperative marker. It does not introduce a separate action, parameter, order, edit, repetition, or unresolved relation; it only frames the following command as a request to act.\"},{\"text\":\"立即\",\"role\":\"CONTEXT\",\"explanation\":\"Adverb meaning immediately. It modifies the timing of the single requested action but does not create a second action or an inter-step before/after relation; with only one step, immediate execution is represented by executing that sole stop step.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the legal parameterless stop action. It is the sole executable action authorized by the source.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action word, 停止, which maps to stop. 请 and 立即 are non-action framing/timing modifiers and do not request additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so there is no choice among multiple possible execution orders. The single stop action forms the trivial linear order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or cancellation clause. Nothing modifies or replaces a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repeated action or repetition marker. 停止 occurs once and no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, omitted shared arguments, or references to earlier commands. stop has no parameters, so no referent needs resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"立即 indicates immediate execution of the single stop action. No before, after, simultaneous, waiting, or completion relation between distinct actions is requested, so the single linear step is the unique representable interpretation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It authorizes one parameterless stop action without alternatives.\"}}}",
+          "raw_response_sha256": "8967d0abb40dcd91ad631b391f0b8201763d586a28cdf6c7a9a3f4f6926c9fff",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_64aa2f4a-b8ac-4249-8e9b-d519a2334510",
+          "source_aware": false,
+          "source_sha256": "f9dab177f1269a61f410414b984a3cfe25fd54b513cb3f29285a0b476f074bf2",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 139,
+            "output_tokens": 1614,
+            "total_tokens": 2521
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Polite imperative marker. It does not introduce a separate action, parameter, order, edit, repetition, or unresolved relation; it only frames the following command as a request to act.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Adverb meaning immediately. It modifies the timing of the single requested action but does not create a second action or an inter-step before/after relation; with only one step, immediate execution is represented by executing that sole stop step.",
+                "role": "CONTEXT",
+                "text": "立即"
+              },
+              {
+                "explanation": "Requests the legal parameterless stop action. It is the sole executable action authorized by the source.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action word, 停止, which maps to stop. 请 and 立即 are non-action framing/timing modifiers and do not request additional actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one requested action, so there is no choice among multiple possible execution orders. The single stop action forms the trivial linear order.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no edit, correction, replacement, or cancellation clause. Nothing modifies or replaces a prior instruction.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinal references, omitted shared arguments, or references to earlier commands. stop has no parameters, so no referent needs resolution.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repeated action or repetition marker. 停止 occurs once and no span is repeated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "立即 indicates immediate execution of the single stop action. No before, after, simultaneous, waiting, or completion relation between distinct actions is requested, so the single linear step is the unique representable interpretation.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It authorizes one parameterless stop action without alternatives.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 202,
+        "output_tokens": 154,
+        "total_tokens": 1892
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-stop-1",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "请立即停止",
+    "status": "SUCCESS"
+  }
+}

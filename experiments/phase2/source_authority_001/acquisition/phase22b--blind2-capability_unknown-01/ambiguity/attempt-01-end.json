@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.937025499999436,
+  "provider_document": {
+    "created_at": 1791360258,
+    "id": "resp_90d1c403-3813-454e-82ff-8d592da74e49",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_90d1c403-3813-454e-82ff-8d592da74e49",
+        "reasoning_content": "We need answer JSON only. Need analyze source \"往前走25m\". Chinese: walk_forward 25m. Need determine status. Seven dimensions. Source only one action. action_multiplicity UNIQUE, action_order UNIQUE/inapplicable, correction_scope UNIQUE/inapplicable, repetition_scope UNIQUE/inapplicable, reference_resolution UNIQUE? \"往前\" means forward, no pronoun? maybe \"往前\" is direction. temporal UNIQUE, unresolved UNIQUE. Entire source supports legal interpretation: walk_forward distance_m=25, single step. Need coverage list with exact text spans concatenated equal entire source. Source is \"往前走25m\". We can split perhaps \"往前走\" and \"25m\". Or whole. Need roles. Ensure every action/relation/editing clause considered. Could coverage [{\"text\":\"往前走25m\",\"role\":\"ACTION\",\"explanation\":\"...\"}]. That concatenates equals entire. But maybe quantity inside same span. Requirement split meaningful spans so every action, relation and editing clause considered. One span containing action + quantity is okay? It says split source into meaningful spans so every action, relation and editing clause is considered. Better split \"往前走\" ACTION and \"25m\" QUANTITY. Text concatenated exactly: \"往前走\" + \"25m\" = \"往前走25m\". Good.\n\nNeed explanations nonempty. For \"往前走\": action phrase meaning walk forward, no parameter. \"25m\": quantity distance 25 meters, argument to walk_forward. Need action_multiplicity: exactly one action, walk_forward. action_order: one action, no ordering alternatives. correction_scope: no corrections/edits. repetition_scope: no repetition. reference_resolution: \"往前\" resolves direction forward; no pronouns/ordinal/external. temporal: no temporal relation, single step; linear plan. unresolved: no explicit unresolved relation.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object keys status, coverage, dimensions. Legal compilation semantics independent.\n\nNeed ensure dimension names exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNo markdown. Final JSON.\n\nLet's craft explanations. Since source Chinese, explanations can be English. Should mention \"往前走\" means walk forward, \"25m\" is positive finite distance 25 meters. No other actions. No corrections etc.\n\nPotential issue: \"往前走\" literally \"go forward\" could be walk_forward. Good. \"25m\" m recognized meters. Positive finite. Legal.\n\nCoverage: two objects. text exact preserving whitespace. No spaces.\n\nRole \"ACTION\" and \"QUANTITY\". Explanation for quantity says it supplies distance parameter to preceding walk action; not independent action.\n\nCould there be ambiguity because \"往前走25m\" might mean walk forward 25 meters, no duration. Unique. Yes.\n\nLet's produce.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source \"往前走25m\". Chinese: walk_forward 25m. Need determine status. Seven dimensions. Source only one action. action_multiplicity UNIQUE, action_order UNIQUE/inapplicable, correction_scope UNIQUE/inapplicable, repetition_scope UNIQUE/inapplicable, reference_resolution UNIQUE? \"往前\" means forward, no pronoun? maybe \"往前\" is direction. temporal UNIQUE, unresolved UNIQUE. Entire source supports legal interpretation: walk_forward distance_m=25, single step. Need coverage list with exact text spans concatenated equal entire source. Source is \"往前走25m\". We can split perhaps \"往前走\" and \"25m\". Or whole. Need roles. Ensure every action/relation/editing clause considered. Could coverage [{\"text\":\"往前走25m\",\"role\":\"ACTION\",\"explanation\":\"...\"}]. That concatenates equals entire. But maybe quantity inside same span. Requirement split meaningful spans so every action, relation and editing clause considered. One span containing action + quantity is okay? It says split source into meaningful spans so every action, relation and editing clause is considered. Better split \"往前走\" ACTION and \"25m\" QUANTITY. Text concatenated exactly: \"往前走\" + \"25m\" = \"往前走25m\". Good.\n\nNeed explanations nonempty. For \"往前走\": action phrase meaning walk forward, no parameter. \"25m\": quantity distance 25 meters, argument to walk_forward. Need action_multiplicity: exactly one action, walk_forward. action_order: one action, no ordering alternatives. correction_scope: no corrections/edits. repetition_scope: no repetition. reference_resolution: \"往前\" resolves direction forward; no pronouns/ordinal/external. temporal: no temporal relation, single step; linear plan. unresolved: no explicit unresolved relation.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object keys status, coverage, dimensions. Legal compilation semantics independent.\n\nNeed ensure dimension names exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNo markdown. Final JSON.\n\nLet's craft explanations. Since source Chinese, explanations can be English. Should mention \"往前走\" means walk forward, \"25m\" is positive finite distance 25 meters. No other actions. No corrections etc.\n\nPotential issue: \"往前走\" literally \"go forward\" could be walk_forward. Good. \"25m\" m recognized meters. Positive finite. Legal.\n\nCoverage: two objects. text exact preserving whitespace. No spaces.\n\nRole \"ACTION\" and \"QUANTITY\". Explanation for quantity says it supplies distance parameter to preceding walk action; not independent action.\n\nCould there be ambiguity because \"往前走25m\" might mean walk forward 25 meters, no duration. Unique. Yes.\n\nLet's produce.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"The verb phrase means to walk forward, which maps to the legal action walk_forward; it requests exactly one action and contains no repetition, correction, or unresolved reference.\"},{\"text\":\"25m\",\"role\":\"QUANTITY\",\"explanation\":\"The quantity '25m' supplies the distance argument for the preceding walk_forward action: 25 meters, a positive finite distance. It does not introduce a second action or modify any other parameter.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The entire source contains exactly one requested action: walking forward. There are no edited, repeated, grouped, or additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one execution order and no competing ordering relation to resolve.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, replacement, or editing clause, so no prior action, parameter, group, or relation is changed or preserved by an edit.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repeated span; the single forward movement is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'往前' resolves directly to the forward direction for the single movement, and '25m' is directly attached as its distance. There are no pronouns, ordinals, omitted shared arguments, or external references requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before, after, simultaneous, waiting, or completion relation. With one action, it maps to a single linear step without inventing timing or extra events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relation unresolved; it uniquely supports one walk_forward step of 25 meters.\"}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_90d1c403-3813-454e-82ff-8d592da74e49",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 139,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1021,
+      "output_tokens_details": {
+        "reasoning_tokens": 597
+      },
+      "total_tokens": 1928
+    }
+  },
+  "request_sha256": "81658e8cd2c8ec77b6daf8f94d11ada58b75776457e925524ccd9c4bba265d12",
+  "status": "SUCCESS"
+}

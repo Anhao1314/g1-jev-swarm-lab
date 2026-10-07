@@ -1,0 +1,332 @@
+{
+  "added_wall_s": 10.608068500001536,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.604276199999731,
+        "provider_document": {
+          "created_at": 1791360066,
+          "id": "resp_465475bf-ae4e-4980-b19c-ebb05f13d3ca",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_465475bf-ae4e-4980-b19c-ebb05f13d3ca",
+              "reasoning_content": "We need answer only JSON. Need derive plan. Source Chinese: \"先向前移动400厘米，再向左转45°，然后停止\"\n\nActions: walk_forward distance 400 cm = 4 m. turn left 45° positive 45. stop. Order: first move, then turn, then stop. No corrections, repetitions, unresolved. All unique.\n\nNeed coverage split entire source exactly concatenated. Need meaningful spans. Source text exact: 先向前移动400厘米，再向左转45°，然后停止\nCharacters:\n先 向 前 移 动 400 厘 米 ， 再 向 左 转 45 ° ， 然 后 停 止\nNeed coverage objects text copied exactly, concatenated equals source. Could split into:\n\"先向前移动400厘米，\" role ACTION? Contains first action and punctuation separator. Explanation.\n\"再向左转45°，\" role ACTION? \"再\" relation + action. Maybe role ACTION or RELATION. Need every action relation edit clause analyzed. Could split:\n1 \"先向前移动400厘米\" role ACTION\n2 \"，\" role SEPARATOR\n3 \"再向左转45°\" role ACTION? includes RELATION \"再\" (then). Could split \"再\" as RELATION and \"向左转45°\" ACTION maybe. But coverage text must concatenate exact. Could have:\n- \"先向前移动400厘米\" ACTION\n- \"，\" SEPARATOR\n- \"再\" RELATION\n- \"向左转45°\" ACTION\n- \"，\" SEPARATOR\n- \"然后\" RELATION\n- \"停止\" ACTION\nThis is good. Need text exact and order. Let's ensure concatenation:\n\"先向前移动400厘米\" + \"，\" + \"再\" + \"向左转45°\" + \"，\" + \"然后\" + \"停止\" = 先向前移动400厘米，再向左转45°，然后停止. Yes.\n\nBut \"先\" maybe relation/order within first action? Could include in action or separate. Need cover relation \"先\"? If split \"先\" relation? Then text \"先\" + \"向前移动400厘米\" + ... But role ACTION for 向前移动 maybe. Let's consider precise. Source: 先向前移动400厘米，再向左转45°，然后停止. The word 先 means first, relation. 向前移动 is forward move. 400厘米 quantity. Could split:\n1 \"先\" RELATION (first)\n2 \"向前移动400厘米\" ACTION? includes direction/distance. Or split quantity.\n3 \"，\" SEPARATOR\n4 \"再\" RELATION\n5 \"向左转45°\" ACTION? includes direction angle.\n6 \"，\" SEPARATOR\n7 \"然后\" RELATION\n8 \"停止\" ACTION\nNeed every quantity analyzed maybe can include in action explanation. Role QUANTITY for \"400厘米\" and \"45°\"? If split, must maintain exact. Could split:\n- \"先\" RELATION\n- \"向前移动\" ACTION\n- \"400厘米\" QUANTITY\n- \"，\" SEPARATOR\n- \"再\" RELATION\n- \"向左转\" ACTION\n- \"45°\" QUANTITY\n- \"，\" SEPARATOR\n- \"然后\" RELATION\n- \"停止\" ACTION\nConcatenation: 先 + 向前移动 + 400厘米 + ， + 再 + 向左转 + 45° + ， + 然后 + 停止 = 先向前移动400厘米，再向左转45°，然后停止. Yes.\n\nNeed explanations nonempty. Role of \"先\" relation: indicates first action in sequence. \"向前移动\" action skill walk_forward direction forward. \"400厘米\" quantity convert to 4 m. \"，\" separator. \"再\" relation: then, second action after first. \"向左转\" action turn left direction positive. \"45°\" quantity angle 45 deg positive. etc. This seems good.\n\nPotential issue: \"向左转\" as action includes left. In skill turn parameters angle_deg; left positive. Fine.\n\nStatus AUTHORIZED_UNIQUE. dimensions each UNIQUE with explanations. candidate matches. authorized_plan:\nsteps:\ns1 walk_forward distance_m 4.0 depends_on []\ns2 turn angle_deg 45.0 depends_on [\"s1\"]\ns3 stop {} depends_on [\"s2\"]\nNeed no mission_id. JSON numbers finite. Use 4.0 or 4? fine. 45.0.\n\nNeed output exactly JSON object no markdown. Need ensure no extra fields. coverage list nonempty. dimensions exactly seven. Explanation strings. authorized_plan list.\n\nLet's craft.\n\nNeed maybe dimension action_multiplicity: three requested actions: walk_forward, turn, stop. No repeats/edits. unique.\naction_order: 先...再...然后 linear s1-s3.\ncorrection_scope: no corrections; no edit clauses; nothing replaced. unique.\nrepetition_scope: no repetition. unique.\nreference_resolution: no pronouns/ordinals shared args; only omitted subject? The robot implied; stop no args. unique.\ntemporal_relations: sequential first/then/then; no waiting. unique.\nunresolved_relations: none; all relations resolved. unique.\n\nNeed coverage explanations. Role maybe ACTION for 向前移动, turn, stop. For \"先\" relation. For \"再\" relation. \"然后\" relation. QUANTITY for 400厘米 and 45°. SEPARATOR for punctuation. \"向左转\" action, \"向前移动\" action.\n\nCheck text \"先\" then \"向前移动\" etc. \"先向前移动400厘米，再向左转45°，然后停止\". The exact split:\n1 text \"先\" \n2 text \"向前移动\"\n3 text \"400厘米\"\n4 text \"，\"\n5 text \"再\"\n6 text \"向左转\"\n7 text \"45°\"\n8 text \"，\"\n9 text \"然后\"\n10 text \"停止\"\nConcatenate:\n先向前移动400厘米，再向左转45°，然后停止. Yes.\n\nNeed maybe \"向前移动\" action, \"400厘米\" quantity, \"向左转\" action, \"45°\" quantity. Good.\n\nPotential subtlety: \"停止\" is stop skill; yes.\n\nNeed JSON escaping? Chinese fine. Degree symbol ° fine. Comma Chinese， fine.\n\nLet's write. Ensure no markdown.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need derive plan. Source Chinese: \"先向前移动400厘米，再向左转45°，然后停止\"\n\nActions: walk_forward distance 400 cm = 4 m. turn left 45° positive 45. stop. Order: first move, then turn, then stop. No corrections, repetitions, unresolved. All unique.\n\nNeed coverage split entire source exactly concatenated. Need meaningful spans. Source text exact: 先向前移动400厘米，再向左转45°，然后停止\nCharacters:\n先 向 前 移 动 400 厘 米 ， 再 向 左 转 45 ° ， 然 后 停 止\nNeed coverage objects text copied exactly, concatenated equals source. Could split into:\n\"先向前移动400厘米，\" role ACTION? Contains first action and punctuation separator. Explanation.\n\"再向左转45°，\" role ACTION? \"再\" relation + action. Maybe role ACTION or RELATION. Need every action relation edit clause analyzed. Could split:\n1 \"先向前移动400厘米\" role ACTION\n2 \"，\" role SEPARATOR\n3 \"再向左转45°\" role ACTION? includes RELATION \"再\" (then). Could split \"再\" as RELATION and \"向左转45°\" ACTION maybe. But coverage text must concatenate exact. Could have:\n- \"先向前移动400厘米\" ACTION\n- \"，\" SEPARATOR\n- \"再\" RELATION\n- \"向左转45°\" ACTION\n- \"，\" SEPARATOR\n- \"然后\" RELATION\n- \"停止\" ACTION\nThis is good. Need text exact and order. Let's ensure concatenation:\n\"先向前移动400厘米\" + \"，\" + \"再\" + \"向左转45°\" + \"，\" + \"然后\" + \"停止\" = 先向前移动400厘米，再向左转45°，然后停止. Yes.\n\nBut \"先\" maybe relation/order within first action? Could include in action or separate. Need cover relation \"先\"? If split \"先\" relation? Then text \"先\" + \"向前移动400厘米\" + ... But role ACTION for 向前移动 maybe. Let's consider precise. Source: 先向前移动400厘米，再向左转45°，然后停止. The word 先 means first, relation. 向前移动 is forward move. 400厘米 quantity. Could split:\n1 \"先\" RELATION (first)\n2 \"向前移动400厘米\" ACTION? includes direction/distance. Or split quantity.\n3 \"，\" SEPARATOR\n4 \"再\" RELATION\n5 \"向左转45°\" ACTION? includes direction angle.\n6 \"，\" SEPARATOR\n7 \"然后\" RELATION\n8 \"停止\" ACTION\nNeed every quantity analyzed maybe can include in action explanation. Role QUANTITY for \"400厘米\" and \"45°\"? If split, must maintain exact. Could split:\n- \"先\" RELATION\n- \"向前移动\" ACTION\n- \"400厘米\" QUANTITY\n- \"，\" SEPARATOR\n- \"再\" RELATION\n- \"向左转\" ACTION\n- \"45°\" QUANTITY\n- \"，\" SEPARATOR\n- \"然后\" RELATION\n- \"停止\" ACTION\nConcatenation: 先 + 向前移动 + 400厘米 + ， + 再 + 向左转 + 45° + ， + 然后 + 停止 = 先向前移动400厘米，再向左转45°，然后停止. Yes.\n\nNeed explanations nonempty. Role of \"先\" relation: indicates first action in sequence. \"向前移动\" action skill walk_forward direction forward. \"400厘米\" quantity convert to 4 m. \"，\" separator. \"再\" relation: then, second action after first. \"向左转\" action turn left direction positive. \"45°\" quantity angle 45 deg positive. etc. This seems good.\n\nPotential issue: \"向左转\" as action includes left. In skill turn parameters angle_deg; left positive. Fine.\n\nStatus AUTHORIZED_UNIQUE. dimensions each UNIQUE with explanations. candidate matches. authorized_plan:\nsteps:\ns1 walk_forward distance_m 4.0 depends_on []\ns2 turn angle_deg 45.0 depends_on [\"s1\"]\ns3 stop {} depends_on [\"s2\"]\nNeed no mission_id. JSON numbers finite. Use 4.0 or 4? fine. 45.0.\n\nNeed output exactly JSON object no markdown. Need ensure no extra fields. coverage list nonempty. dimensions exactly seven. Explanation strings. authorized_plan list.\n\nLet's craft.\n\nNeed maybe dimension action_multiplicity: three requested actions: walk_forward, turn, stop. No repeats/edits. unique.\naction_order: 先...再...然后 linear s1-s3.\ncorrection_scope: no corrections; no edit clauses; nothing replaced. unique.\nrepetition_scope: no repetition. unique.\nreference_resolution: no pronouns/ordinals shared args; only omitted subject? The robot implied; stop no args. unique.\ntemporal_relations: sequential first/then/then; no waiting. unique.\nunresolved_relations: none; all relations resolved. unique.\n\nNeed coverage explanations. Role maybe ACTION for 向前移动, turn, stop. For \"先\" relation. For \"再\" relation. \"然后\" relation. QUANTITY for 400厘米 and 45°. SEPARATOR for punctuation. \"向左转\" action, \"向前移动\" action.\n\nCheck text \"先\" then \"向前移动\" etc. \"先向前移动400厘米，再向左转45°，然后停止\". The exact split:\n1 text \"先\" \n2 text \"向前移动\"\n3 text \"400厘米\"\n4 text \"，\"\n5 text \"再\"\n6 text \"向左转\"\n7 text \"45°\"\n8 text \"，\"\n9 text \"然后\"\n10 text \"停止\"\nConcatenate:\n先向前移动400厘米，再向左转45°，然后停止. Yes.\n\nNeed maybe \"向前移动\" action, \"400厘米\" quantity, \"向左转\" action, \"45°\" quantity. Good.\n\nPotential subtlety: \"停止\" is stop skill; yes.\n\nNeed JSON escaping? Chinese fine. Degree symbol ° fine. Comma Chinese， fine.\n\nLet's write. Ensure no markdown.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示执行顺序中的第一步，将随后的向前移动动作确定为最先执行。\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"要求向前移动，对应合法技能 walk_forward。\"},{\"text\":\"400厘米\",\"role\":\"QUANTITY\",\"explanation\":\"指定 walk_forward 的距离；400 厘米等于 4 米，因此参数 distance_m 为 4.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个与第二个动作子句，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示第一个动作之后继续执行下一个动作，确定第二个动作紧随其后。\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"要求向左转，对应合法技能 turn；向左表示逆时针，因此角度为正。\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"指定 turn 的角度；45 度在允许范围内，因此参数 angle_deg 为 45.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第二个与第三个动作子句，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示在转向动作之后执行最后的停止动作，确定第三个动作紧随其后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"要求停止，对应合法技能 stop，参数为空对象。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源明确请求三个动作：向前移动、向左转、停止。没有重复、增补或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“再”“然后”给出唯一顺序：先 walk_forward，再 turn，最后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有任何更正、修改或替换子句，因此无需改变任何先前动作、参数或关系。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复动作或重复次数；三个动作各执行一次，不进行压缩。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中无代词、序数引用或省略的参数需要外部解析；停止动作无须参数，其余动作参数均已在该动作子句中给出。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"动作关系为线性先后顺序：移动完成后转向，转向完成后停止；没有同时、等待或完成之外的事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源未显式保留任何未决的选择、顺序、范围或关系；所有动作、参数和先后关系均已确定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_465475bf-ae4e-4980-b19c-ebb05f13d3ca",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 247,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 2010,
+            "output_tokens_details": {
+              "reasoning_tokens": 1334
+            },
+            "total_tokens": 3281
+          }
+        },
+        "request_sha256": "f48db18fa6d8a5d67b697c8a253664ca03f3002441a8b99152b95ca6451a7d3c",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.602698200000304,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_465475bf-ae4e-4980-b19c-ebb05f13d3ca",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示执行顺序中的第一步，将随后的向前移动动作确定为最先执行。\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"要求向前移动，对应合法技能 walk_forward。\"},{\"text\":\"400厘米\",\"role\":\"QUANTITY\",\"explanation\":\"指定 walk_forward 的距离；400 厘米等于 4 米，因此参数 distance_m 为 4.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个与第二个动作子句，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示第一个动作之后继续执行下一个动作，确定第二个动作紧随其后。\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"要求向左转，对应合法技能 turn；向左表示逆时针，因此角度为正。\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"指定 turn 的角度；45 度在允许范围内，因此参数 angle_deg 为 45.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第二个与第三个动作子句，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示在转向动作之后执行最后的停止动作，确定第三个动作紧随其后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"要求停止，对应合法技能 stop，参数为空对象。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源明确请求三个动作：向前移动、向左转、停止。没有重复、增补或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“再”“然后”给出唯一顺序：先 walk_forward，再 turn，最后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有任何更正、修改或替换子句，因此无需改变任何先前动作、参数或关系。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复动作或重复次数；三个动作各执行一次，不进行压缩。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中无代词、序数引用或省略的参数需要外部解析；停止动作无须参数，其余动作参数均已在该动作子句中给出。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"动作关系为线性先后顺序：移动完成后转向，转向完成后停止；没有同时、等待或完成之外的事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源未显式保留任何未决的选择、顺序、范围或关系；所有动作、参数和先后关系均已确定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+        "usage": {
+          "input_tokens": 247,
+          "output_tokens": 2010,
+          "total_tokens": 3281
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.4670304999999644,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 21,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "3cb0bcd6dd4e7faf07fb8058e7e5d9e5069d9205f7fa0034b0b58149537d7346",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_3f5ff88f-afaf-4eeb-939a-112e949edbee",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.607323500000348,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 10.602698200000304,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示执行顺序中的第一步，将随后的向前移动动作确定为最先执行。\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"要求向前移动，对应合法技能 walk_forward。\"},{\"text\":\"400厘米\",\"role\":\"QUANTITY\",\"explanation\":\"指定 walk_forward 的距离；400 厘米等于 4 米，因此参数 distance_m 为 4.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个与第二个动作子句，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示第一个动作之后继续执行下一个动作，确定第二个动作紧随其后。\"},{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"要求向左转，对应合法技能 turn；向左表示逆时针，因此角度为正。\"},{\"text\":\"45°\",\"role\":\"QUANTITY\",\"explanation\":\"指定 turn 的角度；45 度在允许范围内，因此参数 angle_deg 为 45.0。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第二个与第三个动作子句，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示在转向动作之后执行最后的停止动作，确定第三个动作紧随其后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"要求停止，对应合法技能 stop，参数为空对象。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源明确请求三个动作：向前移动、向左转、停止。没有重复、增补或替换动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“再”“然后”给出唯一顺序：先 walk_forward，再 turn，最后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有任何更正、修改或替换子句，因此无需改变任何先前动作、参数或关系。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复动作或重复次数；三个动作各执行一次，不进行压缩。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中无代词、序数引用或省略的参数需要外部解析；停止动作无须参数，其余动作参数均已在该动作子句中给出。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"动作关系为线性先后顺序：移动完成后转向，转向完成后停止；没有同时、等待或完成之外的事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源未显式保留任何未决的选择、顺序、范围或关系；所有动作、参数和先后关系均已确定。\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+          "raw_response_sha256": "40d9a60657c974e494fbb76958d84944fcf701003385b9736611a7fcfb11d054",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_465475bf-ae4e-4980-b19c-ebb05f13d3ca",
+          "source_aware": true,
+          "source_sha256": "ab4a38e7130bb732920207dd0c2dbfca0fb76cbd44aa8ed0ba6ef818891774bf",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 247,
+            "output_tokens": 2010,
+            "total_tokens": 3281
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "angle_deg": 45.0
+                },
+                "skill": "turn"
+              },
+              {
+                "depends_on": [
+                  "s2"
+                ],
+                "id": "s3",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "表示执行顺序中的第一步，将随后的向前移动动作确定为最先执行。",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "要求向前移动，对应合法技能 walk_forward。",
+                "role": "ACTION",
+                "text": "向前移动"
+              },
+              {
+                "explanation": "指定 walk_forward 的距离；400 厘米等于 4 米，因此参数 distance_m 为 4.0。",
+                "role": "QUANTITY",
+                "text": "400厘米"
+              },
+              {
+                "explanation": "分隔第一个与第二个动作子句，不改变动作内容或顺序。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "表示第一个动作之后继续执行下一个动作，确定第二个动作紧随其后。",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "要求向左转，对应合法技能 turn；向左表示逆时针，因此角度为正。",
+                "role": "ACTION",
+                "text": "向左转"
+              },
+              {
+                "explanation": "指定 turn 的角度；45 度在允许范围内，因此参数 angle_deg 为 45.0。",
+                "role": "QUANTITY",
+                "text": "45°"
+              },
+              {
+                "explanation": "分隔第二个与第三个动作子句，不改变动作内容或顺序。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "表示在转向动作之后执行最后的停止动作，确定第三个动作紧随其后。",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "要求停止，对应合法技能 stop，参数为空对象。",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源明确请求三个动作：向前移动、向左转、停止。没有重复、增补或替换动作。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "“先”“再”“然后”给出唯一顺序：先 walk_forward，再 turn，最后 stop。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有任何更正、修改或替换子句，因此无需改变任何先前动作、参数或关系。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "源中无代词、序数引用或省略的参数需要外部解析；停止动作无须参数，其余动作参数均已在该动作子句中给出。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有重复动作或重复次数；三个动作各执行一次，不进行压缩。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "动作关系为线性先后顺序：移动完成后转向，转向完成后停止；没有同时、等待或完成之外的事件。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源未显式保留任何未决的选择、顺序、范围或关系；所有动作、参数和先后关系均已确定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 212,
+        "output_tokens": 251,
+        "total_tokens": 1999
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先向前移动400厘米再向左转45°然后停止",
+    "status": "SUCCESS"
+  }
+}

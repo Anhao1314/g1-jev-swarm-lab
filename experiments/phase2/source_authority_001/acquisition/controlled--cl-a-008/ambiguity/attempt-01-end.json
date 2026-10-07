@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.558401099999173,
+  "provider_document": {
+    "created_at": 1791360317,
+    "id": "resp_5cbb5e84-0036-4959-be52-f9c1bc1a0371",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_5cbb5e84-0036-4959-be52-f9c1bc1a0371",
+        "reasoning_content": "We need answer JSON only. Need inspect source \"立即停止\" means \"immediately stop\". Need decide dimensions. Source one action stop with temporal relation immediately? Legal action stop no params. \"立即\" adverb immediate, urgency. Does it create ambiguity? Temporal relation \"immediately\" perhaps timing, but for stop action, it's an immediate execution; linear plan starts now? Need determine unique. Is \"立即\" a temporal relation requiring before/after? It probably modifies stop as immediate, no timing event invented. The mission IR can represent stop as s1. \"立即\" doesn't add unresolved relation. All dimensions? action_multiplicity: one action stop. action_order: single action, order trivial. correction_scope: no edit. repetition_scope: no repetition. reference_resolution: no pronouns. temporal_relations: immediate stop; single linear order, no waiting/completion relation. Is \"立即\" vague timing? \"immediately\" is immediate, executable as first/now. Legal stop has no parameters. Could there be ambiguity that \"立即停止\" could mean stop immediately, but stop action itself no duration. Unique. unresolved_relations: none.\n\nNeed coverage list. Need text values concatenated equal entire source exactly. Source \"立即停止\". We can split into \"立即\" and \"停止\" or whole. Need every action relation editing considered. Better split: \"立即\" role RELATION? It is temporal modifier. \"停止\" role ACTION. Concatenate exactly \"立即停止\". Explanations nonempty.\n\nstatus AUTHORIZED_UNIQUE? Need consider if \"立即\" as explicit vague duration? No, not duration. Legal semantics: stop has no parameters. \"立即\" = immediately, temporal relation, can be honored as immediate execution. Single linear plan. So UNIQUE.\n\nBut gate says if source explicitly leaves relation unresolved cannot authorize. Here no unresolved.\n\nNeed output JSON exactly keys status, coverage, dimensions. Ensure dimensions exactly seven names. status maybe AUTHORIZED_UNIQUE. coverage nonempty. explanations.\n\nNeed be careful: \"AUTHORIZED_UNIQUE only if all seven dimensions UNIQUE and entire source supports one legal interpretation.\" We think yes.\n\nLet's craft.\n\nDimensions:\n- action_multiplicity: UNIQUE, one requested action: stop.\n- action_order: UNIQUE, single action, no ordering alternatives.\n- correction_scope: UNIQUE, no corrective/edit clause.\n- repetition_scope: UNIQUE, no repetition.\n- reference_resolution: UNIQUE, no pronouns/ordinals/shared args.\n- temporal_relations: UNIQUE, \"立即\" specifies immediate execution, can be represented as first/only step with no invented wait. It does not require a separate event.\n- unresolved_relations: UNIQUE, no explicitly unresolved choice/scope/order.\n\nCoverage: two objects:\ntext \"立即\", role RELATION, explanation: temporal modifier requiring immediate execution; does not add action or unresolved timing.\ntext \"停止\", role ACTION, explanation: sole legal stop action, no params, can be sole step s1.\n\nConcatenation matches.\n\nNeed no markdown. Ensure JSON valid with Chinese characters. final.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source \"立即停止\" means \"immediately stop\". Need decide dimensions. Source one action stop with temporal relation immediately? Legal action stop no params. \"立即\" adverb immediate, urgency. Does it create ambiguity? Temporal relation \"immediately\" perhaps timing, but for stop action, it's an immediate execution; linear plan starts now? Need determine unique. Is \"立即\" a temporal relation requiring before/after? It probably modifies stop as immediate, no timing event invented. The mission IR can represent stop as s1. \"立即\" doesn't add unresolved relation. All dimensions? action_multiplicity: one action stop. action_order: single action, order trivial. correction_scope: no edit. repetition_scope: no repetition. reference_resolution: no pronouns. temporal_relations: immediate stop; single linear order, no waiting/completion relation. Is \"立即\" vague timing? \"immediately\" is immediate, executable as first/now. Legal stop has no parameters. Could there be ambiguity that \"立即停止\" could mean stop immediately, but stop action itself no duration. Unique. unresolved_relations: none.\n\nNeed coverage list. Need text values concatenated equal entire source exactly. Source \"立即停止\". We can split into \"立即\" and \"停止\" or whole. Need every action relation editing considered. Better split: \"立即\" role RELATION? It is temporal modifier. \"停止\" role ACTION. Concatenate exactly \"立即停止\". Explanations nonempty.\n\nstatus AUTHORIZED_UNIQUE? Need consider if \"立即\" as explicit vague duration? No, not duration. Legal semantics: stop has no parameters. \"立即\" = immediately, temporal relation, can be honored as immediate execution. Single linear plan. So UNIQUE.\n\nBut gate says if source explicitly leaves relation unresolved cannot authorize. Here no unresolved.\n\nNeed output JSON exactly keys status, coverage, dimensions. Ensure dimensions exactly seven names. status maybe AUTHORIZED_UNIQUE. coverage nonempty. explanations.\n\nNeed be careful: \"AUTHORIZED_UNIQUE only if all seven dimensions UNIQUE and entire source supports one legal interpretation.\" We think yes.\n\nLet's craft.\n\nDimensions:\n- action_multiplicity: UNIQUE, one requested action: stop.\n- action_order: UNIQUE, single action, no ordering alternatives.\n- correction_scope: UNIQUE, no corrective/edit clause.\n- repetition_scope: UNIQUE, no repetition.\n- reference_resolution: UNIQUE, no pronouns/ordinals/shared args.\n- temporal_relations: UNIQUE, \"立即\" specifies immediate execution, can be represented as first/only step with no invented wait. It does not require a separate event.\n- unresolved_relations: UNIQUE, no explicitly unresolved choice/scope/order.\n\nCoverage: two objects:\ntext \"立即\", role RELATION, explanation: temporal modifier requiring immediate execution; does not add action or unresolved timing.\ntext \"停止\", role ACTION, explanation: sole legal stop action, no params, can be sole step s1.\n\nConcatenation matches.\n\nNeed no markdown. Ensure JSON valid with Chinese characters. final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Temporal modifier meaning immediately; it requires the stop to be executed without delay. It does not introduce a separate action, a duration parameter, or an unresolved ordering relation, and it can be represented by placing the single stop step first.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"The sole requested action is stop. stop is a legal parameterless action and can be represented as the only step, s1, in a linear Mission IR plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: 停止. The preceding 立即 modifies timing and does not add another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is only one action, the execution order is trivially unique: stop as the sole step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or scope-changing clause.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition clause, so no span is repeated and no repetition scope must be resolved.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no pronouns, ordinals, omitted shared arguments, or references to earlier commands that require resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"立即 specifies immediate execution of 停止. This can be honored as the single stop step with no waiting, delay, simultaneous events, or completion relation requiring additional timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. It authorizes one legal reading: perform stop immediately.\"}}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_5cbb5e84-0036-4959-be52-f9c1bc1a0371",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 138,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1029,
+      "output_tokens_details": {
+        "reasoning_tokens": 642
+      },
+      "total_tokens": 1935
+    }
+  },
+  "request_sha256": "d6eaa0afbb3119b213b37b3501dea162f138dc49c658f3d7ecacc19acc7b46f9",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 16.655243600000176,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_bcb00f73-3aed-4990-8f52-5c9cec2d0ccb",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右边九十度\",\"role\":\"ACTION\",\"explanation\":\"First commanded turn: right 90 degrees. Under the turn semantics, right/clockwise is negative, so this authorizes turn step s1 with angle_deg -90.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first turn command from the second; it adds no action or timing.\"},{\"text\":\"左边九十度\",\"role\":\"ACTION\",\"explanation\":\"Second commanded turn: left 90 degrees. Under the turn semantics, left/counterclockwise is positive, so this authorizes turn step s2 with angle_deg 90.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the second turn command from the final stop; it adds no action or timing.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following stop as the final action after the two turns.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Final stop command, authorizing stop step s3 with empty parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it does not alter the plan.\"},{\"text\":\"是依次转\",\"role\":\"RELATION\",\"explanation\":\"Explicitly states that the turns are performed one after another in sequence, resolving the execution relation as sequential rather than simultaneous or optional.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the sequential-turn clarification from the contrast clause; it adds no action.\"},{\"text\":\"不是两个选一个\",\"role\":\"RELATION\",\"explanation\":\"Explicitly rejects choosing only one of the two turns; it confirms that both turn actions must be executed in order, not as alternatives.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final punctuation; it does not add or change any action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source names exactly two turn actions, right 90 and left 90, plus a final stop. The clause 不是两个选一个 explicitly denies selecting only one of the two turns, so all three actions must be included.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by the text: 右边九十度, then 左边九十度, then 最后停. 是依次转 confirms the two turns occur sequentially, and 最后 places stop last.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit or replacement of a prior action. 不是两个选一个 is a clarification that rules out an alternative interpretation; it preserves both turn actions rather than changing either one.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. 依次 means sequential order, not repeated execution, so the plan contains each of the two turns exactly once followed by one stop.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"两个 in 不是两个选一个 refers to the two turn commands, 右边九十度 and 左边九十度. 最后 refers to the following 停. No external or missing referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is sequential completion: right turn, then left turn, then stop. There is no wait, simultaneity, or conditional timing, and this is representable as a linear chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source's potential unresolved choice between two turns is explicitly negated by 不是两个选一个, and 是依次转 supplies the sequence relation. No explicit unresolved relation remains.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]}",
+  "usage": {
+    "input_tokens": 381,
+    "output_tokens": 3556,
+    "total_tokens": 4833
+  }
+}

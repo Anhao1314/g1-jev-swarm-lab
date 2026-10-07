@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 2.303900099999737,
+  "provider_document": {
+    "created_at": 1791360124,
+    "id": "resp_482c6ae8-d91a-43da-a802-9ebb9e61bf9c",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_482c6ae8-d91a-43da-a802-9ebb9e61bf9c",
+        "reasoning_content": "We need answer JSON only. Need parse Chinese command. Need produce Mission IR.\n\nUser: 麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\n\nSteps:\n1 turn angle_deg +30 (逆时针 positive)\n2 walk_forward distance_m 6.0 (m meters)\n3 turn angle_deg -30 (顺时针 negative)\n4 stop {}\n\ndependencies: s2 depends s1, s3 depends s2, s4 depends s3. mission_id path-safe. Need exactly schema etc. Status SUCCESS.\n\nNeed ensure no extra fields. mission_id e.g. \"turn-walk-turn-stop\". Valid. Let's output JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse Chinese command. Need produce Mission IR.\n\nUser: 麻烦先逆时针转30度，接着向前移动6m，再顺时针转30度，最后停止\n\nSteps:\n1 turn angle_deg +30 (逆时针 positive)\n2 walk_forward distance_m 6.0 (m meters)\n3 turn angle_deg -30 (顺时针 negative)\n4 stop {}\n\ndependencies: s2 depends s1, s3 depends s2, s4 depends s3. mission_id path-safe. Need exactly schema etc. Status SUCCESS.\n\nNeed ensure no extra fields. mission_id e.g. \"turn-walk-turn-stop\". Valid. Let's output JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_482c6ae8-d91a-43da-a802-9ebb9e61bf9c",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 221,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 289,
+      "output_tokens_details": {
+        "reasoning_tokens": 144
+      },
+      "total_tokens": 2046
+    }
+  },
+  "request_sha256": "274e0a2219de6d384699a81ee33cacc0ceac27f8f1f1187f16ac05c41e243a41",
+  "status": "SUCCESS"
+}

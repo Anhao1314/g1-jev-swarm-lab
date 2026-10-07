@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 6.870552399999724,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.86509020000085,
+        "provider_document": {
+          "created_at": 1791359986,
+          "id": "resp_cca43ce3-a1e2-4258-a3e5-47c44a32e8a1",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_cca43ce3-a1e2-4258-a3e5-47c44a32e8a1",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source \"请向右转30度\". Need decide dimensions. It means \"Please turn right 30 degrees\". Action turn, angle -30 (right/clockwise negative). Single action, unique order, no corrections/repetition/reference/temporal relations unresolved. Legal: turn requires nonzero finite angle, right negative. angle 30 within 180. So AUTHORIZED_UNIQUE.\n\nNeed coverage split source into meaningful spans, concatenation exactly original. Source: \"请向右转30度\". We can split e.g. \"请\" role CONTEXT? \"向右转30度\" ACTION? Need every action relation editing clause considered. Text values concat equals entire source exactly. Could split \"请\" and \"向右转30度\". Need explanations nonempty. Or single span \"请向右转30度\" ACTION. But coverage should split meaningful spans. Entire source one span acceptable? It says split source into meaningful spans so every action considered. Could have one object text \"请向右转30度\" role ACTION. Explanation meaning. That's fine, concatenation equals entire source. But maybe include QUANTITY \"30度\" separate. Need preserve whitespace punctuation. If split into \"请向右转\" and \"30度\", text concat exactly. But \"向右转\" maybe ACTION, \"30度\" QUANTITY. What about \"请\"? Could be CONTEXT. Let's do three maybe: \"请\" CONTEXT, \"向右转\" ACTION, \"30度\" QUANTITY. Concatenation exact: 请 + 向右转 + 30度 = 请向右转30度. Good. Explanation:\n- 请: politeness marker, no executable action, does not modify authority.\n- 向右转: action turn with direction right/clockwise; alone specifies direction but angle in next quantity.\n- 30度: magnitude 30 degrees; combined with right yields angle -30 degrees finite nonzero within bounds.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action turn; no other actions, no repeated/edited.\naction_order UNIQUE: only one action so order trivial. Need mention no temporal ordering alternatives.\ncorrection_scope UNIQUE: no edit/correction clause; nothing to replace/preserve.\nrepetition_scope UNIQUE: no repetition; occurs once.\nreference_resolution UNIQUE: no pronouns/ordinals/omitted args? Direction right and angle explicit. \"请\" no referent. Maybe omitted? turn direction explicit and angle explicit. Unique.\ntemporal_relations UNIQUE: no before/after/simultaneity/waiting; single action linear.\nunresolved_relations UNIQUE: no explicit unresolved relation. Right maps to negative per rule. Need be careful: \"向右转30度\" could be \"turn right 30 degrees\" yes. Legal. status AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object no markdown. Ensure keys exactly status, coverage, dimensions. Each coverage object exactly text, role, explanation. Dimensions object exactly seven names. Good.\n\nNeed maybe \"right\" positive? Rules: left/counterclockwise positive, right/clockwise negative. So angle_deg = -30. Fine.\n\nNeed legal source supports one legal interpretation. Yes.\n\nNeed maybe note \"请\" not executable.\n\nLet's craft. Need exact text copying. Source JSON had no escaping? \"请向右转30度\". Fine.\n\nFinal.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source \"请向右转30度\". Need decide dimensions. It means \"Please turn right 30 degrees\". Action turn, angle -30 (right/clockwise negative). Single action, unique order, no corrections/repetition/reference/temporal relations unresolved. Legal: turn requires nonzero finite angle, right negative. angle 30 within 180. So AUTHORIZED_UNIQUE.\n\nNeed coverage split source into meaningful spans, concatenation exactly original. Source: \"请向右转30度\". We can split e.g. \"请\" role CONTEXT? \"向右转30度\" ACTION? Need every action relation editing clause considered. Text values concat equals entire source exactly. Could split \"请\" and \"向右转30度\". Need explanations nonempty. Or single span \"请向右转30度\" ACTION. But coverage should split meaningful spans. Entire source one span acceptable? It says split source into meaningful spans so every action considered. Could have one object text \"请向右转30度\" role ACTION. Explanation meaning. That's fine, concatenation equals entire source. But maybe include QUANTITY \"30度\" separate. Need preserve whitespace punctuation. If split into \"请向右转\" and \"30度\", text concat exactly. But \"向右转\" maybe ACTION, \"30度\" QUANTITY. What about \"请\"? Could be CONTEXT. Let's do three maybe: \"请\" CONTEXT, \"向右转\" ACTION, \"30度\" QUANTITY. Concatenation exact: 请 + 向右转 + 30度 = 请向右转30度. Good. Explanation:\n- 请: politeness marker, no executable action, does not modify authority.\n- 向右转: action turn with direction right/clockwise; alone specifies direction but angle in next quantity.\n- 30度: magnitude 30 degrees; combined with right yields angle -30 degrees finite nonzero within bounds.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one action turn; no other actions, no repeated/edited.\naction_order UNIQUE: only one action so order trivial. Need mention no temporal ordering alternatives.\ncorrection_scope UNIQUE: no edit/correction clause; nothing to replace/preserve.\nrepetition_scope UNIQUE: no repetition; occurs once.\nreference_resolution UNIQUE: no pronouns/ordinals/omitted args? Direction right and angle explicit. \"请\" no referent. Maybe omitted? turn direction explicit and angle explicit. Unique.\ntemporal_relations UNIQUE: no before/after/simultaneity/waiting; single action linear.\nunresolved_relations UNIQUE: no explicit unresolved relation. Right maps to negative per rule. Need be careful: \"向右转30度\" could be \"turn right 30 degrees\" yes. Legal. status AUTHORIZED_UNIQUE.\n\nNeed output exactly JSON object no markdown. Ensure keys exactly status, coverage, dimensions. Each coverage object exactly text, role, explanation. Dimensions object exactly seven names. Good.\n\nNeed maybe \"right\" positive? Rules: left/counterclockwise positive, right/clockwise negative. So angle_deg = -30. Fine.\n\nNeed legal source supports one legal interpretation. Yes.\n\nNeed maybe note \"请\" not executable.\n\nLet's craft. Need exact text copying. Source JSON had no escaping? \"请向右转30度\". Fine.\n\nFinal.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker introducing a request; it does not add, remove, or reorder any executable action and does not modify the authority of the following turn command.\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action with direction 'right'. Under the given semantics, right/clockwise is represented as a negative angle, so this span contributes the action type turn and the sign of the angle.\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 30 degrees. Combined with '向右转', this yields a single turn action with angle_deg = -30, which is nonzero, finite, and within the 180-degree legality bound.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: a turn. There is no additional action, repeated action, or edited action to account for.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is only one action, there is exactly one execution order with no competing possible orders.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement clause appears; nothing is changed or preserved relative to a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated; the single turn action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The command explicitly supplies both the direction 'right' and the angle '30 degrees'. There are no pronouns, ordinals, or omitted shared arguments requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, order, or relationship unresolved. '向右转30度' resolves uniquely to one turn with angle_deg = -30.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_cca43ce3-a1e2-4258-a3e5-47c44a32e8a1",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 141,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1157,
+            "output_tokens_details": {
+              "reasoning_tokens": 705
+            },
+            "total_tokens": 2066
+          }
+        },
+        "request_sha256": "e1babad09bf05736b1e59d3f4c447d12a619058829c986bf2cd8ab9dce9842e4",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.863716800002294,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_cca43ce3-a1e2-4258-a3e5-47c44a32e8a1",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker introducing a request; it does not add, remove, or reorder any executable action and does not modify the authority of the following turn command.\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action with direction 'right'. Under the given semantics, right/clockwise is represented as a negative angle, so this span contributes the action type turn and the sign of the angle.\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 30 degrees. Combined with '向右转', this yields a single turn action with angle_deg = -30, which is nonzero, finite, and within the 180-degree legality bound.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: a turn. There is no additional action, repeated action, or edited action to account for.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is only one action, there is exactly one execution order with no competing possible orders.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement clause appears; nothing is changed or preserved relative to a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated; the single turn action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The command explicitly supplies both the direction 'right' and the angle '30 degrees'. There are no pronouns, ordinals, or omitted shared arguments requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, order, or relationship unresolved. '向右转30度' resolves uniquely to one turn with angle_deg = -30.\"}}}",
+        "usage": {
+          "input_tokens": 141,
+          "output_tokens": 1157,
+          "total_tokens": 2066
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.6618307000026107,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-right-30",
+      "model": "deepseek-flash",
+      "normalized_length": 7,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-right-30\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "cea4360c3971b4bc1c5c7a8411c02a25a7853b9682f9948a77baf78761537ce8",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_7d6724bb-2f55-4bfa-af94-70edc9cc4adb",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 6.869920099998126,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 6.863716800002294,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker introducing a request; it does not add, remove, or reorder any executable action and does not modify the authority of the following turn command.\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action with direction 'right'. Under the given semantics, right/clockwise is represented as a negative angle, so this span contributes the action type turn and the sign of the angle.\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 30 degrees. Combined with '向右转', this yields a single turn action with angle_deg = -30, which is nonzero, finite, and within the 180-degree legality bound.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: a turn. There is no additional action, repeated action, or edited action to account for.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is only one action, there is exactly one execution order with no competing possible orders.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit, correction, or replacement clause appears; nothing is changed or preserved relative to a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is stated; the single turn action occurs once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The command explicitly supplies both the direction 'right' and the angle '30 degrees'. There are no pronouns, ordinals, or omitted shared arguments requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, order, or relationship unresolved. '向右转30度' resolves uniquely to one turn with angle_deg = -30.\"}}}",
+          "raw_response_sha256": "5a4adf284e5ff67a2ca2cc9997b39a70adc19cf67601d177c2ce7170a7292c53",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_cca43ce3-a1e2-4258-a3e5-47c44a32e8a1",
+          "source_aware": false,
+          "source_sha256": "125f7b3abedf43b7aae23da1396365e7fcf7ddce07e6dcd79aaabc6a673647b3",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 141,
+            "output_tokens": 1157,
+            "total_tokens": 2066
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Politeness marker introducing a request; it does not add, remove, or reorder any executable action and does not modify the authority of the following turn command.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Requests one turn action with direction 'right'. Under the given semantics, right/clockwise is represented as a negative angle, so this span contributes the action type turn and the sign of the angle.",
+                "role": "ACTION",
+                "text": "向右转"
+              },
+              {
+                "explanation": "Specifies the turn magnitude as 30 degrees. Combined with '向右转', this yields a single turn action with angle_deg = -30, which is nonzero, finite, and within the 180-degree legality bound.",
+                "role": "QUANTITY",
+                "text": "30度"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one requested action: a turn. There is no additional action, repeated action, or edited action to account for.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Because there is only one action, there is exactly one execution order with no competing possible orders.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No edit, correction, or replacement clause appears; nothing is changed or preserved relative to a prior instruction.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The command explicitly supplies both the direction 'right' and the angle '30 degrees'. There are no pronouns, ordinals, or omitted shared arguments requiring resolution.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition is stated; the single turn action occurs once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, simultaneous, waiting, or completion relation is stated. The single action is representable as one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, order, or relationship unresolved. '向右转30度' resolves uniquely to one turn with angle_deg = -30.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 119,
+        "total_tokens": 1859
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-right-30",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "请向右转30度",
+    "status": "SUCCESS"
+  }
+}

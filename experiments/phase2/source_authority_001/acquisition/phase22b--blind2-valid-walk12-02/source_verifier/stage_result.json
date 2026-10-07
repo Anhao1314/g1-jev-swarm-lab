@@ -1,0 +1,261 @@
+{
+  "added_wall_s": 8.420849300000555,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.417558599998301,
+        "provider_document": {
+          "created_at": 1791359936,
+          "id": "resp_b648a451-3fa0-4d1e-88cc-40b4979f900d",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_b648a451-3fa0-4d1e-88cc-40b4979f900d",
+              "reasoning_content": "We need answer JSON only. Need analyze source. Source Chinese: \"帮我往前走十二米\" = help me walk forward 12 meters. Candidate walk_forward distance 12.0.\n\nNeed derive plan. Skills legal. Action: walk_forward forward. Distance \"十二米\" 12 meters. No duration etc. One action. Unique. Need coverage entire source exact. Split meaningful spans. Need dimensions seven. authorized_plan list one step id s1 skill walk_forward params distance_m 12.0 depends_on [].\n\nNeed ensure source \"帮我往前走十二米\". Coverage text concatenated exactly entire source. We can split as perhaps \"帮我\" context, \"往前走\" action, \"十二米\" quantity. Need exact punctuation none. Roles CONTEXT, ACTION, QUANTITY. Explanation nonempty. But coverage concatenation must equal entire original. We can split into three spans: \"帮我\", \"往前走\", \"十二米\". That concatenates exactly. Need maybe \"帮我\" is context/politeness/imperative, doesn't alter plan. \"往前走\" action walk_forward forward. \"十二米\" distance. Good.\n\nNeed dimensions:\naction_multiplicity UNIQUE: exactly one requested action walk forward; no edits/repetitions.\naction_order UNIQUE: single action, linear order s1.\ncorrection_scope UNIQUE: no corrections/edits in source; not applicable.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/ordinal/shared omitted args except implicit agent \"帮我\"; action direction/distance explicit. Need maybe \"我\" is user, not robot? \"帮我往前走\" means help me walk forward; robot should walk forward? The source phrase addressed to robot; action by assistant? The action is walk_forward. Reference to \"我\" maybe context not argument. Unique enough. No unresolved.\ntemporal_relations UNIQUE: no timing relations; single immediate action. Could \"帮我\" no temporal. Single linear.\nunresolved_relations UNIQUE: no explicit unresolved choice.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan as above.\n\nNeed output exactly JSON object, no markdown. Ensure coverage explanation for each span. Need mention nonexecuting text. For \"帮我\": CONTEXT, polite/imperative request, does not add skill/step/timing. For \"往前走\": ACTION, denotes forward walking, maps walk_forward. For \"十二米\": QUANTITY, distance 12 meters, maps distance_m=12.0. Need maybe \"十二\" and \"米\" split? If split, need roles. But simpler three spans. \"十二米\" exact. It is quantity, all. Good.\n\nNeed dimensions names exactly as specified: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed no extra fields. Use status etc.\n\nNeed authorized_plan null? No. For AUTHORIZED_UNIQUE complete list.\n\nPotential issue: \"帮我往前走十二米\" means \"Help me walk forward 12 meters\" Could be interpreted as request for assistance, not necessarily robot walking? But in IR skills context, action is walk_forward. The phrase \"往前走\" is imperative \"walk forward\"; \"帮我\" politeness. Good.\n\nPotential issue: \"十二米\" Chinese number 12. Yes.\n\nNeed numbers finite JSON. 12.0.\n\nNeed depends_on [].\n\nNeed ensure coverage text values concatenate exactly. Let's create:\n[\n{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request frame addressed to the agent; it adds no executable action, parameter, order, repetition, or correction.\"},\n{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward-walking action; authorizes exactly one walk_forward step with no other skill.\"},\n{\"text\":\"十二米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the forward walking distance as 12 meters, so distance_m is 12.0.\"}\n]\nConcatenate: 帮我往前走十二米. Good.\n\nNeed action_order explanation: Single action yields one executable order s1; no multiple actions to order. Actually \"往前走\" is one action. Unique.\n\nReference resolution: \"我\" in 帮我? The object \"我\" maybe speaker. It doesn't resolve to robot? Hmm \"帮我往前走\" literally \"help me walk forward\" maybe \"walk forward for me\". It could imply robot walks forward. In Chinese commands, 帮我 + verb often means \"do [verb] for me\", not joint action. The robot action is walk_forward. There is no pronoun reference affecting parameters. Unique. Explain \"我\" is requester context, not a step target or shared parameter; no ordinal or omitted arguments.\n\nTemporal relations: no before/after/wait/completion. Single linear plan.\n\nUnresolved: none.\n\nNeed mention correction_scope: no edit terms such as 改成/不是/而是/另外 etc. Inapplicable. Repetition: no 再/又/重复/连续 etc. Unique.\n\nShould status be AUTHORIZED_UNIQUE even though candidate matches. Yes.\n\nNeed output exactly one JSON object. No markdown. Ensure valid JSON. Use unicode Chinese. Good.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source. Source Chinese: \"帮我往前走十二米\" = help me walk forward 12 meters. Candidate walk_forward distance 12.0.\n\nNeed derive plan. Skills legal. Action: walk_forward forward. Distance \"十二米\" 12 meters. No duration etc. One action. Unique. Need coverage entire source exact. Split meaningful spans. Need dimensions seven. authorized_plan list one step id s1 skill walk_forward params distance_m 12.0 depends_on [].\n\nNeed ensure source \"帮我往前走十二米\". Coverage text concatenated exactly entire source. We can split as perhaps \"帮我\" context, \"往前走\" action, \"十二米\" quantity. Need exact punctuation none. Roles CONTEXT, ACTION, QUANTITY. Explanation nonempty. But coverage concatenation must equal entire original. We can split into three spans: \"帮我\", \"往前走\", \"十二米\". That concatenates exactly. Need maybe \"帮我\" is context/politeness/imperative, doesn't alter plan. \"往前走\" action walk_forward forward. \"十二米\" distance. Good.\n\nNeed dimensions:\naction_multiplicity UNIQUE: exactly one requested action walk forward; no edits/repetitions.\naction_order UNIQUE: single action, linear order s1.\ncorrection_scope UNIQUE: no corrections/edits in source; not applicable.\nrepetition_scope UNIQUE: no repetition.\nreference_resolution UNIQUE: no pronouns/ordinal/shared omitted args except implicit agent \"帮我\"; action direction/distance explicit. Need maybe \"我\" is user, not robot? \"帮我往前走\" means help me walk forward; robot should walk forward? The source phrase addressed to robot; action by assistant? The action is walk_forward. Reference to \"我\" maybe context not argument. Unique enough. No unresolved.\ntemporal_relations UNIQUE: no timing relations; single immediate action. Could \"帮我\" no temporal. Single linear.\nunresolved_relations UNIQUE: no explicit unresolved choice.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan as above.\n\nNeed output exactly JSON object, no markdown. Ensure coverage explanation for each span. Need mention nonexecuting text. For \"帮我\": CONTEXT, polite/imperative request, does not add skill/step/timing. For \"往前走\": ACTION, denotes forward walking, maps walk_forward. For \"十二米\": QUANTITY, distance 12 meters, maps distance_m=12.0. Need maybe \"十二\" and \"米\" split? If split, need roles. But simpler three spans. \"十二米\" exact. It is quantity, all. Good.\n\nNeed dimensions names exactly as specified: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed no extra fields. Use status etc.\n\nNeed authorized_plan null? No. For AUTHORIZED_UNIQUE complete list.\n\nPotential issue: \"帮我往前走十二米\" means \"Help me walk forward 12 meters\" Could be interpreted as request for assistance, not necessarily robot walking? But in IR skills context, action is walk_forward. The phrase \"往前走\" is imperative \"walk forward\"; \"帮我\" politeness. Good.\n\nPotential issue: \"十二米\" Chinese number 12. Yes.\n\nNeed numbers finite JSON. 12.0.\n\nNeed depends_on [].\n\nNeed ensure coverage text values concatenate exactly. Let's create:\n[\n{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request frame addressed to the agent; it adds no executable action, parameter, order, repetition, or correction.\"},\n{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward-walking action; authorizes exactly one walk_forward step with no other skill.\"},\n{\"text\":\"十二米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the forward walking distance as 12 meters, so distance_m is 12.0.\"}\n]\nConcatenate: 帮我往前走十二米. Good.\n\nNeed action_order explanation: Single action yields one executable order s1; no multiple actions to order. Actually \"往前走\" is one action. Unique.\n\nReference resolution: \"我\" in 帮我? The object \"我\" maybe speaker. It doesn't resolve to robot? Hmm \"帮我往前走\" literally \"help me walk forward\" maybe \"walk forward for me\". It could imply robot walks forward. In Chinese commands, 帮我 + verb often means \"do [verb] for me\", not joint action. The robot action is walk_forward. There is no pronoun reference affecting parameters. Unique. Explain \"我\" is requester context, not a step target or shared parameter; no ordinal or omitted arguments.\n\nTemporal relations: no before/after/wait/completion. Single linear plan.\n\nUnresolved: none.\n\nNeed mention correction_scope: no edit terms such as 改成/不是/而是/另外 etc. Inapplicable. Repetition: no 再/又/重复/连续 etc. Unique.\n\nShould status be AUTHORIZED_UNIQUE even though candidate matches. Yes.\n\nNeed output exactly one JSON object. No markdown. Ensure valid JSON. Use unicode Chinese. Good.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request frame addressed to the agent; it adds no executable action, parameter, order, repetition, or correction.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward-walking action; authorizes exactly one walk_forward step with no other skill.\"},{\"text\":\"十二米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the forward walking distance as 12 meters, so distance_m is 12.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: walking forward. There is no additional action, replacement, or repetition.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is exactly one requested action, the execution order is uniquely the single step s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit or correction clause, so there is no earlier instruction to replace or preserve.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repeated span; the action is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The only referential wording is the polite '帮我', which identifies the requester context and does not create a step target, ordinal reference, or unresolved shared argument.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated; the single action has a simple linear execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, scope, order, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":12.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_b648a451-3fa0-4d1e-88cc-40b4979f900d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 187,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1501,
+            "output_tokens_details": {
+              "reasoning_tokens": 1089
+            },
+            "total_tokens": 2712
+          }
+        },
+        "request_sha256": "5e6cc70b54b8179ff103cd292f1b62c750f73223351132608b00ea17e61e291c",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.415985899999214,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_b648a451-3fa0-4d1e-88cc-40b4979f900d",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request frame addressed to the agent; it adds no executable action, parameter, order, repetition, or correction.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward-walking action; authorizes exactly one walk_forward step with no other skill.\"},{\"text\":\"十二米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the forward walking distance as 12 meters, so distance_m is 12.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: walking forward. There is no additional action, replacement, or repetition.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is exactly one requested action, the execution order is uniquely the single step s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit or correction clause, so there is no earlier instruction to replace or preserve.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repeated span; the action is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The only referential wording is the polite '帮我', which identifies the requester context and does not create a step target, ordinal reference, or unresolved shared argument.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated; the single action has a simple linear execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, scope, order, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":12.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 187,
+          "output_tokens": 1501,
+          "total_tokens": 2712
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.6200793999996677,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk-forward-12m",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk-forward-12m\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":12.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "7c0238f13556f08ea27b0d8356bbf48facb94c11d8767998663ee8ba57c4bb6b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_9fb85c25-7a03-4b2a-ac82-ff5d231aaccf",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.420208999999886,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 8.415985899999214,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request frame addressed to the agent; it adds no executable action, parameter, order, repetition, or correction.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Imperative forward-walking action; authorizes exactly one walk_forward step with no other skill.\"},{\"text\":\"十二米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the forward walking distance as 12 meters, so distance_m is 12.0.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: walking forward. There is no additional action, replacement, or repetition.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Because there is exactly one requested action, the execution order is uniquely the single step s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit or correction clause, so there is no earlier instruction to replace or preserve.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or repeated span; the action is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The only referential wording is the polite '帮我', which identifies the requester context and does not create a step target, ordinal reference, or unresolved shared argument.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, simultaneous, or completion relation is stated; the single action has a simple linear execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any action, parameter, scope, order, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":12.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "df8ced763a4e7742fe9cdde3a1d90f671ac4dd5f6fb4dd9e5c32ede5b46250c0",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_b648a451-3fa0-4d1e-88cc-40b4979f900d",
+          "source_aware": true,
+          "source_sha256": "c85b7238b094eb01f0d68569ef85ef7cc2e8c77ba505dc46bd4b4237d90102af",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 187,
+            "output_tokens": 1501,
+            "total_tokens": 2712
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 12.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Polite request frame addressed to the agent; it adds no executable action, parameter, order, repetition, or correction.",
+                "role": "CONTEXT",
+                "text": "帮我"
+              },
+              {
+                "explanation": "Imperative forward-walking action; authorizes exactly one walk_forward step with no other skill.",
+                "role": "ACTION",
+                "text": "往前走"
+              },
+              {
+                "explanation": "Specifies the forward walking distance as 12 meters, so distance_m is 12.0.",
+                "role": "QUANTITY",
+                "text": "十二米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: walking forward. There is no additional action, replacement, or repetition.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Because there is exactly one requested action, the execution order is uniquely the single step s1.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no edit or correction clause, so there is no earlier instruction to replace or preserve.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The only referential wording is the polite '帮我', which identifies the requester context and does not create a step target, ordinal reference, or unresolved shared argument.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker or repeated span; the action is requested once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, waiting, simultaneous, or completion relation is stated; the single action has a simple linear execution.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any action, parameter, scope, order, or relation unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 151,
+        "total_tokens": 1890
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk-forward-12m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 12.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "帮我往前走十二米",
+    "status": "SUCCESS"
+  }
+}

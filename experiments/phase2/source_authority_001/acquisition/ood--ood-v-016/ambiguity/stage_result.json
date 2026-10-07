@@ -1,0 +1,294 @@
+{
+  "added_wall_s": 12.030260499999713,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.025714600000356,
+        "provider_document": {
+          "created_at": 1791359255,
+          "id": "resp_6cfcc920-8058-4e17-8c82-b535eb897652",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_6cfcc920-8058-4e17-8c82-b535eb897652",
+              "reasoning_content": "We need answer JSON only. Need inspect source. Source: \"先站五秒→向前走二十米→停。箭头就代表先后。\"\n\nNeed decide status. Need split coverage exactly concatenated. Need dimensions seven.\n\nSource Chinese: \"先站五秒→向前走二十米→停。箭头就代表先后。\"\n\nActions: stand five seconds, walk forward 20 meters, stop. Order indicated by arrows and sentence \"箭头就代表先后\" meaning arrows represent sequence/order. Seems unique. Need consider action_multiplicity: three actions. action_order: exact order stand then walk then stop. correction_scope: none. repetition_scope: none. reference_resolution: none? pronoun? \"箭头\" refers to arrows in source. Good. temporal_relations: \"先\" first, arrows sequence. There is \"先站五秒\" means first stand five seconds. Then walk, then stop. Linear. unresolved none.\n\nNeed check legality: stand duration 5 positive finite <=60. walk_forward 20 m positive finite. stop no params. Max steps 3 <=32. Unique.\n\nNeed produce coverage with text values concatenated equal entire source exactly. Need split meaningful spans. Since source includes no spaces? \"先站五秒→向前走二十米→停。箭头就代表先后。\" We need preserve punctuation.\n\nWe can split:\n1 \"先站五秒\" ACTION? includes 先 and action. Role maybe ACTION or RELATION? It includes temporal marker. Could be ACTION with explanation includes first. \n2 \"→\" SEPARATOR\n3 \"向前走二十米\" ACTION\n4 \"→\" SEPARATOR\n5 \"停\" ACTION\n6 \"。\" SEPARATOR?\n7 \"箭头就代表先后\" CONTEXT or RELATION? It defines arrow as precedence. Role RELATION/CONTEXT. \n8 \"。\" SEPARATOR\n\nNeed every action, relation and editing clause considered. \"先\" maybe relation within action. Could separate \"先\" as RELATION, \"站五秒\" ACTION. But then concatenation. Need text values exact. Let's decide coverage detailed.\n\nPossible split:\n- text \"先\" role RELATION: temporal precedence marker indicating the following stand occurs first.\n- text \"站五秒\" role ACTION: stand for 5 seconds.\n- text \"→\" role SEPARATOR: arrow separates sequential steps.\n- text \"向前走二十米\" role ACTION: walk_forward 20 m.\n- text \"→\" role SEPARATOR\n- text \"停\" role ACTION: stop.\n- text \"。\" role SEPARATOR\n- text \"箭头就代表先后\" role RELATION/CONTEXT: declares arrows denote chronological order.\n- text \"。\" role SEPARATOR\n\nBut \"箭头就代表先后\" not an action, it's context/relation. It authorizes arrow semantics. It doesn't modify actions except relation. Is \"箭头\" reference resolved to the arrow symbols in source. Good.\n\nCould include \"先站五秒\" as ACTION and \"→...\" etc. But separating 先 okay. The role of \"先\" as RELATION. Explanation: first. \"站五秒\" action stand 5s.\n\nNeed all dimensions statuses UNIQUE. Explanation nonempty.\n\nNeed maybe mention max 32, bounds okay. No need but can.\n\nNeed be careful: \"箭头就代表先后\" means arrow represents \"先后\" = order/sequence. Does it specify exact order? Combined arrows between expressions. Yes unique.\n\nAction multiplicity: Three actions: stand, walk, stop. No repeated/edited. \"停\" separate stop. \"先\" doesn't add action, just order. Unique.\n\nAction order: stand then walk then stop. Explicit \"先\" and arrows. \"箭头就代表先后\" reinforces. Unique.\n\nCorrection scope: no edit. UNIQUE (inapplicable). Explain no correction words such as 改/不是/而是. \"先\" temporal not correction.\n\nRepetition scope: no repetition. UNIQUE (inapplicable). \"五秒\" quantity not repetition. \"先后\" is order not repeat. Need mention no repeated span.\n\nReference resolution: pronoun? \"箭头\" references the two arrow symbols; \"先后\" refers to sequential order. There are no pronouns like it? \"箭头\" demonstrative? It is noun. It resolves to the arrows in source. \"先\" modifies stand. External missing context? no. Unique.\n\nTemporal relations: exact linear order, stand first with duration 5s, then walk, then stop. Arrows and \"先\" represent before; no simultaneity/wait besides duration. Unique. Need represent linear s1,s2,s3. Good.\n\nUnresolved relations: none explicitly unresolved. No choice. Unique.\n\nNeed output exactly JSON object. Ensure coverage text concatenated equals entire original source. Let's verify string.\n\nOriginal source: 先站五秒→向前走二十米→停。箭头就代表先后。\n\nOur coverage list:\n\"先\"\n\"站五秒\"\n\"→\"\n\"向前走二十米\"\n\"→\"\n\"停\"\n\"。\"\n\"箭头就代表先后\"\n\"。\"\n\nConcatenate: 先站五秒→向前走二十米→停。箭头就代表先后。 Yes matches.\n\nNeed roles. For \"。\" after 停 role SEPARATOR. For final \"。\" SEPARATOR.\n\nCould \"箭头就代表先后\" role RELATION maybe. Explanation: This meta-clause defines the arrow as standing for temporal order, not a new action; it resolves arrows as precedence. Role RELATION.\n\nNeed each explanation nonempty. Good.\n\nPotential issue: \"先\" role RELATION, and \"箭头就代表先后\" relation. Good.\n\nNeed status AUTHORIZED_UNIQUE. But requirement: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and the entire source supports one legal interpretation.\" Yes.\n\nNeed no extra fields. Dimensions exactly names.\n\nLet's craft concise but complete. Need no markdown. Valid JSON. Need quote Chinese. Ensure escaping none.\n\nLet's write.\n\nCheck \"coverage\" nonempty list. Every explanation nonempty.\n\nPotential nuance: \"站五秒\" legal? stand accepts positive finite duration_s, default 2.0 if no duration specified. Here explicit 五秒. Chinese numeral 五 = 5. Need identify as 5 seconds. Positive finite. Good.\n\n\"向前走二十米\" = walk_forward 20 meters. \"向前\" indicates forward direction, \"走\" walk, \"二十米\" distance. Good.\n\n\"停\" stop no params. Good.\n\n\"先\" is temporal. \"箭头就代表先后\" maybe \"先后\" means order (first/last). Good.\n\nNeed maybe mention \"最大步数 3 ≤ 32; stand 5 ≤60; walk distance positive; stop parameterless; no angle.\" Could include in dimension explanation? Not necessary but okay. Could mention in action_multiplicity or temporal.\n\nNo unknown.\n\nLet's ensure JSON valid: all strings double quoted. No trailing commas.\n\nFinal.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source. Source: \"先站五秒→向前走二十米→停。箭头就代表先后。\"\n\nNeed decide status. Need split coverage exactly concatenated. Need dimensions seven.\n\nSource Chinese: \"先站五秒→向前走二十米→停。箭头就代表先后。\"\n\nActions: stand five seconds, walk forward 20 meters, stop. Order indicated by arrows and sentence \"箭头就代表先后\" meaning arrows represent sequence/order. Seems unique. Need consider action_multiplicity: three actions. action_order: exact order stand then walk then stop. correction_scope: none. repetition_scope: none. reference_resolution: none? pronoun? \"箭头\" refers to arrows in source. Good. temporal_relations: \"先\" first, arrows sequence. There is \"先站五秒\" means first stand five seconds. Then walk, then stop. Linear. unresolved none.\n\nNeed check legality: stand duration 5 positive finite <=60. walk_forward 20 m positive finite. stop no params. Max steps 3 <=32. Unique.\n\nNeed produce coverage with text values concatenated equal entire source exactly. Need split meaningful spans. Since source includes no spaces? \"先站五秒→向前走二十米→停。箭头就代表先后。\" We need preserve punctuation.\n\nWe can split:\n1 \"先站五秒\" ACTION? includes 先 and action. Role maybe ACTION or RELATION? It includes temporal marker. Could be ACTION with explanation includes first. \n2 \"→\" SEPARATOR\n3 \"向前走二十米\" ACTION\n4 \"→\" SEPARATOR\n5 \"停\" ACTION\n6 \"。\" SEPARATOR?\n7 \"箭头就代表先后\" CONTEXT or RELATION? It defines arrow as precedence. Role RELATION/CONTEXT. \n8 \"。\" SEPARATOR\n\nNeed every action, relation and editing clause considered. \"先\" maybe relation within action. Could separate \"先\" as RELATION, \"站五秒\" ACTION. But then concatenation. Need text values exact. Let's decide coverage detailed.\n\nPossible split:\n- text \"先\" role RELATION: temporal precedence marker indicating the following stand occurs first.\n- text \"站五秒\" role ACTION: stand for 5 seconds.\n- text \"→\" role SEPARATOR: arrow separates sequential steps.\n- text \"向前走二十米\" role ACTION: walk_forward 20 m.\n- text \"→\" role SEPARATOR\n- text \"停\" role ACTION: stop.\n- text \"。\" role SEPARATOR\n- text \"箭头就代表先后\" role RELATION/CONTEXT: declares arrows denote chronological order.\n- text \"。\" role SEPARATOR\n\nBut \"箭头就代表先后\" not an action, it's context/relation. It authorizes arrow semantics. It doesn't modify actions except relation. Is \"箭头\" reference resolved to the arrow symbols in source. Good.\n\nCould include \"先站五秒\" as ACTION and \"→...\" etc. But separating 先 okay. The role of \"先\" as RELATION. Explanation: first. \"站五秒\" action stand 5s.\n\nNeed all dimensions statuses UNIQUE. Explanation nonempty.\n\nNeed maybe mention max 32, bounds okay. No need but can.\n\nNeed be careful: \"箭头就代表先后\" means arrow represents \"先后\" = order/sequence. Does it specify exact order? Combined arrows between expressions. Yes unique.\n\nAction multiplicity: Three actions: stand, walk, stop. No repeated/edited. \"停\" separate stop. \"先\" doesn't add action, just order. Unique.\n\nAction order: stand then walk then stop. Explicit \"先\" and arrows. \"箭头就代表先后\" reinforces. Unique.\n\nCorrection scope: no edit. UNIQUE (inapplicable). Explain no correction words such as 改/不是/而是. \"先\" temporal not correction.\n\nRepetition scope: no repetition. UNIQUE (inapplicable). \"五秒\" quantity not repetition. \"先后\" is order not repeat. Need mention no repeated span.\n\nReference resolution: pronoun? \"箭头\" references the two arrow symbols; \"先后\" refers to sequential order. There are no pronouns like it? \"箭头\" demonstrative? It is noun. It resolves to the arrows in source. \"先\" modifies stand. External missing context? no. Unique.\n\nTemporal relations: exact linear order, stand first with duration 5s, then walk, then stop. Arrows and \"先\" represent before; no simultaneity/wait besides duration. Unique. Need represent linear s1,s2,s3. Good.\n\nUnresolved relations: none explicitly unresolved. No choice. Unique.\n\nNeed output exactly JSON object. Ensure coverage text concatenated equals entire original source. Let's verify string.\n\nOriginal source: 先站五秒→向前走二十米→停。箭头就代表先后。\n\nOur coverage list:\n\"先\"\n\"站五秒\"\n\"→\"\n\"向前走二十米\"\n\"→\"\n\"停\"\n\"。\"\n\"箭头就代表先后\"\n\"。\"\n\nConcatenate: 先站五秒→向前走二十米→停。箭头就代表先后。 Yes matches.\n\nNeed roles. For \"。\" after 停 role SEPARATOR. For final \"。\" SEPARATOR.\n\nCould \"箭头就代表先后\" role RELATION maybe. Explanation: This meta-clause defines the arrow as standing for temporal order, not a new action; it resolves arrows as precedence. Role RELATION.\n\nNeed each explanation nonempty. Good.\n\nPotential issue: \"先\" role RELATION, and \"箭头就代表先后\" relation. Good.\n\nNeed status AUTHORIZED_UNIQUE. But requirement: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and the entire source supports one legal interpretation.\" Yes.\n\nNeed no extra fields. Dimensions exactly names.\n\nLet's craft concise but complete. Need no markdown. Valid JSON. Need quote Chinese. Ensure escaping none.\n\nLet's write.\n\nCheck \"coverage\" nonempty list. Every explanation nonempty.\n\nPotential nuance: \"站五秒\" legal? stand accepts positive finite duration_s, default 2.0 if no duration specified. Here explicit 五秒. Chinese numeral 五 = 5. Need identify as 5 seconds. Positive finite. Good.\n\n\"向前走二十米\" = walk_forward 20 meters. \"向前\" indicates forward direction, \"走\" walk, \"二十米\" distance. Good.\n\n\"停\" stop no params. Good.\n\n\"先\" is temporal. \"箭头就代表先后\" maybe \"先后\" means order (first/last). Good.\n\nNeed maybe mention \"最大步数 3 ≤ 32; stand 5 ≤60; walk distance positive; stop parameterless; no angle.\" Could include in dimension explanation? Not necessary but okay. Could mention in action_multiplicity or temporal.\n\nNo unknown.\n\nLet's ensure JSON valid: all strings double quoted. No trailing commas.\n\nFinal.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning “first”; it orders the following stand action before the later actions without adding another action.\"},{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"A stand action with explicit duration 五秒 = 5 seconds; this is a positive finite stand duration within the 60-second legality bound.\"},{\"text\":\"→\",\"role\":\"SEPARATOR\",\"explanation\":\"Arrow symbol separating sequential actions; according to the later source clause, this arrow denotes order.\"},{\"text\":\"向前走二十米\",\"role\":\"ACTION\",\"explanation\":\"A walk_forward action of 20 meters; 向前 supplies forward direction and 二十米 supplies a positive finite distance in meters.\"},{\"text\":\"→\",\"role\":\"SEPARATOR\",\"explanation\":\"Arrow symbol separating sequential actions; it marks the stop action as coming after the walk action.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"A stop action with no parameters, matching the legal stop semantics.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it does not add or modify any action.\"},{\"text\":\"箭头就代表先后\",\"role\":\"RELATION\",\"explanation\":\"Meta-clause explicitly defining the arrow symbols as representing temporal sequence/order, reinforcing the unique order relation among the actions.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final sentence-ending punctuation; it does not add or modify any action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly three actions are requested: stand for 5 seconds, walk forward 20 meters, and stop. No action is repeated, edited, or added by the explanatory clause about arrows.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed: stand first (先), then walk_forward via the first arrow, then stop via the second arrow. The clause 箭头就代表先后 explicitly states that the arrows represent order, yielding one linear sequence.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or replacement clause; words such as 改, 不是, or 而是 are absent. 先 is a temporal relation, not an edit of any prior action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction. 五秒 specifies a duration, and 先后 specifies order; neither repeats any action or span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"箭头 refers to the two arrow symbols present in the source, and 先后 refers to the preceding/following sequence already expressed by those arrows. No external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single linear temporal relation is given: stand for 5 seconds, then walk forward 20 meters, then stop. There is no simultaneity, waiting, branching, or unspecified timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice of order, scope, repetition, correction, or reference unresolved. The only order relation is explicitly supplied by 先 and by the rule 箭头就代表先后.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_6cfcc920-8058-4e17-8c82-b535eb897652",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 153,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2140,
+            "output_tokens_details": {
+              "reasoning_tokens": 1456
+            },
+            "total_tokens": 3061
+          }
+        },
+        "request_sha256": "51ae6b4f77d20a07b2a4c11a8f2ac3c480aa17a0226a7a55f6ca35096570cd61",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.023595399999977,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_6cfcc920-8058-4e17-8c82-b535eb897652",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning “first”; it orders the following stand action before the later actions without adding another action.\"},{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"A stand action with explicit duration 五秒 = 5 seconds; this is a positive finite stand duration within the 60-second legality bound.\"},{\"text\":\"→\",\"role\":\"SEPARATOR\",\"explanation\":\"Arrow symbol separating sequential actions; according to the later source clause, this arrow denotes order.\"},{\"text\":\"向前走二十米\",\"role\":\"ACTION\",\"explanation\":\"A walk_forward action of 20 meters; 向前 supplies forward direction and 二十米 supplies a positive finite distance in meters.\"},{\"text\":\"→\",\"role\":\"SEPARATOR\",\"explanation\":\"Arrow symbol separating sequential actions; it marks the stop action as coming after the walk action.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"A stop action with no parameters, matching the legal stop semantics.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it does not add or modify any action.\"},{\"text\":\"箭头就代表先后\",\"role\":\"RELATION\",\"explanation\":\"Meta-clause explicitly defining the arrow symbols as representing temporal sequence/order, reinforcing the unique order relation among the actions.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final sentence-ending punctuation; it does not add or modify any action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly three actions are requested: stand for 5 seconds, walk forward 20 meters, and stop. No action is repeated, edited, or added by the explanatory clause about arrows.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed: stand first (先), then walk_forward via the first arrow, then stop via the second arrow. The clause 箭头就代表先后 explicitly states that the arrows represent order, yielding one linear sequence.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or replacement clause; words such as 改, 不是, or 而是 are absent. 先 is a temporal relation, not an edit of any prior action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction. 五秒 specifies a duration, and 先后 specifies order; neither repeats any action or span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"箭头 refers to the two arrow symbols present in the source, and 先后 refers to the preceding/following sequence already expressed by those arrows. No external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single linear temporal relation is given: stand for 5 seconds, then walk forward 20 meters, then stop. There is no simultaneity, waiting, branching, or unspecified timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice of order, scope, repetition, correction, or reference unresolved. The only order relation is explicitly supplied by 先 and by the rule 箭头就代表先后.\"}}}",
+        "usage": {
+          "input_tokens": 153,
+          "output_tokens": 2140,
+          "total_tokens": 3061
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.74853450000046,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 21,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 351,
+      "raw_response_sha256": "10668e597a28e25107ff1fa2bf974a24580b4dc276a0aeddee56549f8b2f27cf",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_e19e187a-7f2c-4e6b-962f-26e4de718578",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 12.029449400000885,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 12.023595399999977,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Temporal marker meaning “first”; it orders the following stand action before the later actions without adding another action.\"},{\"text\":\"站五秒\",\"role\":\"ACTION\",\"explanation\":\"A stand action with explicit duration 五秒 = 5 seconds; this is a positive finite stand duration within the 60-second legality bound.\"},{\"text\":\"→\",\"role\":\"SEPARATOR\",\"explanation\":\"Arrow symbol separating sequential actions; according to the later source clause, this arrow denotes order.\"},{\"text\":\"向前走二十米\",\"role\":\"ACTION\",\"explanation\":\"A walk_forward action of 20 meters; 向前 supplies forward direction and 二十米 supplies a positive finite distance in meters.\"},{\"text\":\"→\",\"role\":\"SEPARATOR\",\"explanation\":\"Arrow symbol separating sequential actions; it marks the stop action as coming after the walk action.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"A stop action with no parameters, matching the legal stop semantics.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-ending punctuation; it does not add or modify any action.\"},{\"text\":\"箭头就代表先后\",\"role\":\"RELATION\",\"explanation\":\"Meta-clause explicitly defining the arrow symbols as representing temporal sequence/order, reinforcing the unique order relation among the actions.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final sentence-ending punctuation; it does not add or modify any action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly three actions are requested: stand for 5 seconds, walk forward 20 meters, and stop. No action is repeated, edited, or added by the explanatory clause about arrows.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed: stand first (先), then walk_forward via the first arrow, then stop via the second arrow. The clause 箭头就代表先后 explicitly states that the arrows represent order, yielding one linear sequence.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or replacement clause; words such as 改, 不是, or 而是 are absent. 先 is a temporal relation, not an edit of any prior action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction. 五秒 specifies a duration, and 先后 specifies order; neither repeats any action or span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"箭头 refers to the two arrow symbols present in the source, and 先后 refers to the preceding/following sequence already expressed by those arrows. No external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"A single linear temporal relation is given: stand for 5 seconds, then walk forward 20 meters, then stop. There is no simultaneity, waiting, branching, or unspecified timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no choice of order, scope, repetition, correction, or reference unresolved. The only order relation is explicitly supplied by 先 and by the rule 箭头就代表先后.\"}}}",
+          "raw_response_sha256": "29f5eed54adb8b2cdea8859210ce296bef3baa27cb03d5a5014d99fead2ebbe6",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_6cfcc920-8058-4e17-8c82-b535eb897652",
+          "source_aware": false,
+          "source_sha256": "d2b09760b460077806c82af9175869252bb55058d0af07152f814e163c350998",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 153,
+            "output_tokens": 2140,
+            "total_tokens": 3061
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Temporal marker meaning “first”; it orders the following stand action before the later actions without adding another action.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "A stand action with explicit duration 五秒 = 5 seconds; this is a positive finite stand duration within the 60-second legality bound.",
+                "role": "ACTION",
+                "text": "站五秒"
+              },
+              {
+                "explanation": "Arrow symbol separating sequential actions; according to the later source clause, this arrow denotes order.",
+                "role": "SEPARATOR",
+                "text": "→"
+              },
+              {
+                "explanation": "A walk_forward action of 20 meters; 向前 supplies forward direction and 二十米 supplies a positive finite distance in meters.",
+                "role": "ACTION",
+                "text": "向前走二十米"
+              },
+              {
+                "explanation": "Arrow symbol separating sequential actions; it marks the stop action as coming after the walk action.",
+                "role": "SEPARATOR",
+                "text": "→"
+              },
+              {
+                "explanation": "A stop action with no parameters, matching the legal stop semantics.",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "Sentence-ending punctuation; it does not add or modify any action.",
+                "role": "SEPARATOR",
+                "text": "。"
+              },
+              {
+                "explanation": "Meta-clause explicitly defining the arrow symbols as representing temporal sequence/order, reinforcing the unique order relation among the actions.",
+                "role": "RELATION",
+                "text": "箭头就代表先后"
+              },
+              {
+                "explanation": "Final sentence-ending punctuation; it does not add or modify any action.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Exactly three actions are requested: stand for 5 seconds, walk forward 20 meters, and stop. No action is repeated, edited, or added by the explanatory clause about arrows.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The order is fixed: stand first (先), then walk_forward via the first arrow, then stop via the second arrow. The clause 箭头就代表先后 explicitly states that the arrows represent order, yielding one linear sequence.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction or replacement clause; words such as 改, 不是, or 而是 are absent. 先 is a temporal relation, not an edit of any prior action.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "箭头 refers to the two arrow symbols present in the source, and 先后 refers to the preceding/following sequence already expressed by those arrows. No external referent is needed.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition instruction. 五秒 specifies a duration, and 先后 specifies order; neither repeats any action or span.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "A single linear temporal relation is given: stand for 5 seconds, then walk forward 20 meters, then stop. There is no simultaneity, waiting, branching, or unspecified timing.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no choice of order, scope, repetition, correction, or reference unresolved. The only order relation is explicitly supplied by 先 and by the rule 箭头就代表先后.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 216,
+        "output_tokens": 303,
+        "total_tokens": 2055
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 20.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先站五秒,向前走二十米,停,箭头就代表先后",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 20.490958300000784,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_23408b71-f5cb-4004-a5ab-8a8ca7a70242",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"时序标记，表示后面的动作是序列中的第一个动作；不新增动作，也不修改其他指令。\"},{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"请求 stand 动作。其持续时间不采用默认值，因为紧随其后的数量词明确给出了持续时间。\"},{\"text\":\"1秒\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的站立动作指定 duration_s = 1 秒；该值在合法范围内，不是模糊时长。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分句标点，分隔站立子句与后续有序动作，不产生动作或关系上的歧义。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"顺序标记，表示后面的行走动作在站立动作之后执行；此处不是重复操作符。\"},{\"text\":\"向前走\",\"role\":\"ACTION\",\"explanation\":\"请求 walk_forward 动作，方向为向前；距离由后面的数量词提供。\"},{\"text\":\"400厘米\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的 walk_forward 指定 distance_m = 400 厘米 = 4.0 米；正数且有限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分句标点，分隔第一次行走与转向子句，不改变顺序关系。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"顺序标记，表示后面的 turn 动作在第一次行走之后执行。\"},{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"请求 turn 动作，方向为向右；角度由后面的数量词提供，向右即顺时针对应负角度。\"},{\"text\":\"30度\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的向右转指定 angle_deg = -30 度；非零、有限，且绝对值不超过 180 度。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分句标点，分隔转向与下一动作，不修改已有参数。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"顺序标记，表示后面的 walk_forward 在转向动作之后执行；它不表示重复之前的行走跨度。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求第二个 walk_forward 动作，距离由后面的数量词提供；这是转向后的独立动作，不是替换或重复先前的向前走动作。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为前面的 walk_forward 指定 distance_m = 4.0 米；正数且有限。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分句标点，分隔第二次行走与最终停止。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"最终顺序标记，表示后面的停止动作位于线性序列末尾。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"请求 stop 动作；stop 无参数，在给定语义下合法。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文列出五个不同动作：保持站立、向前走400厘米、向右转30度、再前进4米、停下。再和最后引入的是后续动作，没有编辑或替换先前动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"先、再、然后、再、最后给出唯一线性顺序：站立，向前走400厘米，向右转30度，再前进4米，最后停下。没有第二种排序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有修正、撤销或重新指定任何动作、参数、组或关系；该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"没有重复跨度。两个再均为顺序连接词，不是重复执行；第二次前进是转向后的独立 walk_forward，并非重复第一次向前走400厘米。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"省略的主语解析为同一个执行主体；前进指转向后的下一次向前移动，停下指最后停止动作。没有需要外部上下文才能确定的指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"所有动作通过先、再、然后、再、最后串成单一顺序，且每个后续步骤依赖前一步；站立持续1秒，不存在同时、等待或未指明时序。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式保留任何未决选择、范围、排序或关系；所有动作与顺序均已明确，且可由合法线性 Mission IR 表示。\"}}}",
+  "usage": {
+    "input_tokens": 161,
+    "output_tokens": 3895,
+    "total_tokens": 4824
+  }
+}

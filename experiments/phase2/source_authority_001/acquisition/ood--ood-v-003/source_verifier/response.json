@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 9.99955239999872,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_ef866e7c-b260-4954-9c3c-378cb13660ea",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"左转九十度吧\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Initial instruction proposing a left turn of 90 degrees. Because the following correction explicitly cancels it, this action is not part of the final executable plan.\"\n    },\n    {\n      \"text\": \"……\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Ellipsis marking a hesitation or pause. It adds no action, parameter, relation, repetition, or correction content and therefore does not alter authorization.\"\n    },\n    {\n      \"text\": \"啊不，\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"Explicit correction meaning 'ah, no,' cancelling the immediately preceding left-turn instruction and requiring a replacement by the following instruction.\"\n    },\n    {\n      \"text\": \"右转九十度。\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Final executable instruction: turn right 90 degrees. Under the compilation semantics, right/clockwise is negative, so angle_deg is -90.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains an initial left-turn action and a later right-turn action, but the edit clause '啊不，' replaces the former rather than adding a second action. The final executable plan therefore contains exactly one action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"After applying the correction, there is only one executable action, so the execution order is trivially the right-turn action alone.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The correction '啊不，' directly follows and cancels the entire preceding left-turn instruction '左转九十度吧'. It is replaced by the subsequent '右转九十度。', so the left turn is not executed.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition is requested in the source. No span is to be repeated, so repetition is inapplicable and introduces no alternative interpretation.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns, ordinals, or omitted arguments requiring an external referent. The final action specifies the turn direction and angle directly as right 90 degrees.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The only temporal relation is correction: the left-turn clause is superseded before execution. The resulting executable plan is a single step with no before/after or waiting relation to represent.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly resolves the competing directions by cancelling left and authorizing right. No unresolved choice, order, scope, or relationship remains.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": -90.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+  "usage": {
+    "input_tokens": 324,
+    "output_tokens": 1945,
+    "total_tokens": 3165
+  }
+}

@@ -1,0 +1,304 @@
+{
+  "added_wall_s": 17.208368699999482,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 17.202450900000258,
+        "provider_document": {
+          "created_at": 1791359383,
+          "id": "resp_2d8dd9b1-34c5-459c-abe3-974bc5c2029e",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_2d8dd9b1-34c5-459c-abe3-974bc5c2029e",
+              "reasoning_content": "We need answer exact JSON. Need inspect source Chinese: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\"\n\nNeed determine dimensions. Source: right 90 degrees, left 90 degrees, finally stop. \"是依次转，不是两个选一个。\" means \"turn sequentially, not choose one of the two.\" Need legal Mission IR.\n\nActions: turn right 90 degrees, turn left 90 degrees, stop. Order sequential as listed? \"依次转\" explicitly sequential, not choose one. \"最后停\" final stop. So unique. Need consider turn angle signs: right negative -90, left +90. Action multiplicity: two turns plus stop. Order: first right 90, then left 90, then stop. Correction? \"不是两个选一个\" clarifies not alternative. Repetition none. Reference resolution? \"依次转\" refers to preceding two turns. Unique. Temporal: 依次 sequential, 最后 stop. Unresolved none. Need status AUTHORIZED_UNIQUE. Need coverage list concatenates entire source exactly. Need split meaningful spans. We must preserve whitespace punctuation. Source string: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\"\n\nNeed create coverage objects whose text concatenated equal entire source. We can split into spans. Need every action, relation, editing clause. Let's design:\n\n1 text \"右边九十度\" role ACTION? Actually action phrase with direction/angle. Explanation: requests turn right by 90 degrees, interpreted as turn angle -90 degrees (right/clockwise negative).\n2 text \"，\" role SEPARATOR.\n3 text \"左边九十度\" role ACTION: requests turn left by 90 degrees, angle +90.\n4 text \"，\" separator.\n5 text \"最后停\" role ACTION? Contains \"最后\" temporal relation plus action stop. Could split \"最后\" and \"停\". Need every relation and action. Maybe text \"最后\" RELATION, text \"停\" ACTION, text \"。\" SEPARATOR. That concatenates.\n6 text \"。\" separator.\n7 text \"是依次转\" maybe EDIT/RELATION? It is clarification about ordering/multiplicity. Role RELATION or EDIT. It says \"is sequential turn\", i.e., the two turns are performed one after another, not a choice. Could be EDIT? It clarifies preceding action relation. Use RELATION.\n8 text \"，\" separator.\n9 text \"不是两个选一个\" EDIT or RELATION? It corrects possible alternative interpretation. Role EDIT (explicitly excludes selecting one of the two). Explanation: negative clarification: not either/or; preserves both turns and mandates both. \n10 text \"。\" separator? Source ends with \"。\", yes after \"不是两个选一个。\" So include final \"。\".\n\nNeed concatenation exact:\n\"右边九十度\" + \"，\" + \"左边九十度\" + \"，\" + \"最后\" + \"停\" + \"。\" + \"是依次转\" + \"，\" + \"不是两个选一个\" + \"。\" = \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\" Let's verify: after 停。 then 是依次转，不是两个选一个。 correct. But original \"最后停。是依次转，不是两个选一个。\" yes.\n\nNeed dimensions all UNIQUE. Need explain each. But be careful: \"最后\" means final/last, maybe determines stop final. Unique. \"依次转\" refers to turns, \"not choose one.\" The source says \"是依次转\" maybe after \"最后停。\" Could \"依次转\" mean turn sequentially, not two choose one. Unique.\n\nPotential ambiguity? Let's scrutinize. Source: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\" Translation: \"Right 90 degrees, left 90 degrees, finally stop. It is turning sequentially, not choosing one of the two.\" Does \"右边九十度\" mean turn right 90 or move? The legal semantics only stand walk turn stop. \"右边九十度\" lacks verb \"转\" but context \"是依次转\" explicitly says turn. So actions are turns. Good. Order: right then left then stop. \"最后停\" final stop. \"依次转\" sequential. Unique.\n\nNeed possible issue: \"右边九十度\" could mean \"turn right 90 degrees\" vs \"face right 90\"? But legal action only turn. Source says \"依次转\"; unique. No need external.\n\nNeed mention IR legality: angles ±90 within 180, stop no params, total 3 steps <=32. Stand default irrelevant.\n\nNeed output exactly JSON. Ensure no markdown.\n\nNeed include keys status, coverage, dimensions. Coverage objects exactly text, role, explanation. role allowed ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Need maybe QUANTITY for \"九十度\"? But if splitting \"右边\" and \"九十度\"? Simpler use ACTION spans containing quantity. But requirement split into meaningful spans so every action, relation, editing clause considered. It doesn't require separate quantities. But maybe better include QUANTITY role for angle? We could split \"右边\" ACTION? Hmm.\n\nWe need text values concatenate entire source exactly. Could split \"右边九十度\" as ACTION. That accounts quantity inside explanation. But dimension action_multiplicity: we accounted. Coverage role \"ACTION\" for full phrase okay. \"最后\" RELATION. \"停\" ACTION. \"是依次转\" RELATION. \"不是两个选一个\" EDIT. Separators.\n\nNeed be careful with \"右边九十度\" as ACTION: It requests turn right. Explanation says \"The phrase names a right turn of 90 degrees; under legal semantics turn is the only directional action, and right/clockwise yields -90 degrees.\" This is fine.\n\n\"左边九十度\" ACTION: left/counterclockwise +90.\n\n\"最后\" RELATION: marks stop as final after two turns. Does not itself create action.\n\n\"停\" ACTION: stop no params.\n\n\"。\" SEPARATOR: sentence punctuation.\n\n\"是依次转\" RELATION: confirms preceding two turns are performed in sequence, both required. Does it modify? It could be considered EDIT? It clarifies not alternative. Role RELATION maybe. \"不是两个选一个\" EDIT: negative editing clause rejecting alternative choice; preserves both turns. Good.\n\nCould also combine \"是依次转，不是两个选一个\" as EDIT? But our split okay.\n\nNeed dimensions:\naction_multiplicity: UNIQUE. Evidence: two distinct turn actions, final stop; \"依次转\" says both turns, \"不是两个选一个\" excludes choosing one; no repetition. Exactly 3 actions.\naction_order: UNIQUE. Source order: right then left then stop; \"依次\" sequential; \"最后\" stop final. No alternative.\ncorrection_scope: UNIQUE. The only correction/edit is \"不是两个选一个\", which negates alternative reading and preserves both listed turns; no parameter/action replaced. Maybe \"是依次转\" also clarifies. No prior instruction replaced. Need status UNIQUE. Explanation nonempty.\nrepetition_scope: UNIQUE. No repetition requested. \"依次\" is sequence not repetition. \"两个\" refers to the two distinct turns, not repetition. Not applicable.\nreference_resolution: UNIQUE. \"依次转\" and \"两个\" refer to preceding two turn phrases \"右边九十度\" and \"左边九十度\"; \"最后\" refers to stop after them. \"不是两个选一个\" resolves no external referent. All within source.\ntemporal_relations: UNIQUE. Linear order right turn, left turn, stop; \"最后\" stop after both; no simultaneity/wait. Representable as s1 turn -90, s2 turn +90, s3 stop.\nunresolved_relations: UNIQUE. Source explicitly resolves the potential either/or by saying sequential not choose one; no unresolved choice/order/scope remains. Need mention no explicit unresolved relation.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure no unsupported compiler claim. Fine.\n\nNeed JSON valid. Chinese text with punctuation. Since output exactly JSON, can have escaped? No need; UTF-8 valid. Need ensure strings with Chinese punctuation okay. Use double quotes. No markdown.\n\nPotential issue: coverage text values concatenated in list order must equal entire original source exactly. Original source includes no extra spaces. Let's concatenate:\n1 右边九十度\n2 ，\n3 左边九十度\n4 ，\n5 最后\n6 停\n7 。\n8 是依次转\n9 ，\n10 不是两个选一个\n11 。\nConcatenation: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\" Yes.\n\nNeed verify source string exactly: {\"source\":\"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\"} The source includes final Chinese full stop. Yes.\n\nNeed maybe \"最后停。\" has \"最后停\" no comma. We split \"最后\" and \"停\". Good.\n\nLet's craft JSON. Need no extra fields. Dimension explanations nonempty. Coverage explanations nonempty. Ensure roles valid. Use \"RELATION\" for \"最后\" and \"是依次转\". \"EDIT\" for \"不是两个选一个\". \"SEPARATOR\" for punctuation.\n\nOne nuance: The first \"，\" after \"右边九十度\" maybe SEPARATOR. second \"，\" separator. \"。\" after 停 separator. \"，\" after 是依次转 separator. final \"。\" separator. Good.\n\nNeed maybe \"是依次转\" role EDIT? It is not an edit but a clarification. Role RELATION is okay. \"不是两个选一个\" is an editing clause because \"不是\" correction. Role EDIT. Explanation: excludes alternative.\n\nNeed dimension \"correction_scope\": identify exactly which action/parameter/group/relation edit changes. Here \"不是两个选一个\" corrects scope of the two turns: it says not an alternative selection, so it preserves both. It doesn't replace a prior action. \"是依次转\" confirms order. Unique.\n\nPotential ambiguity? Let's think if \"右边九十度，左边九十度\" could be read as \"turn right 90 and left 90 simultaneously\"? \"依次转\" excludes simultaneous, so sequential. Unique. Could \"依次\" maybe means repeat turns in order multiple times? Chinese \"依次转\" means turn one by one in order. Not repetition. The phrase \"不是两个选一个\" says not choose one. If someone might interpret \"依次\" as \"turn in sequence\" but how many cycles? Only two items. Unique. Good.\n\nPotential issue with \"最后停\": Could stop be after each turn? No, \"最后\" final. Unique.\n\nNeed maybe mention legal IR action mapping: right turn = negative angle. \"右边九十度\" no explicit \"转\" but later \"依次转\" supplies action. Does reference resolution need resolve omitted verb? It is resolved by \"依次转\" which appears after. Is this source only? Yes. The action word \"转\" appears in \"是依次转\"; it applies to preceding 右边/左边. That's a reference to earlier? Actually \"是依次转\" after the turns. It clarifies the two angle phrases are turns. Unique. Good.\n\nCould there be ambiguity in \"右边九十度\" meaning \"turn to the right 90 degrees\" vs \"turn right by 90 degrees\"? In Chinese \"右边九十度\" likely direction and amount. Legal semantics turn angle; right is sign negative. Unique.\n\nNeed final answer. Ensure JSON object no trailing commas. Let's write compact but readable. Need all keys exactly. The dimensions object exactly seven names. Good.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer exact JSON. Need inspect source Chinese: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\"\n\nNeed determine dimensions. Source: right 90 degrees, left 90 degrees, finally stop. \"是依次转，不是两个选一个。\" means \"turn sequentially, not choose one of the two.\" Need legal Mission IR.\n\nActions: turn right 90 degrees, turn left 90 degrees, stop. Order sequential as listed? \"依次转\" explicitly sequential, not choose one. \"最后停\" final stop. So unique. Need consider turn angle signs: right negative -90, left +90. Action multiplicity: two turns plus stop. Order: first right 90, then left 90, then stop. Correction? \"不是两个选一个\" clarifies not alternative. Repetition none. Reference resolution? \"依次转\" refers to preceding two turns. Unique. Temporal: 依次 sequential, 最后 stop. Unresolved none. Need status AUTHORIZED_UNIQUE. Need coverage list concatenates entire source exactly. Need split meaningful spans. We must preserve whitespace punctuation. Source string: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\"\n\nNeed create coverage objects whose text concatenated equal entire source. We can split into spans. Need every action, relation, editing clause. Let's design:\n\n1 text \"右边九十度\" role ACTION? Actually action phrase with direction/angle. Explanation: requests turn right by 90 degrees, interpreted as turn angle -90 degrees (right/clockwise negative).\n2 text \"，\" role SEPARATOR.\n3 text \"左边九十度\" role ACTION: requests turn left by 90 degrees, angle +90.\n4 text \"，\" separator.\n5 text \"最后停\" role ACTION? Contains \"最后\" temporal relation plus action stop. Could split \"最后\" and \"停\". Need every relation and action. Maybe text \"最后\" RELATION, text \"停\" ACTION, text \"。\" SEPARATOR. That concatenates.\n6 text \"。\" separator.\n7 text \"是依次转\" maybe EDIT/RELATION? It is clarification about ordering/multiplicity. Role RELATION or EDIT. It says \"is sequential turn\", i.e., the two turns are performed one after another, not a choice. Could be EDIT? It clarifies preceding action relation. Use RELATION.\n8 text \"，\" separator.\n9 text \"不是两个选一个\" EDIT or RELATION? It corrects possible alternative interpretation. Role EDIT (explicitly excludes selecting one of the two). Explanation: negative clarification: not either/or; preserves both turns and mandates both. \n10 text \"。\" separator? Source ends with \"。\", yes after \"不是两个选一个。\" So include final \"。\".\n\nNeed concatenation exact:\n\"右边九十度\" + \"，\" + \"左边九十度\" + \"，\" + \"最后\" + \"停\" + \"。\" + \"是依次转\" + \"，\" + \"不是两个选一个\" + \"。\" = \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\" Let's verify: after 停。 then 是依次转，不是两个选一个。 correct. But original \"最后停。是依次转，不是两个选一个。\" yes.\n\nNeed dimensions all UNIQUE. Need explain each. But be careful: \"最后\" means final/last, maybe determines stop final. Unique. \"依次转\" refers to turns, \"not choose one.\" The source says \"是依次转\" maybe after \"最后停。\" Could \"依次转\" mean turn sequentially, not two choose one. Unique.\n\nPotential ambiguity? Let's scrutinize. Source: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\" Translation: \"Right 90 degrees, left 90 degrees, finally stop. It is turning sequentially, not choosing one of the two.\" Does \"右边九十度\" mean turn right 90 or move? The legal semantics only stand walk turn stop. \"右边九十度\" lacks verb \"转\" but context \"是依次转\" explicitly says turn. So actions are turns. Good. Order: right then left then stop. \"最后停\" final stop. \"依次转\" sequential. Unique.\n\nNeed possible issue: \"右边九十度\" could mean \"turn right 90 degrees\" vs \"face right 90\"? But legal action only turn. Source says \"依次转\"; unique. No need external.\n\nNeed mention IR legality: angles ±90 within 180, stop no params, total 3 steps <=32. Stand default irrelevant.\n\nNeed output exactly JSON. Ensure no markdown.\n\nNeed include keys status, coverage, dimensions. Coverage objects exactly text, role, explanation. role allowed ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Need maybe QUANTITY for \"九十度\"? But if splitting \"右边\" and \"九十度\"? Simpler use ACTION spans containing quantity. But requirement split into meaningful spans so every action, relation, editing clause considered. It doesn't require separate quantities. But maybe better include QUANTITY role for angle? We could split \"右边\" ACTION? Hmm.\n\nWe need text values concatenate entire source exactly. Could split \"右边九十度\" as ACTION. That accounts quantity inside explanation. But dimension action_multiplicity: we accounted. Coverage role \"ACTION\" for full phrase okay. \"最后\" RELATION. \"停\" ACTION. \"是依次转\" RELATION. \"不是两个选一个\" EDIT. Separators.\n\nNeed be careful with \"右边九十度\" as ACTION: It requests turn right. Explanation says \"The phrase names a right turn of 90 degrees; under legal semantics turn is the only directional action, and right/clockwise yields -90 degrees.\" This is fine.\n\n\"左边九十度\" ACTION: left/counterclockwise +90.\n\n\"最后\" RELATION: marks stop as final after two turns. Does not itself create action.\n\n\"停\" ACTION: stop no params.\n\n\"。\" SEPARATOR: sentence punctuation.\n\n\"是依次转\" RELATION: confirms preceding two turns are performed in sequence, both required. Does it modify? It could be considered EDIT? It clarifies not alternative. Role RELATION maybe. \"不是两个选一个\" EDIT: negative editing clause rejecting alternative choice; preserves both turns. Good.\n\nCould also combine \"是依次转，不是两个选一个\" as EDIT? But our split okay.\n\nNeed dimensions:\naction_multiplicity: UNIQUE. Evidence: two distinct turn actions, final stop; \"依次转\" says both turns, \"不是两个选一个\" excludes choosing one; no repetition. Exactly 3 actions.\naction_order: UNIQUE. Source order: right then left then stop; \"依次\" sequential; \"最后\" stop final. No alternative.\ncorrection_scope: UNIQUE. The only correction/edit is \"不是两个选一个\", which negates alternative reading and preserves both listed turns; no parameter/action replaced. Maybe \"是依次转\" also clarifies. No prior instruction replaced. Need status UNIQUE. Explanation nonempty.\nrepetition_scope: UNIQUE. No repetition requested. \"依次\" is sequence not repetition. \"两个\" refers to the two distinct turns, not repetition. Not applicable.\nreference_resolution: UNIQUE. \"依次转\" and \"两个\" refer to preceding two turn phrases \"右边九十度\" and \"左边九十度\"; \"最后\" refers to stop after them. \"不是两个选一个\" resolves no external referent. All within source.\ntemporal_relations: UNIQUE. Linear order right turn, left turn, stop; \"最后\" stop after both; no simultaneity/wait. Representable as s1 turn -90, s2 turn +90, s3 stop.\nunresolved_relations: UNIQUE. Source explicitly resolves the potential either/or by saying sequential not choose one; no unresolved choice/order/scope remains. Need mention no explicit unresolved relation.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure no unsupported compiler claim. Fine.\n\nNeed JSON valid. Chinese text with punctuation. Since output exactly JSON, can have escaped? No need; UTF-8 valid. Need ensure strings with Chinese punctuation okay. Use double quotes. No markdown.\n\nPotential issue: coverage text values concatenated in list order must equal entire original source exactly. Original source includes no extra spaces. Let's concatenate:\n1 右边九十度\n2 ，\n3 左边九十度\n4 ，\n5 最后\n6 停\n7 。\n8 是依次转\n9 ，\n10 不是两个选一个\n11 。\nConcatenation: \"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\" Yes.\n\nNeed verify source string exactly: {\"source\":\"右边九十度，左边九十度，最后停。是依次转，不是两个选一个。\"} The source includes final Chinese full stop. Yes.\n\nNeed maybe \"最后停。\" has \"最后停\" no comma. We split \"最后\" and \"停\". Good.\n\nLet's craft JSON. Need no extra fields. Dimension explanations nonempty. Coverage explanations nonempty. Ensure roles valid. Use \"RELATION\" for \"最后\" and \"是依次转\". \"EDIT\" for \"不是两个选一个\". \"SEPARATOR\" for punctuation.\n\nOne nuance: The first \"，\" after \"右边九十度\" maybe SEPARATOR. second \"，\" separator. \"。\" after 停 separator. \"，\" after 是依次转 separator. final \"。\" separator. Good.\n\nNeed maybe \"是依次转\" role EDIT? It is not an edit but a clarification. Role RELATION is okay. \"不是两个选一个\" is an editing clause because \"不是\" correction. Role EDIT. Explanation: excludes alternative.\n\nNeed dimension \"correction_scope\": identify exactly which action/parameter/group/relation edit changes. Here \"不是两个选一个\" corrects scope of the two turns: it says not an alternative selection, so it preserves both. It doesn't replace a prior action. \"是依次转\" confirms order. Unique.\n\nPotential ambiguity? Let's think if \"右边九十度，左边九十度\" could be read as \"turn right 90 and left 90 simultaneously\"? \"依次转\" excludes simultaneous, so sequential. Unique. Could \"依次\" maybe means repeat turns in order multiple times? Chinese \"依次转\" means turn one by one in order. Not repetition. The phrase \"不是两个选一个\" says not choose one. If someone might interpret \"依次\" as \"turn in sequence\" but how many cycles? Only two items. Unique. Good.\n\nPotential issue with \"最后停\": Could stop be after each turn? No, \"最后\" final. Unique.\n\nNeed maybe mention legal IR action mapping: right turn = negative angle. \"右边九十度\" no explicit \"转\" but later \"依次转\" supplies action. Does reference resolution need resolve omitted verb? It is resolved by \"依次转\" which appears after. Is this source only? Yes. The action word \"转\" appears in \"是依次转\"; it applies to preceding 右边/左边. That's a reference to earlier? Actually \"是依次转\" after the turns. It clarifies the two angle phrases are turns. Unique. Good.\n\nCould there be ambiguity in \"右边九十度\" meaning \"turn to the right 90 degrees\" vs \"turn right by 90 degrees\"? In Chinese \"右边九十度\" likely direction and amount. Legal semantics turn angle; right is sign negative. Unique.\n\nNeed final answer. Ensure JSON object no trailing commas. Let's write compact but readable. Need all keys exactly. The dimensions object exactly seven names. Good.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右边九十度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first turn action: turn right by 90 degrees. Under the legal turn semantics, right/clockwise is negative, so this maps to angle_deg = -90; the quantity is finite and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first turn phrase from the second turn phrase; it does not add or remove authority.\"},{\"text\":\"左边九十度\",\"role\":\"ACTION\",\"explanation\":\"Requests the second turn action: turn left by 90 degrees. Under the legal turn semantics, left/counterclockwise is positive, so this maps to angle_deg = +90; the quantity is finite and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the second turn phrase from the final stop clause; it does not alter the action list.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as final in the execution order. It places stop after both turn actions and does not create an additional action.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action. Stop has no parameters and is legally representable as a final step after the two turns.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence punctuation ending the first clause; it does not change the actions or their order.\"},{\"text\":\"是依次转\",\"role\":\"RELATION\",\"explanation\":\"Clarifies that the preceding right-90 and left-90 phrases are turns performed sequentially, one after another. It confirms both turns are required and supplies the otherwise omitted turn verb for those angle phrases.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the sequential-turn clarification from the negative clarification; it does not modify authority.\"},{\"text\":\"不是两个选一个\",\"role\":\"EDIT\",\"explanation\":\"Explicitly edits the interpretation of the two turn phrases: they are not alternatives from which one is chosen. It preserves both listed turns and does not replace either action or parameter.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final sentence punctuation ending the source; it adds no action, relation, or unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source authorizes exactly two turn actions and one final stop action. '右边九十度' and '左边九十度' are distinct requested turns, while '是依次转' requires both in sequence and '不是两个选一个' excludes selecting only one of them. '停' is a separate final action. No repetition creates additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The only order supported is the written sequence: first turn right 90 degrees, then turn left 90 degrees, then stop. '依次转' explicitly makes the turns sequential rather than optional or simultaneous, and '最后停' places stop after both turns.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The only corrective clause is '不是两个选一个', which negates the alternative-choice reading of the two turn phrases. It does not change an angle or replace an earlier action; it preserves both turns. '是依次转' additionally confirms that the two turns are executed one after another.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. '依次转' indicates a sequence over the two listed turns, not repeated cycles, and '两个' refers to those two distinct turn phrases rather than to repeated executions. No span is silently repeated or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'依次转' and '两个' refer within the source to the immediately preceding turn phrases '右边九十度' and '左边九十度'. '最后' refers to '停' as the final action after those turns. No pronoun or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear temporal relation: right turn, then left turn, then stop. '依次' and '最后' resolve the order; there is no simultaneity, waiting, completion dependency, or alternative timing to choose from, and the plan is representable as three successive steps.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the potentially competing reading by saying '是依次转，不是两个选一个': the relation between the two turns is sequential and both are required, not an unresolved either/or choice. No scope, order, or relationship is left explicitly unresolved.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_2d8dd9b1-34c5-459c-abe3-974bc5c2029e",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 156,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 3436,
+            "output_tokens_details": {
+              "reasoning_tokens": 2448
+            },
+            "total_tokens": 4360
+          }
+        },
+        "request_sha256": "c98403cdccb6c26a135c6e6cb178c1b35ce460efe2f346d399905aadf44c7aa9",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 17.200920199999018,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_2d8dd9b1-34c5-459c-abe3-974bc5c2029e",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右边九十度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first turn action: turn right by 90 degrees. Under the legal turn semantics, right/clockwise is negative, so this maps to angle_deg = -90; the quantity is finite and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first turn phrase from the second turn phrase; it does not add or remove authority.\"},{\"text\":\"左边九十度\",\"role\":\"ACTION\",\"explanation\":\"Requests the second turn action: turn left by 90 degrees. Under the legal turn semantics, left/counterclockwise is positive, so this maps to angle_deg = +90; the quantity is finite and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the second turn phrase from the final stop clause; it does not alter the action list.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as final in the execution order. It places stop after both turn actions and does not create an additional action.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action. Stop has no parameters and is legally representable as a final step after the two turns.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence punctuation ending the first clause; it does not change the actions or their order.\"},{\"text\":\"是依次转\",\"role\":\"RELATION\",\"explanation\":\"Clarifies that the preceding right-90 and left-90 phrases are turns performed sequentially, one after another. It confirms both turns are required and supplies the otherwise omitted turn verb for those angle phrases.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the sequential-turn clarification from the negative clarification; it does not modify authority.\"},{\"text\":\"不是两个选一个\",\"role\":\"EDIT\",\"explanation\":\"Explicitly edits the interpretation of the two turn phrases: they are not alternatives from which one is chosen. It preserves both listed turns and does not replace either action or parameter.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final sentence punctuation ending the source; it adds no action, relation, or unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source authorizes exactly two turn actions and one final stop action. '右边九十度' and '左边九十度' are distinct requested turns, while '是依次转' requires both in sequence and '不是两个选一个' excludes selecting only one of them. '停' is a separate final action. No repetition creates additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The only order supported is the written sequence: first turn right 90 degrees, then turn left 90 degrees, then stop. '依次转' explicitly makes the turns sequential rather than optional or simultaneous, and '最后停' places stop after both turns.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The only corrective clause is '不是两个选一个', which negates the alternative-choice reading of the two turn phrases. It does not change an angle or replace an earlier action; it preserves both turns. '是依次转' additionally confirms that the two turns are executed one after another.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. '依次转' indicates a sequence over the two listed turns, not repeated cycles, and '两个' refers to those two distinct turn phrases rather than to repeated executions. No span is silently repeated or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'依次转' and '两个' refer within the source to the immediately preceding turn phrases '右边九十度' and '左边九十度'. '最后' refers to '停' as the final action after those turns. No pronoun or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear temporal relation: right turn, then left turn, then stop. '依次' and '最后' resolve the order; there is no simultaneity, waiting, completion dependency, or alternative timing to choose from, and the plan is representable as three successive steps.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the potentially competing reading by saying '是依次转，不是两个选一个': the relation between the two turns is sequential and both are required, not an unresolved either/or choice. No scope, order, or relationship is left explicitly unresolved.\"}}}",
+        "usage": {
+          "input_tokens": 156,
+          "output_tokens": 3436,
+          "total_tokens": 4360
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.1705584000010276,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-right-left-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 27,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 339,
+      "raw_response_sha256": "f55c2fee215732e45c830bf3f13cd1dbc6e0eb6c9ec978e8cd50fa787b1d2bbc",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_ac92a6c6-ddb6-4d3b-bf76-8c68c5d4bcc1",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 17.207650399999693,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 17.200920199999018,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"右边九十度\",\"role\":\"ACTION\",\"explanation\":\"Requests the first turn action: turn right by 90 degrees. Under the legal turn semantics, right/clockwise is negative, so this maps to angle_deg = -90; the quantity is finite and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first turn phrase from the second turn phrase; it does not add or remove authority.\"},{\"text\":\"左边九十度\",\"role\":\"ACTION\",\"explanation\":\"Requests the second turn action: turn left by 90 degrees. Under the legal turn semantics, left/counterclockwise is positive, so this maps to angle_deg = +90; the quantity is finite and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the second turn phrase from the final stop clause; it does not alter the action list.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as final in the execution order. It places stop after both turn actions and does not create an additional action.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action. Stop has no parameters and is legally representable as a final step after the two turns.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence punctuation ending the first clause; it does not change the actions or their order.\"},{\"text\":\"是依次转\",\"role\":\"RELATION\",\"explanation\":\"Clarifies that the preceding right-90 and left-90 phrases are turns performed sequentially, one after another. It confirms both turns are required and supplies the otherwise omitted turn verb for those angle phrases.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the sequential-turn clarification from the negative clarification; it does not modify authority.\"},{\"text\":\"不是两个选一个\",\"role\":\"EDIT\",\"explanation\":\"Explicitly edits the interpretation of the two turn phrases: they are not alternatives from which one is chosen. It preserves both listed turns and does not replace either action or parameter.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Final sentence punctuation ending the source; it adds no action, relation, or unresolved choice.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source authorizes exactly two turn actions and one final stop action. '右边九十度' and '左边九十度' are distinct requested turns, while '是依次转' requires both in sequence and '不是两个选一个' excludes selecting only one of them. '停' is a separate final action. No repetition creates additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The only order supported is the written sequence: first turn right 90 degrees, then turn left 90 degrees, then stop. '依次转' explicitly makes the turns sequential rather than optional or simultaneous, and '最后停' places stop after both turns.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The only corrective clause is '不是两个选一个', which negates the alternative-choice reading of the two turn phrases. It does not change an angle or replace an earlier action; it preserves both turns. '是依次转' additionally confirms that the two turns are executed one after another.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. '依次转' indicates a sequence over the two listed turns, not repeated cycles, and '两个' refers to those two distinct turn phrases rather than to repeated executions. No span is silently repeated or broadened.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'依次转' and '两个' refer within the source to the immediately preceding turn phrases '右边九十度' and '左边九十度'. '最后' refers to '停' as the final action after those turns. No pronoun or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear temporal relation: right turn, then left turn, then stop. '依次' and '最后' resolve the order; there is no simultaneity, waiting, completion dependency, or alternative timing to choose from, and the plan is representable as three successive steps.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly resolves the potentially competing reading by saying '是依次转，不是两个选一个': the relation between the two turns is sequential and both are required, not an unresolved either/or choice. No scope, order, or relationship is left explicitly unresolved.\"}}}",
+          "raw_response_sha256": "65dc19247c330a547a3059ff419cd123f074867ec0855ffb8b4644769ba758d1",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_2d8dd9b1-34c5-459c-abe3-974bc5c2029e",
+          "source_aware": false,
+          "source_sha256": "538c48c00dbefac3d2e8729e18564a3d76e8a0465c87c0e0c44040fa1df6720f",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 156,
+            "output_tokens": 3436,
+            "total_tokens": 4360
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Requests the first turn action: turn right by 90 degrees. Under the legal turn semantics, right/clockwise is negative, so this maps to angle_deg = -90; the quantity is finite and within the 180-degree bound.",
+                "role": "ACTION",
+                "text": "右边九十度"
+              },
+              {
+                "explanation": "Punctuation separating the first turn phrase from the second turn phrase; it does not add or remove authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Requests the second turn action: turn left by 90 degrees. Under the legal turn semantics, left/counterclockwise is positive, so this maps to angle_deg = +90; the quantity is finite and within the 180-degree bound.",
+                "role": "ACTION",
+                "text": "左边九十度"
+              },
+              {
+                "explanation": "Punctuation separating the second turn phrase from the final stop clause; it does not alter the action list.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Marks the following action as final in the execution order. It places stop after both turn actions and does not create an additional action.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Requests the stop action. Stop has no parameters and is legally representable as a final step after the two turns.",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "Sentence punctuation ending the first clause; it does not change the actions or their order.",
+                "role": "SEPARATOR",
+                "text": "。"
+              },
+              {
+                "explanation": "Clarifies that the preceding right-90 and left-90 phrases are turns performed sequentially, one after another. It confirms both turns are required and supplies the otherwise omitted turn verb for those angle phrases.",
+                "role": "RELATION",
+                "text": "是依次转"
+              },
+              {
+                "explanation": "Punctuation separating the sequential-turn clarification from the negative clarification; it does not modify authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Explicitly edits the interpretation of the two turn phrases: they are not alternatives from which one is chosen. It preserves both listed turns and does not replace either action or parameter.",
+                "role": "EDIT",
+                "text": "不是两个选一个"
+              },
+              {
+                "explanation": "Final sentence punctuation ending the source; it adds no action, relation, or unresolved choice.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source authorizes exactly two turn actions and one final stop action. '右边九十度' and '左边九十度' are distinct requested turns, while '是依次转' requires both in sequence and '不是两个选一个' excludes selecting only one of them. '停' is a separate final action. No repetition creates additional actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The only order supported is the written sequence: first turn right 90 degrees, then turn left 90 degrees, then stop. '依次转' explicitly makes the turns sequential rather than optional or simultaneous, and '最后停' places stop after both turns.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The only corrective clause is '不是两个选一个', which negates the alternative-choice reading of the two turn phrases. It does not change an angle or replace an earlier action; it preserves both turns. '是依次转' additionally confirms that the two turns are executed one after another.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "'依次转' and '两个' refer within the source to the immediately preceding turn phrases '右边九十度' and '左边九十度'. '最后' refers to '停' as the final action after those turns. No pronoun or omitted referent requires external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition is requested. '依次转' indicates a sequence over the two listed turns, not repeated cycles, and '两个' refers to those two distinct turn phrases rather than to repeated executions. No span is silently repeated or broadened.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source gives one linear temporal relation: right turn, then left turn, then stop. '依次' and '最后' resolve the order; there is no simultaneity, waiting, completion dependency, or alternative timing to choose from, and the plan is representable as three successive steps.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly resolves the potentially competing reading by saying '是依次转，不是两个选一个': the relation between the two turns is sequential and both are required, not an unresolved either/or choice. No scope, order, or relationship is left explicitly unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 495,
+        "total_tokens": 2250
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-right-left-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "右边九十度,左边九十度最后停,是依次转,不是两个选一个",
+    "status": "SUCCESS"
+  }
+}

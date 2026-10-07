@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 14.59573839999939,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_4b66a6cd-78d7-4961-b738-202c01d006f6",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两次\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the repetition count as exactly two actions. It does not authorize one compressed action or more than two actions.\"},{\"text\":\"都是\",\"role\":\"RELATION\",\"explanation\":\"Distributes the same described movement to both repetitions, so both walking actions share the same parameter rather than differing.\"},{\"text\":\"往前四米，\",\"role\":\"ACTION\",\"explanation\":\"Specifies forward walking by four meters for each repetition, compiling to walk_forward with distance_m=4.0. The comma separates this clause from the next relation.\"},{\"text\":\"中间不插别的动作，\",\"role\":\"RELATION\",\"explanation\":\"Explicitly forbids any other action between the two walking actions, so the two walk steps must be consecutive in one linear order.\"},{\"text\":\"就分成两次走。\",\"role\":\"ACTION\",\"explanation\":\"Final directive confirming that the movement is divided into exactly two walking executions, not a separate third action and not a single combined step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source says 两次 and 分成两次走, establishing exactly two walk_forward actions, each moving forward four meters. No other action is requested, and no edit replaces or adds to the count.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"中间不插别的动作 and 分成两次走 establish two consecutive walking actions in one linear sequence with no interleaving. Since both actions are identical, the execution order maps directly to s1 then s2.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source. 就 finalizes the split instruction; it does not replace an earlier parameter, action, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The repetition scope is the forward-four-meter walking action, repeated exactly twice. It is not silently narrowed to one action or broadened to a sequence containing other actions.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"两次, 都是, and 分成两次走 refer to the same forward-four-meter walking action. No pronoun, ordinal, or omitted argument requires unavailable external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires two walking actions with no other action in between, representable as a single linear order s1 then s2. There is no waiting, simultaneity, or completion relation beyond consecutive execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. It resolves to exactly two consecutive identical walk_forward steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+  "usage": {
+    "input_tokens": 359,
+    "output_tokens": 2752,
+    "total_tokens": 4007
+  }
+}

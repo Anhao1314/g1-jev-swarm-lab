@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 2.5034052999981213,
+  "provider_document": {
+    "created_at": 1791360882,
+    "id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+        "reasoning_content": "We need answer JSON only. Need parse Chinese command: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止\n\nNeed produce Mission IR. Steps:\n- turn right 90 deg -> angle_deg -90.0\n- walk_forward 6.0 m\n- turn counter-clockwise 90 -> angle_deg +90.0\n- stop.\n\nSequential dependencies. mission_id path-safe. Need exact fields. No extra. Ensure status SUCCESS.\n\nCheck \"立即停止\" stop parameters {}.\n\nNeed order: s1 turn -90, s2 walk 6, s3 turn +90, s4 stop. depends_on previous.\n\nMission id e.g. \"cmd-turn-walk-turn-stop\". Valid [A-Za-z0-9][A-Za-z0-9._-]{0,63}, not ending dot. Good.\n\nReturn exactly JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse Chinese command: 向右转90度然后前进6.0米接着逆时针转90度最后立即停止\n\nNeed produce Mission IR. Steps:\n- turn right 90 deg -> angle_deg -90.0\n- walk_forward 6.0 m\n- turn counter-clockwise 90 -> angle_deg +90.0\n- stop.\n\nSequential dependencies. mission_id path-safe. Need exact fields. No extra. Ensure status SUCCESS.\n\nCheck \"立即停止\" stop parameters {}.\n\nNeed order: s1 turn -90, s2 walk 6, s3 turn +90, s4 stop. depends_on previous.\n\nMission id e.g. \"cmd-turn-walk-turn-stop\". Valid [A-Za-z0-9][A-Za-z0-9._-]{0,63}, not ending dot. Good.\n\nReturn exactly JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 218,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 335,
+      "output_tokens_details": {
+        "reasoning_tokens": 189
+      },
+      "total_tokens": 2089
+    }
+  },
+  "request_sha256": "89deb41b5b6d805e7fa1cf1765971f0bfff0dc80078c130aa149def073e8a63a",
+  "status": "SUCCESS"
+}

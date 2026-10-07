@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 11.39829760000066,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_e0e31e1e-e011-4dbf-9357-c07479780119",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"指定一个向前行走动作，对应唯一的 walk_forward 动作；其方向由“向前”确定，距离参数由后续的“6m”提供。\"},{\"text\":\"6m\",\"role\":\"QUANTITY\",\"explanation\":\"明确给出正有限距离 6 米，作为前一行走动作的 distance_m 参数，不是模糊时长。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个动作子句的标点，不改变动作内容，也不引入额外动作或关系。\"},{\"text\":\"接着立即\",\"role\":\"RELATION\",\"explanation\":\"明确建立前后顺序关系：第二个动作紧接第一个动作之后发生，且没有等待或中间事件；它把停止动作放在行走动作之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"指定一个停止动作，对应唯一的 stop 动作；stop 不接受参数，因此没有需要额外解析的参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好包含两个可执行动作：向前移动和停止。“向前”是移动方向而不是独立动作，“6m”是距离量而不是动作；没有替换、编辑或重复导致额外动作。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“接着立即”明确要求先完成向前移动 6 米，然后立即停止，因此只有一种执行顺序：walk_forward 在前，stop 在后。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有更正、替换或编辑标记；没有先前指令需要被修改、替换或保留，因此该维度不引入其他解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；“向前移动”和“停止”各出现一次，“立即”表示时序而非重复，因此不存在被重复的跨度或次数歧义。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"所有引用都在源内可解析：移动方向由“向前”给出，距离由“6m”给出，停止动作无参数；没有代词、序数引用或省略共享参数需要外部上下文。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"唯一线性顺序为：第一步向前移动 6 米，第二步停止； “接着立即”表示停止紧接移动之后，无需等待或并发，可由依赖前一步的逐步线性计划表示。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；两个动作、距离参数和前后顺序均已确定。\"}}}",
+  "usage": {
+    "input_tokens": 144,
+    "output_tokens": 2014,
+    "total_tokens": 2926
+  }
+}

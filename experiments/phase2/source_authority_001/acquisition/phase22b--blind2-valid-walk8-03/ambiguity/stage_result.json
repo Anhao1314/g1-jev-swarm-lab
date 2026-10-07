@@ -1,0 +1,251 @@
+{
+  "added_wall_s": 8.615627600000153,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.611309899999469,
+        "provider_document": {
+          "created_at": 1791359919,
+          "id": "resp_3262f8d1-a6d9-414d-ba29-b4418a1ebb80",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_3262f8d1-a6d9-414d-ba29-b4418a1ebb80",
+              "reasoning_content": "We need output JSON only. Need inspect source \"向前走800厘米\". Chinese. Means \"walk forward 800 centimeters\". Need decide dimensions.\n\nNeed follow instruction: source string data inspect. Need coverage split into meaningful spans, concatenated exactly entire original source. Need keys exactly status, coverage, dimensions.\n\nSource: 向前走800厘米\n\nNeed determine if uniquely authorizes exactly one legal Mission IR 2.0 interpretation. Actions: walk_forward. Direction 向前 = forward. Distance 800厘米 = 800 cm -> 8 m. Positive finite. Single action, order only one, correction none, repetition none, reference none, temporal none, unresolved none. Seems AUTHORIZED_UNIQUE.\n\nNeed coverage split spans with text exactly preserving. We can split into \"向前\", \"走\", \"800\", \"厘米\" maybe roles. Need every action relation editing clause considered. Entire source concatenated in list order equals exactly \"向前走800厘米\". We can have one span \"向前走800厘米\" role ACTION explanation. But requirement split into meaningful spans so every action, relation, editing clause considered. Could split into action direction/verb/quantity/unit. Need ensure roles. Role options ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR.\n\nMaybe coverage:\n1 text \"向前\" role ACTION? It's direction modifier, context? Explanation: forward direction modifying walk. Could be CONTEXT or ACTION. But every action considered. \n2 \"走\" role ACTION: walk action.\n3 \"800\" role QUANTITY: distance magnitude.\n4 \"厘米\" role QUANTITY: unit centimeters; converted to meters, 800 cm = 8 m. \n\nBut role for \"向前\" maybe RELATION? Hmm. It expresses direction; no separate action. Role CONTEXT maybe \"direction modifier specifying forward orientation for the walk action.\" That's fine. The action span \"走\" is action word. Quantity spans. No separators. Is \"向前\" context? It modifies action but not a separate action. Yes.\n\nPotential issue: \"向前走\" could be one action phrase. But coverage can split. Need concatenated exact: \"向前\"+\"走\"+\"800\"+\"厘米\" = \"向前走800厘米\". Good.\n\nDimensions explanations:\n- action_multiplicity: UNIQUE. Source contains one action: walk forward; 走 is action verb; 向前 modifies direction, 800厘米 is distance. No other actions or edited/repeated actions.\n- action_order: UNIQUE. Only one action step; no competing orders.\n- correction_scope: UNIQUE. No corrections/edits in source.\n- repetition_scope: UNIQUE. No repetition markers; action occurs once.\n- reference_resolution: UNIQUE. No pronouns, ordinals, omitted shared args needing external context; direction and distance are explicit.\n- temporal_relations: UNIQUE. No before/after/wait/simultaneity; single-step linear plan.\n- unresolved_relations: UNIQUE. Source leaves no explicit unresolved choice/scope/order relation.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure \"forward\" direction maps to walk_forward? Legal action walk_forward. Chinese \"向前走\" = walk forward. The IR semantics legal action walk_forward only. \"向前\" corresponds to forward, no turn. 800厘米 positive finite, converted to 8m. No max step issue, max 32. Stand etc not. So legal.\n\nNeed output exactly JSON object. No markdown. Ensure keys exactly. coverage list nonempty. Each object exactly text, role, explanation. dimensions object exactly seven names. No extra fields. Use proper escaping? Source Chinese can appear. JSON valid. Let's construct.\n\nNeed \"coverage\" text concatenated equals entire source. If split with roles, fine. Maybe include all. Explanations nonempty.\n\nPotential issue: status if any dimension unknown? none.\n\nLet's produce.\n\nNeed be careful: \"AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and entire source supports one legal interpretation.\" Yes.\n\nLet's write:\n\n{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"向前\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Direction modifier meaning forward. It does not add a separate action; it constrains the following walk action to forward motion.\"\n    },\n    {\n      \"text\": \"走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Action verb meaning walk. With the forward modifier and the following distance, it maps to the single legal IR action walk_forward.\"\n    },\n    {\n      \"text\": \"800\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Numeric distance magnitude 800 for the walk action.\"\n    },\n    {\n      \"text\": \"厘米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Unit centimeters. 800 centimeters converts to 8 meters, a positive finite distance required by walk_forward.\"\n    }\n  ],\n  \"dimensions\": {...}\n}\n\nNeed role for \"向前\" maybe ACTION? But context okay. \"Every action, relation and editing clause\" - direction is relation? Hmm role CONTEXT maybe acceptable. Could be RELATION? Direction relation? The role definitions include RELATION. Maybe \"向前\" is relation? It modifies action. But no explicit relation between actions. I'd use CONTEXT. Explanation says modifier. That's okay.\n\nNeed \"coverage copying alone does not establish semantic authorization\"; explanations do account.\n\nDimension explanations succinct but adequate. Let's final.",
+              "summary": [
+                {
+                  "text": "We need output JSON only. Need inspect source \"向前走800厘米\". Chinese. Means \"walk forward 800 centimeters\". Need decide dimensions.\n\nNeed follow instruction: source string data inspect. Need coverage split into meaningful spans, concatenated exactly entire original source. Need keys exactly status, coverage, dimensions.\n\nSource: 向前走800厘米\n\nNeed determine if uniquely authorizes exactly one legal Mission IR 2.0 interpretation. Actions: walk_forward. Direction 向前 = forward. Distance 800厘米 = 800 cm -> 8 m. Positive finite. Single action, order only one, correction none, repetition none, reference none, temporal none, unresolved none. Seems AUTHORIZED_UNIQUE.\n\nNeed coverage split spans with text exactly preserving. We can split into \"向前\", \"走\", \"800\", \"厘米\" maybe roles. Need every action relation editing clause considered. Entire source concatenated in list order equals exactly \"向前走800厘米\". We can have one span \"向前走800厘米\" role ACTION explanation. But requirement split into meaningful spans so every action, relation, editing clause considered. Could split into action direction/verb/quantity/unit. Need ensure roles. Role options ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR.\n\nMaybe coverage:\n1 text \"向前\" role ACTION? It's direction modifier, context? Explanation: forward direction modifying walk. Could be CONTEXT or ACTION. But every action considered. \n2 \"走\" role ACTION: walk action.\n3 \"800\" role QUANTITY: distance magnitude.\n4 \"厘米\" role QUANTITY: unit centimeters; converted to meters, 800 cm = 8 m. \n\nBut role for \"向前\" maybe RELATION? Hmm. It expresses direction; no separate action. Role CONTEXT maybe \"direction modifier specifying forward orientation for the walk action.\" That's fine. The action span \"走\" is action word. Quantity spans. No separators. Is \"向前\" context? It modifies action but not a separate action. Yes.\n\nPotential issue: \"向前走\" could be one action phrase. But coverage can split. Need concatenated exact: \"向前\"+\"走\"+\"800\"+\"厘米\" = \"向前走800厘米\". Good.\n\nDimensions explanations:\n- action_multiplicity: UNIQUE. Source contains one action: walk forward; 走 is action verb; 向前 modifies direction, 800厘米 is distance. No other actions or edited/repeated actions.\n- action_order: UNIQUE. Only one action step; no competing orders.\n- correction_scope: UNIQUE. No corrections/edits in source.\n- repetition_scope: UNIQUE. No repetition markers; action occurs once.\n- reference_resolution: UNIQUE. No pronouns, ordinals, omitted shared args needing external context; direction and distance are explicit.\n- temporal_relations: UNIQUE. No before/after/wait/simultaneity; single-step linear plan.\n- unresolved_relations: UNIQUE. Source leaves no explicit unresolved choice/scope/order relation.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure \"forward\" direction maps to walk_forward? Legal action walk_forward. Chinese \"向前走\" = walk forward. The IR semantics legal action walk_forward only. \"向前\" corresponds to forward, no turn. 800厘米 positive finite, converted to 8m. No max step issue, max 32. Stand etc not. So legal.\n\nNeed output exactly JSON object. No markdown. Ensure keys exactly. coverage list nonempty. Each object exactly text, role, explanation. dimensions object exactly seven names. No extra fields. Use proper escaping? Source Chinese can appear. JSON valid. Let's construct.\n\nNeed \"coverage\" text concatenated equals entire source. If split with roles, fine. Maybe include all. Explanations nonempty.\n\nPotential issue: status if any dimension unknown? none.\n\nLet's produce.\n\nNeed be careful: \"AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and entire source supports one legal interpretation.\" Yes.\n\nLet's write:\n\n{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"向前\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Direction modifier meaning forward. It does not add a separate action; it constrains the following walk action to forward motion.\"\n    },\n    {\n      \"text\": \"走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Action verb meaning walk. With the forward modifier and the following distance, it maps to the single legal IR action walk_forward.\"\n    },\n    {\n      \"text\": \"800\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Numeric distance magnitude 800 for the walk action.\"\n    },\n    {\n      \"text\": \"厘米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Unit centimeters. 800 centimeters converts to 8 meters, a positive finite distance required by walk_forward.\"\n    }\n  ],\n  \"dimensions\": {...}\n}\n\nNeed role for \"向前\" maybe ACTION? But context okay. \"Every action, relation and editing clause\" - direction is relation? Hmm role CONTEXT maybe acceptable. Could be RELATION? Direction relation? The role definitions include RELATION. Maybe \"向前\" is relation? It modifies action. But no explicit relation between actions. I'd use CONTEXT. Explanation says modifier. That's okay.\n\nNeed \"coverage copying alone does not establish semantic authorization\"; explanations do account.\n\nDimension explanations succinct but adequate. Let's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward. It does not add a separate action; it constrains the following walk action to forward motion.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning walk. With the forward modifier and the following distance, it maps to the single legal IR action walk_forward.\"},{\"text\":\"800\",\"role\":\"QUANTITY\",\"explanation\":\"Numeric distance magnitude 800 for the walk action.\"},{\"text\":\"厘米\",\"role\":\"QUANTITY\",\"explanation\":\"Unit centimeters. 800 centimeters converts to 8 meters, a positive finite distance required by walk_forward.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: walking forward. 走 supplies the action verb, 向前 modifies its direction, and 800厘米 supplies its distance; no second action, edited action, or repeated action is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order alternatives exist. If represented, it is a single first step s1 with no predecessor-dependent ordering issue.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, replacement, or edit terms. Nothing is changed or preserved from a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count. The single walk action occurs once, and no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments requiring external context. The direction is explicitly 向前 and the distance is explicitly 800厘米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, simultaneity, waiting, or completion relation. It supports one linear single-step plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Forward direction and distance are both fixed.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_3262f8d1-a6d9-414d-ba29-b4418a1ebb80",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1613,
+            "output_tokens_details": {
+              "reasoning_tokens": 1158
+            },
+            "total_tokens": 2521
+          }
+        },
+        "request_sha256": "f41a9d0f2af9aea5d8507cb3ba3961737d9d21b64d6fd97d06820530d652e157",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.609732500000973,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_3262f8d1-a6d9-414d-ba29-b4418a1ebb80",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward. It does not add a separate action; it constrains the following walk action to forward motion.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning walk. With the forward modifier and the following distance, it maps to the single legal IR action walk_forward.\"},{\"text\":\"800\",\"role\":\"QUANTITY\",\"explanation\":\"Numeric distance magnitude 800 for the walk action.\"},{\"text\":\"厘米\",\"role\":\"QUANTITY\",\"explanation\":\"Unit centimeters. 800 centimeters converts to 8 meters, a positive finite distance required by walk_forward.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: walking forward. 走 supplies the action verb, 向前 modifies its direction, and 800厘米 supplies its distance; no second action, edited action, or repeated action is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order alternatives exist. If represented, it is a single first step s1 with no predecessor-dependent ordering issue.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, replacement, or edit terms. Nothing is changed or preserved from a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count. The single walk action occurs once, and no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments requiring external context. The direction is explicitly 向前 and the distance is explicitly 800厘米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, simultaneity, waiting, or completion relation. It supports one linear single-step plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Forward direction and distance are both fixed.\"}}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 1613,
+          "total_tokens": 2521
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.296622900001239,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk-800cm",
+      "model": "deepseek-flash",
+      "normalized_length": 8,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk-800cm\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "0fc3a2f84cfc3f65699e16bd8845888ebb29d3df2323639d16d436dfdc81c6c3",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_785a8c71-c6ad-44b9-96ce-afdd904ab57a",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.614871399997355,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.609732500000973,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"CONTEXT\",\"explanation\":\"Direction modifier meaning forward. It does not add a separate action; it constrains the following walk action to forward motion.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Action verb meaning walk. With the forward modifier and the following distance, it maps to the single legal IR action walk_forward.\"},{\"text\":\"800\",\"role\":\"QUANTITY\",\"explanation\":\"Numeric distance magnitude 800 for the walk action.\"},{\"text\":\"厘米\",\"role\":\"QUANTITY\",\"explanation\":\"Unit centimeters. 800 centimeters converts to 8 meters, a positive finite distance required by walk_forward.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: walking forward. 走 supplies the action verb, 向前 modifies its direction, and 800厘米 supplies its distance; no second action, edited action, or repeated action is present.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order alternatives exist. If represented, it is a single first step s1 with no predecessor-dependent ordering issue.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, replacement, or edit terms. Nothing is changed or preserved from a prior instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count. The single walk action occurs once, and no span is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, or omitted shared arguments requiring external context. The direction is explicitly 向前 and the distance is explicitly 800厘米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, simultaneity, waiting, or completion relation. It supports one linear single-step plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Forward direction and distance are both fixed.\"}}}",
+          "raw_response_sha256": "4b83dce205925b1fce34260eee076e7dbb60a5da6ae0ba9cf30e303fafaef23c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_3262f8d1-a6d9-414d-ba29-b4418a1ebb80",
+          "source_aware": false,
+          "source_sha256": "f728183bf6991961f16cce70201013f6f985f618700436ca3e4c4a8e71800681",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 1613,
+            "total_tokens": 2521
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Direction modifier meaning forward. It does not add a separate action; it constrains the following walk action to forward motion.",
+                "role": "CONTEXT",
+                "text": "向前"
+              },
+              {
+                "explanation": "Action verb meaning walk. With the forward modifier and the following distance, it maps to the single legal IR action walk_forward.",
+                "role": "ACTION",
+                "text": "走"
+              },
+              {
+                "explanation": "Numeric distance magnitude 800 for the walk action.",
+                "role": "QUANTITY",
+                "text": "800"
+              },
+              {
+                "explanation": "Unit centimeters. 800 centimeters converts to 8 meters, a positive finite distance required by walk_forward.",
+                "role": "QUANTITY",
+                "text": "厘米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: walking forward. 走 supplies the action verb, 向前 modifies its direction, and 800厘米 supplies its distance; no second action, edited action, or repeated action is present.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so no execution-order alternatives exist. If represented, it is a single first step s1 with no predecessor-dependent ordering issue.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no correction, replacement, or edit terms. Nothing is changed or preserved from a prior instruction.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinals, or omitted shared arguments requiring external context. The direction is explicitly 向前 and the distance is explicitly 800厘米.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker or count. The single walk action occurs once, and no span is repeated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies no before/after, simultaneity, waiting, or completion relation. It supports one linear single-step plan.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Forward direction and distance are both fixed.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 141,
+        "total_tokens": 1880
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk-800cm",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "向前走800厘米",
+    "status": "SUCCESS"
+  }
+}

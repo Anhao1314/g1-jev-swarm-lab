@@ -1,0 +1,241 @@
+{
+  "added_wall_s": 8.295621200002643,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.291728000000148,
+        "provider_document": {
+          "created_at": 1791359835,
+          "id": "resp_434a003b-d065-48e1-831a-97bfe664b1c7",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_434a003b-d065-48e1-831a-97bfe664b1c7",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"保持站立5秒\". Chinese: \"keep standing 5 seconds\" or \"stand for 5 seconds\". Legal actions: stand accepts positive finite duration_s default 2.0. \"保持站立5秒\" = maintain standing 5 seconds. Interpret as stand duration 5 seconds. Unique? Need dimensions.\n\nNeed coverage split meaningful spans, concatenated exactly entire source. Source string \"保持站立5秒\". We can split e.g. \"保持站立\" ACTION? \"5\" QUANTITY? \"秒\" QUANTITY? Need text concatenation exact. Could split \"保持站立\" and \"5\" and \"秒\". Or one span entire. Need every action relation editing clause considered. No separators.\n\nNeed decide status likely AUTHORIZED_UNIQUE. But must be careful: \"保持站立5秒\" could mean stand duration 5 seconds. It is exactly stand with duration_s=5. No ambiguity. All dimensions UNIQUE or inapplicable.\n\nLet's examine seven:\n- action_multiplicity: one action stand. UNIQUE.\n- action_order: only one action, no order alternatives. UNIQUE.\n- correction_scope: no edits. UNIQUE (inapplicable).\n- repetition_scope: no repetition. UNIQUE.\n- reference_resolution: no pronouns/ordinal; \"站立\" refers to stand action, duration \"5秒\" applies to that action. UNIQUE.\n- temporal_relations: one action with duration 5s; no before/after/simultaneity. UNIQUE.\n- unresolved_relations: none. UNIQUE.\n\nNeed output JSON exactly keys status, coverage, dimensions. coverage list with text, role, explanation. Text values concatenated equal original source exactly. Source: 保持站立5秒. How split? Need preserve. If we split \"保持站立\", \"5\", \"秒\" then concat = 保持站立5秒. Role for \"保持站立\" ACTION (maintain standing/stand). \"5\" QUANTITY, \"秒\" QUANTITY maybe unit. Or combine \"5秒\" QUANTITY. But if \"保持站立\" and \"5秒\". Concatenate exactly. Explanation: \"保持站立\" denotes stand action; \"5秒\" specifies positive finite duration 5 seconds. Does \"保持站立\" alone maybe means maintain standing, but no duration? Combined with 5秒. That's fine.\n\nNeed ensure text copied exactly, no whitespace? Source has no spaces. We can use two items: \"保持站立\" and \"5秒\". Both exact substrings. Role: ACTION for first, QUANTITY for second. Explanation nonempty.\n\nCould also use three: \"保持站立\", \"5\", \"秒\". But \"5秒\" as QUANTITY is meaningful. Concat equals entire. Good.\n\nPotential issue: \"保持站立5秒\" in Chinese could be parsed as \"保持站立5秒\" no punctuation. Unique.\n\nNeed maybe mention legal compilation semantics: stand duration_s positive finite. 5 seconds within max 60. Legal. No issue.\n\nNeed output no markdown. Ensure JSON valid. Use Chinese characters maybe okay. Need no extra text.\n\nLet's craft:\n\n{\n \"status\":\"AUTHORIZED_UNIQUE\",\n \"coverage\":[\n  {\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"Denotes the single requested action of standing/maintaining a standing posture; it maps to the IR stand action.\"},\n  {\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a duration of 5 seconds for the stand action, which is positive and finite and within the 60-second IR bound.\"}\n ],\n \"dimensions\":{\n  \"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action, standing/maintaining standing, with no additional or repeated actions.\"},\n  \"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order choice exists; any linear plan has that single step first.\"},\n  \"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit clause appears; nothing replaces or preserves an earlier instruction.\"},\n  \"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or frequency expression is present; the stand action occurs once for the specified duration.\"},\n  \"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The quantity 5秒 attaches directly to the single stand action; there are no pronouns, ordinal references, or omitted shared arguments needing another referent.\"},\n  \"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only a single continuous stand duration of 5 seconds, with no before/after, waiting, simultaneity, or multi-step timing relation.\"},\n  \"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No choice, scope, ordering, or relation is explicitly left unresolved; the sole action and its duration are fully specified.\"}\n }\n}\n\nNeed think if \"保持站立\" could mean \"remain standing\" not necessarily IR stand? The legal action stand accepts duration. It maps. Good.\n\nPotential ambiguity: \"保持站立5秒\" could be read as \"保持站立\" and \"5秒\" maybe duration. No.\n\nPotential issue: \"stand\" in Chinese often \"站立\" and duration. \"保持站立5秒\" = keep standing for 5 seconds. Unique.\n\nNeed maybe coverage role CONTEXT? Not necessary. The instructions say split every action, relation, editing clause. Two spans enough. \"保持站立\" action, \"5秒\" quantity. Good.\n\nNeed ensure no markdown. Final only JSON.\n\nLet's consider if status should be AUTHORIZED_UNIQUE. Yes.\n\nDouble-check dimension statuses: all UNIQUE. Good.\n\nNeed maybe not include \"IR stand action\" if not claiming compiler implements? It's okay to explain mapping semantics. We don't verify compiler. The gate can say maps to legal IR stand. That's okay? It says never claim separate compiler candidate implements. Not claiming. Fine.\n\nNeed ensure coverage explanation for \"保持站立\" says maps to IR stand action. Fine.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"保持站立5秒\". Chinese: \"keep standing 5 seconds\" or \"stand for 5 seconds\". Legal actions: stand accepts positive finite duration_s default 2.0. \"保持站立5秒\" = maintain standing 5 seconds. Interpret as stand duration 5 seconds. Unique? Need dimensions.\n\nNeed coverage split meaningful spans, concatenated exactly entire source. Source string \"保持站立5秒\". We can split e.g. \"保持站立\" ACTION? \"5\" QUANTITY? \"秒\" QUANTITY? Need text concatenation exact. Could split \"保持站立\" and \"5\" and \"秒\". Or one span entire. Need every action relation editing clause considered. No separators.\n\nNeed decide status likely AUTHORIZED_UNIQUE. But must be careful: \"保持站立5秒\" could mean stand duration 5 seconds. It is exactly stand with duration_s=5. No ambiguity. All dimensions UNIQUE or inapplicable.\n\nLet's examine seven:\n- action_multiplicity: one action stand. UNIQUE.\n- action_order: only one action, no order alternatives. UNIQUE.\n- correction_scope: no edits. UNIQUE (inapplicable).\n- repetition_scope: no repetition. UNIQUE.\n- reference_resolution: no pronouns/ordinal; \"站立\" refers to stand action, duration \"5秒\" applies to that action. UNIQUE.\n- temporal_relations: one action with duration 5s; no before/after/simultaneity. UNIQUE.\n- unresolved_relations: none. UNIQUE.\n\nNeed output JSON exactly keys status, coverage, dimensions. coverage list with text, role, explanation. Text values concatenated equal original source exactly. Source: 保持站立5秒. How split? Need preserve. If we split \"保持站立\", \"5\", \"秒\" then concat = 保持站立5秒. Role for \"保持站立\" ACTION (maintain standing/stand). \"5\" QUANTITY, \"秒\" QUANTITY maybe unit. Or combine \"5秒\" QUANTITY. But if \"保持站立\" and \"5秒\". Concatenate exactly. Explanation: \"保持站立\" denotes stand action; \"5秒\" specifies positive finite duration 5 seconds. Does \"保持站立\" alone maybe means maintain standing, but no duration? Combined with 5秒. That's fine.\n\nNeed ensure text copied exactly, no whitespace? Source has no spaces. We can use two items: \"保持站立\" and \"5秒\". Both exact substrings. Role: ACTION for first, QUANTITY for second. Explanation nonempty.\n\nCould also use three: \"保持站立\", \"5\", \"秒\". But \"5秒\" as QUANTITY is meaningful. Concat equals entire. Good.\n\nPotential issue: \"保持站立5秒\" in Chinese could be parsed as \"保持站立5秒\" no punctuation. Unique.\n\nNeed maybe mention legal compilation semantics: stand duration_s positive finite. 5 seconds within max 60. Legal. No issue.\n\nNeed output no markdown. Ensure JSON valid. Use Chinese characters maybe okay. Need no extra text.\n\nLet's craft:\n\n{\n \"status\":\"AUTHORIZED_UNIQUE\",\n \"coverage\":[\n  {\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"Denotes the single requested action of standing/maintaining a standing posture; it maps to the IR stand action.\"},\n  {\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a duration of 5 seconds for the stand action, which is positive and finite and within the 60-second IR bound.\"}\n ],\n \"dimensions\":{\n  \"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action, standing/maintaining standing, with no additional or repeated actions.\"},\n  \"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order choice exists; any linear plan has that single step first.\"},\n  \"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit clause appears; nothing replaces or preserves an earlier instruction.\"},\n  \"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or frequency expression is present; the stand action occurs once for the specified duration.\"},\n  \"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The quantity 5秒 attaches directly to the single stand action; there are no pronouns, ordinal references, or omitted shared arguments needing another referent.\"},\n  \"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only a single continuous stand duration of 5 seconds, with no before/after, waiting, simultaneity, or multi-step timing relation.\"},\n  \"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No choice, scope, ordering, or relation is explicitly left unresolved; the sole action and its duration are fully specified.\"}\n }\n}\n\nNeed think if \"保持站立\" could mean \"remain standing\" not necessarily IR stand? The legal action stand accepts duration. It maps. Good.\n\nPotential ambiguity: \"保持站立5秒\" could be read as \"保持站立\" and \"5秒\" maybe duration. No.\n\nPotential issue: \"stand\" in Chinese often \"站立\" and duration. \"保持站立5秒\" = keep standing for 5 seconds. Unique.\n\nNeed maybe coverage role CONTEXT? Not necessary. The instructions say split every action, relation, editing clause. Two spans enough. \"保持站立\" action, \"5秒\" quantity. Good.\n\nNeed ensure no markdown. Final only JSON.\n\nLet's consider if status should be AUTHORIZED_UNIQUE. Yes.\n\nDouble-check dimension statuses: all UNIQUE. Good.\n\nNeed maybe not include \"IR stand action\" if not claiming compiler implements? It's okay to explain mapping semantics. We don't verify compiler. The gate can say maps to legal IR stand. That's okay? It says never claim separate compiler candidate implements. Not claiming. Fine.\n\nNeed ensure coverage explanation for \"保持站立\" says maps to IR stand action. Fine.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"Denotes the single requested action of standing or maintaining a standing posture, which maps to the legal IR action stand.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a duration of 5 seconds for the stand action; this is a positive finite duration and is within the 60-second IR legality bound.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action, standing/maintaining standing, with no additional or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order choice exists; the linear plan contains that single action as its first step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit clause appears; nothing replaces or preserves an earlier instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or frequency expression is present; the stand action occurs once for the specified duration.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The quantity 5秒 attaches directly to the single stand action; there are no pronouns, ordinal references, or omitted shared arguments requiring another referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only one continuous stand duration of 5 seconds, with no before/after, waiting, simultaneity, or multi-step timing relation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No choice, scope, ordering, or relation is explicitly left unresolved; the sole action and its duration are fully specified.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_434a003b-d065-48e1-831a-97bfe664b1c7",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1643,
+            "output_tokens_details": {
+              "reasoning_tokens": 1280
+            },
+            "total_tokens": 2551
+          }
+        },
+        "request_sha256": "a861b55c795dbe403006b93c7ff16452245ce24ca2bf6f08449475377b44d4ba",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.29020859999946,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_434a003b-d065-48e1-831a-97bfe664b1c7",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"Denotes the single requested action of standing or maintaining a standing posture, which maps to the legal IR action stand.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a duration of 5 seconds for the stand action; this is a positive finite duration and is within the 60-second IR legality bound.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action, standing/maintaining standing, with no additional or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order choice exists; the linear plan contains that single action as its first step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit clause appears; nothing replaces or preserves an earlier instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or frequency expression is present; the stand action occurs once for the specified duration.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The quantity 5秒 attaches directly to the single stand action; there are no pronouns, ordinal references, or omitted shared arguments requiring another referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only one continuous stand duration of 5 seconds, with no before/after, waiting, simultaneity, or multi-step timing relation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No choice, scope, ordering, or relation is explicitly left unresolved; the sole action and its duration are fully specified.\"}}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 1643,
+          "total_tokens": 2551
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.8901786999995238,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-5s",
+      "model": "deepseek-flash",
+      "normalized_length": 6,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"stand-5s\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "43ab03ee233d6b45c9c84eff017aed5cb434659582297bd4e948fed9e38c7731",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_58987e16-3b53-4199-bfd4-1479909f768e",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.294495100002678,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.29020859999946,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"保持站立\",\"role\":\"ACTION\",\"explanation\":\"Denotes the single requested action of standing or maintaining a standing posture, which maps to the legal IR action stand.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies a duration of 5 seconds for the stand action; this is a positive finite duration and is within the 60-second IR legality bound.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action, standing/maintaining standing, with no additional or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no execution-order choice exists; the linear plan contains that single action as its first step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction or edit clause appears; nothing replaces or preserves an earlier instruction.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or frequency expression is present; the stand action occurs once for the specified duration.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The quantity 5秒 attaches directly to the single stand action; there are no pronouns, ordinal references, or omitted shared arguments requiring another referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies only one continuous stand duration of 5 seconds, with no before/after, waiting, simultaneity, or multi-step timing relation.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No choice, scope, ordering, or relation is explicitly left unresolved; the sole action and its duration are fully specified.\"}}}",
+          "raw_response_sha256": "6a466405a76ce95ae391f3e49e759da6a4a0f67736332e8d49f99b3f6c4dbb09",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_434a003b-d065-48e1-831a-97bfe664b1c7",
+          "source_aware": false,
+          "source_sha256": "d715de566945bdbbf627f6e4dd6c1b1d12411c8044c085f6f8e7d5dab0f92ca6",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 1643,
+            "total_tokens": 2551
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Denotes the single requested action of standing or maintaining a standing posture, which maps to the legal IR action stand.",
+                "role": "ACTION",
+                "text": "保持站立"
+              },
+              {
+                "explanation": "Specifies a duration of 5 seconds for the stand action; this is a positive finite duration and is within the 60-second IR legality bound.",
+                "role": "QUANTITY",
+                "text": "5秒"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action, standing/maintaining standing, with no additional or repeated actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so no execution-order choice exists; the linear plan contains that single action as its first step.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or edit clause appears; nothing replaces or preserves an earlier instruction.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The quantity 5秒 attaches directly to the single stand action; there are no pronouns, ordinal references, or omitted shared arguments requiring another referent.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition or frequency expression is present; the stand action occurs once for the specified duration.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies only one continuous stand duration of 5 seconds, with no before/after, waiting, simultaneity, or multi-step timing relation.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No choice, scope, ordering, or relation is explicitly left unresolved; the sole action and its duration are fully specified.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 146,
+        "total_tokens": 1885
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-5s",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        }
+      ]
+    },
+    "normalized_text": "保持站立5秒",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "added_wall_s": 15.640516199999183,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 15.634764800000994,
+        "provider_document": {
+          "created_at": 1791359139,
+          "id": "resp_41fadbe6-b46d-443a-afea-e7ff0f7922ea",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_41fadbe6-b46d-443a-afea-e7ff0f7922ea",
+              "reasoning_content": "We need answer JSON. Need analyze Chinese source: \"我不是说别停，我说的是‘停’。\"\nWe need derive authorized plan from source alone, compare candidate? Need output status etc. Need parse.\n\nSource: \"我不是说别停，我说的是‘停’。\"\nTranslation: \"I wasn't saying don't stop, what I said is 'stop'.\" Or \"I didn't say don't stop; I said 'stop'.\" It contains negation/correction. Need determine authorized action plan. Does it authorize stop? Need inspect. \"我不是说别停\" = I didn't say don't stop. \"我说的是‘停’\" = What I said is 'stop'. This is correction clarifying previous? It explicitly says not \"别停\" (don't stop), but \"停\" (stop). So the intended action is stop? Need consider source alone. It is an explicit correction of prior utterance: not don't stop, but stop. This should authorize stop action, likely single stop. Need check dimensions.\n\nNeed split into spans exactly, including punctuation. Need coverage concatenate exactly entire source. Source has: 我不是说别停，我说的是‘停’。\nCharacters: 我 不 是 说 别 停 ， 我 说 的 是 ‘ 停 ’ 。\nNeed split meaningful spans. Could split:\n1 \"我不是说别停，\" role EDIT or CONTEXT? It's negation/correction clause. Explanation: it rejects \"别停\" (do not stop) as not the intended command.\n2 \"我说的是‘停’。\" role ACTION? It identifies intended command \"停\" (stop).\nNeed exact concatenation. Maybe include punctuation in spans. \"我不是说别停，\" includes comma. \"我说的是‘停’。\" includes final period. Good.\n\nNeed determine if stop is executable. \"停\" maps to stop skill with parameters {}. The source has no repetitions, no other actions. Action multiplicity: exactly one stop action? Wait there is \"别停\" mentioned as negated, not action. The correction says not that. Does mentioning \"别停\" count as action? It is an explicit correction/negation, not requested action. Thus only one stop. Correction_scope: Corrects/replaces \"别停\" with \"停\"; the earlier (hypothetical) instruction \"别停\" not authorized, only \"停\". But source doesn't include a previous instruction except this self-correction. It says I'm not saying \"don't stop\"; I said \"stop\". That is a correction from negation to stop. Could be interpreted as: The user is correcting something they previously said, but from source alone, no context of previous. However within source, they explicitly disambiguate: not 别停, but 停. It uniquely authorizes stop. Need consider unresolved relation? Maybe \"我不是说别停\" could be self-reported correction, not a command. But \"我说的是‘停’\" is a statement about speech act. Does that authorize executing stop? In this pilot, source may be an instruction. It says what I said is 'stop'. It probably is a command to stop, albeit meta. The previous phrase \"我不是说别停\" maybe not. Need decide if status AUTHORIZED_UNIQUE or UNKNOWN? We must be strict. The source is in Chinese: \"I didn't say don't stop, I said 'stop'.\" This is a correction that clarifies the intended command is stop. It is explicit. It should authorize exactly one stop. Candidate exactly s1 stop {}. So likely AUTHORIZED_UNIQUE.\n\nNeed fill dimensions.\n\nLet's parse all clauses. There is no explicit \"stop\" verb? \"停\" is stop. In Chinese \"停\" can mean stop. Legal skill stop parameter {}. Good.\n\nAction multiplicity: one action \"停\", while \"别停\" is mentioned only in negated/corrected clause, not requested. Count 1.\n\nAction_order: only one step, no ordering issue. Unique/inapplicable.\n\nCorrection_scope: \"我不是说别停\" rejects/corrects \"别停\"; \"我说的是‘停’\" asserts corrected content \"停\". It replaces the negated do-not-stop reading with stop. Since no other prior action in source, it affects interpretation of the command. Unique.\n\nRepetition_scope: no repetition. Unique/inapplicable.\n\nReference_resolution: \"我说的\" refers to speaker's own intended utterance; \"停\" is quoted exact token. No pronouns needing external context? \"我\" speaker, not action. Unique.\n\nTemporal_relations: single immediate stop, no before/after/waiting. Unique/inapplicable.\n\nUnresolved_relations: none; the contrast explicitly resolves negation to stop. Unique.\n\nNeed coverage: entire source split. Need include every action, relation, edit clause. Let's propose two spans or maybe more granular. Requirement: Split source into meaningful spans so every action, relation and edit clause is analyzed. Text values concatenated in order must equal entire original source exactly. We can do 2 spans:\n- text: \"我不是说别停，\" role: EDIT. Explanation: This clause negates the phrase \"别停\" (\"do not stop\"); it is an explicit correction that excludes a do-not-stop command and does not itself request any executable action.\n- text: \"我说的是‘停’。\" role: ACTION. Explanation: This asserts that the intended utterance/command is \"停\" (\"stop\"), which maps uniquely to a single legal stop skill with empty parameters; it supplies the only executable action.\n\nNeed ensure exact: Source includes Chinese comma \"，\" and curly quotes ‘ ’ and full stop \"。\". Text copy: \"我不是说别停，我说的是‘停’。\" Yes.\n\nCould there be a preceding \"我不是说别停\" with \"别停\" as action stop? It's negated. Role EDIT appropriate. The second clause maybe ACTION. Good.\n\nBut is coverage nonempty list, all text concatenated equal source exactly. With two spans: first ends with ， second starts 我... concatenates. Good.\n\nNeed authorized_plan: [{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]. Candidate same. Good.\n\nNeed output JSON exactly with keys status, coverage, dimensions, authorized_plan. No markdown. We can provide.\n\nNeed be cautious: The source is a correction of an utterance, not necessarily direct command? The system says \"source-to-IR authorization verifier\" and source may be natural language instruction. We must derive plan. If source says \"I didn't say don't stop; I said stop\" — it is a statement about what the user said, not an imperative? However in context likely correcting command. But source alone: \"我说的是‘停’\" could be a quotation of an earlier command; not necessarily an imperative to execute now. Does this authorize stop? The previous user message? There is only this source. It explicitly says \"what I said is 'stop'.\" Is \"stop\" as quoted word enough to authorize stop action? In this pilot, they treat commands. The source is a correction: user clarifies they meant stop, not don't stop. That implies command stop. The candidate is stop. Need maybe status AUTHORIZED_UNIQUE. But let's challenge.\n\nThe instructions say \"Determine all action counts, parameters, order, corrections, repetitions, references and temporal relations without taking candidate as evidence.\" If source contains no direct imperative but says \"I said 'stop'.\" Is this enough? It is a reported speech act. It may be a correction. The action is stop. The legal skill stop. I think yes.\n\nCould there be ambiguity due to \"我不是说别停\" = \"I didn't say don't stop\" could be parsed as \"I didn't say [don't stop]\" vs \"I am not saying [don't stop]\" (current). In Chinese \"我不是说\" can mean \"I am not saying\" or \"I didn't say\". Both same: rejecting don't stop. Then \"我说的是‘停’\" = \"What I mean/say is 'stop'.\" Unique.\n\nPotential issue: \"别停\" is \"don't stop\" which would be negation of stop. If the original instruction was maybe \"别停\" (do not stop), but user says \"I didn't say don't stop, I said stop.\" Correction removes the \"不\" (not) attached to \"别\"?? Actually \"别停\" = don't stop. \"停\" = stop. So yes.\n\nCould there be multiple actions? No.\n\nNeed dimensions explanations nonempty. Let's craft concise but complete.\n\nStatus: AUTHORIZED_UNIQUE.\n\nCoverage objects exactly fields text, role, explanation. We can have 2 items.\n\nDimensions object exactly the seven keys. Each has status and explanation. Need order? JSON object order not semantically important, but can follow.\n\nNeed ensure all statuses UNIQUE. If any dimension inapplicable, we can set UNIQUE with explanation \"no ...\". The spec says UNIQUE means source resolves or inapplicable and introduces no alternative. Good.\n\nPotential concern: \"action_multiplicity\" maybe there is mention of two actions: \"别停\" and \"停\". But \"别停\" is negated/corrected. We explain only one executable action. Good.\n\nPotential concern: \"correction_scope\" could be UNKNOWN because source references an earlier utterance \"我不是说别停\" but we don't have the previous context. However it says \"I didn't say don't stop; I said stop.\" This self-contained correction tells us the corrected intended command. The scope is within source: reject 别停, accept 停. It is unique. If there was prior instruction maybe not included, but source itself includes both. The correction changes the interpretation of \"别停\" to \"停\". Good.\n\nPotential concern: \"reference_resolution\": \"我说的\" refers to speaker; \"停\" is quoted token. No external need. Unique.\n\nPotential concern: \"temporal_relations\": stop has no duration; immediate. But stop skill has no parameters, no duration. Unique. However stop maybe execution timing not specified. But stop is a skill, no duration. Fine.\n\nPotential concern: \"unresolved_relations\": None. Unique.\n\nNow output.\n\nNeed ensure no extra text. Let's compose JSON.\n\nDouble-check coverage concatenation:\ntext1: \"我不是说别停，\"\ntext2: \"我说的是‘停’。\"\nConcatenate: \"我不是说别停，我说的是‘停’。\"\nYes.\n\nRole choices: first EDIT, second ACTION. Could first also be EDIT. Good.\n\nExplanation first: \"This span negates the phrase 别停 ('do not stop'); it is an explicit correction that excludes that negated command and does not itself request an executable action.\" Nonempty.\n\nSecond: \"This span states that the intended utterance/command is 停 ('stop'), which maps exactly to one legal stop action with parameters {}; no other action, repetition, or timing is specified.\"\n\nNeed maybe mention quoted punctuation not action. Good.\n\nDimensions explanations:\n\naction_multiplicity: \"The only executable command is the quoted 停 in the second clause; 别停 is negated/corrected, so it contributes no requested action. Thus exactly one stop action.\"\n\naction_order: \"Only one step is authorized, so no ordering relation exists; s1 is first and depends_on [].\"\n\ncorrection_scope: \"The edit clause 我不是说别停 rejects the do-not-stop reading, and 我说的是‘停’ supplies the corrected intended command. It replaces/excludes 别停 with 停 and preserves no other action.\"\n\nrepetition_scope: \"No repetition markers or repetition spans appear; the single stop is not repeated.\"\n\nreference_resolution: \"我 refers to the speaker and 我说的 refers to the speaker's intended utterance; the quoted 停 resolves to the stop command. No external referent is required.\"\n\ntemporal_relations: \"No before/after, waiting, or completion relation is stated; the single stop occurs as the sole step without additional timing.\"\n\nunresolved_relations: \"The contrast between 别停 and 停 explicitly resolves the intended command; no unresolved choice, scope, order, or relation remains.\"\n\nNeed maybe status UNIQUE for all.\n\nAuthorized_plan exactly. Use parameters {}.\n\nCheck JSON valid. Curly quotes Chinese characters are fine UTF-8. Need no markdown.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON. Need analyze Chinese source: \"我不是说别停，我说的是‘停’。\"\nWe need derive authorized plan from source alone, compare candidate? Need output status etc. Need parse.\n\nSource: \"我不是说别停，我说的是‘停’。\"\nTranslation: \"I wasn't saying don't stop, what I said is 'stop'.\" Or \"I didn't say don't stop; I said 'stop'.\" It contains negation/correction. Need determine authorized action plan. Does it authorize stop? Need inspect. \"我不是说别停\" = I didn't say don't stop. \"我说的是‘停’\" = What I said is 'stop'. This is correction clarifying previous? It explicitly says not \"别停\" (don't stop), but \"停\" (stop). So the intended action is stop? Need consider source alone. It is an explicit correction of prior utterance: not don't stop, but stop. This should authorize stop action, likely single stop. Need check dimensions.\n\nNeed split into spans exactly, including punctuation. Need coverage concatenate exactly entire source. Source has: 我不是说别停，我说的是‘停’。\nCharacters: 我 不 是 说 别 停 ， 我 说 的 是 ‘ 停 ’ 。\nNeed split meaningful spans. Could split:\n1 \"我不是说别停，\" role EDIT or CONTEXT? It's negation/correction clause. Explanation: it rejects \"别停\" (do not stop) as not the intended command.\n2 \"我说的是‘停’。\" role ACTION? It identifies intended command \"停\" (stop).\nNeed exact concatenation. Maybe include punctuation in spans. \"我不是说别停，\" includes comma. \"我说的是‘停’。\" includes final period. Good.\n\nNeed determine if stop is executable. \"停\" maps to stop skill with parameters {}. The source has no repetitions, no other actions. Action multiplicity: exactly one stop action? Wait there is \"别停\" mentioned as negated, not action. The correction says not that. Does mentioning \"别停\" count as action? It is an explicit correction/negation, not requested action. Thus only one stop. Correction_scope: Corrects/replaces \"别停\" with \"停\"; the earlier (hypothetical) instruction \"别停\" not authorized, only \"停\". But source doesn't include a previous instruction except this self-correction. It says I'm not saying \"don't stop\"; I said \"stop\". That is a correction from negation to stop. Could be interpreted as: The user is correcting something they previously said, but from source alone, no context of previous. However within source, they explicitly disambiguate: not 别停, but 停. It uniquely authorizes stop. Need consider unresolved relation? Maybe \"我不是说别停\" could be self-reported correction, not a command. But \"我说的是‘停’\" is a statement about speech act. Does that authorize executing stop? In this pilot, source may be an instruction. It says what I said is 'stop'. It probably is a command to stop, albeit meta. The previous phrase \"我不是说别停\" maybe not. Need decide if status AUTHORIZED_UNIQUE or UNKNOWN? We must be strict. The source is in Chinese: \"I didn't say don't stop, I said 'stop'.\" This is a correction that clarifies the intended command is stop. It is explicit. It should authorize exactly one stop. Candidate exactly s1 stop {}. So likely AUTHORIZED_UNIQUE.\n\nNeed fill dimensions.\n\nLet's parse all clauses. There is no explicit \"stop\" verb? \"停\" is stop. In Chinese \"停\" can mean stop. Legal skill stop parameter {}. Good.\n\nAction multiplicity: one action \"停\", while \"别停\" is mentioned only in negated/corrected clause, not requested. Count 1.\n\nAction_order: only one step, no ordering issue. Unique/inapplicable.\n\nCorrection_scope: \"我不是说别停\" rejects/corrects \"别停\"; \"我说的是‘停’\" asserts corrected content \"停\". It replaces the negated do-not-stop reading with stop. Since no other prior action in source, it affects interpretation of the command. Unique.\n\nRepetition_scope: no repetition. Unique/inapplicable.\n\nReference_resolution: \"我说的\" refers to speaker's own intended utterance; \"停\" is quoted exact token. No pronouns needing external context? \"我\" speaker, not action. Unique.\n\nTemporal_relations: single immediate stop, no before/after/waiting. Unique/inapplicable.\n\nUnresolved_relations: none; the contrast explicitly resolves negation to stop. Unique.\n\nNeed coverage: entire source split. Need include every action, relation, edit clause. Let's propose two spans or maybe more granular. Requirement: Split source into meaningful spans so every action, relation and edit clause is analyzed. Text values concatenated in order must equal entire original source exactly. We can do 2 spans:\n- text: \"我不是说别停，\" role: EDIT. Explanation: This clause negates the phrase \"别停\" (\"do not stop\"); it is an explicit correction that excludes a do-not-stop command and does not itself request any executable action.\n- text: \"我说的是‘停’。\" role: ACTION. Explanation: This asserts that the intended utterance/command is \"停\" (\"stop\"), which maps uniquely to a single legal stop skill with empty parameters; it supplies the only executable action.\n\nNeed ensure exact: Source includes Chinese comma \"，\" and curly quotes ‘ ’ and full stop \"。\". Text copy: \"我不是说别停，我说的是‘停’。\" Yes.\n\nCould there be a preceding \"我不是说别停\" with \"别停\" as action stop? It's negated. Role EDIT appropriate. The second clause maybe ACTION. Good.\n\nBut is coverage nonempty list, all text concatenated equal source exactly. With two spans: first ends with ， second starts 我... concatenates. Good.\n\nNeed authorized_plan: [{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]. Candidate same. Good.\n\nNeed output JSON exactly with keys status, coverage, dimensions, authorized_plan. No markdown. We can provide.\n\nNeed be cautious: The source is a correction of an utterance, not necessarily direct command? The system says \"source-to-IR authorization verifier\" and source may be natural language instruction. We must derive plan. If source says \"I didn't say don't stop; I said stop\" — it is a statement about what the user said, not an imperative? However in context likely correcting command. But source alone: \"我说的是‘停’\" could be a quotation of an earlier command; not necessarily an imperative to execute now. Does this authorize stop? The previous user message? There is only this source. It explicitly says \"what I said is 'stop'.\" Is \"stop\" as quoted word enough to authorize stop action? In this pilot, they treat commands. The source is a correction: user clarifies they meant stop, not don't stop. That implies command stop. The candidate is stop. Need maybe status AUTHORIZED_UNIQUE. But let's challenge.\n\nThe instructions say \"Determine all action counts, parameters, order, corrections, repetitions, references and temporal relations without taking candidate as evidence.\" If source contains no direct imperative but says \"I said 'stop'.\" Is this enough? It is a reported speech act. It may be a correction. The action is stop. The legal skill stop. I think yes.\n\nCould there be ambiguity due to \"我不是说别停\" = \"I didn't say don't stop\" could be parsed as \"I didn't say [don't stop]\" vs \"I am not saying [don't stop]\" (current). In Chinese \"我不是说\" can mean \"I am not saying\" or \"I didn't say\". Both same: rejecting don't stop. Then \"我说的是‘停’\" = \"What I mean/say is 'stop'.\" Unique.\n\nPotential issue: \"别停\" is \"don't stop\" which would be negation of stop. If the original instruction was maybe \"别停\" (do not stop), but user says \"I didn't say don't stop, I said stop.\" Correction removes the \"不\" (not) attached to \"别\"?? Actually \"别停\" = don't stop. \"停\" = stop. So yes.\n\nCould there be multiple actions? No.\n\nNeed dimensions explanations nonempty. Let's craft concise but complete.\n\nStatus: AUTHORIZED_UNIQUE.\n\nCoverage objects exactly fields text, role, explanation. We can have 2 items.\n\nDimensions object exactly the seven keys. Each has status and explanation. Need order? JSON object order not semantically important, but can follow.\n\nNeed ensure all statuses UNIQUE. If any dimension inapplicable, we can set UNIQUE with explanation \"no ...\". The spec says UNIQUE means source resolves or inapplicable and introduces no alternative. Good.\n\nPotential concern: \"action_multiplicity\" maybe there is mention of two actions: \"别停\" and \"停\". But \"别停\" is negated/corrected. We explain only one executable action. Good.\n\nPotential concern: \"correction_scope\" could be UNKNOWN because source references an earlier utterance \"我不是说别停\" but we don't have the previous context. However it says \"I didn't say don't stop; I said stop.\" This self-contained correction tells us the corrected intended command. The scope is within source: reject 别停, accept 停. It is unique. If there was prior instruction maybe not included, but source itself includes both. The correction changes the interpretation of \"别停\" to \"停\". Good.\n\nPotential concern: \"reference_resolution\": \"我说的\" refers to speaker; \"停\" is quoted token. No external need. Unique.\n\nPotential concern: \"temporal_relations\": stop has no duration; immediate. But stop skill has no parameters, no duration. Unique. However stop maybe execution timing not specified. But stop is a skill, no duration. Fine.\n\nPotential concern: \"unresolved_relations\": None. Unique.\n\nNow output.\n\nNeed ensure no extra text. Let's compose JSON.\n\nDouble-check coverage concatenation:\ntext1: \"我不是说别停，\"\ntext2: \"我说的是‘停’。\"\nConcatenate: \"我不是说别停，我说的是‘停’。\"\nYes.\n\nRole choices: first EDIT, second ACTION. Could first also be EDIT. Good.\n\nExplanation first: \"This span negates the phrase 别停 ('do not stop'); it is an explicit correction that excludes that negated command and does not itself request an executable action.\" Nonempty.\n\nSecond: \"This span states that the intended utterance/command is 停 ('stop'), which maps exactly to one legal stop action with parameters {}; no other action, repetition, or timing is specified.\"\n\nNeed maybe mention quoted punctuation not action. Good.\n\nDimensions explanations:\n\naction_multiplicity: \"The only executable command is the quoted 停 in the second clause; 别停 is negated/corrected, so it contributes no requested action. Thus exactly one stop action.\"\n\naction_order: \"Only one step is authorized, so no ordering relation exists; s1 is first and depends_on [].\"\n\ncorrection_scope: \"The edit clause 我不是说别停 rejects the do-not-stop reading, and 我说的是‘停’ supplies the corrected intended command. It replaces/excludes 别停 with 停 and preserves no other action.\"\n\nrepetition_scope: \"No repetition markers or repetition spans appear; the single stop is not repeated.\"\n\nreference_resolution: \"我 refers to the speaker and 我说的 refers to the speaker's intended utterance; the quoted 停 resolves to the stop command. No external referent is required.\"\n\ntemporal_relations: \"No before/after, waiting, or completion relation is stated; the single stop occurs as the sole step without additional timing.\"\n\nunresolved_relations: \"The contrast between 别停 and 停 explicitly resolves the intended command; no unresolved choice, scope, order, or relation remains.\"\n\nNeed maybe status UNIQUE for all.\n\nAuthorized_plan exactly. Use parameters {}.\n\nCheck JSON valid. Curly quotes Chinese characters are fine UTF-8. Need no markdown.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"我不是说别停，\",\"role\":\"EDIT\",\"explanation\":\"This span negates the phrase 别停 ('do not stop'); it is an explicit correction that excludes that negated command and does not itself request an executable action.\"},{\"text\":\"我说的是‘停’。\",\"role\":\"ACTION\",\"explanation\":\"This span states that the intended utterance/command is 停 ('stop'), which maps exactly to one legal stop action with parameters {}; no other action, repetition, or timing is specified.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The only executable command is the quoted 停 in the second clause; 别停 is negated/corrected, so it contributes no requested action. Thus exactly one stop action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one step is authorized, so no ordering relation exists; s1 is the sole step and has depends_on [].\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The edit clause 我不是说别停 rejects the do-not-stop reading, and 我说的是‘停’ supplies the corrected intended command. It replaces/excludes 别停 with 停 and preserves no other action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition markers or repetition spans appear; the single stop is not repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"我 refers to the speaker and 我说的 refers to the speaker's intended utterance; the quoted 停 resolves to the stop command. No external referent is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, or completion relation is stated; the single stop occurs as the sole step without additional timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The contrast between 别停 and 停 explicitly resolves the intended command; no unresolved choice, scope, order, or relation remains.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_41fadbe6-b46d-443a-afea-e7ff0f7922ea",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 312,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 3049,
+            "output_tokens_details": {
+              "reasoning_tokens": 2590
+            },
+            "total_tokens": 4257
+          }
+        },
+        "request_sha256": "e78a69405a32cbdf9334544d178f82391338f967a2b80e0e64116df21d0f3b54",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 15.633359499999642,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_41fadbe6-b46d-443a-afea-e7ff0f7922ea",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"我不是说别停，\",\"role\":\"EDIT\",\"explanation\":\"This span negates the phrase 别停 ('do not stop'); it is an explicit correction that excludes that negated command and does not itself request an executable action.\"},{\"text\":\"我说的是‘停’。\",\"role\":\"ACTION\",\"explanation\":\"This span states that the intended utterance/command is 停 ('stop'), which maps exactly to one legal stop action with parameters {}; no other action, repetition, or timing is specified.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The only executable command is the quoted 停 in the second clause; 别停 is negated/corrected, so it contributes no requested action. Thus exactly one stop action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one step is authorized, so no ordering relation exists; s1 is the sole step and has depends_on [].\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The edit clause 我不是说别停 rejects the do-not-stop reading, and 我说的是‘停’ supplies the corrected intended command. It replaces/excludes 别停 with 停 and preserves no other action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition markers or repetition spans appear; the single stop is not repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"我 refers to the speaker and 我说的 refers to the speaker's intended utterance; the quoted 停 resolves to the stop command. No external referent is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, or completion relation is stated; the single stop occurs as the sole step without additional timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The contrast between 别停 and 停 explicitly resolves the intended command; no unresolved choice, scope, order, or relation remains.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 312,
+          "output_tokens": 3049,
+          "total_tokens": 4257
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 5.187079999999696,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stop-clarified",
+      "model": "deepseek-flash",
+      "normalized_length": 14,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 174,
+      "raw_response_sha256": "d786e71563a4020eda5750e290ac1f5191ffee8fe80ab1aa18cc279e6f3fd8d6",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_db04f2d6-0e2e-475b-bfac-beb9d22e03fc",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 15.63991200000055,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 15.633359499999642,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"我不是说别停，\",\"role\":\"EDIT\",\"explanation\":\"This span negates the phrase 别停 ('do not stop'); it is an explicit correction that excludes that negated command and does not itself request an executable action.\"},{\"text\":\"我说的是‘停’。\",\"role\":\"ACTION\",\"explanation\":\"This span states that the intended utterance/command is 停 ('stop'), which maps exactly to one legal stop action with parameters {}; no other action, repetition, or timing is specified.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The only executable command is the quoted 停 in the second clause; 别停 is negated/corrected, so it contributes no requested action. Thus exactly one stop action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one step is authorized, so no ordering relation exists; s1 is the sole step and has depends_on [].\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The edit clause 我不是说别停 rejects the do-not-stop reading, and 我说的是‘停’ supplies the corrected intended command. It replaces/excludes 别停 with 停 and preserves no other action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition markers or repetition spans appear; the single stop is not repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"我 refers to the speaker and 我说的 refers to the speaker's intended utterance; the quoted 停 resolves to the stop command. No external referent is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, waiting, or completion relation is stated; the single stop occurs as the sole step without additional timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The contrast between 别停 and 停 explicitly resolves the intended command; no unresolved choice, scope, order, or relation remains.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]}",
+          "raw_response_sha256": "f6ebb2fe2c44164e4d015018201c5bfb431d066df0c936c764fab7a2fd76c642",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_41fadbe6-b46d-443a-afea-e7ff0f7922ea",
+          "source_aware": true,
+          "source_sha256": "d80794e6b9ad8c7e2d1d96dbb377521acdeba01d2a8a0b624c79cf41d5194d2e",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 312,
+            "output_tokens": 3049,
+            "total_tokens": 4257
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "This span negates the phrase 别停 ('do not stop'); it is an explicit correction that excludes that negated command and does not itself request an executable action.",
+                "role": "EDIT",
+                "text": "我不是说别停，"
+              },
+              {
+                "explanation": "This span states that the intended utterance/command is 停 ('stop'), which maps exactly to one legal stop action with parameters {}; no other action, repetition, or timing is specified.",
+                "role": "ACTION",
+                "text": "我说的是‘停’。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The only executable command is the quoted 停 in the second clause; 别停 is negated/corrected, so it contributes no requested action. Thus exactly one stop action is authorized.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one step is authorized, so no ordering relation exists; s1 is the sole step and has depends_on [].",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The edit clause 我不是说别停 rejects the do-not-stop reading, and 我说的是‘停’ supplies the corrected intended command. It replaces/excludes 别停 with 停 and preserves no other action.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "我 refers to the speaker and 我说的 refers to the speaker's intended utterance; the quoted 停 resolves to the stop command. No external referent is required.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition markers or repetition spans appear; the single stop is not repeated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, waiting, or completion relation is stated; the single stop occurs as the sole step without additional timing.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The contrast between 别停 and 停 explicitly resolves the intended command; no unresolved choice, scope, order, or relation remains.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 209,
+        "output_tokens": 844,
+        "total_tokens": 2589
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stop-clarified",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "我不是说别停,我说的是‘停’",
+    "status": "SUCCESS"
+  }
+}

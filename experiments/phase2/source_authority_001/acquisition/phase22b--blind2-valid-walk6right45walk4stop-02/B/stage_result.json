@@ -1,0 +1,178 @@
+{
+  "added_wall_s": 3.743769299999258,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 3.6701788999998826,
+        "provider_document": {
+          "created_at": 1791360057,
+          "id": "resp_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+              "reasoning_content": "We need answer JSON only. Need parse Chinese command. Need determine if mission. User: \"麻烦先往前走六米，接着顺时针转45度，然后前进4m，再停止\"\n\nTranslate: Please first walk forward six meters, then clockwise turn 45 degrees, then forward 4m, then stop.\n\nLegal skills: walk_forward, turn, stop. Need steps s1 walk distance 6.0, s2 turn angle -45.0 (clockwise negative), s3 walk 4.0, s4 stop. depends_on previous exactly.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-stop\" matches [A-Za-z0-9][A-Za-z0-9._-]{0,63}, no ending dot, not reserved. Need exact fields. No extra.\n\nCheck \"六米\" number Chinese numeral 6. Is that allowed? Need parse numeric text. MALFORMED_NUMBER only NaN/Infinity/exponential/multiple decimal points otherwise malformed. Chinese numerals likely okay? Examples include 站立5秒, \"六米\" probably natural. Need convert to 6.0. \"45度\" 45.0. \"4m\" 4.0. \"顺时针\" clockwise negative. \"麻烦\" polite. \"先...接着...然后...再\" sequence.\n\nNeed ensure turn sign: clockwise negative per prompt: Right, clockwise and 顺时针 are negative. So -45.0.\n\nMission ID maybe \"seq-walk-turn-walk-stop\". Fine.\n\nReturn exactly JSON object no markdown. Need status SUCCESS, mission object, error_code null. Ensure schema_version \"2.0.0\". Steps IDs s1...s4. For every after s1 depends_on exactly previous step ID.\n\nLet's craft.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need parse Chinese command. Need determine if mission. User: \"麻烦先往前走六米，接着顺时针转45度，然后前进4m，再停止\"\n\nTranslate: Please first walk forward six meters, then clockwise turn 45 degrees, then forward 4m, then stop.\n\nLegal skills: walk_forward, turn, stop. Need steps s1 walk distance 6.0, s2 turn angle -45.0 (clockwise negative), s3 walk 4.0, s4 stop. depends_on previous exactly.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-stop\" matches [A-Za-z0-9][A-Za-z0-9._-]{0,63}, no ending dot, not reserved. Need exact fields. No extra.\n\nCheck \"六米\" number Chinese numeral 6. Is that allowed? Need parse numeric text. MALFORMED_NUMBER only NaN/Infinity/exponential/multiple decimal points otherwise malformed. Chinese numerals likely okay? Examples include 站立5秒, \"六米\" probably natural. Need convert to 6.0. \"45度\" 45.0. \"4m\" 4.0. \"顺时针\" clockwise negative. \"麻烦\" polite. \"先...接着...然后...再\" sequence.\n\nNeed ensure turn sign: clockwise negative per prompt: Right, clockwise and 顺时针 are negative. So -45.0.\n\nMission ID maybe \"seq-walk-turn-walk-stop\". Fine.\n\nReturn exactly JSON object no markdown. Need status SUCCESS, mission object, error_code null. Ensure schema_version \"2.0.0\". Steps IDs s1...s4. For every after s1 depends_on exactly previous step ID.\n\nLet's craft.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"seq-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 218,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 521,
+            "output_tokens_details": {
+              "reasoning_tokens": 373
+            },
+            "total_tokens": 2275
+          }
+        },
+        "request_sha256": "fc7987898bdf1284f9ca112f9a619bcde648055622a0e7095d0481952c6db1b3",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 3.6685385999990103,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+        "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"seq-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+        "usage": {
+          "input_tokens": 218,
+          "output_tokens": 521,
+          "total_tokens": 2275
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 1,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.6685385999990103,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "seq-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 26,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"seq-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "4c68dfdf462cd75bd8b1bbe1645356107c437d0f78e50834ebfe436efd44484a",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_fbfd7826-10c9-4cae-9ee7-d5a6e2c988c2",
+      "route": "GUARDED_DIRECT_LLM",
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 218,
+        "output_tokens": 521,
+        "total_tokens": 2275
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "seq-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "麻烦先往前走六米接着顺时针转45度然后前进4m再停止",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,653 @@
+{
+  "B": {
+    "added_wall_s": 2.9848136000000522,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 2.930665300002147,
+          "provider_document": {
+            "created_at": 1791360880,
+            "id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_fe886a22-7152-450c-978a-4d40a983e448",
+                "reasoning_content": "We need answer JSON only. Need parse Chinese: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nNeed produce mission steps:\n1 walk_forward distance_m 4.0\n2 turn angle_deg +60 (left positive)\n3 walk_forward distance_m 4.0 (四米 = 4.0)\n4 turn angle_deg -60 (right negative)\n5 stop parameters {}\ndepends sequential.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-turn-stop\". Must match regex [A-Za-z0-9][A-Za-z0-9._-]{0,63} not end dot/reserved. OK.\n\nNeed exactly top-level keys status, mission, error_code. Ensure no markdown. JSON valid. Parameters keys exact. For stop {}. depends_on s previous.\n\nNeed consider \"立即停止\" stop. Fine.\n\nPotential ambiguity? \"往前移动\" means walk_forward. \"向左转\" left positive. \"向右转\" right negative. Good.\n\nReturn.",
+                "summary": [
+                  {
+                    "text": "We need answer JSON only. Need parse Chinese: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nNeed produce mission steps:\n1 walk_forward distance_m 4.0\n2 turn angle_deg +60 (left positive)\n3 walk_forward distance_m 4.0 (四米 = 4.0)\n4 turn angle_deg -60 (right negative)\n5 stop parameters {}\ndepends sequential.\n\nNeed mission_id path-safe. Can choose e.g. \"mission-walk-turn-walk-turn-stop\". Must match regex [A-Za-z0-9][A-Za-z0-9._-]{0,63} not end dot/reserved. OK.\n\nNeed exactly top-level keys status, mission, error_code. Ensure no markdown. JSON valid. Parameters keys exact. For stop {}. depends_on s previous.\n\nNeed consider \"立即停止\" stop. Fine.\n\nPotential ambiguity? \"往前移动\" means walk_forward. \"向左转\" left positive. \"向右转\" right negative. Good.\n\nReturn.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_fe886a22-7152-450c-978a-4d40a983e448",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 223,
+              "input_tokens_details": {
+                "cached_tokens": 1536
+              },
+              "output_tokens": 407,
+              "output_tokens_details": {
+                "reasoning_tokens": 229
+              },
+              "total_tokens": 2166
+            }
+          },
+          "request_sha256": "8f777f946ac454768245b02aa5d6ed5a5f9c7d0a9de4c9c798cf17280e7c0d6c",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 2.9283309999991616,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+          "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 407,
+            "total_tokens": 2166
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_v1",
+        "attempts": 1,
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 2.9283309999991616,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "mission-walk-turn-walk-turn-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 37,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+        "raw_response_sha256": "a6ca42f9400bb1de4ea0c8bc6cd7580e0d25361e313a1bb08def3f76288f566f",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+        "route": "GUARDED_DIRECT_LLM",
+        "step_count": 5,
+        "usage": {
+          "input_tokens": 223,
+          "output_tokens": 407,
+          "total_tokens": 2166
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "mission-walk-turn-walk-turn-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "angle_deg": 60.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {
+              "angle_deg": -60.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s4"
+            ],
+            "id": "s5",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  },
+  "baseline_kind": "new_frozen_B_first_response",
+  "gate_order": [
+    "ambiguity",
+    "source_verifier"
+  ],
+  "sample": {
+    "baseline_recorded": null,
+    "expected_mission": {
+      "mission_id": "oracle-cl-gen-023",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "angle_deg": -60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "expected_status": "SUCCESS",
+    "family": "sequence_variant",
+    "population": "controlled",
+    "sample_id": "cl-gen-023",
+    "source": "往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止",
+    "split": "already_seen_regression"
+  },
+  "treatments": {
+    "ambiguity": {
+      "added_wall_s": 23.9709546999984,
+      "live_evidence": {
+        "events": [
+          {
+            "index": 1,
+            "latency_s": 23.964903300002334,
+            "provider_document": {
+              "created_at": 1791360888,
+              "id": "resp_f48a3ae8-51d4-435b-9112-24b869ac417a",
+              "incomplete_details": {
+                "reason": "max_output_tokens"
+              },
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "object": "response",
+              "output": [
+                {
+                  "id": "rs_resp_f48a3ae8-51d4-435b-9112-24b869ac417a",
+                  "reasoning_content": "We need answer only JSON. Need inspect Chinese source. Need parse. Source: \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\"\n\nNeed decide dimensions. Actions:\n1 walk_forward distance 4.0 m\n2 turn left 60 degrees -> +60\n3 walk_forward distance \"四米\" = 4 m\n4 turn right 60 degrees -> -60\n5 stop immediately? \"再立即停止\" likely stop immediately.\n\nSequence markers: 然后 (then), 接着 (then/next), 最后 (finally), 再 (then), 立即 (immediately). This seems exact linear order. Need assess ambiguity. \"立即停止\" includes immediate. Is \"immediately\" temporal relation but stop action after previous. Legal? stop no params. \"立即\" could mean stop immediately after turn; linear order can represent as sequential stop depending on predecessor. No simultaneity issues? It says \"最后向右转60度再立即停止\": after final turn, then immediately stop. Since linear plan each step after first depends on exactly predecessor. \"立即\" may indicate no delay; allowed? The IR doesn't support timing/delay except dependency. Is \"immediate\" an unresolved relation? Hmm. The dimensions demand temporal_relations: honor before/after, simultaneity, waiting and completion relations; require single linear order representable without inventing timing or events. Could \"立即停止\" be just stop action after turn, no delay. It may be representable as s4 turn, s5 stop. \"立即\" doesn't create ambiguity. Need action multiplicity: all five actions accounted. action_order: unique sequence. correction_scope: no corrections. repetition_scope: no repetitions. reference_resolution: no pronouns? \"再\" maybe \"then\"; \"最后\" ordinal final. \"四米\" number. \"往\" omitted subject, imperative. No ambiguous referent. temporal_relations: unique order via markers and \"最后\" / \"再立即\". unresolved_relations: none explicit. So AUTHORIZED_UNIQUE likely.\n\nNeed be careful with \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\". Is \"4.0米\" positive finite, legal. \"四米\" positive finite. Turn angles 60 and right 60 -> -60 nonzero finite, abs <=180. Max steps 5 <=32. Stand none. Stop no params. All legal.\n\nNeed provide coverage list exact text concatenation equals source. Need split every action relation editing clause etc. Must preserve exact. We need likely split into spans with exact source substrings in order. Let's design coverage.\n\n\nFull source:\n往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nNeed split into meaningful spans. Could do:\n1 \"往前移动4.0米\" ACTION\n2 \"然后\" RELATION\n3 \"向左转60度\" ACTION\n4 \"接着\" RELATION\n5 \"往前移动四米\" ACTION\n6 \"最后\" RELATION? It's ordinal/temporal.\n7 \"向右转60度\" ACTION\n8 \"再\" RELATION\n9 \"立即停止\" ACTION? \"立即\" is temporal modifier, \"停止\" action. Could separate \"立即\" RELATION? Need every action relation etc. We can split:\n- \"立即\" as RELATION? It qualifies stop immediacy.\n- \"停止\" as ACTION.\nBut if we split \"立即停止\", text concatenation preserves. Role: \"立即\" RELATION (temporal immediacy), \"停止\" ACTION. Or \"立即停止\" ACTION. The coverage needs every action, relation and editing clause considered. We can make \"立即停止\" ACTION and explanation includes immediate. But \"立即\" is temporal relation. Better split maybe:\n\"立即\" RELATION, \"停止\" ACTION. Then coverage includes temporal. But \"停止\" alone is action with no params; \"立即\" relation modifying stop. Need ensure no omission. Both okay.\n\nNeed role for quantities? The numbers are embedded in action. Could either treat whole action as ACTION, or split numbers as QUANTITY. Requirement: coverage split meaningful spans so every action, relation and editing clause considered. Quantities maybe should be separate? They want role QUANTITY if separate. But text concatenation exact. We could split \"往前移动\" ACTION, \"4.0米\" QUANTITY, \"然后\" RELATION, etc. But if action span lacks distance, explanation can mention next quantity supplies argument. Is that better? Need \"every action, relation and editing clause considered.\" We can separate action and quantity. But action \"往前移动\" alone without quantity may be considered incomplete; but combined with quantity next is fine. The dimensions reference resolution includes omitted shared arguments. Hmm.\n\nThe output coverage role choices: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We can assign each chunk. It says text values concatenated in list order must equal entire original source exactly; no omission/paraphrase/normalization/duplication. So we can split anywhere. Need every explanation nonempty account of span's meaning and effect, including why nonexecuting span does not modify authority.\n\nMaybe do a reasonable granularity:\n[\n{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk action; its distance is supplied by the immediately following quantity 4.0米.\"},\n{\"text\":\"4.0米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the preceding forward movement as 4.0 meters, a positive finite value.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the next action after the preceding walk; it creates a sequential relation, not a new action.\"},\n{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Requests a left turn; its angle is supplied by the following 60度.\"},\n{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 60 degrees left/counterclockwise positive.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the next action after the left turn.\"},\n{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Requests a second forward walk; its distance is supplied by the following 四米.\"},\n{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second forward distance as 4 meters, positive finite.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as the final action in the sequence.\"},\n{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests a right turn; its angle is supplied by following 60度.\"},\n{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the right turn angle as 60 degrees, right/clockwise negative.\"},\n{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Orders the stop after the right turn; it is a sequencing relation, not an action.\"},\n{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Specifies the stop is immediate after the preceding turn; it adds no separate event or unresolved timing choice.\"},\n{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action with no parameters, after the final right turn.\"}\n]\n\nThis concatenates exact? Let's check:\n往前移动 + 4.0米 + 然后 + 向左转 + 60度 + 接着 + 往前移动 + 四米 + 最后 + 向右转 + 60度 + 再 + 立即 + 停止\n= 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nBut note action spans \"往前移动\" and quantity separate. Is \"往前移动\" alone action? It needs distance; following quantity supplies. Good. \"向左转\" action and \"60度\" quantity. Legal.\n\nCould maybe \"立即\" role RELATION. Good.\n\nNow dimensions:\naction_multiplicity: UNIQUE. Explanation: explicitly five actions: first forward, left turn, second forward, right turn, stop; no alternates/replacements. Numbers distinguish first/second walk as separate due 然后/接着/最后/再. Need note \"四米\" not editing 4.0? It's a separate movement due \"然后/接着\" and final. Actually \"往前移动4.0米然后向左转60度接着往前移动四米\" ensures second walk. \"四米\" could be same as 4.0 but separate action. Unique.\n\naction_order: UNIQUE. Sequence markers: 然后, 接着, 最后, 再. Order s1 walk, s2 left turn, s3 walk, s4 right turn, s5 stop. \"立即\" after final turn. No alternative.\n\ncorrection_scope: UNIQUE. No correction/edit terms (\"改为\", \"不是\", \"而是\") or replacement; all clauses additive. \"然后/接着/最后/再\" are sequencing, not edits. \"四米\" isn't correcting 4.0米 because it is introduced after turn and marker 接着 as another action. Need maybe \"then\" could be mistaken? But unique.\n\nrepetition_scope: UNIQUE. No repetition/loop or \"再次/重复\"; \"再\" is sequential \"then\", not repetition. \"往前移动\" occurs twice but as separate explicitly ordered actions, not repeated span. Need address \"再\" not repetition. Good.\n\nreference_resolution: UNIQUE. No pronouns; imperative clauses have implied agent (the robot), and omitted distance/angle arguments are supplied by immediately following quantities; \"四米\" resolves to 4 meters; \"停止\" no argument. \"最后\" refers to final action in same sequence. No external context.\n\ntemporal_relations: UNIQUE. Sequential markers plus \"最后\" and \"再立即\" yield single linear order: walk -> left turn -> walk -> right turn -> stop. \"立即\" means stop directly after right turn; representable as next dependent step after predecessor without inventing delay or concurrent event. All actions sequential.\n\nunresolved_relations: UNIQUE. No explicit unresolved choice. Markers resolve order. No alternatives left open. Hmm if \"立即\" could be interpreted as stop simultaneous with after? But no, Chinese \"再立即停止\" = then immediately stop, sequential. It doesn't need timing value. Good.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly one JSON object, no markdown. Ensure keys exactly status, coverage, dimensions. Dimensions exact seven names. Each value exactly status and explanation. No extra fields.\n\nNeed maybe mention legal bounds? Could in explanations: actions legal: distances positive finite, turn angles 60/-60 nonzero finite <=180, stop no params, total steps 5 <=32. But dimensions not include legality. Could include in action_multiplicity or action_order explanation. Status authorized unique requires entire source supports one legal interpretation. Need mention legal interpretation. Perhaps in action_multiplicity explanation: all five are legal: walk distances 4.0 m and 4 m positive finite; turns +60 and -60 degrees nonzero finite within 180; stop no params; 5 steps <=32. Good.\n\nNeed ensure coverage explanations for nonexecuting spans say they don't modify authority. For relation spans: \"creates sequencing relation, not action/edit.\" For quantity spans: \"parameter value, not separate action.\" For \"立即\": \"temporal modifier, no separate action or unresolved timing.\" Good.\n\nPotential issue: \"往\" vs \"往前\" maybe \"向前\" but source exact. Fine.\n\nNeed final JSON. Must avoid markdown. Need proper escaping? Chinese fine. Ensure valid JSON. Let's construct carefully.\n\nCheck coverage concatenation:\n1 往前移动\n2 4.0米\n3 然后\n4 向左转\n5 60度\n6 接着\n7 往前移动\n8 四米\n9 最后\n10 向右转\n11 60度\n12 再\n13 立即\n14 停止\n\nConcatenate:\n往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nNow, do we need \"SEPARATOR\" for punctuation? There is no punctuation. Good.\n\nNeed each explanation nonempty.\n\nLet's write explanations succinct but enough. The final answer should be just JSON. Ensure no newline? JSON can pretty. They said exactly one JSON object, no markdown. Fine.\n\nLet's produce.\n\nDouble-check dimensions names:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Exactly.\n\nStatus values UNIQUE etc.\n\nPotential nuance: Is \"立即停止\" stop action but \"立即\" could be vague? The spec says \"Explicit vague duration is unresolved, not default.\" But \"立即\" is not a duration; it's immediate. It may be temporal relation. Could \"立即\" be unresolved because IR cannot represent immediacy? Hmm. Need think. The instructions: \"temporal_relations: honor before/after, simultaneity, waiting and completion relations; require a single linear order representable without inventing timing or events.\" \"立即\" indicates immediacy after previous action, which is naturally represented by the next step depending on predecessor. It doesn't require delay. No ambiguity. Good.\n\nWhat about \"最后向右转60度再立即停止\": \"最后\" could scope over both right turn and stop, meaning right turn and stop are final? It says \"finally turn right 60 degrees then immediately stop.\" Both final? Actually \"最后\" marks the following action as final? Could be \"最后向右转60度再立即停止\" means the final sequence is turn right then stop. But this still yields order. It might scope \"最后\" over the whole final clause including stop. Does that create ambiguity? The order remains right turn then stop. The final action may be stop or the final group. For linear plan, still right turn then stop. No ambiguity for action order. Could mention \"最后\" marks final phase, and \"再\" orders stop after right turn, so stop is last executed. Is there alternative where \"最后向右转60度\" is final and \"再立即停止\" maybe not part? No, \"再\" connects stop. Unique.\n\nWhat about \"再\" could mean \"again\" repetition? In Chinese, \"再\" can mean \"again\" or \"then\"; here \"再立即停止\" = then immediately stop. Could there be ambiguity between \"again stop\" (repeat stop) vs \"then stop\"? There was no prior stop, so \"again\" impossible. Context resolves. Good.\n\nWhat about \"然后向左转60度接着往前移动四米\": \"接着\" could mean \"following/next\"; unique. Good.\n\nCould \"四米\" refer to total distance? The previous first walk 4.0米 then left turn then \"往前移动四米\" separate. \"然后/接着\" separates. No ambiguity.\n\nNeed maybe coverage role \"ACTION\" for \"往前移动\" without quantity may be considered incomplete, but explanation says quantity following. That's acceptable.\n\nShould we mark \"立即\" as RELATION? Yes.\n\nMaybe output status AUTHORIZED_UNIQUE. Fine.\n\nNeed no extra field. Let's final.",
+                  "summary": [
+                    {
+                      "text": "We need answer only JSON. Need inspect Chinese source. Need parse. Source: \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\"\n\nNeed decide dimensions. Actions:\n1 walk_forward distance 4.0 m\n2 turn left 60 degrees -> +60\n3 walk_forward distance \"四米\" = 4 m\n4 turn right 60 degrees -> -60\n5 stop immediately? \"再立即停止\" likely stop immediately.\n\nSequence markers: 然后 (then), 接着 (then/next), 最后 (finally), 再 (then), 立即 (immediately). This seems exact linear order. Need assess ambiguity. \"立即停止\" includes immediate. Is \"immediately\" temporal relation but stop action after previous. Legal? stop no params. \"立即\" could mean stop immediately after turn; linear order can represent as sequential stop depending on predecessor. No simultaneity issues? It says \"最后向右转60度再立即停止\": after final turn, then immediately stop. Since linear plan each step after first depends on exactly predecessor. \"立即\" may indicate no delay; allowed? The IR doesn't support timing/delay except dependency. Is \"immediate\" an unresolved relation? Hmm. The dimensions demand temporal_relations: honor before/after, simultaneity, waiting and completion relations; require single linear order representable without inventing timing or events. Could \"立即停止\" be just stop action after turn, no delay. It may be representable as s4 turn, s5 stop. \"立即\" doesn't create ambiguity. Need action multiplicity: all five actions accounted. action_order: unique sequence. correction_scope: no corrections. repetition_scope: no repetitions. reference_resolution: no pronouns? \"再\" maybe \"then\"; \"最后\" ordinal final. \"四米\" number. \"往\" omitted subject, imperative. No ambiguous referent. temporal_relations: unique order via markers and \"最后\" / \"再立即\". unresolved_relations: none explicit. So AUTHORIZED_UNIQUE likely.\n\nNeed be careful with \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\". Is \"4.0米\" positive finite, legal. \"四米\" positive finite. Turn angles 60 and right 60 -> -60 nonzero finite, abs <=180. Max steps 5 <=32. Stand none. Stop no params. All legal.\n\nNeed provide coverage list exact text concatenation equals source. Need split every action relation editing clause etc. Must preserve exact. We need likely split into spans with exact source substrings in order. Let's design coverage.\n\n\nFull source:\n往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nNeed split into meaningful spans. Could do:\n1 \"往前移动4.0米\" ACTION\n2 \"然后\" RELATION\n3 \"向左转60度\" ACTION\n4 \"接着\" RELATION\n5 \"往前移动四米\" ACTION\n6 \"最后\" RELATION? It's ordinal/temporal.\n7 \"向右转60度\" ACTION\n8 \"再\" RELATION\n9 \"立即停止\" ACTION? \"立即\" is temporal modifier, \"停止\" action. Could separate \"立即\" RELATION? Need every action relation etc. We can split:\n- \"立即\" as RELATION? It qualifies stop immediacy.\n- \"停止\" as ACTION.\nBut if we split \"立即停止\", text concatenation preserves. Role: \"立即\" RELATION (temporal immediacy), \"停止\" ACTION. Or \"立即停止\" ACTION. The coverage needs every action, relation and editing clause considered. We can make \"立即停止\" ACTION and explanation includes immediate. But \"立即\" is temporal relation. Better split maybe:\n\"立即\" RELATION, \"停止\" ACTION. Then coverage includes temporal. But \"停止\" alone is action with no params; \"立即\" relation modifying stop. Need ensure no omission. Both okay.\n\nNeed role for quantities? The numbers are embedded in action. Could either treat whole action as ACTION, or split numbers as QUANTITY. Requirement: coverage split meaningful spans so every action, relation and editing clause considered. Quantities maybe should be separate? They want role QUANTITY if separate. But text concatenation exact. We could split \"往前移动\" ACTION, \"4.0米\" QUANTITY, \"然后\" RELATION, etc. But if action span lacks distance, explanation can mention next quantity supplies argument. Is that better? Need \"every action, relation and editing clause considered.\" We can separate action and quantity. But action \"往前移动\" alone without quantity may be considered incomplete; but combined with quantity next is fine. The dimensions reference resolution includes omitted shared arguments. Hmm.\n\nThe output coverage role choices: ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We can assign each chunk. It says text values concatenated in list order must equal entire original source exactly; no omission/paraphrase/normalization/duplication. So we can split anywhere. Need every explanation nonempty account of span's meaning and effect, including why nonexecuting span does not modify authority.\n\nMaybe do a reasonable granularity:\n[\n{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Requests a forward walk action; its distance is supplied by the immediately following quantity 4.0米.\"},\n{\"text\":\"4.0米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the preceding forward movement as 4.0 meters, a positive finite value.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Orders the next action after the preceding walk; it creates a sequential relation, not a new action.\"},\n{\"text\":\"向左转\",\"role\":\"ACTION\",\"explanation\":\"Requests a left turn; its angle is supplied by the following 60度.\"},\n{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as 60 degrees left/counterclockwise positive.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Orders the next action after the left turn.\"},\n{\"text\":\"往前移动\",\"role\":\"ACTION\",\"explanation\":\"Requests a second forward walk; its distance is supplied by the following 四米.\"},\n{\"text\":\"四米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second forward distance as 4 meters, positive finite.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as the final action in the sequence.\"},\n{\"text\":\"向右转\",\"role\":\"ACTION\",\"explanation\":\"Requests a right turn; its angle is supplied by following 60度.\"},\n{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the right turn angle as 60 degrees, right/clockwise negative.\"},\n{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Orders the stop after the right turn; it is a sequencing relation, not an action.\"},\n{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Specifies the stop is immediate after the preceding turn; it adds no separate event or unresolved timing choice.\"},\n{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action with no parameters, after the final right turn.\"}\n]\n\nThis concatenates exact? Let's check:\n往前移动 + 4.0米 + 然后 + 向左转 + 60度 + 接着 + 往前移动 + 四米 + 最后 + 向右转 + 60度 + 再 + 立即 + 停止\n= 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nBut note action spans \"往前移动\" and quantity separate. Is \"往前移动\" alone action? It needs distance; following quantity supplies. Good. \"向左转\" action and \"60度\" quantity. Legal.\n\nCould maybe \"立即\" role RELATION. Good.\n\nNow dimensions:\naction_multiplicity: UNIQUE. Explanation: explicitly five actions: first forward, left turn, second forward, right turn, stop; no alternates/replacements. Numbers distinguish first/second walk as separate due 然后/接着/最后/再. Need note \"四米\" not editing 4.0? It's a separate movement due \"然后/接着\" and final. Actually \"往前移动4.0米然后向左转60度接着往前移动四米\" ensures second walk. \"四米\" could be same as 4.0 but separate action. Unique.\n\naction_order: UNIQUE. Sequence markers: 然后, 接着, 最后, 再. Order s1 walk, s2 left turn, s3 walk, s4 right turn, s5 stop. \"立即\" after final turn. No alternative.\n\ncorrection_scope: UNIQUE. No correction/edit terms (\"改为\", \"不是\", \"而是\") or replacement; all clauses additive. \"然后/接着/最后/再\" are sequencing, not edits. \"四米\" isn't correcting 4.0米 because it is introduced after turn and marker 接着 as another action. Need maybe \"then\" could be mistaken? But unique.\n\nrepetition_scope: UNIQUE. No repetition/loop or \"再次/重复\"; \"再\" is sequential \"then\", not repetition. \"往前移动\" occurs twice but as separate explicitly ordered actions, not repeated span. Need address \"再\" not repetition. Good.\n\nreference_resolution: UNIQUE. No pronouns; imperative clauses have implied agent (the robot), and omitted distance/angle arguments are supplied by immediately following quantities; \"四米\" resolves to 4 meters; \"停止\" no argument. \"最后\" refers to final action in same sequence. No external context.\n\ntemporal_relations: UNIQUE. Sequential markers plus \"最后\" and \"再立即\" yield single linear order: walk -> left turn -> walk -> right turn -> stop. \"立即\" means stop directly after right turn; representable as next dependent step after predecessor without inventing delay or concurrent event. All actions sequential.\n\nunresolved_relations: UNIQUE. No explicit unresolved choice. Markers resolve order. No alternatives left open. Hmm if \"立即\" could be interpreted as stop simultaneous with after? But no, Chinese \"再立即停止\" = then immediately stop, sequential. It doesn't need timing value. Good.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output exactly one JSON object, no markdown. Ensure keys exactly status, coverage, dimensions. Dimensions exact seven names. Each value exactly status and explanation. No extra fields.\n\nNeed maybe mention legal bounds? Could in explanations: actions legal: distances positive finite, turn angles 60/-60 nonzero finite <=180, stop no params, total steps 5 <=32. But dimensions not include legality. Could include in action_multiplicity or action_order explanation. Status authorized unique requires entire source supports one legal interpretation. Need mention legal interpretation. Perhaps in action_multiplicity explanation: all five are legal: walk distances 4.0 m and 4 m positive finite; turns +60 and -60 degrees nonzero finite within 180; stop no params; 5 steps <=32. Good.\n\nNeed ensure coverage explanations for nonexecuting spans say they don't modify authority. For relation spans: \"creates sequencing relation, not action/edit.\" For quantity spans: \"parameter value, not separate action.\" For \"立即\": \"temporal modifier, no separate action or unresolved timing.\" Good.\n\nPotential issue: \"往\" vs \"往前\" maybe \"向前\" but source exact. Fine.\n\nNeed final JSON. Must avoid markdown. Need proper escaping? Chinese fine. Ensure valid JSON. Let's construct carefully.\n\nCheck coverage concatenation:\n1 往前移动\n2 4.0米\n3 然后\n4 向左转\n5 60度\n6 接着\n7 往前移动\n8 四米\n9 最后\n10 向右转\n11 60度\n12 再\n13 立即\n14 停止\n\nConcatenate:\n往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nNow, do we need \"SEPARATOR\" for punctuation? There is no punctuation. Good.\n\nNeed each explanation nonempty.\n\nLet's write explanations succinct but enough. The final answer should be just JSON. Ensure no newline? JSON can pretty. They said exactly one JSON object, no markdown. Fine.\n\nLet's produce.\n\nDouble-check dimensions names:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Exactly.\n\nStatus values UNIQUE etc.\n\nPotential nuance: Is \"立即停止\" stop action but \"立即\" could be vague? The spec says \"Explicit vague duration is unresolved, not default.\" But \"立即\" is not a duration; it's immediate. It may be temporal relation. Could \"立即\" be unresolved because IR cannot represent immediacy? Hmm. Need think. The instructions: \"temporal_relations: honor before/after, simultaneity, waiting and completion relations; require a single linear order representable without inventing timing or events.\" \"立即\" indicates immediacy after previous action, which is naturally represented by the next step depending on predecessor. It doesn't require delay. No ambiguity. Good.\n\nWhat about \"最后向右转60度再立即停止\": \"最后\" could scope over both right turn and stop, meaning right turn and stop are final? It says \"finally turn right 60 degrees then immediately stop.\" Both final? Actually \"最后\" marks the following action as final? Could be \"最后向右转60度再立即停止\" means the final sequence is turn right then stop. But this still yields order. It might scope \"最后\" over the whole final clause including stop. Does that create ambiguity? The order remains right turn then stop. The final action may be stop or the final group. For linear plan, still right turn then stop. No ambiguity for action order. Could mention \"最后\" marks final phase, and \"再\" orders stop after right turn, so stop is last executed. Is there alternative where \"最后向右转60度\" is final and \"再立即停止\" maybe not part? No, \"再\" connects stop. Unique.\n\nWhat about \"再\" could mean \"again\" repetition? In Chinese, \"再\" can mean \"again\" or \"then\"; here \"再立即停止\" = then immediately stop. Could there be ambiguity between \"again stop\" (repeat stop) vs \"then stop\"? There was no prior stop, so \"again\" impossible. Context resolves. Good.\n\nWhat about \"然后向左转60度接着往前移动四米\": \"接着\" could mean \"following/next\"; unique. Good.\n\nCould \"四米\" refer to total distance? The previous first walk 4.0米 then left turn then \"往前移动四米\" separate. \"然后/接着\" separates. No ambiguity.\n\nNeed maybe coverage role \"ACTION\" for \"往前移动\" without quantity may be considered incomplete, but explanation says quantity following. That's acceptable.\n\nShould we mark \"立即\" as RELATION? Yes.\n\nMaybe output status AUTHORIZED_UNIQUE. Fine.\n\nNeed no extra field. Let's final.",
+                      "type": "summary_text"
+                    }
+                  ],
+                  "type": "reasoning"
+                },
+                {
+                  "content": [
+                    {
+                      "annotations": [],
+                      "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the first forward movement; the immediately following quantity supplies its distance.\"\n    },\n    {\n      \"text\": \"4.0米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the first forward movement distance as 4.0 meters, a positive finite value; it is a parameter, not a separate action.\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the next action after the first forward movement; it is a sequencing relation and does not add authority for another action by itself.\"\n    },\n    {\n      \"text\": \"向左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a left turn; the following quantity supplies its angle.\"\n    },\n    {\n      \"text\": \"60度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the left turn angle as 60 degrees, which is nonzero, finite, and within the 180-degree legality bound; it is a parameter, not a separate action.\"\n    },\n    {\n      \"text\": \"接着\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the next action after the left turn; it is a sequencing relation, not an additional action or edit.\"\n    },\n    {\n      \"text\": \"往前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a second forward movement; the following quantity supplies its distance.\"\n    },\n    {\n      \"text\": \"四米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the second forward movement distance as 4 meters, a positive finite value; it does not replace the earlier 4.0米 distance because it belongs to a separately ordered second movement.\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the following clause as the final portion of the sequence; it orders the remaining actions and does not introduce or modify an action by itself.\"\n    },\n    {\n      \"text\": \"向右转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a right turn; the following quantity supplies its angle.\"\n    },\n    {\n      \"text\": \"60度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the right turn angle as 60 degrees, which is nonzero, finite, and within the 180-degree legality bound; it means right/clockwise negative.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the stop after the right turn; here it means sequential then, not repetition, since no prior stop exists to repeat.\"\n    },\n    {\n      \"text\": \"立即\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Specifies that the stop follows immediately after the right turn; this is representable as the next dependent step and introduces no separate event or unresolved timing choice.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop action with no parameters, to be executed after the final right turn.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly requests five actions: forward move 4.0米, left turn 60度, forward move 四米, right turn 60度, and stop. The second forward move is separately introduced by 接着 rather than replacing the first. All are legal: both walk distances are positive finite, both turns are nonzero finite and within 180 degrees, stop has no parameters, and the plan has 5 steps, within the 32-step bound.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence markers 然后, 接着, 最后, and 再, together",
+                      "type": "output_text"
+                    }
+                  ],
+                  "id": "msg_f48a3ae8-51d4-435b-9112-24b869ac417a",
+                  "role": "assistant",
+                  "status": "completed",
+                  "type": "message"
+                }
+              ],
+              "status": "incomplete",
+              "temperature": 0.0,
+              "usage": {
+                "input_tokens": 160,
+                "input_tokens_details": {
+                  "cached_tokens": 768
+                },
+                "output_tokens": 4096,
+                "output_tokens_details": {
+                  "reasoning_tokens": 3217
+                },
+                "total_tokens": 5024
+              }
+            },
+            "request_sha256": "5b198dff159021894f7c7f3f01696698de7a5ce13bee51f7c686dd629e125bd7",
+            "status": "SUCCESS"
+          }
+        ],
+        "provider_attempts": 1,
+        "provider_calls": 1,
+        "responses": [
+          {
+            "attempts": 1,
+            "finish_reason": "max_output_tokens",
+            "latency_s": 23.963287400001718,
+            "model": "deepseek-flash",
+            "provider_status": "incomplete",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_f48a3ae8-51d4-435b-9112-24b869ac417a",
+            "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the first forward movement; the immediately following quantity supplies its distance.\"\n    },\n    {\n      \"text\": \"4.0米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the first forward movement distance as 4.0 meters, a positive finite value; it is a parameter, not a separate action.\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the next action after the first forward movement; it is a sequencing relation and does not add authority for another action by itself.\"\n    },\n    {\n      \"text\": \"向左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a left turn; the following quantity supplies its angle.\"\n    },\n    {\n      \"text\": \"60度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the left turn angle as 60 degrees, which is nonzero, finite, and within the 180-degree legality bound; it is a parameter, not a separate action.\"\n    },\n    {\n      \"text\": \"接着\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the next action after the left turn; it is a sequencing relation, not an additional action or edit.\"\n    },\n    {\n      \"text\": \"往前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a second forward movement; the following quantity supplies its distance.\"\n    },\n    {\n      \"text\": \"四米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the second forward movement distance as 4 meters, a positive finite value; it does not replace the earlier 4.0米 distance because it belongs to a separately ordered second movement.\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the following clause as the final portion of the sequence; it orders the remaining actions and does not introduce or modify an action by itself.\"\n    },\n    {\n      \"text\": \"向右转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a right turn; the following quantity supplies its angle.\"\n    },\n    {\n      \"text\": \"60度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the right turn angle as 60 degrees, which is nonzero, finite, and within the 180-degree legality bound; it means right/clockwise negative.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the stop after the right turn; here it means sequential then, not repetition, since no prior stop exists to repeat.\"\n    },\n    {\n      \"text\": \"立即\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Specifies that the stop follows immediately after the right turn; this is representable as the next dependent step and introduces no separate event or unresolved timing choice.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop action with no parameters, to be executed after the final right turn.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly requests five actions: forward move 4.0米, left turn 60度, forward move 四米, right turn 60度, and stop. The second forward move is separately introduced by 接着 rather than replacing the first. All are legal: both walk distances are positive finite, both turns are nonzero finite and within 180 degrees, stop has no parameters, and the plan has 5 steps, within the 32-step bound.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence markers 然后, 接着, 最后, and 再, together",
+            "usage": {
+              "input_tokens": 160,
+              "output_tokens": 4096,
+              "total_tokens": 5024
+            }
+          }
+        ]
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+          "attempts": 1,
+          "baseline_status": "SUCCESS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "contract_violation_count": 0,
+          "contract_violations": [],
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 2.9283309999991616,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "mission_id": "mission-walk-turn-walk-turn-stop",
+          "model": "deepseek-flash",
+          "normalized_length": 37,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+          "raw_response_sha256": "a6ca42f9400bb1de4ea0c8bc6cd7580e0d25361e313a1bb08def3f76288f566f",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "release_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "released_executable": false,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "attempts": 1,
+              "automatic_repair": false,
+              "finish_reason": "max_output_tokens",
+              "latency_s": 23.970212600001105,
+              "model": "deepseek-flash",
+              "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+              "provider_calls": 1,
+              "provider_latency_s": 23.963287400001718,
+              "provider_status": "incomplete",
+              "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the first forward movement; the immediately following quantity supplies its distance.\"\n    },\n    {\n      \"text\": \"4.0米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the first forward movement distance as 4.0 meters, a positive finite value; it is a parameter, not a separate action.\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the next action after the first forward movement; it is a sequencing relation and does not add authority for another action by itself.\"\n    },\n    {\n      \"text\": \"向左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a left turn; the following quantity supplies its angle.\"\n    },\n    {\n      \"text\": \"60度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the left turn angle as 60 degrees, which is nonzero, finite, and within the 180-degree legality bound; it is a parameter, not a separate action.\"\n    },\n    {\n      \"text\": \"接着\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the next action after the left turn; it is a sequencing relation, not an additional action or edit.\"\n    },\n    {\n      \"text\": \"往前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a second forward movement; the following quantity supplies its distance.\"\n    },\n    {\n      \"text\": \"四米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the second forward movement distance as 4 meters, a positive finite value; it does not replace the earlier 4.0米 distance because it belongs to a separately ordered second movement.\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the following clause as the final portion of the sequence; it orders the remaining actions and does not introduce or modify an action by itself.\"\n    },\n    {\n      \"text\": \"向右转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a right turn; the following quantity supplies its angle.\"\n    },\n    {\n      \"text\": \"60度\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the right turn angle as 60 degrees, which is nonzero, finite, and within the 180-degree legality bound; it means right/clockwise negative.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Orders the stop after the right turn; here it means sequential then, not repetition, since no prior stop exists to repeat.\"\n    },\n    {\n      \"text\": \"立即\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Specifies that the stop follows immediately after the right turn; this is representable as the next dependent step and introduces no separate event or unresolved timing choice.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop action with no parameters, to be executed after the final right turn.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly requests five actions: forward move 4.0米, left turn 60度, forward move 四米, right turn 60度, and stop. The second forward move is separately introduced by 接着 rather than replacing the first. All are legal: both walk distances are positive finite, both turns are nonzero finite and within 180 degrees, stop has no parameters, and the plan has 5 steps, within the 32-step bound.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence markers 然后, 接着, 最后, and 再, together",
+              "raw_response_sha256": "1216a8021ec7836ddd1cc4243b76e5017249a32e112702bab4ea2695fb332019",
+              "request_parameters": {
+                "max_network_retries": 2,
+                "max_output_tokens": 4096,
+                "model": "deepseek-flash",
+                "retry_backoff_s": 0.5,
+                "stream": false,
+                "temperature": 0.0
+              },
+              "response_id": "resp_f48a3ae8-51d4-435b-9112-24b869ac417a",
+              "source_aware": false,
+              "source_sha256": "8171df8089498bb261592c33a231d5390f8c05d173780b0434aeac6f81bdab4c",
+              "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+              "usage": {
+                "input_tokens": 160,
+                "output_tokens": 4096,
+                "total_tokens": 5024
+              }
+            },
+            "reason_code": "INCOMPLETE_PROVIDER_RESPONSE",
+            "status": "UNKNOWN"
+          },
+          "step_count": 5,
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 407,
+            "total_tokens": 2166
+          },
+          "validation": {
+            "issues": [],
+            "valid": true
+          }
+        },
+        "error_code": "LLM_OUTPUT_INVALID",
+        "error_message": "source authorization withheld executable Mission: INCOMPLETE_PROVIDER_RESPONSE",
+        "mission": null,
+        "normalized_text": "往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止",
+        "status": "MALFORMED"
+      },
+      "score": {
+        "false_rejection": true,
+        "released": false,
+        "status": "MALFORMED",
+        "unauthorized_release": false,
+        "valid_exact": false,
+        "wrong_ir": false
+      }
+    },
+    "source_verifier": {
+      "added_wall_s": 20.048605799998768,
+      "live_evidence": {
+        "events": [
+          {
+            "index": 1,
+            "latency_s": 20.043586900002992,
+            "provider_document": {
+              "created_at": 1791360908,
+              "id": "resp_c9d1b487-b0fd-4e8a-94af-866aa154b44a",
+              "incomplete_details": {
+                "reason": "max_output_tokens"
+              },
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "object": "response",
+              "output": [
+                {
+                  "id": "rs_resp_c9d1b487-b0fd-4e8a-94af-866aa154b44a",
+                  "reasoning_content": "We need answer JSON only. Need analyze source. Source Chinese: \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\"\n\nNeed derive plan. Need inspect dimensions. Legal skills. Source actions:\n- 往前移动4.0米 = walk_forward distance 4.0 m.\n- 然后 = then\n- 向左转60度 = turn left 60 deg => positive 60.\n- 接着 = then\n- 往前移动四米 = walk_forward distance 4 m (Chinese numeral 四).\n- 最后 = finally/then\n- 向右转60度 = turn right 60 deg => negative -60.\n- 再 = then\n- 立即停止 = stop immediately. \"立即\" adverb maybe timing? Does it affect stop? stop parameters {}. \"立即\" means immediately; could imply stop after previous action, no wait. It doesn't create parameter. It says right turn 60 then immediately stop. Legal stop.\n\nOrder unique: s1 walk 4.0, s2 turn +60, s3 walk 4, s4 turn -60, s5 stop. Depends_on chain.\n\nNeed consider \"立即\" maybe temporal relation: stop immediately after turn? Since sequence \"再立即停止\" means then immediately stop. Stop is action, no duration. It can be ordered after s4. No extra timing. It is executable. Not ambiguous? \"立即\" as immediacy after previous action, not simultaneous. It strengthens no delay. Plan linear.\n\nNeed consider \"向左转60度\" maximum abs 60 <=180. \"向右转60度\" negative. Good.\n\nNeed coverage: split source exactly. Need every action relation edit clause. Source no edit/correction. We need coverage list objects text role explanation. Text concatenated equals entire source exactly. Need decide splits meaningful. Source string: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nWe can split:\n1 \"往前移动4.0米\" ACTION\n2 \"然后\" RELATION\n3 \"向左转60度\" ACTION\n4 \"接着\" RELATION\n5 \"往前移动四米\" ACTION\n6 \"最后\" RELATION\n7 \"向右转60度\" ACTION\n8 \"再\" RELATION\n9 \"立即停止\" ACTION\n\nNeed ensure exact concatenation no spaces. That covers. But \"立即停止\" perhaps action with \"立即\" temporal relation? Could split \"立即\" relation and \"停止\" action, but \"立即停止\" is action phrase? Role can be ACTION for whole. But coverage must analyze temporal relation. Maybe split \"再\" relation then \"立即\" RELATION then \"停止\" ACTION? Need exact source. But role of 立即 is adverb, temporal. It is meaningful. We can include in ACTION explanation or separate. The instruction says split source into meaningful spans so every action, relation and edit clause analyzed. \"立即\" is timing relation. Could make span \"再\" RELATION, \"立即\" RELATION, \"停止\" ACTION. Then all covered. But role \"ACTION\" for 停止. Text values concat exact: ... \"再\" + \"立即\" + \"停止\". That's fine. Explanation for \"立即\" states immediacy after right turn; no wait; linear order.\n\nNeed consider Chinese numeral \"四米\": quantity. In coverage \"往前移动四米\" can ACTION with explanation includes quantity. Or split \"四米\" QUANTITY? Need coverage meaningful. Could split action verb and quantity? But easier. Need every action relation edit clause. Quantities can be within action explanation. But coverage role may be ACTION or QUANTITY. The spec roles include QUANTITY. To be thorough, could split:\n- \"往前移动\" ACTION? \n- \"4.0米\" QUANTITY\n- \"然后\" RELATION\n- \"向左转\" ACTION\n- \"60度\" QUANTITY\n- \"接着\" RELATION\n- \"往前移动\" ACTION\n- \"四米\" QUANTITY\n- \"最后\" RELATION\n- \"向右转\" ACTION\n- \"60度\" QUANTITY\n- \"再\" RELATION\n- \"立即\" RELATION\n- \"停止\" ACTION\nBut text concatenation exact. However \"往前移动\" alone not legal action? It's partial; explanation says action verb with quantity next. Fine. Need \"向左转\" and \"向右转\" partial but with quantity. This is more granular. But coverage values need exact text. Could be okay. Need ensure no missing punctuation (none). Chinese text with no spaces.\n\nAlternatively simpler spans ensure each action full. The spec says role can be ACTION, RELATION, QUANTITY, CONTEXT or SEPARATOR. We can use ACTION for full action phrase and mention quantity; but role QUANTITY unused maybe okay. But to satisfy every quantity, could split. Need be careful with \"4.0\" decimal, \"四\" Chinese numeral. The source numbers are \"4.0\" and \"四\". Candidate uses 4.0 for both; source says 四米 = 4 m. Authorized plan distance_m 4? JSON number can be 4 or 4.0. It says numbers finite JSON. 4 is okay. Maybe use 4.0? Source first 4.0, second 四 = 4. For consistency can use 4.0? But \"exactly parameters distance_m positive finite meters.\" Both 4.0 and 4 equal numeric. Use 4.0 maybe. But source second is 四米; 4.0 is mathematically 4. It might be okay. To avoid altering, use 4.0 for first and 4 for second? JSON number 4 vs 4.0. Does it matter? \"四米\" converts to 4 meters. Both finite. authorized plan could have distance_m 4.0 and 4.0. The source-derived plan should reflect exact quantities. 4.0 is same value. But if host compares? Candidate uses 4.0 both. It likely accepts numeric equality. We can choose 4.0 for both or 4 for second. Since source says 四米, 4 is most direct. But JSON numbers 4 and 4.0 are equal. I'd use 4.0? Hmm.\n\nNeed status. All dimensions unique? Let's assess.\n\n- action_multiplicity: 5 actions, no edits/repetitions. Walk, turn, walk, turn, stop. Unique. Need mention \"然后/接着/最后/再\" connect, no repeated same? \"往前移动4.0米\" and \"往前移动四米\" are two separate walk actions, not repetition? They are separate requested actions. The second not a replacement; no edit. Unique.\n- action_order: from sequence markers unique.\n- correction_scope: no corrections. Inapplicable/uniquely unaffected.\n- repetition_scope: no repetition. \"再\" could mean again? In Chinese, \"再立即停止\" = then immediately stop; \"再\" can mean again but here with 立即停止 after right turn means then, not repetition. Is there ambiguity? Need check. Source: \"最后向右转60度再立即停止\" The \"再\" can mean \"then\" or \"again\". Could it imply repeat previous action? Actually \"再\" before a new action often means \"then\" / \"and then\". It doesn't indicate repetition. No explicit repetition. Unique inapplicable.\n- reference_resolution: pronouns? none. Shared/omitted arguments? Each action has its own distance/angle. No omitted args except stop {}. Unique.\n- temporal_relations: \"然后\", \"接着\", \"最后\", \"再立即\" impose sequential order. \"立即\" means immediately after right turn. Can represent as strict sequential steps with depends_on. No simultaneous/wait. Unique.\n- unresolved_relations: none. Unique.\n\nThus status AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed produce JSON exactly. The final answer must be one JSON object, no markdown. Need ensure valid JSON. Use Chinese text exact in coverage. Need no extra text.\n\nLet's craft coverage. Need text values concatenated in order exactly equal original. Let's decide spans.\n\nOption:\n[\n{\"text\":\"往前移动4.0米\",\"role\":\"ACTION\",\"explanation\":\"First action: walk_forward distance_m=4.0 meters.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action as following the first in sequence; no other order is authorized.\"},\n{\"text\":\"向左转60度\",\"role\":\"ACTION\",\"explanation\":\"Second action: turn with left/counterclockwise 60 degrees, angle_deg=60.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action as following the turn in sequence.\"},\n{\"text\":\"往前移动四米\",\"role\":\"ACTION\",\"explanation\":\"Third action: walk_forward with Chinese numeral 四 converted to distance_m=4 meters; this is a separate action, not a repetition or edit of the first walk.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action as the final turn before stop.\"},\n{\"text\":\"向右转60度\",\"role\":\"ACTION\",\"explanation\":\"Fourth action: turn with right/clockwise 60 degrees, angle_deg=-60.\"},\n{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Marks the stop as the next action after the right turn; it does not introduce repetition.\"},\n{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Requires the stop to occur immediately after the right turn, representable as the next sequential step with no wait.\"},\n{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fifth action: stop with parameters {} and no duration.\"}\n]\n\nConcatenate: 往前移动4.0米 + 然后 + 向左转60度 + 接着 + 往前移动四米 + 最后 + 向右转60度 + 再 + 立即 + 停止 = original? Original: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nNeed role for \"立即\" maybe RELATION. Good.\n\nDimensions explanations. Need exactly seven keys. Each status and explanation.\n\naction_multiplicity: UNIQUE. Explanation: Explicit five actions: walk 4.0, left turn 60, walk 4, right turn 60, stop. The two walks are distinct requested actions; no correction or repetition. \"再\" is sequential not repeat.\n\naction_order: UNIQUE. Sequence markers 然后, 接着, 最后, 再; 立即. Unique linear order.\n\ncorrection_scope: UNIQUE. No correction/edit language; neither walk/turn replaces another; all preserved. Or if inapplicable, UNIQUE (inapplicable introduces no alternative). Need mention no edit clause.\n\nrepetition_scope: UNIQUE. No repeated action clause; \"再\" here means then, not again; no span repeated.\n\nreference_resolution: UNIQUE. No pronouns/ordinals/shared omitted args. Each turn has explicit direction and angle; stop empty. Chinese 四 resolved to 4.\n\ntemporal_relations: UNIQUE. Sequential order from markers, immediate stop after right turn; representable by depends_on chain no wait.\n\nunresolved_relations: UNIQUE. No explicit unresolved choice/order/scope.\n\nauthorized_plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},\n{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},\n{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},\n{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}\n]\n\nShould second distance be 4 or 4.0? The source says 四米. Chinese numeral 四 = 4. In JSON, 4.0 equals 4. Maybe to reflect exact, use 4.0? Candidate uses 4.0. If host compares numerically, no issue. But source-derived plan should be independent. 四米 as 4 meters. \"distance_m\":4.0 is acceptable because meters finite. I'll use 4.0 for both? Hmm, if \"四\" exactly four, 4.0 is same. But maybe should use 4.0 for first and 4 for second to mirror source. However JSON number 4.0 and 4 semantically same but syntactically different. The instruction: \"Numbers must be finite JSON numbers.\" No requirement exact lexical. Use 4.0? Candidate uses 4.0. To avoid anchoring, use 4 for Chinese numeral? But then host may compare and accept? If it checks numeric equality, yes. If exact? likely numeric. But source says 4.0 for first, so first 4.0; second 四米 = 4, use 4.0? Let's think: Chinese numeral 四 means exactly 4, not 4.0. But 4.0 is numeric representation of 4. In JSON, 4 and 4.0 are different lexically but same number. The plan is semantic. I can set distance_m:4.0 for both for consistency. But maybe \"source-derived\" should use 4.0 for first and 4.0 for second because compilation converts meters to numeric. No issue. Could set second 4.0. Candidate matches. The prompt warns candidate not oracle, but matching is okay if source supports. Use 4.0 for both? I'd maybe use 4.0 for both to simplify. But \"四米\" is not \"4.0米\"; however 4.0 is equal. The compiler semantics says parameters are positive finite meters. 4.0 meters is exactly 4 meters. Fine.\n\nNeed ensure no extra fields. coverage list nonempty. Each object exactly text, role, explanation. Dimensions exactly seven.\n\nPotential issue: \"立即\" is not a separate action; role RELATION. Good.\n\nPotential issue: \"停止\" alone as ACTION; \"立即停止\" could be treated as action phrase. But splitting is okay as coverage. The explanation for \"停止\" says fifth action stop. The \"立即\" relation modifies it. Good.\n\nPotential issue: Source \"往前移动四米\" has no \"米\" after 四? It is 四米. Yes.\n\nPotential issue: Does \"向左转60度\" and \"向右转60度\" use \"转\" as turn. Good.\n\nPotential issue: \"再立即停止\" maybe \"再\" means \"then\" but also could mean \"again immediately stop\" if there was previous stop? There isn't. No ambiguity.\n\nPotential issue: \"最后向右转60度再立即停止\": \"最后\" might mark final action as right turn and then stop? Actually sequence: ... 最后向右转60度再立即停止. \"最后\" could attach to entire final clause \"right turn 60 and then immediately stop\" or just right turn. But order same. No alternative.\n\nPotential issue: \"然后\" after first action: \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\" There is no explicit \"then\" between right turn and stop? \"再\" yes. Unique.\n\nNeed maybe include \"CONTEXT\" for none? Not required. Coverage roles can all ACTION/RELATION. That's okay.\n\nLet's produce final. Need JSON valid with Chinese chars. Ensure no markdown. Use double quotes. Let's compose carefully.\n\nNeed ensure all keys exactly. No trailing commas.\n\nLet's write:\n\n{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前移动4.0米\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"First action: walk_forward with distance_m=4.0 meters; it is a separate requested walk, not a repetition or edit of any other action.\"\n    },\n    ...\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {...}\n  },\n  \"authorized_plan\": [...]\n}\n\nNeed coverage text exact. The source has no spaces. My text values no spaces. Good.\n\nLet's ensure concatenation: \n1 往前移动4.0米\n2 然后\n3 向左转60度\n4 接着\n5 往前移动四米\n6 最后\n7 向右转60度\n8 再\n9 立即\n10 停止\n\nConcatenated: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nDimensions:\naction_multiplicity explanation: \"The source explicitly requests five actions: walk forward 4.0 m, turn left 60°, walk forward 四米 (4 m), turn right 60°, and stop. The second walk is another action, not a replacement; there are no edits or repetitions.\" Need no degree symbol maybe okay.\n\naction_order: \"The markers 然后, 接着, 最后, 再 make the order s1 walk, s2 left turn, s3 walk, s4 right turn, s5 stop; 立即 only tightens stop's immediacy after s4 and does not create simultaneity.\"\n\ncorrection_scope: \"No correction, replacement, or edit clause appears. Nothing in the source changes any earlier action, parameter, group, or relation.\" Unique.\n\nrepetition_scope: \"No repetition is specified. The two walk commands are distinct actions with their own distances; 再 in 再立即停止 means then, not a repetition of prior actions.\" Unique.\n\nreference_resolution: \"No pronouns, ordinals, or omitted shared arguments require external resolution. The left/right directions and 60-degree angles bind to their turn actions; 四 resolves to 4; stop has empty parameters.\" Unique.\n\ntemporal_relations: \"The source gives one linear sequence via 然后, 接着, 最后, and 再; 立即 requires stop immediately after the right turn. This is representable as successive depends_on steps with no waiting or simultaneous events.\" Unique.\n\nunresolved_relations: \"There is no explicit unresolved choice, scope, order, or relationship; all requested relations are fixed by the source.\" Unique.\n\nauthorized_plan as above.\n\nNeed maybe \"coverage is nonempty list of objects with exactly text, role, explanation.\" We have.\n\nPotential concern: \"role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR.\" For \"向前移动4.0米\" role ACTION, okay. \"立即\" role RELATION. Good.\n\nPotential concern: \"Every explanation is nonempty and states the span's meaning and effect on the plan, including why nonexecuting text does not alter authorization.\" For relation spans explain. For action spans explain. Good.\n\nPotential concern: \"Copied coverage by itself is not semantic authorization.\" We explain.\n\nLet's final.",
+                  "summary": [
+                    {
+                      "text": "We need answer JSON only. Need analyze source. Source Chinese: \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\"\n\nNeed derive plan. Need inspect dimensions. Legal skills. Source actions:\n- 往前移动4.0米 = walk_forward distance 4.0 m.\n- 然后 = then\n- 向左转60度 = turn left 60 deg => positive 60.\n- 接着 = then\n- 往前移动四米 = walk_forward distance 4 m (Chinese numeral 四).\n- 最后 = finally/then\n- 向右转60度 = turn right 60 deg => negative -60.\n- 再 = then\n- 立即停止 = stop immediately. \"立即\" adverb maybe timing? Does it affect stop? stop parameters {}. \"立即\" means immediately; could imply stop after previous action, no wait. It doesn't create parameter. It says right turn 60 then immediately stop. Legal stop.\n\nOrder unique: s1 walk 4.0, s2 turn +60, s3 walk 4, s4 turn -60, s5 stop. Depends_on chain.\n\nNeed consider \"立即\" maybe temporal relation: stop immediately after turn? Since sequence \"再立即停止\" means then immediately stop. Stop is action, no duration. It can be ordered after s4. No extra timing. It is executable. Not ambiguous? \"立即\" as immediacy after previous action, not simultaneous. It strengthens no delay. Plan linear.\n\nNeed consider \"向左转60度\" maximum abs 60 <=180. \"向右转60度\" negative. Good.\n\nNeed coverage: split source exactly. Need every action relation edit clause. Source no edit/correction. We need coverage list objects text role explanation. Text concatenated equals entire source exactly. Need decide splits meaningful. Source string: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\n\nWe can split:\n1 \"往前移动4.0米\" ACTION\n2 \"然后\" RELATION\n3 \"向左转60度\" ACTION\n4 \"接着\" RELATION\n5 \"往前移动四米\" ACTION\n6 \"最后\" RELATION\n7 \"向右转60度\" ACTION\n8 \"再\" RELATION\n9 \"立即停止\" ACTION\n\nNeed ensure exact concatenation no spaces. That covers. But \"立即停止\" perhaps action with \"立即\" temporal relation? Could split \"立即\" relation and \"停止\" action, but \"立即停止\" is action phrase? Role can be ACTION for whole. But coverage must analyze temporal relation. Maybe split \"再\" relation then \"立即\" RELATION then \"停止\" ACTION? Need exact source. But role of 立即 is adverb, temporal. It is meaningful. We can include in ACTION explanation or separate. The instruction says split source into meaningful spans so every action, relation and edit clause analyzed. \"立即\" is timing relation. Could make span \"再\" RELATION, \"立即\" RELATION, \"停止\" ACTION. Then all covered. But role \"ACTION\" for 停止. Text values concat exact: ... \"再\" + \"立即\" + \"停止\". That's fine. Explanation for \"立即\" states immediacy after right turn; no wait; linear order.\n\nNeed consider Chinese numeral \"四米\": quantity. In coverage \"往前移动四米\" can ACTION with explanation includes quantity. Or split \"四米\" QUANTITY? Need coverage meaningful. Could split action verb and quantity? But easier. Need every action relation edit clause. Quantities can be within action explanation. But coverage role may be ACTION or QUANTITY. The spec roles include QUANTITY. To be thorough, could split:\n- \"往前移动\" ACTION? \n- \"4.0米\" QUANTITY\n- \"然后\" RELATION\n- \"向左转\" ACTION\n- \"60度\" QUANTITY\n- \"接着\" RELATION\n- \"往前移动\" ACTION\n- \"四米\" QUANTITY\n- \"最后\" RELATION\n- \"向右转\" ACTION\n- \"60度\" QUANTITY\n- \"再\" RELATION\n- \"立即\" RELATION\n- \"停止\" ACTION\nBut text concatenation exact. However \"往前移动\" alone not legal action? It's partial; explanation says action verb with quantity next. Fine. Need \"向左转\" and \"向右转\" partial but with quantity. This is more granular. But coverage values need exact text. Could be okay. Need ensure no missing punctuation (none). Chinese text with no spaces.\n\nAlternatively simpler spans ensure each action full. The spec says role can be ACTION, RELATION, QUANTITY, CONTEXT or SEPARATOR. We can use ACTION for full action phrase and mention quantity; but role QUANTITY unused maybe okay. But to satisfy every quantity, could split. Need be careful with \"4.0\" decimal, \"四\" Chinese numeral. The source numbers are \"4.0\" and \"四\". Candidate uses 4.0 for both; source says 四米 = 4 m. Authorized plan distance_m 4? JSON number can be 4 or 4.0. It says numbers finite JSON. 4 is okay. Maybe use 4.0? Source first 4.0, second 四 = 4. For consistency can use 4.0? But \"exactly parameters distance_m positive finite meters.\" Both 4.0 and 4 equal numeric. Use 4.0 maybe. But source second is 四米; 4.0 is mathematically 4. It might be okay. To avoid altering, use 4.0 for first and 4 for second? JSON number 4 vs 4.0. Does it matter? \"四米\" converts to 4 meters. Both finite. authorized plan could have distance_m 4.0 and 4.0. The source-derived plan should reflect exact quantities. 4.0 is same value. But if host compares? Candidate uses 4.0 both. It likely accepts numeric equality. We can choose 4.0 for both or 4 for second. Since source says 四米, 4 is most direct. But JSON numbers 4 and 4.0 are equal. I'd use 4.0? Hmm.\n\nNeed status. All dimensions unique? Let's assess.\n\n- action_multiplicity: 5 actions, no edits/repetitions. Walk, turn, walk, turn, stop. Unique. Need mention \"然后/接着/最后/再\" connect, no repeated same? \"往前移动4.0米\" and \"往前移动四米\" are two separate walk actions, not repetition? They are separate requested actions. The second not a replacement; no edit. Unique.\n- action_order: from sequence markers unique.\n- correction_scope: no corrections. Inapplicable/uniquely unaffected.\n- repetition_scope: no repetition. \"再\" could mean again? In Chinese, \"再立即停止\" = then immediately stop; \"再\" can mean again but here with 立即停止 after right turn means then, not repetition. Is there ambiguity? Need check. Source: \"最后向右转60度再立即停止\" The \"再\" can mean \"then\" or \"again\". Could it imply repeat previous action? Actually \"再\" before a new action often means \"then\" / \"and then\". It doesn't indicate repetition. No explicit repetition. Unique inapplicable.\n- reference_resolution: pronouns? none. Shared/omitted arguments? Each action has its own distance/angle. No omitted args except stop {}. Unique.\n- temporal_relations: \"然后\", \"接着\", \"最后\", \"再立即\" impose sequential order. \"立即\" means immediately after right turn. Can represent as strict sequential steps with depends_on. No simultaneous/wait. Unique.\n- unresolved_relations: none. Unique.\n\nThus status AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed produce JSON exactly. The final answer must be one JSON object, no markdown. Need ensure valid JSON. Use Chinese text exact in coverage. Need no extra text.\n\nLet's craft coverage. Need text values concatenated in order exactly equal original. Let's decide spans.\n\nOption:\n[\n{\"text\":\"往前移动4.0米\",\"role\":\"ACTION\",\"explanation\":\"First action: walk_forward distance_m=4.0 meters.\"},\n{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action as following the first in sequence; no other order is authorized.\"},\n{\"text\":\"向左转60度\",\"role\":\"ACTION\",\"explanation\":\"Second action: turn with left/counterclockwise 60 degrees, angle_deg=60.\"},\n{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action as following the turn in sequence.\"},\n{\"text\":\"往前移动四米\",\"role\":\"ACTION\",\"explanation\":\"Third action: walk_forward with Chinese numeral 四 converted to distance_m=4 meters; this is a separate action, not a repetition or edit of the first walk.\"},\n{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action as the final turn before stop.\"},\n{\"text\":\"向右转60度\",\"role\":\"ACTION\",\"explanation\":\"Fourth action: turn with right/clockwise 60 degrees, angle_deg=-60.\"},\n{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Marks the stop as the next action after the right turn; it does not introduce repetition.\"},\n{\"text\":\"立即\",\"role\":\"RELATION\",\"explanation\":\"Requires the stop to occur immediately after the right turn, representable as the next sequential step with no wait.\"},\n{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Fifth action: stop with parameters {} and no duration.\"}\n]\n\nConcatenate: 往前移动4.0米 + 然后 + 向左转60度 + 接着 + 往前移动四米 + 最后 + 向右转60度 + 再 + 立即 + 停止 = original? Original: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nNeed role for \"立即\" maybe RELATION. Good.\n\nDimensions explanations. Need exactly seven keys. Each status and explanation.\n\naction_multiplicity: UNIQUE. Explanation: Explicit five actions: walk 4.0, left turn 60, walk 4, right turn 60, stop. The two walks are distinct requested actions; no correction or repetition. \"再\" is sequential not repeat.\n\naction_order: UNIQUE. Sequence markers 然后, 接着, 最后, 再; 立即. Unique linear order.\n\ncorrection_scope: UNIQUE. No correction/edit language; neither walk/turn replaces another; all preserved. Or if inapplicable, UNIQUE (inapplicable introduces no alternative). Need mention no edit clause.\n\nrepetition_scope: UNIQUE. No repeated action clause; \"再\" here means then, not again; no span repeated.\n\nreference_resolution: UNIQUE. No pronouns/ordinals/shared omitted args. Each turn has explicit direction and angle; stop empty. Chinese 四 resolved to 4.\n\ntemporal_relations: UNIQUE. Sequential order from markers, immediate stop after right turn; representable by depends_on chain no wait.\n\nunresolved_relations: UNIQUE. No explicit unresolved choice/order/scope.\n\nauthorized_plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},\n{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},\n{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},\n{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}\n]\n\nShould second distance be 4 or 4.0? The source says 四米. Chinese numeral 四 = 4. In JSON, 4.0 equals 4. Maybe to reflect exact, use 4.0? Candidate uses 4.0. If host compares numerically, no issue. But source-derived plan should be independent. 四米 as 4 meters. \"distance_m\":4.0 is acceptable because meters finite. I'll use 4.0 for both? Hmm, if \"四\" exactly four, 4.0 is same. But maybe should use 4.0 for first and 4 for second to mirror source. However JSON number 4.0 and 4 semantically same but syntactically different. The instruction: \"Numbers must be finite JSON numbers.\" No requirement exact lexical. Use 4.0? Candidate uses 4.0. To avoid anchoring, use 4 for Chinese numeral? But then host may compare and accept? If it checks numeric equality, yes. If exact? likely numeric. But source says 4.0 for first, so first 4.0; second 四米 = 4, use 4.0? Let's think: Chinese numeral 四 means exactly 4, not 4.0. But 4.0 is numeric representation of 4. In JSON, 4 and 4.0 are different lexically but same number. The plan is semantic. I can set distance_m:4.0 for both for consistency. But maybe \"source-derived\" should use 4.0 for first and 4.0 for second because compilation converts meters to numeric. No issue. Could set second 4.0. Candidate matches. The prompt warns candidate not oracle, but matching is okay if source supports. Use 4.0 for both? I'd maybe use 4.0 for both to simplify. But \"四米\" is not \"4.0米\"; however 4.0 is equal. The compiler semantics says parameters are positive finite meters. 4.0 meters is exactly 4 meters. Fine.\n\nNeed ensure no extra fields. coverage list nonempty. Each object exactly text, role, explanation. Dimensions exactly seven.\n\nPotential issue: \"立即\" is not a separate action; role RELATION. Good.\n\nPotential issue: \"停止\" alone as ACTION; \"立即停止\" could be treated as action phrase. But splitting is okay as coverage. The explanation for \"停止\" says fifth action stop. The \"立即\" relation modifies it. Good.\n\nPotential issue: Source \"往前移动四米\" has no \"米\" after 四? It is 四米. Yes.\n\nPotential issue: Does \"向左转60度\" and \"向右转60度\" use \"转\" as turn. Good.\n\nPotential issue: \"再立即停止\" maybe \"再\" means \"then\" but also could mean \"again immediately stop\" if there was previous stop? There isn't. No ambiguity.\n\nPotential issue: \"最后向右转60度再立即停止\": \"最后\" might mark final action as right turn and then stop? Actually sequence: ... 最后向右转60度再立即停止. \"最后\" could attach to entire final clause \"right turn 60 and then immediately stop\" or just right turn. But order same. No alternative.\n\nPotential issue: \"然后\" after first action: \"往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止\" There is no explicit \"then\" between right turn and stop? \"再\" yes. Unique.\n\nNeed maybe include \"CONTEXT\" for none? Not required. Coverage roles can all ACTION/RELATION. That's okay.\n\nLet's produce final. Need JSON valid with Chinese chars. Ensure no markdown. Use double quotes. Let's compose carefully.\n\nNeed ensure all keys exactly. No trailing commas.\n\nLet's write:\n\n{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"往前移动4.0米\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"First action: walk_forward with distance_m=4.0 meters; it is a separate requested walk, not a repetition or edit of any other action.\"\n    },\n    ...\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {...}\n  },\n  \"authorized_plan\": [...]\n}\n\nNeed coverage text exact. The source has no spaces. My text values no spaces. Good.\n\nLet's ensure concatenation: \n1 往前移动4.0米\n2 然后\n3 向左转60度\n4 接着\n5 往前移动四米\n6 最后\n7 向右转60度\n8 再\n9 立即\n10 停止\n\nConcatenated: 往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止. Yes.\n\nDimensions:\naction_multiplicity explanation: \"The source explicitly requests five actions: walk forward 4.0 m, turn left 60°, walk forward 四米 (4 m), turn right 60°, and stop. The second walk is another action, not a replacement; there are no edits or repetitions.\" Need no degree symbol maybe okay.\n\naction_order: \"The markers 然后, 接着, 最后, 再 make the order s1 walk, s2 left turn, s3 walk, s4 right turn, s5 stop; 立即 only tightens stop's immediacy after s4 and does not create simultaneity.\"\n\ncorrection_scope: \"No correction, replacement, or edit clause appears. Nothing in the source changes any earlier action, parameter, group, or relation.\" Unique.\n\nrepetition_scope: \"No repetition is specified. The two walk commands are distinct actions with their own distances; 再 in 再立即停止 means then, not a repetition of prior actions.\" Unique.\n\nreference_resolution: \"No pronouns, ordinals, or omitted shared arguments require external resolution. The left/right directions and 60-degree angles bind to their turn actions; 四 resolves to 4; stop has empty parameters.\" Unique.\n\ntemporal_relations: \"The source gives one linear sequence via 然后, 接着, 最后, and 再; 立即 requires stop immediately after the right turn. This is representable as successive depends_on steps with no waiting or simultaneous events.\" Unique.\n\nunresolved_relations: \"There is no explicit unresolved choice, scope, order, or relationship; all requested relations are fixed by the source.\" Unique.\n\nauthorized_plan as above.\n\nNeed maybe \"coverage is nonempty list of objects with exactly text, role, explanation.\" We have.\n\nPotential concern: \"role is ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR.\" For \"向前移动4.0米\" role ACTION, okay. \"立即\" role RELATION. Good.\n\nPotential concern: \"Every explanation is nonempty and states the span's meaning and effect on the plan, including why nonexecuting text does not alter authorization.\" For relation spans explain. For action spans explain. Good.\n\nPotential concern: \"Copied coverage by itself is not semantic authorization.\" We explain.\n\nLet's final.",
+                      "type": "summary_text"
+                    }
+                  ],
+                  "type": "reasoning"
+                },
+                {
+                  "content": [
+                    {
+                      "annotations": [],
+                      "text": "{\n ",
+                      "type": "output_text"
+                    }
+                  ],
+                  "id": "msg_c9d1b487-b0fd-4e8a-94af-866aa154b44a",
+                  "role": "assistant",
+                  "status": "completed",
+                  "type": "message"
+                }
+              ],
+              "status": "incomplete",
+              "temperature": 0.0,
+              "usage": {
+                "input_tokens": 193,
+                "input_tokens_details": {
+                  "cached_tokens": 1152
+                },
+                "output_tokens": 4096,
+                "output_tokens_details": {
+                  "reasoning_tokens": 4093
+                },
+                "total_tokens": 5441
+              }
+            },
+            "request_sha256": "be0abf512e78b7d675cb1e6ec6035b59299a18455df60f880887f1dcc9cdaa08",
+            "status": "SUCCESS"
+          }
+        ],
+        "provider_attempts": 1,
+        "provider_calls": 1,
+        "responses": [
+          {
+            "attempts": 1,
+            "finish_reason": "max_output_tokens",
+            "latency_s": 20.04198130000077,
+            "model": "deepseek-flash",
+            "provider_status": "incomplete",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_c9d1b487-b0fd-4e8a-94af-866aa154b44a",
+            "text": "{",
+            "usage": {
+              "input_tokens": 193,
+              "output_tokens": 4096,
+              "total_tokens": 5441
+            }
+          }
+        ]
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_source_authority_v1",
+          "attempts": 1,
+          "baseline_status": "SUCCESS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "contract_violation_count": 0,
+          "contract_violations": [],
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 2.9283309999991616,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "mission_id": "mission-walk-turn-walk-turn-stop",
+          "model": "deepseek-flash",
+          "normalized_length": 37,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-60.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+          "raw_response_sha256": "a6ca42f9400bb1de4ea0c8bc6cd7580e0d25361e313a1bb08def3f76288f566f",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "release_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "released_executable": false,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_fe886a22-7152-450c-978a-4d40a983e448",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "attempts": 1,
+              "automatic_repair": false,
+              "finish_reason": "max_output_tokens",
+              "latency_s": 20.047780500000954,
+              "model": "deepseek-flash",
+              "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+              "provider_calls": 1,
+              "provider_latency_s": 20.04198130000077,
+              "provider_status": "incomplete",
+              "raw_response": "{",
+              "raw_response_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+              "request_parameters": {
+                "max_network_retries": 2,
+                "max_output_tokens": 4096,
+                "model": "deepseek-flash",
+                "retry_backoff_s": 0.5,
+                "stream": false,
+                "temperature": 0.0
+              },
+              "response_id": "resp_c9d1b487-b0fd-4e8a-94af-866aa154b44a",
+              "source_aware": true,
+              "source_sha256": "8171df8089498bb261592c33a231d5390f8c05d173780b0434aeac6f81bdab4c",
+              "treatment": "guarded_direct_llm_source_authority_v1",
+              "usage": {
+                "input_tokens": 193,
+                "output_tokens": 4096,
+                "total_tokens": 5441
+              }
+            },
+            "reason_code": "INCOMPLETE_PROVIDER_RESPONSE",
+            "status": "UNKNOWN"
+          },
+          "step_count": 5,
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 407,
+            "total_tokens": 2166
+          },
+          "validation": {
+            "issues": [],
+            "valid": true
+          }
+        },
+        "error_code": "LLM_OUTPUT_INVALID",
+        "error_message": "source authorization withheld executable Mission: INCOMPLETE_PROVIDER_RESPONSE",
+        "mission": null,
+        "normalized_text": "往前移动4.0米然后向左转60度接着往前移动四米最后向右转60度再立即停止",
+        "status": "MALFORMED"
+      },
+      "score": {
+        "false_rejection": true,
+        "released": false,
+        "status": "MALFORMED",
+        "unauthorized_release": false,
+        "valid_exact": false,
+        "wrong_ir": false
+      }
+    }
+  }
+}

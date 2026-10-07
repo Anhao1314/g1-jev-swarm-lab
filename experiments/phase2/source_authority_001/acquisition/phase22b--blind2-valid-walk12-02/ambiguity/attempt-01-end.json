@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.722880699999223,
+  "provider_document": {
+    "created_at": 1791359944,
+    "id": "resp_837858a6-4ebc-41f8-bad7-1026c1fe9d72",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_837858a6-4ebc-41f8-bad7-1026c1fe9d72",
+        "reasoning_content": "The source is Chinese: \"帮我往前走十二米\" = \"Help me walk forward twelve meters.\"\n\nActions: walk_forward with distance 12 meters. That's one action. No order ambiguity. No corrections, no repetition, no pronouns other than 我 (me, the user). One legal interpretation: walk_forward distance_m=12.0.\n\nCheck: walk_forward requires positive finite distance_m — 十二米 = 12 m. That's legal. Max 32 steps, fine.\n\nDimensions all UNIQUE? reference_resolution: \"我\" refers to the agent? Hmm. \"帮我往前走\" — \"help me walk forward\". The command is directed to the robot; \"我\" is the speaker. Does implying the robot walks on behalf? The action is walk_forward. There's a slight ambiguity but generally resolved: the addressee performs walk_forward. I'd say UNIQUE.\n\nCoverage: split source into meaningful spans. \"帮我往前走十二米\" — need text values concatenated exactly equal entire source.\n\nMaybe split: \"帮我\" (context/relation?), \"往前走\" (action), \"十二米\" (quantity). Or keep whole as ACTION. Let's split into three spans:\n- \"帮我\" — CONTEXT: polite request frame, speaker refers to themselves, no separate action.\n- \"往前走\" — ACTION: walk forward.\n- \"十二米\" — QUANTITY: distance 12 m.\n\nConcatenation: \"帮我\"+\"往前走\"+\"十二米\" = \"帮我往前走十二米\". Correct.\n\nStatus: AUTHORIZED_UNIQUE.\n\nWrite explanations.\n\naction_multiplicity: UNIQUE — exactly one requested action, walk_forward, no conjunction or repeated action.\n\naction_order: UNIQUE — single action, no ordering alternatives.\n\ncorrection_scope: UNIQUE — no edit clauses.\n\nrepetition_scope: UNIQUE — no repetition.\n\nreference_resolution: UNIQUE — 我 refers to the speaker requesting the action; no other pronoun or ordinal; no missing arguments since distance is explicit.\n\ntemporal_relations: UNIQUE — single action, no before/after/waiting.\n\nunresolved_relations: UNIQUE — nothing explicitly left unresolved; the single distance parameter is fully specified.\n\nOutput JSON.",
+        "summary": [
+          {
+            "text": "The source is Chinese: \"帮我往前走十二米\" = \"Help me walk forward twelve meters.\"\n\nActions: walk_forward with distance 12 meters. That's one action. No order ambiguity. No corrections, no repetition, no pronouns other than 我 (me, the user). One legal interpretation: walk_forward distance_m=12.0.\n\nCheck: walk_forward requires positive finite distance_m — 十二米 = 12 m. That's legal. Max 32 steps, fine.\n\nDimensions all UNIQUE? reference_resolution: \"我\" refers to the agent? Hmm. \"帮我往前走\" — \"help me walk forward\". The command is directed to the robot; \"我\" is the speaker. Does implying the robot walks on behalf? The action is walk_forward. There's a slight ambiguity but generally resolved: the addressee performs walk_forward. I'd say UNIQUE.\n\nCoverage: split source into meaningful spans. \"帮我往前走十二米\" — need text values concatenated exactly equal entire source.\n\nMaybe split: \"帮我\" (context/relation?), \"往前走\" (action), \"十二米\" (quantity). Or keep whole as ACTION. Let's split into three spans:\n- \"帮我\" — CONTEXT: polite request frame, speaker refers to themselves, no separate action.\n- \"往前走\" — ACTION: walk forward.\n- \"十二米\" — QUANTITY: distance 12 m.\n\nConcatenation: \"帮我\"+\"往前走\"+\"十二米\" = \"帮我往前走十二米\". Correct.\n\nStatus: AUTHORIZED_UNIQUE.\n\nWrite explanations.\n\naction_multiplicity: UNIQUE — exactly one requested action, walk_forward, no conjunction or repeated action.\n\naction_order: UNIQUE — single action, no ordering alternatives.\n\ncorrection_scope: UNIQUE — no edit clauses.\n\nrepetition_scope: UNIQUE — no repetition.\n\nreference_resolution: UNIQUE — 我 refers to the speaker requesting the action; no other pronoun or ordinal; no missing arguments since distance is explicit.\n\ntemporal_relations: UNIQUE — single action, no before/after/waiting.\n\nunresolved_relations: UNIQUE — nothing explicitly left unresolved; the single distance parameter is fully specified.\n\nOutput JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request frame addressed to the agent; 我 refers to the speaker on whose behalf the request is made. It introduces no additional action, parameter, ordering or edit, so it does not modify authority beyond framing the single instruction that follows.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"Requests a single forward locomotion action, corresponding to walk_forward. No other verb, conjunction or repeated action appears, so this is the only action in the source.\"},{\"text\":\"十二米\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the distance argument 十二 (12) with unit 米 (meters) for the preceding walk_forward action, yielding distance_m = 12.0, a positive finite value within the linear-plan bounds; the argument is fully specified and not left vague.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one verb phrase, 往前走 (walk forward), with no conjunction, no second action and no edited or repeated action. The only other spans are the request frame 帮我 and the quantity 十二米, neither of which requests an action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so exactly one execution order (a single step s1) exists; there is no pair of actions between which an order could be chosen.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no editing or corrective clause in the source; nothing is replaced, revised or preserved against a prior instruction, so the dimension is inapplicable and introduces no alternative reading.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker (such as 再, 又, 重复) appears. The source describes one single traversal of twelve meters, not a repeated span and not a repeated sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The only referring expression is 我 in 帮我, which unambiguously denotes the speaker making the request; the addressee performs the walk_forward. There are no pronouns, ordinals, omitted shared arguments or references to earlier commands, and the distance argument is given explicitly as 十二米, so no external context is required.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no before/after, simultaneity, waiting or completion markers. A single action is requested, which is representable as one linear step depending on nothing beyond the plan start.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"Nothing in the source explicitly leaves a choice, scope, ordering or relationship unresolved. The sole parameter, the forward distance, is fully determined as twelve meters, and the requested action walk_forward with a positive finite distance of 12.0 m is legal under the stated IR rules.\"}}}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_837858a6-4ebc-41f8-bad7-1026c1fe9d72",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 140,
+      "input_tokens_details": {
+        "cached_tokens": 768
+      },
+      "output_tokens": 1083,
+      "output_tokens_details": {
+        "reasoning_tokens": 464
+      },
+      "total_tokens": 1991
+    }
+  },
+  "request_sha256": "9487f1a5351ca9c6e6fcd4fbdf40f790f221e4174a43bd0e53af42b6675a494b",
+  "status": "SUCCESS"
+}

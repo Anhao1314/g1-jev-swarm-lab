@@ -1,0 +1,329 @@
+{
+  "added_wall_s": 16.394891299998562,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 16.390127399998164,
+        "provider_document": {
+          "created_at": 1791359708,
+          "id": "resp_28473a3b-7396-4168-86ca-6b65c3b08418",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_28473a3b-7396-4168-86ca-6b65c3b08418",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source. Need decide ambiguity. Source: \"前进：一〇米；站立：二秒；左转：九〇度；停止。\" Actions: walk_forward 10 m, stand 2 s, turn left 90 deg, stop. Order given linear. Quantities Chinese numerals. Reference none. Corrections none. Repetition none. Temporal none. Seems unique legal interpretation. Need coverage split exact source, concatenated equals entire source. Need roles. Source exact includes punctuation: 前进：一〇米；站立：二秒；左转：九〇度；停止。 We can split by semicolon and final period maybe. Need every span. Could list:\n\"前进：一〇米；\" ACTION? It includes action and quantity.\n\"站立：二秒；\" ACTION\n\"左转：九〇度；\" ACTION\n\"停止。\" ACTION\nBut role ACTION. Need explanations. But every action, relation editing considered. Since all action spans. There are no separators separate? If split includes semicolons inside spans, okay. The instruction says split into meaningful spans so every action etc. text values concatenated equal entire original. Role can ACTION for action clause. Quantities embedded. Could also split into action labels, colons, quantities, separators. But simpler. Need coverage nonempty list objects exactly text role explanation. Ensure exact characters. Check Chinese numerals: 一〇米 = 10 m? 〇 is zero, yes. 二秒 = 2 s. 九〇度 = 90 degrees. 停止 stop. Order linear as sequence.\n\nNeed dimensions all UNIQUE. Need action_multiplicity explanation: four distinct actions each requested once; no edit/repeat. action_order: explicit semicolon sequence and punctuation establishes s1 forward, s2 stand, s3 left turn, s4 stop. correction_scope: no correction/edit. repetition_scope: no repetition. reference_resolution: no pronouns/ordinals/omitted args? Each action self-contained with arguments. temporal_relations: semicolon sequence plus terminal stop linear, no before/after explicit? Linear order from listing. unresolved_relations: none. Then status AUTHORIZED_UNIQUE. Need be careful: stand duration_s 2 positive finite, default not relevant. Walk 10 m positive finite. turn left 90 positive. Within max 32, angle <=180, stand <=60. Stop no params. Legal.\n\nCould there be ambiguity with \"前进\" as walk_forward? Semantic mapping legal. Chinese labels map action. \"左转\" = turn left. \"站立\" = stand. \"停止\" = stop. Quantity Chinese numerals unambiguous. Fine.\n\nNeed output JSON exactly. No markdown. Ensure JSON escaping? Chinese fine. Use double quotes. Coverage text exact. Let's craft.\n\nPotential issue: coverage text \"前进：一〇米；\" role ACTION explanation. If role ACTION includes quantity but quantity role not separately used. That's acceptable? The spec wants meaningful spans so every action, relation and editing clause considered. Quantities embedded in action spans considered. Could additionally split quantities separately, but then text values still equal. Maybe better split each action label and quantity? Need every action and quantity considered. But if split \"前进：\" and \"一〇米；\" role QUANTITY, is \"前进：\" ACTION? It is a label without object. But action effect? Hm.\n\nCould split:\n1 \"前进：\" role ACTION explanation: requests walk_forward, direction forward.\n2 \"一〇米；\" role QUANTITY explanation: distance 10 meters, valid positive finite, parameter for preceding action.\n3 \"站立：\" role ACTION\n4 \"二秒；\" role QUANTITY\n5 \"左转：\" role ACTION\n6 \"九〇度；\" role QUANTITY\n7 \"停止。\" role ACTION\nThis gives roles and full concatenation. But action label without parameter might be considered action requested, quantity separate. The spec says role ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Chinese colon is part of label? \"前进：\" includes colon, okay. Semicolon included in quantity \"一〇米；\". Last \"停止。\" includes period. This is fine. Each span meaningful. Need explanations nonempty. However action_multiplicity accounting: four actions. The quantity spans are parameters not additional actions. Good.\n\nBut \"站立：\" action then \"二秒；\" quantity explicit. \"左转：\" action, \"九〇度；\" quantity. The colon \"：\" is punctuation. Are there separators? Semicolon attached to quantity, final period attached to stop. Okay.\n\nShould we include the semicolon as SEPARATOR separate? Could split:\n\"前进：\" ACTION\n\"一〇米\" QUANTITY\n\"；\" SEPARATOR\n\"站立：\" ACTION\n\"二秒\" QUANTITY\n\"；\" SEPARATOR\n\"左转：\" ACTION\n\"九〇度\" QUANTITY\n\"；\" SEPARATOR\n\"停止\" ACTION\n\"。\" SEPARATOR\nThis is more explicit. Concatenates exact. Explanations for separators: semicolons delimit sequential steps, do not modify authority; final period terminates. This may be clean. Need ensure \"；\" Chinese semicolon exact. Source: \"；\" yes. Colon \"：\" fullwidth. Final \"。\". Good.\n\nRoles: ACTION for action labels \"前进：\", \"站立：\", \"左转：\", \"停止\". But \"停止\" no colon, then final period separate. Wait source: \"停止。\" no colon. So \"停止\" ACTION, \"。\" SEPARATOR. For others label includes colon. Is colon separator? We can include colon in action label, or separate. It might be okay. But \"前进：\" not an action word alone? It's action label plus delimiter. Could split colon as SEPARATOR:\n\"前进\" ACTION\n\"：\" SEPARATOR\n\"一〇米\" QUANTITY\n\"；\" SEPARATOR\n...\n\"停止\" ACTION\n\"。\" SEPARATOR\nThis is more granular and exact. Need role explanations.\n\nLet's consider coverage list must concatenate entire original. We'll do granular. Text values:\n1 \"前进\" role ACTION\n2 \"：\" role SEPARATOR\n3 \"一〇米\" role QUANTITY\n4 \"；\" role SEPARATOR\n5 \"站立\" role ACTION\n6 \"：\" role SEPARATOR\n7 \"二秒\" role QUANTITY\n8 \"；\" role SEPARATOR\n9 \"左转\" role ACTION\n10 \"：\" role SEPARATOR\n11 \"九〇度\" role QUANTITY\n12 \"；\" role SEPARATOR\n13 \"停止\" role ACTION\n14 \"。\" role SEPARATOR\n\nConcatenates: 前进：一〇米；站立：二秒；左转：九〇度；停止。 Yes.\n\nNeed explanations nonempty. For action \"前进\": requests walk_forward with distance parameter supplied by following quantity; first action. For colon: separates action label from parameter; nonexecuting. Quantity \"一〇米\": 10 meters, positive finite, parameter for 前进. Semicolon: delimits action sequence, nonexecuting, contributes to order. For \"站立\": stand action, duration param following. Colon separator. \"二秒\": 2 seconds, positive finite, within max 60. Semicolon. \"左转\": turn left action, angle following. \"九〇度\": 90 degrees left positive, nonzero finite <=180. Semicolon. \"停止\": stop action, no params, final. Period SEPARATOR ends command, nonexecuting.\n\nNeed ensure role for \"：\" and \"；\" and \"。\" exactly allowed. SEPARATOR. Good.\n\nNow dimensions. Need explain with source evidence. Use exact source snippets. Should not mention compiler candidate. Status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed be careful about \"action_order\": Is sequence of semicolon-separated clauses necessarily execution order? In Chinese command list with punctuation, yes. \"前进...；站立...；左转...；停止\" sequential. Unique.\n\n\"correction_scope\": no correction. Source has no edited/replaced actions. UNIQUE inapplicable. Good.\n\n\"repetition_scope\": no repeated spans. UNIQUE.\n\n\"reference_resolution\": no pronouns or omitted shared arguments; each action has its own parameter except stop which legally has none. The colons tie quantities to immediately preceding action. UNIQUE.\n\n\"temporal_relations\": no before/after/waiting/simultaneity; listing with separators gives single linear order. Terminal stop after turn. UNIQUE. Is stop after turn? Yes order.\n\n\"unresolved_relations\": no explicit unresolved choice/scope. UNIQUE.\n\nAction multiplicity: \"前进\", \"站立\", \"左转\", \"停止\" each once. Quantities are parameters, not actions. No edits. UNIQUE.\n\nNeed maybe mention Chinese numerals. \"〇\" is zero, so 一〇=10, 九〇=90. No ambiguity? In Chinese, 一〇 unambiguously 10? It is a digit sequence \"一〇\" = 10. 九〇 = 90. Yes.\n\nPotential hidden issue: \"站立：二秒\" stand duration 2 seconds. Valid. \"左转：九〇度\" left turn 90, positive. Max absolute 180, okay. \"前进：一〇米\" walk_forward positive finite. Good.\n\nNeed output exactly one JSON object. No markdown. Ensure no newline? JSON can have spaces. Fine.\n\nLet's formulate concise but enough.\n\nNeed ensure dimensions object exactly seven names. Values with status and explanation. All UNIQUE. Coverage each object exactly text, role, explanation. Good.\n\nLet's produce final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source. Need decide ambiguity. Source: \"前进：一〇米；站立：二秒；左转：九〇度；停止。\" Actions: walk_forward 10 m, stand 2 s, turn left 90 deg, stop. Order given linear. Quantities Chinese numerals. Reference none. Corrections none. Repetition none. Temporal none. Seems unique legal interpretation. Need coverage split exact source, concatenated equals entire source. Need roles. Source exact includes punctuation: 前进：一〇米；站立：二秒；左转：九〇度；停止。 We can split by semicolon and final period maybe. Need every span. Could list:\n\"前进：一〇米；\" ACTION? It includes action and quantity.\n\"站立：二秒；\" ACTION\n\"左转：九〇度；\" ACTION\n\"停止。\" ACTION\nBut role ACTION. Need explanations. But every action, relation editing considered. Since all action spans. There are no separators separate? If split includes semicolons inside spans, okay. The instruction says split into meaningful spans so every action etc. text values concatenated equal entire original. Role can ACTION for action clause. Quantities embedded. Could also split into action labels, colons, quantities, separators. But simpler. Need coverage nonempty list objects exactly text role explanation. Ensure exact characters. Check Chinese numerals: 一〇米 = 10 m? 〇 is zero, yes. 二秒 = 2 s. 九〇度 = 90 degrees. 停止 stop. Order linear as sequence.\n\nNeed dimensions all UNIQUE. Need action_multiplicity explanation: four distinct actions each requested once; no edit/repeat. action_order: explicit semicolon sequence and punctuation establishes s1 forward, s2 stand, s3 left turn, s4 stop. correction_scope: no correction/edit. repetition_scope: no repetition. reference_resolution: no pronouns/ordinals/omitted args? Each action self-contained with arguments. temporal_relations: semicolon sequence plus terminal stop linear, no before/after explicit? Linear order from listing. unresolved_relations: none. Then status AUTHORIZED_UNIQUE. Need be careful: stand duration_s 2 positive finite, default not relevant. Walk 10 m positive finite. turn left 90 positive. Within max 32, angle <=180, stand <=60. Stop no params. Legal.\n\nCould there be ambiguity with \"前进\" as walk_forward? Semantic mapping legal. Chinese labels map action. \"左转\" = turn left. \"站立\" = stand. \"停止\" = stop. Quantity Chinese numerals unambiguous. Fine.\n\nNeed output JSON exactly. No markdown. Ensure JSON escaping? Chinese fine. Use double quotes. Coverage text exact. Let's craft.\n\nPotential issue: coverage text \"前进：一〇米；\" role ACTION explanation. If role ACTION includes quantity but quantity role not separately used. That's acceptable? The spec wants meaningful spans so every action, relation and editing clause considered. Quantities embedded in action spans considered. Could additionally split quantities separately, but then text values still equal. Maybe better split each action label and quantity? Need every action and quantity considered. But if split \"前进：\" and \"一〇米；\" role QUANTITY, is \"前进：\" ACTION? It is a label without object. But action effect? Hm.\n\nCould split:\n1 \"前进：\" role ACTION explanation: requests walk_forward, direction forward.\n2 \"一〇米；\" role QUANTITY explanation: distance 10 meters, valid positive finite, parameter for preceding action.\n3 \"站立：\" role ACTION\n4 \"二秒；\" role QUANTITY\n5 \"左转：\" role ACTION\n6 \"九〇度；\" role QUANTITY\n7 \"停止。\" role ACTION\nThis gives roles and full concatenation. But action label without parameter might be considered action requested, quantity separate. The spec says role ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Chinese colon is part of label? \"前进：\" includes colon, okay. Semicolon included in quantity \"一〇米；\". Last \"停止。\" includes period. This is fine. Each span meaningful. Need explanations nonempty. However action_multiplicity accounting: four actions. The quantity spans are parameters not additional actions. Good.\n\nBut \"站立：\" action then \"二秒；\" quantity explicit. \"左转：\" action, \"九〇度；\" quantity. The colon \"：\" is punctuation. Are there separators? Semicolon attached to quantity, final period attached to stop. Okay.\n\nShould we include the semicolon as SEPARATOR separate? Could split:\n\"前进：\" ACTION\n\"一〇米\" QUANTITY\n\"；\" SEPARATOR\n\"站立：\" ACTION\n\"二秒\" QUANTITY\n\"；\" SEPARATOR\n\"左转：\" ACTION\n\"九〇度\" QUANTITY\n\"；\" SEPARATOR\n\"停止\" ACTION\n\"。\" SEPARATOR\nThis is more explicit. Concatenates exact. Explanations for separators: semicolons delimit sequential steps, do not modify authority; final period terminates. This may be clean. Need ensure \"；\" Chinese semicolon exact. Source: \"；\" yes. Colon \"：\" fullwidth. Final \"。\". Good.\n\nRoles: ACTION for action labels \"前进：\", \"站立：\", \"左转：\", \"停止\". But \"停止\" no colon, then final period separate. Wait source: \"停止。\" no colon. So \"停止\" ACTION, \"。\" SEPARATOR. For others label includes colon. Is colon separator? We can include colon in action label, or separate. It might be okay. But \"前进：\" not an action word alone? It's action label plus delimiter. Could split colon as SEPARATOR:\n\"前进\" ACTION\n\"：\" SEPARATOR\n\"一〇米\" QUANTITY\n\"；\" SEPARATOR\n...\n\"停止\" ACTION\n\"。\" SEPARATOR\nThis is more granular and exact. Need role explanations.\n\nLet's consider coverage list must concatenate entire original. We'll do granular. Text values:\n1 \"前进\" role ACTION\n2 \"：\" role SEPARATOR\n3 \"一〇米\" role QUANTITY\n4 \"；\" role SEPARATOR\n5 \"站立\" role ACTION\n6 \"：\" role SEPARATOR\n7 \"二秒\" role QUANTITY\n8 \"；\" role SEPARATOR\n9 \"左转\" role ACTION\n10 \"：\" role SEPARATOR\n11 \"九〇度\" role QUANTITY\n12 \"；\" role SEPARATOR\n13 \"停止\" role ACTION\n14 \"。\" role SEPARATOR\n\nConcatenates: 前进：一〇米；站立：二秒；左转：九〇度；停止。 Yes.\n\nNeed explanations nonempty. For action \"前进\": requests walk_forward with distance parameter supplied by following quantity; first action. For colon: separates action label from parameter; nonexecuting. Quantity \"一〇米\": 10 meters, positive finite, parameter for 前进. Semicolon: delimits action sequence, nonexecuting, contributes to order. For \"站立\": stand action, duration param following. Colon separator. \"二秒\": 2 seconds, positive finite, within max 60. Semicolon. \"左转\": turn left action, angle following. \"九〇度\": 90 degrees left positive, nonzero finite <=180. Semicolon. \"停止\": stop action, no params, final. Period SEPARATOR ends command, nonexecuting.\n\nNeed ensure role for \"：\" and \"；\" and \"。\" exactly allowed. SEPARATOR. Good.\n\nNow dimensions. Need explain with source evidence. Use exact source snippets. Should not mention compiler candidate. Status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed be careful about \"action_order\": Is sequence of semicolon-separated clauses necessarily execution order? In Chinese command list with punctuation, yes. \"前进...；站立...；左转...；停止\" sequential. Unique.\n\n\"correction_scope\": no correction. Source has no edited/replaced actions. UNIQUE inapplicable. Good.\n\n\"repetition_scope\": no repeated spans. UNIQUE.\n\n\"reference_resolution\": no pronouns or omitted shared arguments; each action has its own parameter except stop which legally has none. The colons tie quantities to immediately preceding action. UNIQUE.\n\n\"temporal_relations\": no before/after/waiting/simultaneity; listing with separators gives single linear order. Terminal stop after turn. UNIQUE. Is stop after turn? Yes order.\n\n\"unresolved_relations\": no explicit unresolved choice/scope. UNIQUE.\n\nAction multiplicity: \"前进\", \"站立\", \"左转\", \"停止\" each once. Quantities are parameters, not actions. No edits. UNIQUE.\n\nNeed maybe mention Chinese numerals. \"〇\" is zero, so 一〇=10, 九〇=90. No ambiguity? In Chinese, 一〇 unambiguously 10? It is a digit sequence \"一〇\" = 10. 九〇 = 90. Yes.\n\nPotential hidden issue: \"站立：二秒\" stand duration 2 seconds. Valid. \"左转：九〇度\" left turn 90, positive. Max absolute 180, okay. \"前进：一〇米\" walk_forward positive finite. Good.\n\nNeed output exactly one JSON object. No markdown. Ensure no newline? JSON can have spaces. Fine.\n\nLet's formulate concise but enough.\n\nNeed ensure dimensions object exactly seven names. Values with status and explanation. All UNIQUE. Coverage each object exactly text, role, explanation. Good.\n\nLet's produce final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行前进动作，对应 walk_forward；其距离参数由紧随其后的“一〇米”提供。该动作在序列中第一次出现，未被编辑或重复。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“前进”与其参数“一〇米”连接起来；它本身不执行动作，也不改变授权内容。\"},{\"text\":\"一〇米\",\"role\":\"QUANTITY\",\"explanation\":\"表示 10 米，是“前进”的 distance_m 参数；数值为正且有限，满足 walk_forward 的合法参数要求。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔前一条动作指令与后一条动作指令；它本身不执行动作，但参与形成列表中的顺序。\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"请求执行站立动作，对应 stand；其持续时间参数由紧随其后的“二秒”提供。该动作在序列中第二次出现。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“站立”与其参数“二秒”连接起来；它本身不执行动作。\"},{\"text\":\"二秒\",\"role\":\"QUANTITY\",\"explanation\":\"表示 2 秒，是“站立”的 duration_s 参数；数值为正且有限，且未超过最大站立时长 60 秒。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔“站立：二秒”与后续“左转：九〇度”；它本身不执行动作，但维持列表顺序。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行左转动作，对应 turn 且方向为左，即角度取正值；其角度参数由紧随其后的“九〇度”提供。该动作在序列中第三次出现。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“左转”与其参数“九〇度”连接起来；它本身不执行动作。\"},{\"text\":\"九〇度\",\"role\":\"QUANTITY\",\"explanation\":\"表示 90 度，是“左转”的 angle_deg 参数；左转为正，因此为 +90 度，非零有限且未超过最大绝对转角 180 度。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔“左转：九〇度”与最后的“停止”；它本身不执行动作，但维持列表顺序。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行停止动作，对应 stop；stop 没有参数，因此不需要后续数量。该动作在序列中第四次出现。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句号，结束整条指令；它本身不执行动作，也不改变已表达的动作、参数或顺序。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中明确列出四个动作词：“前进”“站立”“左转”“停止”，各自只出现一次。三个数量“一〇米”“二秒”“九〇度”分别是前三个动作的参数，不是额外动作；没有编辑、替换或重复动作的表述。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"源以“前进：一〇米；站立：二秒；左转：九〇度；停止。”的顺序排列，分号和句号分隔出单一线性顺序：先前进，再站立，再左转，最后停止；没有并列、可选或冲突顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、撤销、改为、替换或“而是”等编辑词，也没有任何被修改的参数、动作或关系。该维度不适用，且不引入替代解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有“再次”“重复”“每”“循环”或次数表述；四个动作均只被请求一次，未出现需要界定重复范围的片段。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有代词、序数回指或跨句省略共享参数。“前进”“站立”“左转”分别由紧邻其后的“一〇米”“二秒”“九〇度”作为参数；“停止”按 stop 语义无参数。所有引用均可在源内唯一确定。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有 before/after、等待、同时或完成依赖等显式时间词；分号列表和结尾句号给出单一顺序：前进、站立、左转、停止，可表示为每个后续步骤依赖前一步的线性计划，无需发明额外时间关系。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留未定选择、未定范围或未定顺序；所有动作、参数和顺序均已给出，不存在需要在多个可能关系中选择的未决项。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_28473a3b-7396-4168-86ca-6b65c3b08418",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 156,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 3154,
+            "output_tokens_details": {
+              "reasoning_tokens": 2062
+            },
+            "total_tokens": 4078
+          }
+        },
+        "request_sha256": "8b8ff0c94754b0cb2961cb58d6fb0482bd3ca86aac37ab615ece5b2be7b7519f",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 16.388655499999004,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_28473a3b-7396-4168-86ca-6b65c3b08418",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行前进动作，对应 walk_forward；其距离参数由紧随其后的“一〇米”提供。该动作在序列中第一次出现，未被编辑或重复。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“前进”与其参数“一〇米”连接起来；它本身不执行动作，也不改变授权内容。\"},{\"text\":\"一〇米\",\"role\":\"QUANTITY\",\"explanation\":\"表示 10 米，是“前进”的 distance_m 参数；数值为正且有限，满足 walk_forward 的合法参数要求。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔前一条动作指令与后一条动作指令；它本身不执行动作，但参与形成列表中的顺序。\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"请求执行站立动作，对应 stand；其持续时间参数由紧随其后的“二秒”提供。该动作在序列中第二次出现。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“站立”与其参数“二秒”连接起来；它本身不执行动作。\"},{\"text\":\"二秒\",\"role\":\"QUANTITY\",\"explanation\":\"表示 2 秒，是“站立”的 duration_s 参数；数值为正且有限，且未超过最大站立时长 60 秒。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔“站立：二秒”与后续“左转：九〇度”；它本身不执行动作，但维持列表顺序。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行左转动作，对应 turn 且方向为左，即角度取正值；其角度参数由紧随其后的“九〇度”提供。该动作在序列中第三次出现。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“左转”与其参数“九〇度”连接起来；它本身不执行动作。\"},{\"text\":\"九〇度\",\"role\":\"QUANTITY\",\"explanation\":\"表示 90 度，是“左转”的 angle_deg 参数；左转为正，因此为 +90 度，非零有限且未超过最大绝对转角 180 度。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔“左转：九〇度”与最后的“停止”；它本身不执行动作，但维持列表顺序。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行停止动作，对应 stop；stop 没有参数，因此不需要后续数量。该动作在序列中第四次出现。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句号，结束整条指令；它本身不执行动作，也不改变已表达的动作、参数或顺序。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中明确列出四个动作词：“前进”“站立”“左转”“停止”，各自只出现一次。三个数量“一〇米”“二秒”“九〇度”分别是前三个动作的参数，不是额外动作；没有编辑、替换或重复动作的表述。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"源以“前进：一〇米；站立：二秒；左转：九〇度；停止。”的顺序排列，分号和句号分隔出单一线性顺序：先前进，再站立，再左转，最后停止；没有并列、可选或冲突顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、撤销、改为、替换或“而是”等编辑词，也没有任何被修改的参数、动作或关系。该维度不适用，且不引入替代解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有“再次”“重复”“每”“循环”或次数表述；四个动作均只被请求一次，未出现需要界定重复范围的片段。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有代词、序数回指或跨句省略共享参数。“前进”“站立”“左转”分别由紧邻其后的“一〇米”“二秒”“九〇度”作为参数；“停止”按 stop 语义无参数。所有引用均可在源内唯一确定。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有 before/after、等待、同时或完成依赖等显式时间词；分号列表和结尾句号给出单一顺序：前进、站立、左转、停止，可表示为每个后续步骤依赖前一步的线性计划，无需发明额外时间关系。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留未定选择、未定范围或未定顺序；所有动作、参数和顺序均已给出，不存在需要在多个可能关系中选择的未决项。\"}}}",
+        "usage": {
+          "input_tokens": 156,
+          "output_tokens": 3154,
+          "total_tokens": 4078
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.9843801999995776,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-walk-stand-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 22,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 431,
+      "raw_response_sha256": "a4489fcaaa827645f440306147b48fc9ea5c951115408cb3925d62ca23b9933a",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_5b30135f-1fe0-4fe7-9e67-b7dd6d046f3f",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 16.39416429999983,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 16.388655499999004,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行前进动作，对应 walk_forward；其距离参数由紧随其后的“一〇米”提供。该动作在序列中第一次出现，未被编辑或重复。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“前进”与其参数“一〇米”连接起来；它本身不执行动作，也不改变授权内容。\"},{\"text\":\"一〇米\",\"role\":\"QUANTITY\",\"explanation\":\"表示 10 米，是“前进”的 distance_m 参数；数值为正且有限，满足 walk_forward 的合法参数要求。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔前一条动作指令与后一条动作指令；它本身不执行动作，但参与形成列表中的顺序。\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"请求执行站立动作，对应 stand；其持续时间参数由紧随其后的“二秒”提供。该动作在序列中第二次出现。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“站立”与其参数“二秒”连接起来；它本身不执行动作。\"},{\"text\":\"二秒\",\"role\":\"QUANTITY\",\"explanation\":\"表示 2 秒，是“站立”的 duration_s 参数；数值为正且有限，且未超过最大站立时长 60 秒。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔“站立：二秒”与后续“左转：九〇度”；它本身不执行动作，但维持列表顺序。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行左转动作，对应 turn 且方向为左，即角度取正值；其角度参数由紧随其后的“九〇度”提供。该动作在序列中第三次出现。\"},{\"text\":\"：\",\"role\":\"SEPARATOR\",\"explanation\":\"全角冒号，将动作词“左转”与其参数“九〇度”连接起来；它本身不执行动作。\"},{\"text\":\"九〇度\",\"role\":\"QUANTITY\",\"explanation\":\"表示 90 度，是“左转”的 angle_deg 参数；左转为正，因此为 +90 度，非零有限且未超过最大绝对转角 180 度。\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"全角分号，分隔“左转：九〇度”与最后的“停止”；它本身不执行动作，但维持列表顺序。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行停止动作，对应 stop；stop 没有参数，因此不需要后续数量。该动作在序列中第四次出现。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句号，结束整条指令；它本身不执行动作，也不改变已表达的动作、参数或顺序。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中明确列出四个动作词：“前进”“站立”“左转”“停止”，各自只出现一次。三个数量“一〇米”“二秒”“九〇度”分别是前三个动作的参数，不是额外动作；没有编辑、替换或重复动作的表述。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"源以“前进：一〇米；站立：二秒；左转：九〇度；停止。”的顺序排列，分号和句号分隔出单一线性顺序：先前进，再站立，再左转，最后停止；没有并列、可选或冲突顺序。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、撤销、改为、替换或“而是”等编辑词，也没有任何被修改的参数、动作或关系。该维度不适用，且不引入替代解读。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有“再次”“重复”“每”“循环”或次数表述；四个动作均只被请求一次，未出现需要界定重复范围的片段。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有代词、序数回指或跨句省略共享参数。“前进”“站立”“左转”分别由紧邻其后的“一〇米”“二秒”“九〇度”作为参数；“停止”按 stop 语义无参数。所有引用均可在源内唯一确定。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有 before/after、等待、同时或完成依赖等显式时间词；分号列表和结尾句号给出单一顺序：前进、站立、左转、停止，可表示为每个后续步骤依赖前一步的线性计划，无需发明额外时间关系。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留未定选择、未定范围或未定顺序；所有动作、参数和顺序均已给出，不存在需要在多个可能关系中选择的未决项。\"}}}",
+          "raw_response_sha256": "c0c768a36ecec592ddaf309985e5e14b41c21ede23fe8952dcc8ca673dfc2514",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_28473a3b-7396-4168-86ca-6b65c3b08418",
+          "source_aware": false,
+          "source_sha256": "f3647fe42e9c907f9d1b0f0db89a39c4c609e1052fd165adf598d639fcba4933",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 156,
+            "output_tokens": 3154,
+            "total_tokens": 4078
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "请求执行前进动作，对应 walk_forward；其距离参数由紧随其后的“一〇米”提供。该动作在序列中第一次出现，未被编辑或重复。",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "全角冒号，将动作词“前进”与其参数“一〇米”连接起来；它本身不执行动作，也不改变授权内容。",
+                "role": "SEPARATOR",
+                "text": "："
+              },
+              {
+                "explanation": "表示 10 米，是“前进”的 distance_m 参数；数值为正且有限，满足 walk_forward 的合法参数要求。",
+                "role": "QUANTITY",
+                "text": "一〇米"
+              },
+              {
+                "explanation": "全角分号，分隔前一条动作指令与后一条动作指令；它本身不执行动作，但参与形成列表中的顺序。",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "请求执行站立动作，对应 stand；其持续时间参数由紧随其后的“二秒”提供。该动作在序列中第二次出现。",
+                "role": "ACTION",
+                "text": "站立"
+              },
+              {
+                "explanation": "全角冒号，将动作词“站立”与其参数“二秒”连接起来；它本身不执行动作。",
+                "role": "SEPARATOR",
+                "text": "："
+              },
+              {
+                "explanation": "表示 2 秒，是“站立”的 duration_s 参数；数值为正且有限，且未超过最大站立时长 60 秒。",
+                "role": "QUANTITY",
+                "text": "二秒"
+              },
+              {
+                "explanation": "全角分号，分隔“站立：二秒”与后续“左转：九〇度”；它本身不执行动作，但维持列表顺序。",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "请求执行左转动作，对应 turn 且方向为左，即角度取正值；其角度参数由紧随其后的“九〇度”提供。该动作在序列中第三次出现。",
+                "role": "ACTION",
+                "text": "左转"
+              },
+              {
+                "explanation": "全角冒号，将动作词“左转”与其参数“九〇度”连接起来；它本身不执行动作。",
+                "role": "SEPARATOR",
+                "text": "："
+              },
+              {
+                "explanation": "表示 90 度，是“左转”的 angle_deg 参数；左转为正，因此为 +90 度，非零有限且未超过最大绝对转角 180 度。",
+                "role": "QUANTITY",
+                "text": "九〇度"
+              },
+              {
+                "explanation": "全角分号，分隔“左转：九〇度”与最后的“停止”；它本身不执行动作，但维持列表顺序。",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "请求执行停止动作，对应 stop；stop 没有参数，因此不需要后续数量。该动作在序列中第四次出现。",
+                "role": "ACTION",
+                "text": "停止"
+              },
+              {
+                "explanation": "句号，结束整条指令；它本身不执行动作，也不改变已表达的动作、参数或顺序。",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源中明确列出四个动作词：“前进”“站立”“左转”“停止”，各自只出现一次。三个数量“一〇米”“二秒”“九〇度”分别是前三个动作的参数，不是额外动作；没有编辑、替换或重复动作的表述。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "源以“前进：一〇米；站立：二秒；左转：九〇度；停止。”的顺序排列，分号和句号分隔出单一线性顺序：先前进，再站立，再左转，最后停止；没有并列、可选或冲突顺序。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有修正、撤销、改为、替换或“而是”等编辑词，也没有任何被修改的参数、动作或关系。该维度不适用，且不引入替代解读。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "源中没有代词、序数回指或跨句省略共享参数。“前进”“站立”“左转”分别由紧邻其后的“一〇米”“二秒”“九〇度”作为参数；“停止”按 stop 语义无参数。所有引用均可在源内唯一确定。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有“再次”“重复”“每”“循环”或次数表述；四个动作均只被请求一次，未出现需要界定重复范围的片段。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "源没有 before/after、等待、同时或完成依赖等显式时间词；分号列表和结尾句号给出单一顺序：前进、站立、左转、停止，可表示为每个后续步骤依赖前一步的线性计划，无需发明额外时间关系。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源没有显式保留未定选择、未定范围或未定顺序；所有动作、参数和顺序均已给出，不存在需要在多个可能关系中选择的未决项。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 440,
+        "total_tokens": 2195
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-walk-stand-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 10.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "前进,一〇米,站立,二秒,左转,九〇度,停止",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 7.293659200000548,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 7.290167900002416,
+        "provider_document": {
+          "created_at": 1791360820,
+          "id": "resp_13f9d072-c4b5-48c1-b06f-191809abbabc",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_13f9d072-c4b5-48c1-b06f-191809abbabc",
+              "reasoning_content": "We need answer JSON only. Need inspect source \"向前走20m\". Chinese: \"向前走20m\" means walk forward 20m. Need determine dimensions. Source only. Action: walk_forward distance 20m. Unique? Let's examine seven.\n\naction_multiplicity: one requested action. UNIQUE.\naction_order: only one action, order trivially resolved. UNIQUE.\ncorrection_scope: no corrections. UNIQUE (inapplicable).\nrepetition_scope: no repetition. UNIQUE.\nreference_resolution: \"向前\" = forward, no pronoun? \"走\" action directed forward. No omitted args? distance specified. UNIQUE.\ntemporal_relations: single action no temporal relations. UNIQUE.\nunresolved_relations: none. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE. Coverage list with text exactly entire source. Need split meaningful spans so every action/relation/editing clause considered. Source \"向前走20m\". Could split into \"向前\" and \"走\" and \"20m\"? But concatenation must equal source. Roles: \"向前\" CONTEXT or RELATION? It modifies direction. \"走\" ACTION. \"20m\" QUANTITY. Need ensure text exact no whitespace. Source has no punctuation. Could have one span entire source role ACTION? But instruction says split into meaningful spans so every action, relation and editing clause. Better: [\"向前\", \"走\", \"20m\"]. Roles: \"向前\" RELATION (direction/forward relation), \"走\" ACTION, \"20m\" QUANTITY. Explanations. Need mention \"向前\" specifies forward direction for walk_forward, does not add an independent action; \"走\" legal action mapped to walk_forward; \"20m\" quantity 20 meters positive finite, distance_m. Concatenate exactly \"向前走20m\". Good.\n\nNeed output exactly JSON object no markdown. Need keys exactly status, coverage, dimensions. Dimensions object with exactly seven names. Each status and explanation nonempty. Be careful: status AUTHORIZED_UNIQUE. Explanation can mention unique.\n\nPotential issue: \"向前走20m\" Chinese phrase. \"走\" alone means walk; \"向前走\" means walk forward. Legal action walk_forward. Is there any ambiguity? \"走\" could mean walk, \"向前\" forward. 20m positive finite. Unique. No unresolved.\n\nNeed not mention external compiler. Should not claim separate compiler. We can say source authorizes one legal Mission IR interpretation? The gate can authorize source unique. Fine.\n\nNeed coverage text concatenated exactly original source. Use original. Ensure no extra spaces. Coverage is list of three objects. JSON strings with Chinese.\n\nLet's craft. dimensions explanations.\n\nNeed no markdown. final only JSON.\n\nLet's compose:\n\n{\n \"status\":\"AUTHORIZED_UNIQUE\",\n \"coverage\":[\n  {\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Specifies the direction of the sole movement as forward, fixing the orientation argument for the following action; it does not create a separate action, order, edit, or repetition.\"},\n  {\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Requests a single walk action; with the preceding forward direction and following distance, it maps to one walk_forward step and no other action.\"},\n  {\"text\":\"20m\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the distance parameter 20 meters for the preceding walk action; it is a positive finite distance in meters and does not introduce another action or an unresolved value.\"}\n ],\n \"dimensions\":{\n  \"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action phrase, 走, modified by 向前 and quantified by 20m; there are no additional, repeated, edited, or alternative actions.\"},\n  \"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one linear order and no competing order can arise.\"},\n  \"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source, so the dimension introduces no alternative.\"},\n  \"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the single walk action is not repeated or broadened into a sequence.\"},\n  \"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前 directly supplies the forward direction for 走, and 20m directly supplies that action's distance; no pronoun, ordinal, omitted argument, or external referent remains.\"},\n  \"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated; a single action is representable as one linear step.\"},\n  \"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source states a forward walk of 20m without explicitly leaving any choice, scope, ordering, or relationship unresolved.\"}\n }\n}\n\nCheck coverage concatenation: \"向前\"+\"走\"+\"20m\" = \"向前走20m\". Yes.\n\nNeed maybe \"action_multiplicity\" status UNIQUE. Good.\n\nPotential concern: Role of \"向前\" as RELATION, \"走\" ACTION, \"20m\" QUANTITY. Good.\n\nNo executable fields. Good.\n\nFinal.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source \"向前走20m\". Chinese: \"向前走20m\" means walk forward 20m. Need determine dimensions. Source only. Action: walk_forward distance 20m. Unique? Let's examine seven.\n\naction_multiplicity: one requested action. UNIQUE.\naction_order: only one action, order trivially resolved. UNIQUE.\ncorrection_scope: no corrections. UNIQUE (inapplicable).\nrepetition_scope: no repetition. UNIQUE.\nreference_resolution: \"向前\" = forward, no pronoun? \"走\" action directed forward. No omitted args? distance specified. UNIQUE.\ntemporal_relations: single action no temporal relations. UNIQUE.\nunresolved_relations: none. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE. Coverage list with text exactly entire source. Need split meaningful spans so every action/relation/editing clause considered. Source \"向前走20m\". Could split into \"向前\" and \"走\" and \"20m\"? But concatenation must equal source. Roles: \"向前\" CONTEXT or RELATION? It modifies direction. \"走\" ACTION. \"20m\" QUANTITY. Need ensure text exact no whitespace. Source has no punctuation. Could have one span entire source role ACTION? But instruction says split into meaningful spans so every action, relation and editing clause. Better: [\"向前\", \"走\", \"20m\"]. Roles: \"向前\" RELATION (direction/forward relation), \"走\" ACTION, \"20m\" QUANTITY. Explanations. Need mention \"向前\" specifies forward direction for walk_forward, does not add an independent action; \"走\" legal action mapped to walk_forward; \"20m\" quantity 20 meters positive finite, distance_m. Concatenate exactly \"向前走20m\". Good.\n\nNeed output exactly JSON object no markdown. Need keys exactly status, coverage, dimensions. Dimensions object with exactly seven names. Each status and explanation nonempty. Be careful: status AUTHORIZED_UNIQUE. Explanation can mention unique.\n\nPotential issue: \"向前走20m\" Chinese phrase. \"走\" alone means walk; \"向前走\" means walk forward. Legal action walk_forward. Is there any ambiguity? \"走\" could mean walk, \"向前\" forward. 20m positive finite. Unique. No unresolved.\n\nNeed not mention external compiler. Should not claim separate compiler. We can say source authorizes one legal Mission IR interpretation? The gate can authorize source unique. Fine.\n\nNeed coverage text concatenated exactly original source. Use original. Ensure no extra spaces. Coverage is list of three objects. JSON strings with Chinese.\n\nLet's craft. dimensions explanations.\n\nNeed no markdown. final only JSON.\n\nLet's compose:\n\n{\n \"status\":\"AUTHORIZED_UNIQUE\",\n \"coverage\":[\n  {\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Specifies the direction of the sole movement as forward, fixing the orientation argument for the following action; it does not create a separate action, order, edit, or repetition.\"},\n  {\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Requests a single walk action; with the preceding forward direction and following distance, it maps to one walk_forward step and no other action.\"},\n  {\"text\":\"20m\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the distance parameter 20 meters for the preceding walk action; it is a positive finite distance in meters and does not introduce another action or an unresolved value.\"}\n ],\n \"dimensions\":{\n  \"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action phrase, 走, modified by 向前 and quantified by 20m; there are no additional, repeated, edited, or alternative actions.\"},\n  \"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one linear order and no competing order can arise.\"},\n  \"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source, so the dimension introduces no alternative.\"},\n  \"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the single walk action is not repeated or broadened into a sequence.\"},\n  \"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前 directly supplies the forward direction for 走, and 20m directly supplies that action's distance; no pronoun, ordinal, omitted argument, or external referent remains.\"},\n  \"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated; a single action is representable as one linear step.\"},\n  \"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source states a forward walk of 20m without explicitly leaving any choice, scope, ordering, or relationship unresolved.\"}\n }\n}\n\nCheck coverage concatenation: \"向前\"+\"走\"+\"20m\" = \"向前走20m\". Yes.\n\nNeed maybe \"action_multiplicity\" status UNIQUE. Good.\n\nPotential concern: Role of \"向前\" as RELATION, \"走\" ACTION, \"20m\" QUANTITY. Good.\n\nNo executable fields. Good.\n\nFinal.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Specifies the direction of the sole movement as forward, fixing the orientation argument for the following action; it does not create a separate action, order, edit, or repetition.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Requests a single walk action; with the preceding forward direction and following distance, it maps to one walk_forward step and no other action.\"},{\"text\":\"20m\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the distance parameter 20 meters for the preceding walk action; it is a positive finite distance in meters and does not introduce another action or an unresolved value.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action phrase, 走, modified by 向前 and quantified by 20m; there are no additional, repeated, edited, or alternative actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one linear order and no competing order can arise.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source, so the dimension introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the single walk action is not repeated or broadened into a sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前 directly supplies the forward direction for 走, and 20m directly supplies that action's distance; no pronoun, ordinal, omitted argument, or external referent remains.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated; a single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source states a forward walk of 20m without explicitly leaving any choice, scope, ordering, or relationship unresolved.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_13f9d072-c4b5-48c1-b06f-191809abbabc",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1555,
+            "output_tokens_details": {
+              "reasoning_tokens": 1111
+            },
+            "total_tokens": 2463
+          }
+        },
+        "request_sha256": "c1111438bb51cb9b75350770c2de337c52065521d353fc616aa2699649440025",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 7.28869929999928,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_13f9d072-c4b5-48c1-b06f-191809abbabc",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Specifies the direction of the sole movement as forward, fixing the orientation argument for the following action; it does not create a separate action, order, edit, or repetition.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Requests a single walk action; with the preceding forward direction and following distance, it maps to one walk_forward step and no other action.\"},{\"text\":\"20m\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the distance parameter 20 meters for the preceding walk action; it is a positive finite distance in meters and does not introduce another action or an unresolved value.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action phrase, 走, modified by 向前 and quantified by 20m; there are no additional, repeated, edited, or alternative actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one linear order and no competing order can arise.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source, so the dimension introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the single walk action is not repeated or broadened into a sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前 directly supplies the forward direction for 走, and 20m directly supplies that action's distance; no pronoun, ordinal, omitted argument, or external referent remains.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated; a single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source states a forward walk of 20m without explicitly leaving any choice, scope, ordering, or relationship unresolved.\"}}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 1555,
+          "total_tokens": 2463
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.7996117000002414,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "forward-20m",
+      "model": "deepseek-flash",
+      "normalized_length": 6,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"forward-20m\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":20.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "f479f48e4e4cda439616535ef1b44972f63d0dc95da95dd793e4826c9b221a46",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_4c71651c-2181-49ea-a472-910a75ddd93a",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 7.2930472000007285,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 7.28869929999928,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前\",\"role\":\"RELATION\",\"explanation\":\"Specifies the direction of the sole movement as forward, fixing the orientation argument for the following action; it does not create a separate action, order, edit, or repetition.\"},{\"text\":\"走\",\"role\":\"ACTION\",\"explanation\":\"Requests a single walk action; with the preceding forward direction and following distance, it maps to one walk_forward step and no other action.\"},{\"text\":\"20m\",\"role\":\"QUANTITY\",\"explanation\":\"Supplies the distance parameter 20 meters for the preceding walk action; it is a positive finite distance in meters and does not introduce another action or an unresolved value.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action phrase, 走, modified by 向前 and quantified by 20m; there are no additional, repeated, edited, or alternative actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so there is exactly one linear order and no competing order can arise.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, replacement, or scope-changing clause in the source, so the dimension introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the single walk action is not repeated or broadened into a sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前 directly supplies the forward direction for 走, and 20m directly supplies that action's distance; no pronoun, ordinal, omitted argument, or external referent remains.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before/after, simultaneity, waiting, or completion relation is stated; a single action is representable as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source states a forward walk of 20m without explicitly leaving any choice, scope, ordering, or relationship unresolved.\"}}}",
+          "raw_response_sha256": "5d59112d760e902d45dff11c02cc39a892e3edc7a5c1075aee4cff44e675b2e0",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_13f9d072-c4b5-48c1-b06f-191809abbabc",
+          "source_aware": false,
+          "source_sha256": "2200c980946f46864ec4b6a442d91eed4db5cd0267ed3c49435fdd56ee298aef",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 1555,
+            "total_tokens": 2463
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Specifies the direction of the sole movement as forward, fixing the orientation argument for the following action; it does not create a separate action, order, edit, or repetition.",
+                "role": "RELATION",
+                "text": "向前"
+              },
+              {
+                "explanation": "Requests a single walk action; with the preceding forward direction and following distance, it maps to one walk_forward step and no other action.",
+                "role": "ACTION",
+                "text": "走"
+              },
+              {
+                "explanation": "Supplies the distance parameter 20 meters for the preceding walk action; it is a positive finite distance in meters and does not introduce another action or an unresolved value.",
+                "role": "QUANTITY",
+                "text": "20m"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains one action phrase, 走, modified by 向前 and quantified by 20m; there are no additional, repeated, edited, or alternative actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so there is exactly one linear order and no competing order can arise.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction, edit, replacement, or scope-changing clause in the source, so the dimension introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "向前 directly supplies the forward direction for 走, and 20m directly supplies that action's distance; no pronoun, ordinal, omitted argument, or external referent remains.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition marker or repeated span; the single walk action is not repeated or broadened into a sequence.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before/after, simultaneity, waiting, or completion relation is stated; a single action is representable as one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source states a forward walk of 20m without explicitly leaving any choice, scope, ordering, or relationship unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 160,
+        "total_tokens": 1899
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "forward-20m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 20.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "向前走20m",
+    "status": "SUCCESS"
+  }
+}

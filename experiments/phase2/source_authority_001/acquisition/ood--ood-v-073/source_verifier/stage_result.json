@@ -1,0 +1,291 @@
+{
+  "added_wall_s": 14.603353100003005,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 14.597187600000325,
+        "provider_document": {
+          "created_at": 1791359746,
+          "id": "resp_4b66a6cd-78d7-4961-b738-202c01d006f6",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_4b66a6cd-78d7-4961-b738-202c01d006f6",
+              "reasoning_content": "We need answer JSON object only. Need analyze source Chinese: \"两次都是往前四米，中间不插别的动作，就分成两次走。\"\n\nWe need derive plan. Source: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Means \"Both times are forward four meters, no other action in between, just split into two walks.\" So two walk_forward each distance 4m, sequential, no other action. Candidate matches two steps walk_forward distance 4m depends sequential. Need assess dimensions.\n\nNeed provide coverage split exact entire source. Must concatenate exactly. Source: 两次都是往前四米，中间不插别的动作，就分成两次走。 Let's segment meaningful spans preserving punctuation. We can split by clauses:\n1 \"两次都是往前四米，\" \n2 \"中间不插别的动作，\"\n3 \"就分成两次走。\"\nConcatenate equals source. Need role and explanation. All nonempty.\n\nDimensions:\naction_multiplicity: UNIQUE? Source says 两次 (two times), 分成两次走 (split into two walks). So exactly two walk_forward actions. Does \"两次都是往前四米\" indicate two actions each 4m. Yes.\naction_order: \"中间不插别的动作\" and sequential probably two walks in order; source not explicitly \"first then second\"? \"分成两次走\" means split into two consecutive walks. Need one exact execution order. For identical actions, order is sequential and IDs s1 s2. Is there ambiguity? Since two identical actions, order indistinguishable but IR requires linear order. Source implies sequence, no other actions in between. It doesn't specify which is first? They are identical, so there is one execution order (one then other). Unique.\ncorrection_scope: no edit? Source \"就\" not correction. It clarifies no interleaving. UNIQUE inapplicable.\nrepetition_scope: \"两次\" repetition exactly 2 of walk_forward 4m. Not compressed. UNIQUE.\nreference_resolution: \"两次\" refers to walking forward 4m each? The second clause \"就分成两次走\" refers to same forward four-meter movement split into two walks. Unique. No pronouns problematic.\ntemporal_relations: \"中间不插别的动作\" no other action between; \"就分成两次走\" two consecutive. Sequential order. Unique.\nunresolved_relations: none explicit. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE. Authorized plan: s1 walk_forward 4.0 depends_on [], s2 walk_forward 4.0 depends_on [\"s1\"]. Exactly.\n\nNeed ensure \"parameters\" exactly distance_m, positive finite. Use 4.0? Source \"四米\" = 4 m. JSON number 4.0 okay.\n\nCoverage list objects exactly text, role, explanation. Need text values concatenated in order equal entire original source exactly. Need include punctuation. Source full string: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" It has no spaces. Use as segments maybe:\n- text: \"两次都是往前四米，\" role QUANTITY? It contains action/quantity. Could split \"两次\" and \"都是往前四米，\"? Need cover every action relation edit. Let's decide segments.\n\nWe can make fine-grained:\n1 \"两次\" role QUANTITY explanation: repetition count exactly 2, governs walk actions.\n2 \"都是\" role RELATION? explanation: both repetitions share same parameter/movement.\n3 \"往前四米，\" role ACTION? It specifies forward 4m, walk_forward distance 4.\n4 \"中间不插别的动作，\" role RELATION explanation: no intervening actions; preserves direct sequence.\n5 \"就分成两次走。\" role ACTION explanation: final instruction to split into two walk executions; confirms two walk_forward steps sequential.\n\nConcatenate: \"两次\" + \"都是\" + \"往前四米，\" + \"中间不插别的动作，\" + \"就分成两次走。\" = \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Yes.\n\nNeed role categories. \"两次\" is QUANTITY. \"都是\" maybe RELATION or SEPARATOR? It is relational/quantifier, role RELATION? \"往前四米，\" ACTION (or ACTION+QUANTITY). \"中间不插别的动作，\" RELATION. \"就分成两次走。\" ACTION. All explanations nonempty.\n\nPotential issue coverage text \"都是\" is not meaningful span? okay.\n\nNeed dimensions exactly seven names. status UNIQUE for each. Explanation complete source evidence.\n\nNeed output exactly one JSON object, no markdown.\n\nLet's craft JSON with proper escaping? Chinese fine. Keys exactly. No extra fields. Each step exactly id, skill, parameters, depends_on. No extra. Parameters object exactly distance_m. depends_on array.\n\nNeed maybe authorized_plan if AUTHORIZED_UNIQUE. Yes.\n\nNeed be careful: \"The first depends_on is []; every later depends_on exactly [previous step ID].\" s2 depends_on [\"s1\"].\n\nLet's consider any subtle ambiguity: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Could \"两次都是往前四米\" mean \"both times [are] 4m forward\", then \"中间不插别的动作\" no other action in between, \"就分成两次走\" just split into two walks. So two walk_forward 4m. No duration. Walk_forward no duration. Good.\n\nCould \"两次\" repetition scope maybe each time forward four meters; \"分成两次走\" explicitly. Unique.\n\nCould \"中间不插别的动作\" means no action between, but doesn't specify order? Since two actions identical, any order gives same plan? If identical, the linear order s1 then s2 vs s2 then s1 are equivalent. IR requires IDs; source \"两次走\" sequential; first/second not labeled, but because identical, there is a single abstract sequence. Is action_order UNIQUE? The system says identify one exact execution order; never select arbitrarily among permitted orders. If two identical actions, is order ambiguous? Since actions are indistinguishable, the sequence of two identical walk_forward 4m steps has only one observable plan up to identity? But IR IDs could label them arbitrarily. However source says \"两次\" no ordinal. In such cases, any assignment of IDs to identical steps yields same plan? The \"order\" is just first and second, both identical. Not material ambiguity. Unique.\n\nNeed mention candidate matches.\n\nPotential need coverage every action, relation and edit clause. We don't have edit. We can note no edit clauses. But coverage only spans. There is no EDIT role maybe not required. Could role SEPARATOR for punctuation? But text includes punctuation attached. Our coverage includes punctuation. Good.\n\nNeed maybe \"两次\" role QUANTITY explanation: Counts exactly two, not one; candidate matches. \"都是\" role RELATION: distributive universal \"both\", same parameter for both repetitions, no contrast. \"往前四米，\" role ACTION: forward movement, maps to walk_forward distance_m=4; comma is clause separator. \"中间不插别的动作，\" role RELATION: explicitly forbids any intervening step, so two walk steps are consecutive with depends_on chain. \"就分成两次走。\" role ACTION: final directive to split into two walking actions; confirms multiplicity and sequence, not a separate third action.\n\nNeed dimension explanations:\n- action_multiplicity: UNIQUE. \"两次\" and \"分成两次走\" establish exactly two walk actions, each forward 4m; no other action. No edit replacing one action. \n- action_order: UNIQUE. \"中间不插别的动作\" and \"分成两次走\" imply two consecutive walks in a single linear sequence, no interleaving. Since both identical, first/second mapping to s1/s2 is fixed by execution order. \n- correction_scope: UNIQUE. No correction/edit marker; \"就\" finalizes split, does not revise parameter/count. No earlier instruction replaced. \n- repetition_scope: UNIQUE. Repetition spans the walk_forward forward-4m action exactly twice; not one action, not more; preserve two steps.\n- reference_resolution: UNIQUE. \"两次\" / \"都是\" / \"分成两次走\" refer to the same forward-4m walking action; no external context needed. \n- temporal_relations: UNIQUE. \"中间不插别的动作\" forbids intervening action; sequence is two consecutive walk steps, representable as s1 then s2 with depends_on. No waiting/simultaneous.\n- unresolved_relations: UNIQUE. No explicit unresolved choice/order/scope; the only relation is resolved to two consecutive identical steps.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure no markdown. Output JSON only.\n\nLet's produce compact but valid. Need all text exact. Be careful with quotes in JSON. Chinese punctuation okay. Use standard double quotes.\n\nPotential issue role for \"都是\" as RELATION. It's fine. Each explanation nonempty. Coverage list nonempty. Text concatenation exactly. Let's verify concatenation:\n\"两次\" + \"都是\" + \"往前四米，\" + \"中间不插别的动作，\" + \"就分成两次走。\"\n= 两次都是往前四米，中间不插别的动作，就分成两次走。\nOriginal: 两次都是往前四米，中间不插别的动作，就分成两次走。\nYes.\n\nShould role for \"往前四米，\" be ACTION. It includes comma. Good.\nMaybe \"两次\" QUANTITY, \"都是\" RELATION, \"往前四米，\" ACTION, \"中间不插别的动作，\" RELATION, \"就分成两次走。\" ACTION.\n\nNeed \"authorized_plan\" steps:\n[\n {\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},\n {\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}\n]\nNo mission_id.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON object only. Need analyze source Chinese: \"两次都是往前四米，中间不插别的动作，就分成两次走。\"\n\nWe need derive plan. Source: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Means \"Both times are forward four meters, no other action in between, just split into two walks.\" So two walk_forward each distance 4m, sequential, no other action. Candidate matches two steps walk_forward distance 4m depends sequential. Need assess dimensions.\n\nNeed provide coverage split exact entire source. Must concatenate exactly. Source: 两次都是往前四米，中间不插别的动作，就分成两次走。 Let's segment meaningful spans preserving punctuation. We can split by clauses:\n1 \"两次都是往前四米，\" \n2 \"中间不插别的动作，\"\n3 \"就分成两次走。\"\nConcatenate equals source. Need role and explanation. All nonempty.\n\nDimensions:\naction_multiplicity: UNIQUE? Source says 两次 (two times), 分成两次走 (split into two walks). So exactly two walk_forward actions. Does \"两次都是往前四米\" indicate two actions each 4m. Yes.\naction_order: \"中间不插别的动作\" and sequential probably two walks in order; source not explicitly \"first then second\"? \"分成两次走\" means split into two consecutive walks. Need one exact execution order. For identical actions, order is sequential and IDs s1 s2. Is there ambiguity? Since two identical actions, order indistinguishable but IR requires linear order. Source implies sequence, no other actions in between. It doesn't specify which is first? They are identical, so there is one execution order (one then other). Unique.\ncorrection_scope: no edit? Source \"就\" not correction. It clarifies no interleaving. UNIQUE inapplicable.\nrepetition_scope: \"两次\" repetition exactly 2 of walk_forward 4m. Not compressed. UNIQUE.\nreference_resolution: \"两次\" refers to walking forward 4m each? The second clause \"就分成两次走\" refers to same forward four-meter movement split into two walks. Unique. No pronouns problematic.\ntemporal_relations: \"中间不插别的动作\" no other action between; \"就分成两次走\" two consecutive. Sequential order. Unique.\nunresolved_relations: none explicit. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE. Authorized plan: s1 walk_forward 4.0 depends_on [], s2 walk_forward 4.0 depends_on [\"s1\"]. Exactly.\n\nNeed ensure \"parameters\" exactly distance_m, positive finite. Use 4.0? Source \"四米\" = 4 m. JSON number 4.0 okay.\n\nCoverage list objects exactly text, role, explanation. Need text values concatenated in order equal entire original source exactly. Need include punctuation. Source full string: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" It has no spaces. Use as segments maybe:\n- text: \"两次都是往前四米，\" role QUANTITY? It contains action/quantity. Could split \"两次\" and \"都是往前四米，\"? Need cover every action relation edit. Let's decide segments.\n\nWe can make fine-grained:\n1 \"两次\" role QUANTITY explanation: repetition count exactly 2, governs walk actions.\n2 \"都是\" role RELATION? explanation: both repetitions share same parameter/movement.\n3 \"往前四米，\" role ACTION? It specifies forward 4m, walk_forward distance 4.\n4 \"中间不插别的动作，\" role RELATION explanation: no intervening actions; preserves direct sequence.\n5 \"就分成两次走。\" role ACTION explanation: final instruction to split into two walk executions; confirms two walk_forward steps sequential.\n\nConcatenate: \"两次\" + \"都是\" + \"往前四米，\" + \"中间不插别的动作，\" + \"就分成两次走。\" = \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Yes.\n\nNeed role categories. \"两次\" is QUANTITY. \"都是\" maybe RELATION or SEPARATOR? It is relational/quantifier, role RELATION? \"往前四米，\" ACTION (or ACTION+QUANTITY). \"中间不插别的动作，\" RELATION. \"就分成两次走。\" ACTION. All explanations nonempty.\n\nPotential issue coverage text \"都是\" is not meaningful span? okay.\n\nNeed dimensions exactly seven names. status UNIQUE for each. Explanation complete source evidence.\n\nNeed output exactly one JSON object, no markdown.\n\nLet's craft JSON with proper escaping? Chinese fine. Keys exactly. No extra fields. Each step exactly id, skill, parameters, depends_on. No extra. Parameters object exactly distance_m. depends_on array.\n\nNeed maybe authorized_plan if AUTHORIZED_UNIQUE. Yes.\n\nNeed be careful: \"The first depends_on is []; every later depends_on exactly [previous step ID].\" s2 depends_on [\"s1\"].\n\nLet's consider any subtle ambiguity: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Could \"两次都是往前四米\" mean \"both times [are] 4m forward\", then \"中间不插别的动作\" no other action in between, \"就分成两次走\" just split into two walks. So two walk_forward 4m. No duration. Walk_forward no duration. Good.\n\nCould \"两次\" repetition scope maybe each time forward four meters; \"分成两次走\" explicitly. Unique.\n\nCould \"中间不插别的动作\" means no action between, but doesn't specify order? Since two actions identical, any order gives same plan? If identical, the linear order s1 then s2 vs s2 then s1 are equivalent. IR requires IDs; source \"两次走\" sequential; first/second not labeled, but because identical, there is a single abstract sequence. Is action_order UNIQUE? The system says identify one exact execution order; never select arbitrarily among permitted orders. If two identical actions, is order ambiguous? Since actions are indistinguishable, the sequence of two identical walk_forward 4m steps has only one observable plan up to identity? But IR IDs could label them arbitrarily. However source says \"两次\" no ordinal. In such cases, any assignment of IDs to identical steps yields same plan? The \"order\" is just first and second, both identical. Not material ambiguity. Unique.\n\nNeed mention candidate matches.\n\nPotential need coverage every action, relation and edit clause. We don't have edit. We can note no edit clauses. But coverage only spans. There is no EDIT role maybe not required. Could role SEPARATOR for punctuation? But text includes punctuation attached. Our coverage includes punctuation. Good.\n\nNeed maybe \"两次\" role QUANTITY explanation: Counts exactly two, not one; candidate matches. \"都是\" role RELATION: distributive universal \"both\", same parameter for both repetitions, no contrast. \"往前四米，\" role ACTION: forward movement, maps to walk_forward distance_m=4; comma is clause separator. \"中间不插别的动作，\" role RELATION: explicitly forbids any intervening step, so two walk steps are consecutive with depends_on chain. \"就分成两次走。\" role ACTION: final directive to split into two walking actions; confirms multiplicity and sequence, not a separate third action.\n\nNeed dimension explanations:\n- action_multiplicity: UNIQUE. \"两次\" and \"分成两次走\" establish exactly two walk actions, each forward 4m; no other action. No edit replacing one action. \n- action_order: UNIQUE. \"中间不插别的动作\" and \"分成两次走\" imply two consecutive walks in a single linear sequence, no interleaving. Since both identical, first/second mapping to s1/s2 is fixed by execution order. \n- correction_scope: UNIQUE. No correction/edit marker; \"就\" finalizes split, does not revise parameter/count. No earlier instruction replaced. \n- repetition_scope: UNIQUE. Repetition spans the walk_forward forward-4m action exactly twice; not one action, not more; preserve two steps.\n- reference_resolution: UNIQUE. \"两次\" / \"都是\" / \"分成两次走\" refer to the same forward-4m walking action; no external context needed. \n- temporal_relations: UNIQUE. \"中间不插别的动作\" forbids intervening action; sequence is two consecutive walk steps, representable as s1 then s2 with depends_on. No waiting/simultaneous.\n- unresolved_relations: UNIQUE. No explicit unresolved choice/order/scope; the only relation is resolved to two consecutive identical steps.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed ensure no markdown. Output JSON only.\n\nLet's produce compact but valid. Need all text exact. Be careful with quotes in JSON. Chinese punctuation okay. Use standard double quotes.\n\nPotential issue role for \"都是\" as RELATION. It's fine. Each explanation nonempty. Coverage list nonempty. Text concatenation exactly. Let's verify concatenation:\n\"两次\" + \"都是\" + \"往前四米，\" + \"中间不插别的动作，\" + \"就分成两次走。\"\n= 两次都是往前四米，中间不插别的动作，就分成两次走。\nOriginal: 两次都是往前四米，中间不插别的动作，就分成两次走。\nYes.\n\nShould role for \"往前四米，\" be ACTION. It includes comma. Good.\nMaybe \"两次\" QUANTITY, \"都是\" RELATION, \"往前四米，\" ACTION, \"中间不插别的动作，\" RELATION, \"就分成两次走。\" ACTION.\n\nNeed \"authorized_plan\" steps:\n[\n {\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},\n {\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}\n]\nNo mission_id.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两次\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the repetition count as exactly two actions. It does not authorize one compressed action or more than two actions.\"},{\"text\":\"都是\",\"role\":\"RELATION\",\"explanation\":\"Distributes the same described movement to both repetitions, so both walking actions share the same parameter rather than differing.\"},{\"text\":\"往前四米，\",\"role\":\"ACTION\",\"explanation\":\"Specifies forward walking by four meters for each repetition, compiling to walk_forward with distance_m=4.0. The comma separates this clause from the next relation.\"},{\"text\":\"中间不插别的动作，\",\"role\":\"RELATION\",\"explanation\":\"Explicitly forbids any other action between the two walking actions, so the two walk steps must be consecutive in one linear order.\"},{\"text\":\"就分成两次走。\",\"role\":\"ACTION\",\"explanation\":\"Final directive confirming that the movement is divided into exactly two walking executions, not a separate third action and not a single combined step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source says 两次 and 分成两次走, establishing exactly two walk_forward actions, each moving forward four meters. No other action is requested, and no edit replaces or adds to the count.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"中间不插别的动作 and 分成两次走 establish two consecutive walking actions in one linear sequence with no interleaving. Since both actions are identical, the execution order maps directly to s1 then s2.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source. 就 finalizes the split instruction; it does not replace an earlier parameter, action, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The repetition scope is the forward-four-meter walking action, repeated exactly twice. It is not silently narrowed to one action or broadened to a sequence containing other actions.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"两次, 都是, and 分成两次走 refer to the same forward-four-meter walking action. No pronoun, ordinal, or omitted argument requires unavailable external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires two walking actions with no other action in between, representable as a single linear order s1 then s2. There is no waiting, simultaneity, or completion relation beyond consecutive execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. It resolves to exactly two consecutive identical walk_forward steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_4b66a6cd-78d7-4961-b738-202c01d006f6",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 359,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 2752,
+            "output_tokens_details": {
+              "reasoning_tokens": 2107
+            },
+            "total_tokens": 4007
+          }
+        },
+        "request_sha256": "9653c4b55e00e009a6bc54b79975bb9b3600150efcf641c0d582ff6a49acdc1e",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 14.59573839999939,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_4b66a6cd-78d7-4961-b738-202c01d006f6",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两次\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the repetition count as exactly two actions. It does not authorize one compressed action or more than two actions.\"},{\"text\":\"都是\",\"role\":\"RELATION\",\"explanation\":\"Distributes the same described movement to both repetitions, so both walking actions share the same parameter rather than differing.\"},{\"text\":\"往前四米，\",\"role\":\"ACTION\",\"explanation\":\"Specifies forward walking by four meters for each repetition, compiling to walk_forward with distance_m=4.0. The comma separates this clause from the next relation.\"},{\"text\":\"中间不插别的动作，\",\"role\":\"RELATION\",\"explanation\":\"Explicitly forbids any other action between the two walking actions, so the two walk steps must be consecutive in one linear order.\"},{\"text\":\"就分成两次走。\",\"role\":\"ACTION\",\"explanation\":\"Final directive confirming that the movement is divided into exactly two walking executions, not a separate third action and not a single combined step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source says 两次 and 分成两次走, establishing exactly two walk_forward actions, each moving forward four meters. No other action is requested, and no edit replaces or adds to the count.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"中间不插别的动作 and 分成两次走 establish two consecutive walking actions in one linear sequence with no interleaving. Since both actions are identical, the execution order maps directly to s1 then s2.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source. 就 finalizes the split instruction; it does not replace an earlier parameter, action, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The repetition scope is the forward-four-meter walking action, repeated exactly twice. It is not silently narrowed to one action or broadened to a sequence containing other actions.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"两次, 都是, and 分成两次走 refer to the same forward-four-meter walking action. No pronoun, ordinal, or omitted argument requires unavailable external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires two walking actions with no other action in between, representable as a single linear order s1 then s2. There is no waiting, simultaneity, or completion relation beyond consecutive execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. It resolves to exactly two consecutive identical walk_forward steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+        "usage": {
+          "input_tokens": 359,
+          "output_tokens": 2752,
+          "total_tokens": 4007
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.355809600001521,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "two-walk-4m",
+      "model": "deepseek-flash",
+      "normalized_length": 24,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 282,
+      "raw_response_sha256": "819938f574f7e48863f29eb7b20e25ad63242d439ebc7f76ae9fd52ef56f5683",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_2364aeb5-740a-400c-a3f2-9c94702a7378",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 14.602720499999123,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 14.59573839999939,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两次\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the repetition count as exactly two actions. It does not authorize one compressed action or more than two actions.\"},{\"text\":\"都是\",\"role\":\"RELATION\",\"explanation\":\"Distributes the same described movement to both repetitions, so both walking actions share the same parameter rather than differing.\"},{\"text\":\"往前四米，\",\"role\":\"ACTION\",\"explanation\":\"Specifies forward walking by four meters for each repetition, compiling to walk_forward with distance_m=4.0. The comma separates this clause from the next relation.\"},{\"text\":\"中间不插别的动作，\",\"role\":\"RELATION\",\"explanation\":\"Explicitly forbids any other action between the two walking actions, so the two walk steps must be consecutive in one linear order.\"},{\"text\":\"就分成两次走。\",\"role\":\"ACTION\",\"explanation\":\"Final directive confirming that the movement is divided into exactly two walking executions, not a separate third action and not a single combined step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source says 两次 and 分成两次走, establishing exactly two walk_forward actions, each moving forward four meters. No other action is requested, and no edit replaces or adds to the count.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"中间不插别的动作 and 分成两次走 establish two consecutive walking actions in one linear sequence with no interleaving. Since both actions are identical, the execution order maps directly to s1 then s2.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or edit marker in the source. 就 finalizes the split instruction; it does not replace an earlier parameter, action, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The repetition scope is the forward-four-meter walking action, repeated exactly twice. It is not silently narrowed to one action or broadened to a sequence containing other actions.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"两次, 都是, and 分成两次走 refer to the same forward-four-meter walking action. No pronoun, ordinal, or omitted argument requires unavailable external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requires two walking actions with no other action in between, representable as a single linear order s1 then s2. There is no waiting, simultaneity, or completion relation beyond consecutive execution.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship. It resolves to exactly two consecutive identical walk_forward steps.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+          "raw_response_sha256": "814b301aaea03ee71785bb6986caa9f4410bf1c20194c3275afaa3d5ee8048d2",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_4b66a6cd-78d7-4961-b738-202c01d006f6",
+          "source_aware": true,
+          "source_sha256": "4f668a690d77dd75c9fea35934a0943fee13e8c93406ce9ccf992a013277bb81",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 359,
+            "output_tokens": 2752,
+            "total_tokens": 4007
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the repetition count as exactly two actions. It does not authorize one compressed action or more than two actions.",
+                "role": "QUANTITY",
+                "text": "两次"
+              },
+              {
+                "explanation": "Distributes the same described movement to both repetitions, so both walking actions share the same parameter rather than differing.",
+                "role": "RELATION",
+                "text": "都是"
+              },
+              {
+                "explanation": "Specifies forward walking by four meters for each repetition, compiling to walk_forward with distance_m=4.0. The comma separates this clause from the next relation.",
+                "role": "ACTION",
+                "text": "往前四米，"
+              },
+              {
+                "explanation": "Explicitly forbids any other action between the two walking actions, so the two walk steps must be consecutive in one linear order.",
+                "role": "RELATION",
+                "text": "中间不插别的动作，"
+              },
+              {
+                "explanation": "Final directive confirming that the movement is divided into exactly two walking executions, not a separate third action and not a single combined step.",
+                "role": "ACTION",
+                "text": "就分成两次走。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Source says 两次 and 分成两次走, establishing exactly two walk_forward actions, each moving forward four meters. No other action is requested, and no edit replaces or adds to the count.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "中间不插别的动作 and 分成两次走 establish two consecutive walking actions in one linear sequence with no interleaving. Since both actions are identical, the execution order maps directly to s1 then s2.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction or edit marker in the source. 就 finalizes the split instruction; it does not replace an earlier parameter, action, group, or relation.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "两次, 都是, and 分成两次走 refer to the same forward-four-meter walking action. No pronoun, ordinal, or omitted argument requires unavailable external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The repetition scope is the forward-four-meter walking action, repeated exactly twice. It is not silently narrowed to one action or broadened to a sequence containing other actions.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source requires two walking actions with no other action in between, representable as a single linear order s1 then s2. There is no waiting, simultaneity, or completion relation beyond consecutive execution.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit unresolved choice, scope, order, or relationship. It resolves to exactly two consecutive identical walk_forward steps.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 216,
+        "output_tokens": 260,
+        "total_tokens": 2012
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "two-walk-4m",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "两次都是往前四米,中间不插别的动作,就分成两次走",
+    "status": "SUCCESS"
+  }
+}

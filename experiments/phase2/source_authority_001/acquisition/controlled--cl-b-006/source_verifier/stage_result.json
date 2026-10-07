@@ -1,0 +1,261 @@
+{
+  "added_wall_s": 8.96482610000021,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.96134180000081,
+        "provider_document": {
+          "created_at": 1791360431,
+          "id": "resp_7a99a000-bbd1-42cc-96b5-e4797ed799fc",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_7a99a000-bbd1-42cc-96b5-e4797ed799fc",
+              "reasoning_content": "We need answer exactly JSON object. Need analyze source Chinese \"向左转四十五度\". Candidate turn angle 45. Need derive source plan. Need coverage split entire source exact. Need dimensions seven. Determine status likely AUTHORIZED_UNIQUE? Let's parse.\n\nSource: 向左转四十五度 = \"turn left 45 degrees\". Legal skill turn, angle_deg positive for left/counterclockwise/逆时针, max 180. \"向左\" left positive. 四十五度 = 45 degrees. One action. order one. correction none. repetition none. reference none. temporal none. unresolved none. Authorized plan: s1 turn parameters angle_deg 45.0? finite JSON number. Could use 45.0. depends_on [].\n\nNeed output JSON only. Need coverage list objects exactly text, role, explanation. Text values concatenated in order equal entire original source exactly. Need split meaningful spans. Original \"向左转四十五度\". Could split into \"向左\", \"转\", \"四十五度\"? Need each role. But \"转\" as ACTION? It is part of \"向左转\" maybe \"turn left\". Need coverage every action relation edit clause. We can choose spans. The concatenated text must equal original exactly. For Chinese, no spaces. Options:\n- text \"向左\" role CONTEXT? explains direction left. But action is \"转\"? Then \"四十五度\" quantity. But \"转\" alone means turn. \"向左\" direction modifier. That is okay.\n- Or text \"向左转\" role ACTION and \"四十五度\" QUANTITY.\nNeed role options include ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We can use two spans: \"向左转\" ACTION; \"四十五度\" QUANTITY. Concatenation exact. Explanation for action: requests a single turn to the left; left is positive. Quantity: 45 degrees sets angle_deg=45.0. Good. That covers all. There is no separator. Is \"向左转\" all action? yes.\n\nNeed dimensions explanations. All UNIQUE. Need status AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed be careful: \"向左转四十五度\" Could be \"turn left 45 degrees\". Is \"向左\" means left. Positive. angle 45. No ambiguity. Plan has one step.\n\nNeed output exactly one JSON object. No markdown. Ensure valid JSON. Values strings. No extra fields in step? exactly id, skill, parameters, depends_on.\n\nPotential issue: Chinese \"转\" could mean rotate, turn; legal skill turn. Good.\n\nNeed dimensions:\naction_multiplicity: UNIQUE. Source contains one verb phrase \"向左转\" with one angle modifier, no conjunction/repetition/correction. Requests exactly one turn action.\naction_order: UNIQUE. Only one action, so exact order s1.\ncorrection_scope: UNIQUE. No edit/correction term. Nothing replaced/preserved? Explanation.\nrepetition_scope: UNIQUE. No repetition words. Executes once.\nreference_resolution: UNIQUE. No pronouns/ordinals/omitted shared args? The action has explicit direction and angle. No external referent.\ntemporal_relations: UNIQUE. No before/after/wait/completion. Single action, trivially linear.\nunresolved_relations: UNIQUE. No unresolved choices/scope/order. Direction and quantity explicit.\n\nNeed coverage roles. Maybe use three spans? \"向左\" CONTEXT, \"转\" ACTION, \"四十五度\" QUANTITY. But then action explanation \"转\" means turn; context \"向左\" specifies positive left direction. This is fine. Does role ACTION cover \"转\" exactly. Maybe better to align action verb. However \"向左转\" is action phrase. Coverage can split \"向左\" and \"转四十五度\"? Hmm. Need meaningful spans. The action clause is \"向左转四十五度\" entire. But we need split. I can do:\n{\"text\":\"向左\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the turn as left/counterclockwise, which under the compilation semantics makes the turn angle positive. It does not add a separate action.\"}\n{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action. The adjacent direction and quantity supply its exact parameters; no additional actions are requested.\"}\n{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies 45 degrees as the turn magnitude, so angle_deg is 45.0. It is not a distance or duration and introduces no unresolved relation.\"}\nConcatenation: 向左 + 转 + 四十五度 = 向左转四十五度. Good. This is precise.\n\nNeed in ACTION explanation mention \"向左转\" maybe. This coverage text values concatenated exact. Good.\n\nNeed authorized_plan:\n[\n {\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}\n]\nNo mission_id. Good.\n\nNeed final no markdown. Use JSON with Chinese characters. Ensure status string exactly AUTHORIZED_UNIQUE. coverage nonempty list. dimensions exactly seven names. Need order? It says keys exactly status, coverage, dimensions, authorized_plan. dimensions has exactly seven names. We can order as given. Inside each value exactly status, explanation. No extra.\n\nPotential issue: JSON numbers finite. 45.0 is valid. The source \"四十五度\" 45. Good.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON object. Need analyze source Chinese \"向左转四十五度\". Candidate turn angle 45. Need derive source plan. Need coverage split entire source exact. Need dimensions seven. Determine status likely AUTHORIZED_UNIQUE? Let's parse.\n\nSource: 向左转四十五度 = \"turn left 45 degrees\". Legal skill turn, angle_deg positive for left/counterclockwise/逆时针, max 180. \"向左\" left positive. 四十五度 = 45 degrees. One action. order one. correction none. repetition none. reference none. temporal none. unresolved none. Authorized plan: s1 turn parameters angle_deg 45.0? finite JSON number. Could use 45.0. depends_on [].\n\nNeed output JSON only. Need coverage list objects exactly text, role, explanation. Text values concatenated in order equal entire original source exactly. Need split meaningful spans. Original \"向左转四十五度\". Could split into \"向左\", \"转\", \"四十五度\"? Need each role. But \"转\" as ACTION? It is part of \"向左转\" maybe \"turn left\". Need coverage every action relation edit clause. We can choose spans. The concatenated text must equal original exactly. For Chinese, no spaces. Options:\n- text \"向左\" role CONTEXT? explains direction left. But action is \"转\"? Then \"四十五度\" quantity. But \"转\" alone means turn. \"向左\" direction modifier. That is okay.\n- Or text \"向左转\" role ACTION and \"四十五度\" QUANTITY.\nNeed role options include ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We can use two spans: \"向左转\" ACTION; \"四十五度\" QUANTITY. Concatenation exact. Explanation for action: requests a single turn to the left; left is positive. Quantity: 45 degrees sets angle_deg=45.0. Good. That covers all. There is no separator. Is \"向左转\" all action? yes.\n\nNeed dimensions explanations. All UNIQUE. Need status AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed be careful: \"向左转四十五度\" Could be \"turn left 45 degrees\". Is \"向左\" means left. Positive. angle 45. No ambiguity. Plan has one step.\n\nNeed output exactly one JSON object. No markdown. Ensure valid JSON. Values strings. No extra fields in step? exactly id, skill, parameters, depends_on.\n\nPotential issue: Chinese \"转\" could mean rotate, turn; legal skill turn. Good.\n\nNeed dimensions:\naction_multiplicity: UNIQUE. Source contains one verb phrase \"向左转\" with one angle modifier, no conjunction/repetition/correction. Requests exactly one turn action.\naction_order: UNIQUE. Only one action, so exact order s1.\ncorrection_scope: UNIQUE. No edit/correction term. Nothing replaced/preserved? Explanation.\nrepetition_scope: UNIQUE. No repetition words. Executes once.\nreference_resolution: UNIQUE. No pronouns/ordinals/omitted shared args? The action has explicit direction and angle. No external referent.\ntemporal_relations: UNIQUE. No before/after/wait/completion. Single action, trivially linear.\nunresolved_relations: UNIQUE. No unresolved choices/scope/order. Direction and quantity explicit.\n\nNeed coverage roles. Maybe use three spans? \"向左\" CONTEXT, \"转\" ACTION, \"四十五度\" QUANTITY. But then action explanation \"转\" means turn; context \"向左\" specifies positive left direction. This is fine. Does role ACTION cover \"转\" exactly. Maybe better to align action verb. However \"向左转\" is action phrase. Coverage can split \"向左\" and \"转四十五度\"? Hmm. Need meaningful spans. The action clause is \"向左转四十五度\" entire. But we need split. I can do:\n{\"text\":\"向左\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the turn as left/counterclockwise, which under the compilation semantics makes the turn angle positive. It does not add a separate action.\"}\n{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action. The adjacent direction and quantity supply its exact parameters; no additional actions are requested.\"}\n{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies 45 degrees as the turn magnitude, so angle_deg is 45.0. It is not a distance or duration and introduces no unresolved relation.\"}\nConcatenation: 向左 + 转 + 四十五度 = 向左转四十五度. Good. This is precise.\n\nNeed in ACTION explanation mention \"向左转\" maybe. This coverage text values concatenated exact. Good.\n\nNeed authorized_plan:\n[\n {\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}\n]\nNo mission_id. Good.\n\nNeed final no markdown. Use JSON with Chinese characters. Ensure status string exactly AUTHORIZED_UNIQUE. coverage nonempty list. dimensions exactly seven names. Need order? It says keys exactly status, coverage, dimensions, authorized_plan. dimensions has exactly seven names. We can order as given. Inside each value exactly status, explanation. No extra.\n\nPotential issue: JSON numbers finite. 45.0 is valid. The source \"四十五度\" 45. Good.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向左\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the turn as left/counterclockwise, which under the compilation semantics makes the turn angle positive. It does not introduce a separate action.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one turn action. Its direction and magnitude are supplied by the adjacent source spans, and no additional action is requested.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, so the turn action uses angle_deg 45.0. It does not introduce a distance, duration, repetition, correction, or unresolved relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one turn action phrase, '向左转', with one quantity modifier, '四十五度'. There is no conjunction, repetition, or correction requesting more than one action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the execution order is exactly one step: the left turn as s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction wording appears in the source. Nothing is replaced or preserved in the sense of an edit; the sole turn instruction remains in force.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition wording appears. The source requests one execution of the left turn, not a repeated sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and angle are explicit in the source. There are no pronouns, ordinals, omitted shared arguments, or external referents requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneous, or completion relation appears. With only one action, the plan has a single linear order and no invented timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes both the direction as left and the magnitude as 45 degrees. It leaves no unresolved choice of action, parameter, scope, order, or relation.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_7a99a000-bbd1-42cc-96b5-e4797ed799fc",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 187,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1651,
+            "output_tokens_details": {
+              "reasoning_tokens": 1155
+            },
+            "total_tokens": 2862
+          }
+        },
+        "request_sha256": "fb66fec8ce841b2b71742308a3259c605f8850f517aa9ad50d3e6f5f1cfac8f8",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.959802199999103,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_7a99a000-bbd1-42cc-96b5-e4797ed799fc",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向左\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the turn as left/counterclockwise, which under the compilation semantics makes the turn angle positive. It does not introduce a separate action.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one turn action. Its direction and magnitude are supplied by the adjacent source spans, and no additional action is requested.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, so the turn action uses angle_deg 45.0. It does not introduce a distance, duration, repetition, correction, or unresolved relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one turn action phrase, '向左转', with one quantity modifier, '四十五度'. There is no conjunction, repetition, or correction requesting more than one action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the execution order is exactly one step: the left turn as s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction wording appears in the source. Nothing is replaced or preserved in the sense of an edit; the sole turn instruction remains in force.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition wording appears. The source requests one execution of the left turn, not a repeated sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and angle are explicit in the source. There are no pronouns, ordinals, omitted shared arguments, or external referents requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneous, or completion relation appears. With only one action, the plan has a single linear order and no invented timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes both the direction as left and the magnitude as 45 degrees. It leaves no unresolved choice of action, parameter, scope, order, or relation.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 187,
+          "output_tokens": 1651,
+          "total_tokens": 2862
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.6067973999997776,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-turn-left-45",
+      "model": "deepseek-flash",
+      "normalized_length": 7,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-turn-left-45\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "d72672c48aff49c72b1569f3b911dd1f5a1334c1bb258611fafcf185e6c955fb",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_99c98d16-b8f5-479b-8a54-d91f9b04e072",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.964201200000389,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 8.959802199999103,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向左\",\"role\":\"CONTEXT\",\"explanation\":\"Specifies the direction of the turn as left/counterclockwise, which under the compilation semantics makes the turn angle positive. It does not introduce a separate action.\"},{\"text\":\"转\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one turn action. Its direction and magnitude are supplied by the adjacent source spans, and no additional action is requested.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 45 degrees, so the turn action uses angle_deg 45.0. It does not introduce a distance, duration, repetition, correction, or unresolved relation.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one turn action phrase, '向左转', with one quantity modifier, '四十五度'. There is no conjunction, repetition, or correction requesting more than one action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the execution order is exactly one step: the left turn as s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction wording appears in the source. Nothing is replaced or preserved in the sense of an edit; the sole turn instruction remains in force.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition wording appears. The source requests one execution of the left turn, not a repeated sequence.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and angle are explicit in the source. There are no pronouns, ordinals, omitted shared arguments, or external referents requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, waiting, simultaneous, or completion relation appears. With only one action, the plan has a single linear order and no invented timing.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes both the direction as left and the magnitude as 45 degrees. It leaves no unresolved choice of action, parameter, scope, order, or relation.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "862c5a65f1613f673a7dd55fd9276fc809da55f67078fcc8c88b49640823a0c4",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_7a99a000-bbd1-42cc-96b5-e4797ed799fc",
+          "source_aware": true,
+          "source_sha256": "660aba7cb2e07ffc911c65c973ac410a29597847f2b03d348591e9f1c7eeba00",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 187,
+            "output_tokens": 1651,
+            "total_tokens": 2862
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": 45.0
+                },
+                "skill": "turn"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the direction of the turn as left/counterclockwise, which under the compilation semantics makes the turn angle positive. It does not introduce a separate action.",
+                "role": "CONTEXT",
+                "text": "向左"
+              },
+              {
+                "explanation": "Requests exactly one turn action. Its direction and magnitude are supplied by the adjacent source spans, and no additional action is requested.",
+                "role": "ACTION",
+                "text": "转"
+              },
+              {
+                "explanation": "Specifies the turn magnitude as 45 degrees, so the turn action uses angle_deg 45.0. It does not introduce a distance, duration, repetition, correction, or unresolved relation.",
+                "role": "QUANTITY",
+                "text": "四十五度"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains one turn action phrase, '向左转', with one quantity modifier, '四十五度'. There is no conjunction, repetition, or correction requesting more than one action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so the execution order is exactly one step: the left turn as s1.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No edit or correction wording appears in the source. Nothing is replaced or preserved in the sense of an edit; the sole turn instruction remains in force.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The direction and angle are explicit in the source. There are no pronouns, ordinals, omitted shared arguments, or external referents requiring resolution.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition wording appears. The source requests one execution of the left turn, not a repeated sequence.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, waiting, simultaneous, or completion relation appears. With only one action, the plan has a single linear order and no invented timing.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly fixes both the direction as left and the magnitude as 45 degrees. It leaves no unresolved choice of action, parameter, scope, order, or relation.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 112,
+        "total_tokens": 1852
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-turn-left-45",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "向左转四十五度",
+    "status": "SUCCESS"
+  }
+}

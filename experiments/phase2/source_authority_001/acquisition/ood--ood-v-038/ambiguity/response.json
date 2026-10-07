@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 17.72624360000009,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_1c85423b-a3ad-480b-95f9-e03a95877fa4",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the first action in the sequence; it orders the turn before the following action and does not itself execute.\"\n    },\n    {\n      \"text\": \"朝左转45度\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests a left/counterclockwise turn of 45 degrees, a legal turn with a nonzero finite angle. It is the first authorized action.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the first action clause from the next ordering word; it adds no executable action.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the next action after the first; it places the forward walk after the turn.\"\n    },\n    {\n      \"text\": \"往前走8米\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests walking forward 8 meters, a legal walk_forward with a positive finite distance. It is the second authorized action.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence-ending punctuation; it has no executable effect.\"\n    },\n    {\n      \"text\": \"不要理会括号里的（先走8米）那句\",\n      \"role\": \"EDIT\",\n      \"explanation\": \"Instructs not to regard the parenthetical clause （先走8米）; it excludes that clause from the authorized plan rather than adding or replacing an action.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Punctuation separating the edit from its justification.\"\n    },\n    {\n      \"text\": \"它是错的备注\",\n      \"role\": \"CONTEXT\",\n      \"explanation\": \"Identifies the ignored parenthetical as an incorrect note, reinforcing the edit. It does not authorize the parenthetical or alter the main turn-then-walk sequence.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Sentence-ending punctuation; it has no executable effect.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source authorizes exactly two actions: turn left 45 degrees, then walk forward 8 meters. The parenthetical （先走8米） is explicitly excluded by 不要理会括号里的（先走8米）那句, so it is not an additional or replacement action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The sequence is fixed by 先...再...: the left turn occurs first, and the forward walk occurs second. The ignored parenthetical does not create an alternative order.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The edit 不要理会括号里的（先走8米）那句, with 它是错的备注, scopes the correction exactly to the parenthetical sentence （先走8米）. The main turn and walk instructions are preserved.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition of any action or span is requested. The parenthetical is an excluded note, not a repetition instruction.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"它 refers to 括号里的（先走8米）那句. The turn angle 45度 and walk distance 8米 are explicit, with no unresolved pronoun or omitted argument.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The only temporal relation is sequential: first turn left 45 degrees, then walk forward 8 meters. There is no waiting, simultaneity, or separate completion condition requiring another event.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No relation is explicitly left unresolved. The apparent conflict from the parenthetical is resolved by the explicit instruction to ignore it and treat it as a wrong note.\"\n    }\n  }\n}",
+  "usage": {
+    "input_tokens": 164,
+    "output_tokens": 3994,
+    "total_tokens": 4926
+  }
+}

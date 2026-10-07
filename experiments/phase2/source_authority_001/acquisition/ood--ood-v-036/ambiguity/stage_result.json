@@ -1,0 +1,264 @@
+{
+  "added_wall_s": 12.783814700000221,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.777679599999828,
+        "provider_document": {
+          "created_at": 1791359414,
+          "id": "resp_0150e103-b5b3-41c3-8783-149e22cd3869",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_0150e103-b5b3-41c3-8783-149e22cd3869",
+              "reasoning_content": "We need answer JSON only. Need analyze Chinese source: \"向前走20米，到这个距离就停。\" Means \"Walk forward 20 meters, stop when reaching this distance.\" Need determine unique legal Mission IR 2.0 interpretation.\n\nWe need inspect seven dimensions. Source has action: walk_forward distance 20 m. Then \"到这个距离就停\" = when reach this distance, stop. Is that a second action stop after walk? Temporal relation: stop upon reaching 20m. Could be interpreted as stop at end of walk. Is that a legal linear plan: s1 walk_forward 20m, s2 stop. Depends predecessor. Unique? Need consider whether \"到这个距离就停\" is a stop action or just termination condition? It requests stop, action stop no params. The order is clear: walk forward 20m, upon reaching this distance stop. That is linear order walk then stop. Action multiplicity: walk_forward and stop. Repetition none. Correction none. Reference resolution: \"这个距离\" refers to 20米. Temporal relation: stop after/upon completion of walk. Unique? Likely yes. But need be careful: \"到这个距离就停\" maybe means stop at 20m, which is completion condition of walk, not necessarily separate IR action? However stop action exists. Legal semantics: walk_forward requires distance; stop no parameters. \"到这个距离就停\" is an action \"stop\" at distance. Since IR steps each depends on predecessor. Walk then stop. That seems unique. But is \"到这个距离\" maybe ambiguous: \"this distance\" could refer to current distance or 20 meters? Since only distance mentioned, resolves to 20米. Temporal \"到...就\" = as soon as reaching, stop. Order walk then stop. No unresolved.\n\nNeed provide coverage spans exactly. We need split source into meaningful spans, concatenated equal original source. Source: 向前走20米，到这个距离就停。 Characters:\n向 前 走 2 0 米 ， 到 这 个 距 离 就 停 。\nWe need list with text copied exactly preserving whitespace and punctuation. Could split:\n1 \"向前走20米\" role ACTION explanation walk_forward distance 20m.\n2 \"，\" role SEPARATOR punctuation separating actions/clauses.\n3 \"到这个距离就停\" role ACTION? Or RELATION + ACTION? The span includes \"到这个距离\" relation (upon reaching this distance) and \"就停\" action stop. Since object has one text per span and role. Could split into \"到这个距离\" RELATION, \"就停\" ACTION, \"。\" SEPARATOR. But text values concatenated exactly. Need every action, relation considered. Let's choose:\n- \"向前走20米\" ACTION\n- \"，\" SEPARATOR\n- \"到这个距离\" RELATION\n- \"就停\" ACTION\n- \"。\" SEPARATOR\nCheck concatenation: \"向前走20米\" + \"，\" + \"到这个距离\" + \"就停\" + \"。\" = \"向前走20米，到这个距离就停。\" yes.\n\nNeed explanations nonempty.\n\nDimensions:\naction_multiplicity UNIQUE: exactly two actions: walk_forward 20m, stop, no repeated/edited actions. The second is not replacing first; it's follow-up stop. Explain.\n\naction_order UNIQUE: walk_forward first, then stop; \"到这个距离就停\" indicates stop after/upon reaching 20m. Linear order s1 walk, s2 stop. Need ensure \"就\" indicates immediate upon reaching. This is unique.\n\ncorrection_scope UNIQUE: no edits/corrections; no prior instruction replaced.\n\nrepetition_scope UNIQUE: no repetition; single walk, single stop.\n\nreference_resolution UNIQUE: \"这个距离\" refers to the only distance 20米 from preceding clause. No pronoun ambiguity.\n\ntemporal_relations UNIQUE: \"到...就...\" establishes completion/reaching relation: stop after walk reaches 20m. Single linear order. No waiting/simultaneity.\n\nunresolved_relations UNIQUE: no explicit unresolved choice; all resolved.\n\nStatus AUTHORIZED_UNIQUE. Need ensure legal interpretation: walk_forward distance_m 20 positive finite, stop no params, steps 2 under 32, angle none. Duration none. Good.\n\nBut let's scrutinize potential ambiguity: \"到这个距离就停\" could be read as \"stop at this distance\" i.e., stopping is part of the walking command, not separate action. But IR has stop action. The source explicitly says stop. A compiler likely emits walk_forward then stop. Could there be ambiguity whether stop is at end or during? \"到这个距离\" says upon reaching. Unique.\n\nCould there be ambiguity about \"这个距离\" since \"这个\" might refer to some previously established distance in external context? But source itself only has 20米. Since gate sees source only, external missing context? The phrase \"这个距离\" deictic could refer to a distance in the environment or previous context. But in the source, only 20米 is mentioned. Is \"这个距离\" resolved within source? It says \"到这个距离\" after \"向前走20米\" so natural referent is 20米. Could be read as \"to this [aforementioned] distance\". Unique.\n\nNeed maybe mention not external. External missing context is UNKNOWN. But no need.\n\nNeed output exactly JSON. No markdown. Ensure keys exactly status, coverage, dimensions.\n\nNeed ensure coverage list text concatenation equals entire original source exactly. Let's verify:\n1 \"向前走20米\"\n2 \"，\"\n3 \"到这个距离\"\n4 \"就停\"\n5 \"。\"\nConcatenate: 向前走20米，到这个距离就停。 yes.\n\nRoles:\n\"向前走20米\" ACTION\n\"，\" SEPARATOR\n\"到这个距离\" RELATION\n\"就停\" ACTION\n\"。\" SEPARATOR\n\nMaybe \"到这个距离就停\" as one ACTION? If we split \"到这个距离\" RELATION, \"就停\" ACTION, okay. \"就\" in \"就停\" maybe adverb part of action phrase. Text \"就停\" role ACTION: means then stop. Good.\n\nNeed explanations:\n- \"向前走20米\": executes walk_forward with distance_m=20; positive finite, no repetition, no correction.\n- \"，\": separates clauses; contributes punctuation only, no action, no authority.\n- \"到这个距离\": expresses completion/reaching condition; \"这个距离\" refers to 20米 from preceding clause; creates temporal relation after walk reaches that distance; no alternative distance.\n- \"就停\": executes stop; no params; follows reaching 20m as immediate stop.\n- \"。\": terminal punctuation; nonexecuting, no modification.\n\nDimensions explanations:\naction_multiplicity: source requests exactly two actions: walk forward 20m and stop; second is additional, not replacing walk; no repeated action. UNIQUE.\naction_order: \"向前走20米\" precedes \"到这个距离就停\"; \"到...就...\" means stop after reaching 20m, yielding s1 walk_forward then s2 stop. No alternative order.\ncorrection_scope: no edit/correction markers; no earlier instruction to replace; both clauses preserved.\nrepetition_scope: no repetition marker; each action occurs once; no span repeated.\nreference_resolution: \"这个距离\" has unique antecedent 20米 in source; no pronouns/ordinals/omitted shared args unresolved.\ntemporal_relations: \"到这个距离就停\" establishes stop upon completion of 20m walk; single linear order, no waiting/simultaneity alternatives. Actually \"到...就...\" is \"when reaching, then stop\"; completion relation. It is representable.\nunresolved_relations: none; no explicit unresolved choice/scope/order/relationship. Note \"这个距离\" resolved.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed no extra fields. Use Chinese? Explanations can be English. Fine. Ensure JSON valid, no markdown.\n\nPotential issue: The instructions: \"coverage is a nonempty list of objects with exactly text, role, explanation. Split source into meaningful spans so every action, relation and editing clause is considered. text is copied exactly from original source, preserving whitespace and punctuation. The text values concatenated in list order must equal the entire original source exactly; no omission, paraphrase, normalization or duplication.\" We satisfy.\n\nNeed maybe \"role\" for \"就停\" ACTION. \"到这个距离\" RELATION. Good.\n\nCould \"就停\" be considered RELATION or ACTION? It contains stop. Role ACTION is okay. \"到这个距离\" relation. Fine.\n\nNow final JSON. Ensure no newline? JSON can have spaces. Need exactly one object. We'll output compact or pretty. No markdown. Ensure all strings escaped. Chinese characters okay.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze Chinese source: \"向前走20米，到这个距离就停。\" Means \"Walk forward 20 meters, stop when reaching this distance.\" Need determine unique legal Mission IR 2.0 interpretation.\n\nWe need inspect seven dimensions. Source has action: walk_forward distance 20 m. Then \"到这个距离就停\" = when reach this distance, stop. Is that a second action stop after walk? Temporal relation: stop upon reaching 20m. Could be interpreted as stop at end of walk. Is that a legal linear plan: s1 walk_forward 20m, s2 stop. Depends predecessor. Unique? Need consider whether \"到这个距离就停\" is a stop action or just termination condition? It requests stop, action stop no params. The order is clear: walk forward 20m, upon reaching this distance stop. That is linear order walk then stop. Action multiplicity: walk_forward and stop. Repetition none. Correction none. Reference resolution: \"这个距离\" refers to 20米. Temporal relation: stop after/upon completion of walk. Unique? Likely yes. But need be careful: \"到这个距离就停\" maybe means stop at 20m, which is completion condition of walk, not necessarily separate IR action? However stop action exists. Legal semantics: walk_forward requires distance; stop no parameters. \"到这个距离就停\" is an action \"stop\" at distance. Since IR steps each depends on predecessor. Walk then stop. That seems unique. But is \"到这个距离\" maybe ambiguous: \"this distance\" could refer to current distance or 20 meters? Since only distance mentioned, resolves to 20米. Temporal \"到...就\" = as soon as reaching, stop. Order walk then stop. No unresolved.\n\nNeed provide coverage spans exactly. We need split source into meaningful spans, concatenated equal original source. Source: 向前走20米，到这个距离就停。 Characters:\n向 前 走 2 0 米 ， 到 这 个 距 离 就 停 。\nWe need list with text copied exactly preserving whitespace and punctuation. Could split:\n1 \"向前走20米\" role ACTION explanation walk_forward distance 20m.\n2 \"，\" role SEPARATOR punctuation separating actions/clauses.\n3 \"到这个距离就停\" role ACTION? Or RELATION + ACTION? The span includes \"到这个距离\" relation (upon reaching this distance) and \"就停\" action stop. Since object has one text per span and role. Could split into \"到这个距离\" RELATION, \"就停\" ACTION, \"。\" SEPARATOR. But text values concatenated exactly. Need every action, relation considered. Let's choose:\n- \"向前走20米\" ACTION\n- \"，\" SEPARATOR\n- \"到这个距离\" RELATION\n- \"就停\" ACTION\n- \"。\" SEPARATOR\nCheck concatenation: \"向前走20米\" + \"，\" + \"到这个距离\" + \"就停\" + \"。\" = \"向前走20米，到这个距离就停。\" yes.\n\nNeed explanations nonempty.\n\nDimensions:\naction_multiplicity UNIQUE: exactly two actions: walk_forward 20m, stop, no repeated/edited actions. The second is not replacing first; it's follow-up stop. Explain.\n\naction_order UNIQUE: walk_forward first, then stop; \"到这个距离就停\" indicates stop after/upon reaching 20m. Linear order s1 walk, s2 stop. Need ensure \"就\" indicates immediate upon reaching. This is unique.\n\ncorrection_scope UNIQUE: no edits/corrections; no prior instruction replaced.\n\nrepetition_scope UNIQUE: no repetition; single walk, single stop.\n\nreference_resolution UNIQUE: \"这个距离\" refers to the only distance 20米 from preceding clause. No pronoun ambiguity.\n\ntemporal_relations UNIQUE: \"到...就...\" establishes completion/reaching relation: stop after walk reaches 20m. Single linear order. No waiting/simultaneity.\n\nunresolved_relations UNIQUE: no explicit unresolved choice; all resolved.\n\nStatus AUTHORIZED_UNIQUE. Need ensure legal interpretation: walk_forward distance_m 20 positive finite, stop no params, steps 2 under 32, angle none. Duration none. Good.\n\nBut let's scrutinize potential ambiguity: \"到这个距离就停\" could be read as \"stop at this distance\" i.e., stopping is part of the walking command, not separate action. But IR has stop action. The source explicitly says stop. A compiler likely emits walk_forward then stop. Could there be ambiguity whether stop is at end or during? \"到这个距离\" says upon reaching. Unique.\n\nCould there be ambiguity about \"这个距离\" since \"这个\" might refer to some previously established distance in external context? But source itself only has 20米. Since gate sees source only, external missing context? The phrase \"这个距离\" deictic could refer to a distance in the environment or previous context. But in the source, only 20米 is mentioned. Is \"这个距离\" resolved within source? It says \"到这个距离\" after \"向前走20米\" so natural referent is 20米. Could be read as \"to this [aforementioned] distance\". Unique.\n\nNeed maybe mention not external. External missing context is UNKNOWN. But no need.\n\nNeed output exactly JSON. No markdown. Ensure keys exactly status, coverage, dimensions.\n\nNeed ensure coverage list text concatenation equals entire original source exactly. Let's verify:\n1 \"向前走20米\"\n2 \"，\"\n3 \"到这个距离\"\n4 \"就停\"\n5 \"。\"\nConcatenate: 向前走20米，到这个距离就停。 yes.\n\nRoles:\n\"向前走20米\" ACTION\n\"，\" SEPARATOR\n\"到这个距离\" RELATION\n\"就停\" ACTION\n\"。\" SEPARATOR\n\nMaybe \"到这个距离就停\" as one ACTION? If we split \"到这个距离\" RELATION, \"就停\" ACTION, okay. \"就\" in \"就停\" maybe adverb part of action phrase. Text \"就停\" role ACTION: means then stop. Good.\n\nNeed explanations:\n- \"向前走20米\": executes walk_forward with distance_m=20; positive finite, no repetition, no correction.\n- \"，\": separates clauses; contributes punctuation only, no action, no authority.\n- \"到这个距离\": expresses completion/reaching condition; \"这个距离\" refers to 20米 from preceding clause; creates temporal relation after walk reaches that distance; no alternative distance.\n- \"就停\": executes stop; no params; follows reaching 20m as immediate stop.\n- \"。\": terminal punctuation; nonexecuting, no modification.\n\nDimensions explanations:\naction_multiplicity: source requests exactly two actions: walk forward 20m and stop; second is additional, not replacing walk; no repeated action. UNIQUE.\naction_order: \"向前走20米\" precedes \"到这个距离就停\"; \"到...就...\" means stop after reaching 20m, yielding s1 walk_forward then s2 stop. No alternative order.\ncorrection_scope: no edit/correction markers; no earlier instruction to replace; both clauses preserved.\nrepetition_scope: no repetition marker; each action occurs once; no span repeated.\nreference_resolution: \"这个距离\" has unique antecedent 20米 in source; no pronouns/ordinals/omitted shared args unresolved.\ntemporal_relations: \"到这个距离就停\" establishes stop upon completion of 20m walk; single linear order, no waiting/simultaneity alternatives. Actually \"到...就...\" is \"when reaching, then stop\"; completion relation. It is representable.\nunresolved_relations: none; no explicit unresolved choice/scope/order/relationship. Note \"这个距离\" resolved.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed no extra fields. Use Chinese? Explanations can be English. Fine. Ensure JSON valid, no markdown.\n\nPotential issue: The instructions: \"coverage is a nonempty list of objects with exactly text, role, explanation. Split source into meaningful spans so every action, relation and editing clause is considered. text is copied exactly from original source, preserving whitespace and punctuation. The text values concatenated in list order must equal the entire original source exactly; no omission, paraphrase, normalization or duplication.\" We satisfy.\n\nNeed maybe \"role\" for \"就停\" ACTION. \"到这个距离\" RELATION. Good.\n\nCould \"就停\" be considered RELATION or ACTION? It contains stop. Role ACTION is okay. \"到这个距离\" relation. Fine.\n\nNow final JSON. Ensure no newline? JSON can have spaces. Need exactly one object. We'll output compact or pretty. No markdown. Ensure all strings escaped. Chinese characters okay.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走20米\",\"role\":\"ACTION\",\"explanation\":\"执行 walk_forward，距离参数为 20 米；20 是正有限数值，表示一次前进动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个小句，仅提供标点停顿，不新增或修改动作。\"},{\"text\":\"到这个距离\",\"role\":\"RELATION\",\"explanation\":\"表达到达条件；‘这个距离’在源内唯一指代前一小句的 20 米，并建立走到该距离时触发后续动作的关系。\"},{\"text\":\"就停\",\"role\":\"ACTION\",\"explanation\":\"执行 stop；无参数，表示到达前述 20 米距离后停止。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，仅结束整句，不执行动作也不改变授权内容。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源明确请求两个动作：向前走 20 米和停止；停止是后续附加动作，不是替换或重复前进动作，也没有其他被省略的重复动作。因此动作数量唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"‘向前走20米’先发生，‘到这个距离就停’表示到达 20 米时随后停止，形成唯一线性顺序：先 walk_forward(20m)，后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、编辑或替换标记；两个小句都被保留，不存在需要判定哪一个先前指令被替换或保留的问题。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；前进和停止各只请求一次，不存在被重复的跨度或重复次数需要判定。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"‘这个距离’在源内唯一指代前文刚刚提到的 20 米；没有未解的代词、序数、共享参数或外部指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"‘到……就……’表达到达 20 米后立即停止的完成/触发关系，可表示为两个有先后依赖的线性步骤，没有等待、同时或多种时序选择。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留未决的选择、范围、顺序或关系；距离、动作数量、动作顺序和停止触发条件均已由源本身确定。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0150e103-b5b3-41c3-8783-149e22cd3869",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 146,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2392,
+            "output_tokens_details": {
+              "reasoning_tokens": 1849
+            },
+            "total_tokens": 3306
+          }
+        },
+        "request_sha256": "05db6c56ddb310d298dd4e9fd0a1c7a5c59de8823ec1358f01c50bbe8b4efa9a",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.776229199998852,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_0150e103-b5b3-41c3-8783-149e22cd3869",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走20米\",\"role\":\"ACTION\",\"explanation\":\"执行 walk_forward，距离参数为 20 米；20 是正有限数值，表示一次前进动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个小句，仅提供标点停顿，不新增或修改动作。\"},{\"text\":\"到这个距离\",\"role\":\"RELATION\",\"explanation\":\"表达到达条件；‘这个距离’在源内唯一指代前一小句的 20 米，并建立走到该距离时触发后续动作的关系。\"},{\"text\":\"就停\",\"role\":\"ACTION\",\"explanation\":\"执行 stop；无参数，表示到达前述 20 米距离后停止。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，仅结束整句，不执行动作也不改变授权内容。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源明确请求两个动作：向前走 20 米和停止；停止是后续附加动作，不是替换或重复前进动作，也没有其他被省略的重复动作。因此动作数量唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"‘向前走20米’先发生，‘到这个距离就停’表示到达 20 米时随后停止，形成唯一线性顺序：先 walk_forward(20m)，后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、编辑或替换标记；两个小句都被保留，不存在需要判定哪一个先前指令被替换或保留的问题。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；前进和停止各只请求一次，不存在被重复的跨度或重复次数需要判定。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"‘这个距离’在源内唯一指代前文刚刚提到的 20 米；没有未解的代词、序数、共享参数或外部指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"‘到……就……’表达到达 20 米后立即停止的完成/触发关系，可表示为两个有先后依赖的线性步骤，没有等待、同时或多种时序选择。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留未决的选择、范围、顺序或关系；距离、动作数量、动作顺序和停止触发条件均已由源本身确定。\"}}}",
+        "usage": {
+          "input_tokens": 146,
+          "output_tokens": 2392,
+          "total_tokens": 3306
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.0042391999995743,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk20-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 14,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 267,
+      "raw_response_sha256": "ca4040329d9be92685e624f4b81d11babaca190647111616e79fb2ce641cec07",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b53d968a-a0df-4667-a753-df314fbab891",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 12.783130600000732,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 12.776229199998852,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"向前走20米\",\"role\":\"ACTION\",\"explanation\":\"执行 walk_forward，距离参数为 20 米；20 是正有限数值，表示一次前进动作。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前后两个小句，仅提供标点停顿，不新增或修改动作。\"},{\"text\":\"到这个距离\",\"role\":\"RELATION\",\"explanation\":\"表达到达条件；‘这个距离’在源内唯一指代前一小句的 20 米，并建立走到该距离时触发后续动作的关系。\"},{\"text\":\"就停\",\"role\":\"ACTION\",\"explanation\":\"执行 stop；无参数，表示到达前述 20 米距离后停止。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"句末标点，仅结束整句，不执行动作也不改变授权内容。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源明确请求两个动作：向前走 20 米和停止；停止是后续附加动作，不是替换或重复前进动作，也没有其他被省略的重复动作。因此动作数量唯一。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"‘向前走20米’先发生，‘到这个距离就停’表示到达 20 米时随后停止，形成唯一线性顺序：先 walk_forward(20m)，后 stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有修正、编辑或替换标记；两个小句都被保留，不存在需要判定哪一个先前指令被替换或保留的问题。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复标记；前进和停止各只请求一次，不存在被重复的跨度或重复次数需要判定。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"‘这个距离’在源内唯一指代前文刚刚提到的 20 米；没有未解的代词、序数、共享参数或外部指代。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"‘到……就……’表达到达 20 米后立即停止的完成/触发关系，可表示为两个有先后依赖的线性步骤，没有等待、同时或多种时序选择。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式保留未决的选择、范围、顺序或关系；距离、动作数量、动作顺序和停止触发条件均已由源本身确定。\"}}}",
+          "raw_response_sha256": "1272fe66dc83d3332904e34f959827f7069258f1d5c23530f794241c4e1b3943",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_0150e103-b5b3-41c3-8783-149e22cd3869",
+          "source_aware": false,
+          "source_sha256": "53fde5c85198382544f0b027ac0eb2918f1741b14bb8e40eda7dfd29fafc16ac",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 146,
+            "output_tokens": 2392,
+            "total_tokens": 3306
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "执行 walk_forward，距离参数为 20 米；20 是正有限数值，表示一次前进动作。",
+                "role": "ACTION",
+                "text": "向前走20米"
+              },
+              {
+                "explanation": "分隔前后两个小句，仅提供标点停顿，不新增或修改动作。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "表达到达条件；‘这个距离’在源内唯一指代前一小句的 20 米，并建立走到该距离时触发后续动作的关系。",
+                "role": "RELATION",
+                "text": "到这个距离"
+              },
+              {
+                "explanation": "执行 stop；无参数，表示到达前述 20 米距离后停止。",
+                "role": "ACTION",
+                "text": "就停"
+              },
+              {
+                "explanation": "句末标点，仅结束整句，不执行动作也不改变授权内容。",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源明确请求两个动作：向前走 20 米和停止；停止是后续附加动作，不是替换或重复前进动作，也没有其他被省略的重复动作。因此动作数量唯一。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "‘向前走20米’先发生，‘到这个距离就停’表示到达 20 米时随后停止，形成唯一线性顺序：先 walk_forward(20m)，后 stop。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有修正、编辑或替换标记；两个小句都被保留，不存在需要判定哪一个先前指令被替换或保留的问题。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "‘这个距离’在源内唯一指代前文刚刚提到的 20 米；没有未解的代词、序数、共享参数或外部指代。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有重复标记；前进和停止各只请求一次，不存在被重复的跨度或重复次数需要判定。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "‘到……就……’表达到达 20 米后立即停止的完成/触发关系，可表示为两个有先后依赖的线性步骤，没有等待、同时或多种时序选择。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源没有显式保留未决的选择、范围、顺序或关系；距离、动作数量、动作顺序和停止触发条件均已由源本身确定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 209,
+        "output_tokens": 305,
+        "total_tokens": 2050
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk20-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 20.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "向前走20米,到这个距离就停",
+    "status": "SUCCESS"
+  }
+}

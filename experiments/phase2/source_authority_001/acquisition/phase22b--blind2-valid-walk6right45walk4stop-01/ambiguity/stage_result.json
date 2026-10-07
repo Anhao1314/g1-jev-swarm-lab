@@ -1,0 +1,319 @@
+{
+  "added_wall_s": 15.29259479999746,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 15.28662610000174,
+        "provider_document": {
+          "created_at": 1791360066,
+          "id": "resp_08f9605b-8520-4453-9400-3be5988d1f28",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_08f9605b-8520-4453-9400-3be5988d1f28",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source: \"请先向前走6米，然后向右转45度，再往前走4米，最后停下\"\n\nNeed decide semantic ambiguity gate. Need evaluate dimensions. Source: Please first walk forward 6 meters, then turn right 45 degrees, then walk forward 4 meters, finally stop.\n\nActions: walk_forward 6m, turn right 45 deg (negative? right/clockwise negative per rules), walk_forward 4m, stop. Order explicitly 先...然后...再...最后. Unique. Correction none. Repetition none. Reference resolution: \"向前\" then \"再往前\" refers forward? It is clear. Maybe \"往前\" in second walk means forward, same direction? Need consider after turn right, \"往前\" means forward relative to new heading. No ambiguity? It's just walk forward. Unresolved none. Temporal relations: sequence with 先,然后,再,最后. unique. Action multiplicity: four actions. Unique. Legal: distances positive finite, angle 45 nonzero within 180, stop no params. Max steps 4. Authorized unique.\n\nNeed coverage split entire source exactly, preserving whitespace? Source has Chinese no spaces. Need include characters. We need split into spans whose concatenation exactly equals original. Need text copied exactly. We can choose spans maybe each clause. Need ensure concatenation equals full source. Original source string: 请先向前走6米，然后向右转45度，再往前走4米，最后停下\n\nLet's list characters: 请 先 向 前 走 6 米 ， 然 后 向 右 转 4 5 度 ， 再 往 前 走 4 米 ， 最 后 停 下\nNo spaces. We need coverage list text values concatenated exactly. We can split into:\n\"请先向前走6米，\" \n\"然后向右转45度，\"\n\"再往前走4米，\"\n\"最后停下\"\nThat concatenates exactly. Is splitting commas with previous span okay. We can assign roles: first ACTION? \"请先向前走6米，\" includes polite and order. Role ACTION. second ACTION. third ACTION. fourth ACTION maybe CONTEXT? Stop action. But \"最后停下\" includes final. All action. However coverage should consider every action, relation, editing clause. We can split more fine-grained to include relations \"先\", \"然后\", \"再\", \"最后\". But text concatenation. Need meaningful spans. We can split:\n\"请\" CONTEXT/politeness\n\"先\" RELATION\n\"向前走6米\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"向右转45度\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"往前走4米\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停下\" ACTION\nThis concatenates? Let's test: 请 + 先 + 向前走6米 + ， + 然后 + 向右转45度 + ， + 再 + 往前走4米 + ， + 最后 + 停下 = original. Yes. Need role for \"请\" CONTEXT? It is politeness not action. Explanation why nonexecuting span doesn't modify authority. Good.\n\nBut action \"向右转45度\": Need mention right/clockwise negative. Could be action with parameter angle -45 degrees. \"向右转45度\" means turn right 45. Unique.\n\n\"再往前走4米\": Does \"再\" mean \"then\" or \"again\"? In Chinese, \"再往前走4米\" could mean \"then walk forward another 4 meters\" or \"again walk forward 4 meters\". Could this introduce repetition_scope? Important! Source: \"请先向前走6米，然后向右转45度，再往前走4米，最后停下\". \"再\" can mean \"then/and then\" or \"again\". Here \"再往前\" often means \"then/continue forward\" after turn? It might imply continue walking forward 4m, not repeat previous 6m. Could be ambiguous? The gate asks repetition_scope: identify exactly what span is repeated and how often; never silently narrow repetition to one action or broaden it to a sequence. Does \"再\" create repetition? It often means \"then\" in sequence, but could be \"again\". However in this context with \"先...然后...再...最后\", \"再\" is clearly sequential connective (\"then\"). It does not mean repeat previous action. Is there any ambiguity? It is part of order: 先, 然后, 再, 最后. The phrase \"再往前走4米\" is a new walk action. It is not a repetition of first walk 6m; it's a separate 4m. Unique. Need explain.\n\nPotential issue \"往前\" after turn right: forward relative to current orientation. But legal semantics only stand, walk_forward, turn, stop; walk_forward likely forward relative to robot's current heading. No ambiguity.\n\nNeed output status AUTHORIZED_UNIQUE. Dimensions all UNIQUE. Need explanations nonempty. Need coverage with roles. Need exactly keys. The dimensions object exactly seven names. Let's formulate.\n\nNeed be careful about \"coverage is nonempty list of objects with exactly text, role, explanation. text values concatenated in list order must equal entire original source exactly; no omission, paraphrase, normalization or duplication.\" If we split \"请\" and \"先\" etc. Good. Explanation nonempty. Roles from enum. Use ACTION, RELATION, QUANTITY, CONTEXT, SEPARATOR, EDIT. We can assign:\n1 text \"请\" role CONTEXT. Explanation: polite marker, no executable action; does not change semantics.\n2 \"先\" role RELATION. Marks first action in sequence.\n3 \"向前走6米\" role ACTION. walk_forward distance 6 m.\n4 \"，\" role SEPARATOR. Punctuation separating clauses; no authority.\n5 \"然后\" role RELATION. Marks next after previous.\n6 \"向右转45度\" role ACTION. turn right 45 => angle -45 deg.\n7 \"，\" separator.\n8 \"再\" role RELATION. sequential \"then\", not repetition? Explanation. It orders next action; does not repeat previous.\n9 \"往前走4米\" role ACTION. walk_forward 4 m.\n10 \"，\" separator.\n11 \"最后\" role RELATION. final marker.\n12 \"停下\" role ACTION. stop.\n\nConcatenation: Let's verify exact: 请先向前走6米，然后向右转45度，再往前走4米，最后停下\nOur spans:\n请\n先\n向前走6米\n，\n然后\n向右转45度\n，\n再\n往前走4米\n，\n最后\n停下\nConcatenate: 请先向前走6米，然后向右转45度，再往前走4米，最后停下. Yes.\n\nNeed dimensions. Let's write explanations in English maybe okay. Need all statuses UNIQUE. For action_multiplicity: source explicitly lists four actions: walk 6m, turn right 45, walk 4m, stop. The word 再 is sequential not action repetition? Hmm action_multiplicity may mention no hidden repeats. For repetition_scope: \"再\" in 先/然后/再/最后 is sequential connective, not repetition; no span repeated. But is that definitive? Let's consider if \"再往前走4米\" could be interpreted as \"walk forward another 4 meters\" which is just a second walk action, not repeating prior 6m. The repetition_scope dimension: what span is repeated and how often. If no repetition, UNIQUE. Could someone think \"再\" means \"again\", repeating \"往前走\"? It could be \"again walk forward 4m\" but the quantity 4m is new, so it's not repeating the exact previous action; it's a new action. The sequence connectives \"先...然后...再...最后\" strongly disambiguate \"再\" as then. So unique.\n\nAction_order: unique via 先, 然后, 再, 最后. Temporal relations: sequential. Correction_scope: no corrections/edits. Reference_resolution: pronouns/omitted: \"向前\" and \"往前走\" both forward relative to current heading; no unclear referent. \"向右\" means robot's right. Is \"right\" relative to robot or observer? Standard turn right means clockwise. Unique. External context not needed. Unresolved_relations: none. All unique.\n\nNeed status AUTHORIZED_UNIQUE. Coverage copying alone not enough, explanations. Need maybe mention maximum steps 4 <= 32; turn abs 45 <=180; stand none, stop no params. Walk distances positive finite. No stand. Good.\n\nPotential nuance: \"停\" is stop. Source says \"停下\" = stop. Legal action stop. Good.\n\nNeed ensure no extra text outside JSON. Output JSON object. Valid JSON with Chinese characters. No markdown. Use keys exactly status, coverage, dimensions.\n\nLet's craft final. Need escaping? Chinese fine. Commas in JSON.\n\nLet's ensure \"dimensions\" keys exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each value object with status, explanation. Explanations nonempty.\n\nNeed maybe mention \"AUTHORIZED_UNIQUE only if all seven dimensions UNIQUE and entire source supports one legal interpretation.\" Yes.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source: \"请先向前走6米，然后向右转45度，再往前走4米，最后停下\"\n\nNeed decide semantic ambiguity gate. Need evaluate dimensions. Source: Please first walk forward 6 meters, then turn right 45 degrees, then walk forward 4 meters, finally stop.\n\nActions: walk_forward 6m, turn right 45 deg (negative? right/clockwise negative per rules), walk_forward 4m, stop. Order explicitly 先...然后...再...最后. Unique. Correction none. Repetition none. Reference resolution: \"向前\" then \"再往前\" refers forward? It is clear. Maybe \"往前\" in second walk means forward, same direction? Need consider after turn right, \"往前\" means forward relative to new heading. No ambiguity? It's just walk forward. Unresolved none. Temporal relations: sequence with 先,然后,再,最后. unique. Action multiplicity: four actions. Unique. Legal: distances positive finite, angle 45 nonzero within 180, stop no params. Max steps 4. Authorized unique.\n\nNeed coverage split entire source exactly, preserving whitespace? Source has Chinese no spaces. Need include characters. We need split into spans whose concatenation exactly equals original. Need text copied exactly. We can choose spans maybe each clause. Need ensure concatenation equals full source. Original source string: 请先向前走6米，然后向右转45度，再往前走4米，最后停下\n\nLet's list characters: 请 先 向 前 走 6 米 ， 然 后 向 右 转 4 5 度 ， 再 往 前 走 4 米 ， 最 后 停 下\nNo spaces. We need coverage list text values concatenated exactly. We can split into:\n\"请先向前走6米，\" \n\"然后向右转45度，\"\n\"再往前走4米，\"\n\"最后停下\"\nThat concatenates exactly. Is splitting commas with previous span okay. We can assign roles: first ACTION? \"请先向前走6米，\" includes polite and order. Role ACTION. second ACTION. third ACTION. fourth ACTION maybe CONTEXT? Stop action. But \"最后停下\" includes final. All action. However coverage should consider every action, relation, editing clause. We can split more fine-grained to include relations \"先\", \"然后\", \"再\", \"最后\". But text concatenation. Need meaningful spans. We can split:\n\"请\" CONTEXT/politeness\n\"先\" RELATION\n\"向前走6米\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"向右转45度\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"往前走4米\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停下\" ACTION\nThis concatenates? Let's test: 请 + 先 + 向前走6米 + ， + 然后 + 向右转45度 + ， + 再 + 往前走4米 + ， + 最后 + 停下 = original. Yes. Need role for \"请\" CONTEXT? It is politeness not action. Explanation why nonexecuting span doesn't modify authority. Good.\n\nBut action \"向右转45度\": Need mention right/clockwise negative. Could be action with parameter angle -45 degrees. \"向右转45度\" means turn right 45. Unique.\n\n\"再往前走4米\": Does \"再\" mean \"then\" or \"again\"? In Chinese, \"再往前走4米\" could mean \"then walk forward another 4 meters\" or \"again walk forward 4 meters\". Could this introduce repetition_scope? Important! Source: \"请先向前走6米，然后向右转45度，再往前走4米，最后停下\". \"再\" can mean \"then/and then\" or \"again\". Here \"再往前\" often means \"then/continue forward\" after turn? It might imply continue walking forward 4m, not repeat previous 6m. Could be ambiguous? The gate asks repetition_scope: identify exactly what span is repeated and how often; never silently narrow repetition to one action or broaden it to a sequence. Does \"再\" create repetition? It often means \"then\" in sequence, but could be \"again\". However in this context with \"先...然后...再...最后\", \"再\" is clearly sequential connective (\"then\"). It does not mean repeat previous action. Is there any ambiguity? It is part of order: 先, 然后, 再, 最后. The phrase \"再往前走4米\" is a new walk action. It is not a repetition of first walk 6m; it's a separate 4m. Unique. Need explain.\n\nPotential issue \"往前\" after turn right: forward relative to current orientation. But legal semantics only stand, walk_forward, turn, stop; walk_forward likely forward relative to robot's current heading. No ambiguity.\n\nNeed output status AUTHORIZED_UNIQUE. Dimensions all UNIQUE. Need explanations nonempty. Need coverage with roles. Need exactly keys. The dimensions object exactly seven names. Let's formulate.\n\nNeed be careful about \"coverage is nonempty list of objects with exactly text, role, explanation. text values concatenated in list order must equal entire original source exactly; no omission, paraphrase, normalization or duplication.\" If we split \"请\" and \"先\" etc. Good. Explanation nonempty. Roles from enum. Use ACTION, RELATION, QUANTITY, CONTEXT, SEPARATOR, EDIT. We can assign:\n1 text \"请\" role CONTEXT. Explanation: polite marker, no executable action; does not change semantics.\n2 \"先\" role RELATION. Marks first action in sequence.\n3 \"向前走6米\" role ACTION. walk_forward distance 6 m.\n4 \"，\" role SEPARATOR. Punctuation separating clauses; no authority.\n5 \"然后\" role RELATION. Marks next after previous.\n6 \"向右转45度\" role ACTION. turn right 45 => angle -45 deg.\n7 \"，\" separator.\n8 \"再\" role RELATION. sequential \"then\", not repetition? Explanation. It orders next action; does not repeat previous.\n9 \"往前走4米\" role ACTION. walk_forward 4 m.\n10 \"，\" separator.\n11 \"最后\" role RELATION. final marker.\n12 \"停下\" role ACTION. stop.\n\nConcatenation: Let's verify exact: 请先向前走6米，然后向右转45度，再往前走4米，最后停下\nOur spans:\n请\n先\n向前走6米\n，\n然后\n向右转45度\n，\n再\n往前走4米\n，\n最后\n停下\nConcatenate: 请先向前走6米，然后向右转45度，再往前走4米，最后停下. Yes.\n\nNeed dimensions. Let's write explanations in English maybe okay. Need all statuses UNIQUE. For action_multiplicity: source explicitly lists four actions: walk 6m, turn right 45, walk 4m, stop. The word 再 is sequential not action repetition? Hmm action_multiplicity may mention no hidden repeats. For repetition_scope: \"再\" in 先/然后/再/最后 is sequential connective, not repetition; no span repeated. But is that definitive? Let's consider if \"再往前走4米\" could be interpreted as \"walk forward another 4 meters\" which is just a second walk action, not repeating prior 6m. The repetition_scope dimension: what span is repeated and how often. If no repetition, UNIQUE. Could someone think \"再\" means \"again\", repeating \"往前走\"? It could be \"again walk forward 4m\" but the quantity 4m is new, so it's not repeating the exact previous action; it's a new action. The sequence connectives \"先...然后...再...最后\" strongly disambiguate \"再\" as then. So unique.\n\nAction_order: unique via 先, 然后, 再, 最后. Temporal relations: sequential. Correction_scope: no corrections/edits. Reference_resolution: pronouns/omitted: \"向前\" and \"往前走\" both forward relative to current heading; no unclear referent. \"向右\" means robot's right. Is \"right\" relative to robot or observer? Standard turn right means clockwise. Unique. External context not needed. Unresolved_relations: none. All unique.\n\nNeed status AUTHORIZED_UNIQUE. Coverage copying alone not enough, explanations. Need maybe mention maximum steps 4 <= 32; turn abs 45 <=180; stand none, stop no params. Walk distances positive finite. No stand. Good.\n\nPotential nuance: \"停\" is stop. Source says \"停下\" = stop. Legal action stop. Good.\n\nNeed ensure no extra text outside JSON. Output JSON object. Valid JSON with Chinese characters. No markdown. Use keys exactly status, coverage, dimensions.\n\nLet's craft final. Need escaping? Chinese fine. Commas in JSON.\n\nLet's ensure \"dimensions\" keys exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each value object with status, explanation. Explanations nonempty.\n\nNeed maybe mention \"AUTHORIZED_UNIQUE only if all seven dimensions UNIQUE and entire source supports one legal interpretation.\" Yes.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it introduces the command but has no executable action and does not alter the authorized plan.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the first action in the explicit sequence, establishing that the following walk is executed first.\"},{\"text\":\"向前走6米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward action with positive finite distance 6 meters.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action after the first walk, fixing the second position in the sequence.\"},{\"text\":\"向右转45度\",\"role\":\"ACTION\",\"explanation\":\"Executable turn action: right/clockwise 45 degrees, represented as negative 45 degrees; nonzero, finite, and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"In the explicit frame 先/然后/再/最后, this means 'then' and orders the next action; it does not repeat an earlier action span.\"},{\"text\":\"往前走4米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward action with positive finite distance 4 meters, performed forward relative to the robot's current heading after the turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the final action in the explicit sequence, fixing the stop as the last step.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Executable stop action with no parameters, completing the linear plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly requests exactly four actions: walk_forward 6 m, turn right 45 degrees, walk_forward 4 m, and stop. '再' is a sequential connector here, not an additional hidden repetition of an earlier action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by 先 ('first'), 然后 ('then'), 再 ('then'), and 最后 ('finally'): walk 6 m, turn right 45 degrees, walk 4 m, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, edit, replacement, or scope-changing clauses in the source. No prior instruction is modified or preserved by any edit because no edit exists.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No span is repeated. The second walking command has a distinct distance (4 m) and is introduced by the sequence marker 再, which orders it after the turn rather than repeating the earlier 6 m walk.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The omitted subject is the robot throughout. '向前' and '往前走' both resolve to forward motion relative to the robot's current heading, and '向右' resolves to clockwise/right turn. No external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear temporal order with no simultaneity, waiting, or completion ambiguity: first walk, then turn, then walk, finally stop. The resulting plan has four steps, each after the first depending on its predecessor.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, ordering, scope, or relationship unresolved. All requested actions, parameters, and sequence relations are fixed by the text and are representable in legal Mission IR 2.0.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_08f9605b-8520-4453-9400-3be5988d1f28",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 156,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2824,
+            "output_tokens_details": {
+              "reasoning_tokens": 1988
+            },
+            "total_tokens": 3748
+          }
+        },
+        "request_sha256": "9ab7bf884551c8a61ebb0d7a5d518e9798dfe276021e5f37a49781c0b0efdc03",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 15.285027000001719,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_08f9605b-8520-4453-9400-3be5988d1f28",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it introduces the command but has no executable action and does not alter the authorized plan.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the first action in the explicit sequence, establishing that the following walk is executed first.\"},{\"text\":\"向前走6米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward action with positive finite distance 6 meters.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action after the first walk, fixing the second position in the sequence.\"},{\"text\":\"向右转45度\",\"role\":\"ACTION\",\"explanation\":\"Executable turn action: right/clockwise 45 degrees, represented as negative 45 degrees; nonzero, finite, and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"In the explicit frame 先/然后/再/最后, this means 'then' and orders the next action; it does not repeat an earlier action span.\"},{\"text\":\"往前走4米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward action with positive finite distance 4 meters, performed forward relative to the robot's current heading after the turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the final action in the explicit sequence, fixing the stop as the last step.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Executable stop action with no parameters, completing the linear plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly requests exactly four actions: walk_forward 6 m, turn right 45 degrees, walk_forward 4 m, and stop. '再' is a sequential connector here, not an additional hidden repetition of an earlier action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by 先 ('first'), 然后 ('then'), 再 ('then'), and 最后 ('finally'): walk 6 m, turn right 45 degrees, walk 4 m, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, edit, replacement, or scope-changing clauses in the source. No prior instruction is modified or preserved by any edit because no edit exists.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No span is repeated. The second walking command has a distinct distance (4 m) and is introduced by the sequence marker 再, which orders it after the turn rather than repeating the earlier 6 m walk.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The omitted subject is the robot throughout. '向前' and '往前走' both resolve to forward motion relative to the robot's current heading, and '向右' resolves to clockwise/right turn. No external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear temporal order with no simultaneity, waiting, or completion ambiguity: first walk, then turn, then walk, finally stop. The resulting plan has four steps, each after the first depending on its predecessor.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, ordering, scope, or relationship unresolved. All requested actions, parameters, and sequence relations are fixed by the text and are representable in legal Mission IR 2.0.\"}}}",
+        "usage": {
+          "input_tokens": 156,
+          "output_tokens": 2824,
+          "total_tokens": 3748
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.57924869999988,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-walk6-turn-right45-walk4-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 25,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-walk6-turn-right45-walk4-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "c2fee78ace1fcb60f0854f4fbce061d029d9d78331f6afa92caf7655498f3792",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_6fd1a26f-237b-480a-bfa2-fac91f81bc2c",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 15.291690100002597,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 15.285027000001719,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it introduces the command but has no executable action and does not alter the authorized plan.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the first action in the explicit sequence, establishing that the following walk is executed first.\"},{\"text\":\"向前走6米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward action with positive finite distance 6 meters.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the next action after the first walk, fixing the second position in the sequence.\"},{\"text\":\"向右转45度\",\"role\":\"ACTION\",\"explanation\":\"Executable turn action: right/clockwise 45 degrees, represented as negative 45 degrees; nonzero, finite, and within the 180-degree bound.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"In the explicit frame 先/然后/再/最后, this means 'then' and orders the next action; it does not repeat an earlier action span.\"},{\"text\":\"往前走4米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward action with positive finite distance 4 meters, performed forward relative to the robot's current heading after the turn.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating clauses; it has no executable meaning and does not modify authority.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the final action in the explicit sequence, fixing the stop as the last step.\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"Executable stop action with no parameters, completing the linear plan.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly requests exactly four actions: walk_forward 6 m, turn right 45 degrees, walk_forward 4 m, and stop. '再' is a sequential connector here, not an additional hidden repetition of an earlier action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The order is fixed by 先 ('first'), 然后 ('then'), 再 ('then'), and 最后 ('finally'): walk 6 m, turn right 45 degrees, walk 4 m, stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction, edit, replacement, or scope-changing clauses in the source. No prior instruction is modified or preserved by any edit because no edit exists.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No span is repeated. The second walking command has a distinct distance (4 m) and is introduced by the sequence marker 再, which orders it after the turn rather than repeating the earlier 6 m walk.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The omitted subject is the robot throughout. '向前' and '往前走' both resolve to forward motion relative to the robot's current heading, and '向右' resolves to clockwise/right turn. No external referent is needed.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives one linear temporal order with no simultaneity, waiting, or completion ambiguity: first walk, then turn, then walk, finally stop. The resulting plan has four steps, each after the first depending on its predecessor.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, ordering, scope, or relationship unresolved. All requested actions, parameters, and sequence relations are fixed by the text and are representable in legal Mission IR 2.0.\"}}}",
+          "raw_response_sha256": "04b28533d253d0b459252d33d8391af7394c7d821eaf0295d9fec7797a83d6d1",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_08f9605b-8520-4453-9400-3be5988d1f28",
+          "source_aware": false,
+          "source_sha256": "44ea9c80d1fd3a1c018ffa240ce466c99878dc636d7818799e43386a41d81afb",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 156,
+            "output_tokens": 2824,
+            "total_tokens": 3748
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Polite request marker; it introduces the command but has no executable action and does not alter the authorized plan.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Marks the first action in the explicit sequence, establishing that the following walk is executed first.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Executable walk_forward action with positive finite distance 6 meters.",
+                "role": "ACTION",
+                "text": "向前走6米"
+              },
+              {
+                "explanation": "Punctuation separating clauses; it has no executable meaning and does not modify authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Marks the next action after the first walk, fixing the second position in the sequence.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Executable turn action: right/clockwise 45 degrees, represented as negative 45 degrees; nonzero, finite, and within the 180-degree bound.",
+                "role": "ACTION",
+                "text": "向右转45度"
+              },
+              {
+                "explanation": "Punctuation separating clauses; it has no executable meaning and does not modify authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "In the explicit frame 先/然后/再/最后, this means 'then' and orders the next action; it does not repeat an earlier action span.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Executable walk_forward action with positive finite distance 4 meters, performed forward relative to the robot's current heading after the turn.",
+                "role": "ACTION",
+                "text": "往前走4米"
+              },
+              {
+                "explanation": "Punctuation separating clauses; it has no executable meaning and does not modify authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Marks the final action in the explicit sequence, fixing the stop as the last step.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Executable stop action with no parameters, completing the linear plan.",
+                "role": "ACTION",
+                "text": "停下"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source explicitly requests exactly four actions: walk_forward 6 m, turn right 45 degrees, walk_forward 4 m, and stop. '再' is a sequential connector here, not an additional hidden repetition of an earlier action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The order is fixed by 先 ('first'), 然后 ('then'), 再 ('then'), and 最后 ('finally'): walk 6 m, turn right 45 degrees, walk 4 m, stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There are no correction, edit, replacement, or scope-changing clauses in the source. No prior instruction is modified or preserved by any edit because no edit exists.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The omitted subject is the robot throughout. '向前' and '往前走' both resolve to forward motion relative to the robot's current heading, and '向右' resolves to clockwise/right turn. No external referent is needed.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No span is repeated. The second walking command has a distinct distance (4 m) and is introduced by the sequence marker 再, which orders it after the turn rather than repeating the earlier 6 m walk.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source gives one linear temporal order with no simultaneity, waiting, or completion ambiguity: first walk, then turn, then walk, finally stop. The resulting plan has four steps, each after the first depending on its predecessor.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, ordering, scope, or relationship unresolved. All requested actions, parameters, and sequence relations are fixed by the text and are representable in legal Mission IR 2.0.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 331,
+        "total_tokens": 2086
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-walk6-turn-right45-walk4-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "请先向前走6米然后向右转45度再往前走4米最后停下",
+    "status": "SUCCESS"
+  }
+}

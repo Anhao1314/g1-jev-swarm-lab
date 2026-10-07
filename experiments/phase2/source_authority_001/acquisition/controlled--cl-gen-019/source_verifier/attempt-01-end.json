@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.939172400001553,
+  "provider_document": {
+    "created_at": 1791360872,
+    "id": "resp_0cd80888-628e-4d19-9726-0202a3499533",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_0cd80888-628e-4d19-9726-0202a3499533",
+        "reasoning_content": "We need answer JSON only. Need analyze source \"前进十五米\" Chinese means \"move forward fifteen meters\". Candidate walk_forward distance_m 15.0. Need derive plan. Need coverage entire source exactly, split meaningful spans. Source no punctuation. \"前进十五米\" can split? Need coverage concatenated exact. We can split into \"前进\" ACTION and \"十五米\" QUANTITY? Concatenation equals \"前进十五米\". Need explanations. Dimensions seven. Likely AUTHORIZED_UNIQUE.\n\nNeed ensure legal skills: walk_forward, distance positive finite. 十五 = 15. 米 meter. Plan one step s1 walk_forward distance_m 15, depends_on [].\n\nNeed output JSON with status, coverage, dimensions, authorized_plan. Coverage nonempty list objects text role explanation. Text copied exactly. Split source into spans. If split \"前进\" and \"十五米\", yes. Every explanation nonempty. Could include ACTION for 前进, QUANTITY for 十五米. Maybe role ACTION for 前进, QUANTITY for 十五米. Need all original punctuation whitespace; none.\n\nDimensions:\n- action_multiplicity UNIQUE: one action.\n- action_order UNIQUE: single action, order trivial.\n- correction_scope UNIQUE: no edits/corrections.\n- repetition_scope UNIQUE: no repetitions.\n- reference_resolution UNIQUE: no pronouns; distance directly specified. Or no references.\n- temporal_relations UNIQUE: no temporal relations; single step.\n- unresolved_relations UNIQUE: no explicit unresolved choices.\nNeed explanations.\n\nNeed be careful: \"前进十五米\" is unambiguous? Chinese \"十五米\" 15 meters. \"前进\" could be walk forward. Legal skill walk_forward. Yes.\n\nPotential issue: Source says \"前进十五米\" no explicit \"走\", but skill mapping? We can infer walk_forward because forward movement. It is action. The compiler semantics legal skills. Unique.\n\nNeed output exactly JSON object, no markdown. Ensure valid JSON. Numbers finite. authorized_plan list.\n\nLet's craft with coverage splitting maybe \"前进\" and \"十五米\". The coverage text concatenated equals \"前进十五米\". role: ACTION, QUANTITY. Explanation for 前进: denotes forward locomotion action, maps to walk_forward for 15 meters; no other action requested. For 十五米: specifies distance 15 meters, supplies exactly distance_m=15.0; no duration etc. Since no separator. Good.\n\nNeed include all seven dimensions exactly names. Value status and explanation. No extra fields.\n\nNeed ensure authorized_plan step has exactly id, skill, parameters, depends_on. parameters exactly distance_m. No extra fields. Good.\n\nFinal JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source \"前进十五米\" Chinese means \"move forward fifteen meters\". Candidate walk_forward distance_m 15.0. Need derive plan. Need coverage entire source exactly, split meaningful spans. Source no punctuation. \"前进十五米\" can split? Need coverage concatenated exact. We can split into \"前进\" ACTION and \"十五米\" QUANTITY? Concatenation equals \"前进十五米\". Need explanations. Dimensions seven. Likely AUTHORIZED_UNIQUE.\n\nNeed ensure legal skills: walk_forward, distance positive finite. 十五 = 15. 米 meter. Plan one step s1 walk_forward distance_m 15, depends_on [].\n\nNeed output JSON with status, coverage, dimensions, authorized_plan. Coverage nonempty list objects text role explanation. Text copied exactly. Split source into spans. If split \"前进\" and \"十五米\", yes. Every explanation nonempty. Could include ACTION for 前进, QUANTITY for 十五米. Maybe role ACTION for 前进, QUANTITY for 十五米. Need all original punctuation whitespace; none.\n\nDimensions:\n- action_multiplicity UNIQUE: one action.\n- action_order UNIQUE: single action, order trivial.\n- correction_scope UNIQUE: no edits/corrections.\n- repetition_scope UNIQUE: no repetitions.\n- reference_resolution UNIQUE: no pronouns; distance directly specified. Or no references.\n- temporal_relations UNIQUE: no temporal relations; single step.\n- unresolved_relations UNIQUE: no explicit unresolved choices.\nNeed explanations.\n\nNeed be careful: \"前进十五米\" is unambiguous? Chinese \"十五米\" 15 meters. \"前进\" could be walk forward. Legal skill walk_forward. Yes.\n\nPotential issue: Source says \"前进十五米\" no explicit \"走\", but skill mapping? We can infer walk_forward because forward movement. It is action. The compiler semantics legal skills. Unique.\n\nNeed output exactly JSON object, no markdown. Ensure valid JSON. Numbers finite. authorized_plan list.\n\nLet's craft with coverage splitting maybe \"前进\" and \"十五米\". The coverage text concatenated equals \"前进十五米\". role: ACTION, QUANTITY. Explanation for 前进: denotes forward locomotion action, maps to walk_forward for 15 meters; no other action requested. For 十五米: specifies distance 15 meters, supplies exactly distance_m=15.0; no duration etc. Since no separator. Good.\n\nNeed include all seven dimensions exactly names. Value status and explanation. No extra fields.\n\nNeed ensure authorized_plan step has exactly id, skill, parameters, depends_on. parameters exactly distance_m. No extra fields. Good.\n\nFinal JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"前进\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Denotes a forward locomotion action. The only legal skill matching forward movement is walk_forward. This span authorizes exactly one walking action and does not authorize any additional, repeated, or edited action.\"\n    },\n    {\n      \"text\": \"十五米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the distance as fifteen meters. 十五 means 15 and 米 is the meter unit, so the walk_forward parameter distance_m is exactly 15.0. This span does not introduce a duration, turn, stop, correction, repetition, or unresolved relation.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains one action phrase, 前进, corresponding to one walk_forward action. There is no conjunction, listing, repetition, or edit adding or replacing actions.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one executable action is requested, so the execution order is trivially unique: walk_forward once.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is no correction, replacement, or edit clause in the source, so no earlier action or parameter is changed.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is no repetition marker or span. The action is performed once, not multiple times or as a repeated sequence.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no pronouns or omitted references requiring external context. The distance is directly specified as 十五米.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no before/after, simultaneous, waiting, or completion relations. A single action has one linear execution order.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly specifies the action and distance and leaves no unresolved choice, scope, order, or relationship.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 15.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_0cd80888-628e-4d19-9726-0202a3499533",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 313,
+      "input_tokens_details": {
+        "cached_tokens": 896
+      },
+      "output_tokens": 1132,
+      "output_tokens_details": {
+        "reasoning_tokens": 564
+      },
+      "total_tokens": 2341
+    }
+  },
+  "request_sha256": "f408a57a015ff9cc502b9b086ffa0fcff62156be4c2d98dab2bfe22a9361a00f",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 8.078550900001574,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_ce8a3f5e-367c-4c9a-9de9-20fafb2ee18d",
+  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the first action: a turn to the left. Left turn compiles to a positive turn angle, so this action is the turn skill with the angle supplied by the following quantity span.\"},{\"text\":\"四十五度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn angle as forty-five degrees. It uniquely parameterizes the preceding left turn as angle_deg = 45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn clause from the following temporal clause. It adds no action, parameter, repetition, or correction.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Specifies that the next action occurs after the preceding action. It uniquely places the stop action after the turn action, with no simultaneous or alternate order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Specifies the second action: stop. The stop skill takes exactly empty parameters and depends on the preceding turn step.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly two actions: one left turn and one stop. No action is repeated, added as an alternative, or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 之后 establishes that stopping occurs after the left turn, yielding the linear execution order: turn left 45 degrees, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no correction, edit, reversal, or replacement clause, so no earlier action or parameter is changed.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so both actions occur exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"之后 refers to the immediately preceding action, the left turn of 45 degrees. The omitted subject of 停止 is resolved as the same sequence continuing after that turn, and stop has no arguments needing further resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is 之后, meaning after the preceding turn. This gives one single linear order with no waiting, duration, simultaneity, or completion ambiguity.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any order, scope, reference, repetition, correction, or relation unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+  "usage": {
+    "input_tokens": 212,
+    "output_tokens": 1489,
+    "total_tokens": 2725
+  }
+}

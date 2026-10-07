@@ -1,0 +1,281 @@
+{
+  "added_wall_s": 14.132416899999953,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 14.128879799998685,
+        "provider_document": {
+          "created_at": 1791359427,
+          "id": "resp_d4dcc186-6457-4927-a11b-90982d69f5e4",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_d4dcc186-6457-4927-a11b-90982d69f5e4",
+              "reasoning_content": "We need answer exactly JSON. Need analyze source Chinese: \"30 degrees，朝右转一下，只这一回。\" Need derive plan. Need inspect dimensions. Source: 30 degrees, turn right (朝右转) once, only this once. Candidate turn angle -30. Need see ambiguity? \"转一下\" means turn once? It may mean perform a turn action one time, angle? \"30 degrees\" quantity. \"朝右转\" turn toward right. \"只这一回\" only this once. So action: turn right by 30 degrees, once. Legal. Parameters angle_deg: right/clockwise negative => -30. Repetition exact one? \"一下\" often means a bit/one time? \"只这一回\" only this once. Need decide if \"一下\" ambiguous? In Chinese, \"转一下\" can mean \"turn a little\" or \"give a turn\" not necessarily exactly one action. But \"只这一回\" explicitly says only this one time. So repetition: one turn action. Need unique.\n\nNeed coverage split entire source exactly. Need ensure concatenated text equals source. Source: \"30 degrees，朝右转一下，只这一回。\" Let's split meaningful spans:\n- \"30 degrees\" QUANTITY angle\n- \"，\" SEPARATOR\n- \"朝右转\" ACTION? Actually \"朝右\" direction and \"转\" turn. Could split \"朝右\" RELATION? \"转\" ACTION? Need every action, relation, edit clause. We can have text \"朝右转\" ACTION, explanation turn right.\n- \"一下\" QUANTITY? It indicates one occurrence? Maybe REPETITION? Role maybe QUANTITY? The allowed roles are ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Repetition not role. Could classify \"一下\" as QUANTITY (one time) maybe. \n- \"，\" separator\n- \"只这一回\" EDIT? It's a restriction/repetition scope, maybe EDIT? It clarifies only once. Or QUANTITY. Role QUANTITY? \"只这一回\" = only this one time, quantifies repetitions. Could role EDIT? It's not editing previous action, just limiting. Role QUANTITY seems okay. But coverage roles need meaningful spans, not necessarily all. We can choose.\n\nNeed ensure text concatenation equals source exactly. If split:\n\"30 degrees\" + \"，\" + \"朝右转\" + \"一下\" + \"，\" + \"只这一回\" + \"。\" = \"30 degrees，朝右转一下，只这一回。\" yes.\n\nMaybe \"朝右转一下\" as ACTION? But then \"一下\" included. Need analyze quantity. Better split quantity and action.\n\nCould include \"朝右\" as RELATION? The phrase \"朝右转\" = turn to the right. Direction is parameter to turn. We can either treat entire \"朝右转\" as ACTION with direction. But relation? The dimension reference to relation maybe no explicit relation like before/after. Direction is parameter. So role ACTION for \"朝右转\" and explanation includes right. \"30 degrees\" QUANTITY. \"一下\" QUANTITY? Hmm two QUANTITY spans okay. \"只这一回\" EDIT? It restricts repetition. Let's make \"只这一回\" EDIT role? It is a correction? It says only this once, no other turns. It doesn't edit earlier instruction? It reinforces scope. Could role QUANTITY. But coverage roles allowed; \"EDIT\" for edits. There is no correction? \"只这一回\" could be a constraint, not edit. Use QUANTITY? It says number of repetitions. But action_multiplicity and repetition_scope. Explanation.\n\nNeed dimensions:\naction_multiplicity: UNIQUE? There is exactly one turn action. \"一下\" plus \"只这一回\" restrict to one occurrence. Could \"一下\" mean a small amount not one time, but combined \"只这一回\" exact one. Unique.\naction_order: only one action, order inapplicable/unique.\ncorrection_scope: No correction/edit; \"只这一回\" doesn't replace earlier, constrains repetition. UNIQUE/inapplicable.\nrepetition_scope: \"一下\" and \"只这一回\" exactly once; no repetition beyond one. UNIQUE. Need maybe \"一下\" is vague? Does it mean \"briefly\" could suggest duration? For turn, no duration parameter. But \"一下\" in Chinese colloquially means \"once\" or \"a bit\". \"只这一回\" explicitly \"only this once\" resolves to one occurrence. So UNIQUE.\nreference_resolution: No pronouns/ordinal references except \"这一回\" refers to this action/occurrence. Resolve to the single turn action. UNIQUE.\ntemporal_relations: single action; no relations. UNIQUE/inapplicable.\nunresolved_relations: none explicit. UNIQUE.\n\nAuthorized plan: steps [{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]. Wait number finite. angle max 180. -30 fine.\n\nNeed output JSON only. Need include coverage. Need all explanations nonempty. Text values concatenated exactly. Need no markdown. Let's craft JSON valid. Ensure no extra keys in coverage objects exactly text, role, explanation. dimensions exactly seven names. authorized_plan list.\n\nNeed think about source \"30 degrees\" in English amidst Chinese. \"degrees\" means degrees. Legal turn angle. \"朝右转\" right turn negative. \"一下\" maybe often means \"once\" but also \"a little\"; \"只这一回\" says only this once. Candidate angle -30.0. Fine.\n\nPotential issue: \"朝右转一下\" could be interpreted as \"turn right a bit\" not specifying angle? But \"30 degrees\" before comma likely modifies turn. It says \"30 degrees, turn right once, only this once.\" So angle 30 degrees. Direction right. Unique.\n\nNeed maybe source says \"30 degrees，朝右转一下，只这一回。\" The comma is Chinese comma, period Chinese full stop. We must preserve exact punctuation. Coverage text values need concatenate exactly. If split as above, yes.\n\nLet's construct:\n\ncoverage:\n1 {\"text\":\"30 degrees\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the magnitude of the single turn as 30 degrees; it supplies the angle_deg value 30.\"}\n2 {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the angle quantity from the turn instruction; it has no executable effect.\"}\n3 {\"text\":\"朝右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action directed to the right, which compiles to a negative angle.\"}\n4 {\"text\":\"一下\",\"role\":\"QUANTITY\",\"explanation\":\"Indicates a single occurrence/one-time action; read with the later restriction, it does not authorize multiple turns.\"}\n5 {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the turn phrase from the limiting clause; it has no executable effect.\"}\n6 {\"text\":\"只这一回\",\"role\":\"EDIT\"? Hmm role maybe QUANTITY. Explanation \"Restricts the action to only this one occurrence, fixing repetition scope to exactly one.\" If role EDIT, explanation that it constrains but does not replace prior action. But \"EDIT\" maybe reserved for changes. It is a limiting clause. Could use \"QUANTITY\" for repetition count. Need every action, relation and edit clause. This isn't an edit clause. Use QUANTITY. But there are two quantities: angle and count. Fine.\n7 {\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop ending the instruction; it has no executable effect.\"}\n\nMaybe \"只这一回\" as RELATION? It relates to \"一下\". But QUANTITY okay.\n\nNeed dimensions explanations:\n\naction_multiplicity: UNIQUE. Source contains one turn request (\"朝右转\") and no additional action verbs; \"一下\" and \"只这一回\" quantify that same single action rather than adding another.\n\naction_order: UNIQUE. Only one executable action is authorized, so there is a single trivial order; no multiple-step ordering is left unresolved.\n\ncorrection_scope: UNIQUE. There is no correction or replacement clause; \"只这一回\" limits repetition, it does not edit or supersede any earlier action or parameter.\n\nrepetition_scope: UNIQUE. \"一下\" indicates one occurrence and \"只这一回\" explicitly restricts execution to only this one time; no repetition span beyond a single turn is authorized.\n\nreference_resolution: UNIQUE. \"这一回\" refers to the single just-mentioned turn action; no other referent is present, and shared arguments (direction/angle) are supplied by \"朝右\" and \"30 degrees\".\n\ntemporal_relations: UNIQUE. There is only one action, so no before/after, simultaneous, waiting, or completion relation among multiple steps is required or unresolved.\n\nunresolved_relations: UNIQUE. The source does not explicitly leave any relation unresolved; angle, direction, action count, and repetition are all fixed by the sentence.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan.\n\nNeed ensure \"朝右\" direction right -> negative. \"right/clockwise/顺时针 are negative\"; \"朝右转\" -> right turn -> -30. Good.\n\nPotential issue: \"一下\" could mean \"a little\" and \"只这一回\" only this once. If \"一下\" means \"a little\", then angle maybe vague? But \"30 degrees\" provides angle. \"一下\" maybe aspect particle, not additional quantity. Could our explanation \"indicates one occurrence\" be challenged? \"只这一回\" does exactly. Even if \"一下\" not count, \"只这一回\" count. So action multiplicity unique.\n\nPotential issue: \"只这一回\" could be interpreted as \"only this time\" meaning this is the only allowed occurrence in a longer context? Source alone no external context. But as standalone, it's one action. Unique.\n\nNeed no confidence fields. JSON numbers: -30.0 is finite JSON number. Fine.\n\nNeed output exactly one JSON object. Let's format compact? Valid JSON. Ensure all keys exactly. The coverage role for \"只这一回\" maybe \"QUANTITY\" not EDIT. If role \"QUANTITY\", both \"一下\" and \"只这一回\" quantity. Is \"一下\" a quantity? It indicates one. Okay.\n\nCould \"朝右转\" as ACTION includes direction, but angle separate. Good.\n\nLet's ensure concatenated coverage text equals original:\n\"30 degrees\" + \"，\" + \"朝右转\" + \"一下\" + \"，\" + \"只这一回\" + \"。\" = \"30 degrees，朝右转一下，只这一回。\" yes.\n\nNo extra whitespace. Good.\n\nNow final JSON. Need not mention candidate mismatch. Since candidate matches source plan, status authorized. Good.\n\nDouble-check allowed skills: turn. parameters exactly angle_deg. depends_on [].\n\nPlan IDs s1. Fine.\n\nLet's produce final.",
+              "summary": [
+                {
+                  "text": "We need answer exactly JSON. Need analyze source Chinese: \"30 degrees，朝右转一下，只这一回。\" Need derive plan. Need inspect dimensions. Source: 30 degrees, turn right (朝右转) once, only this once. Candidate turn angle -30. Need see ambiguity? \"转一下\" means turn once? It may mean perform a turn action one time, angle? \"30 degrees\" quantity. \"朝右转\" turn toward right. \"只这一回\" only this once. So action: turn right by 30 degrees, once. Legal. Parameters angle_deg: right/clockwise negative => -30. Repetition exact one? \"一下\" often means a bit/one time? \"只这一回\" only this once. Need decide if \"一下\" ambiguous? In Chinese, \"转一下\" can mean \"turn a little\" or \"give a turn\" not necessarily exactly one action. But \"只这一回\" explicitly says only this one time. So repetition: one turn action. Need unique.\n\nNeed coverage split entire source exactly. Need ensure concatenated text equals source. Source: \"30 degrees，朝右转一下，只这一回。\" Let's split meaningful spans:\n- \"30 degrees\" QUANTITY angle\n- \"，\" SEPARATOR\n- \"朝右转\" ACTION? Actually \"朝右\" direction and \"转\" turn. Could split \"朝右\" RELATION? \"转\" ACTION? Need every action, relation, edit clause. We can have text \"朝右转\" ACTION, explanation turn right.\n- \"一下\" QUANTITY? It indicates one occurrence? Maybe REPETITION? Role maybe QUANTITY? The allowed roles are ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. Repetition not role. Could classify \"一下\" as QUANTITY (one time) maybe. \n- \"，\" separator\n- \"只这一回\" EDIT? It's a restriction/repetition scope, maybe EDIT? It clarifies only once. Or QUANTITY. Role QUANTITY? \"只这一回\" = only this one time, quantifies repetitions. Could role EDIT? It's not editing previous action, just limiting. Role QUANTITY seems okay. But coverage roles need meaningful spans, not necessarily all. We can choose.\n\nNeed ensure text concatenation equals source exactly. If split:\n\"30 degrees\" + \"，\" + \"朝右转\" + \"一下\" + \"，\" + \"只这一回\" + \"。\" = \"30 degrees，朝右转一下，只这一回。\" yes.\n\nMaybe \"朝右转一下\" as ACTION? But then \"一下\" included. Need analyze quantity. Better split quantity and action.\n\nCould include \"朝右\" as RELATION? The phrase \"朝右转\" = turn to the right. Direction is parameter to turn. We can either treat entire \"朝右转\" as ACTION with direction. But relation? The dimension reference to relation maybe no explicit relation like before/after. Direction is parameter. So role ACTION for \"朝右转\" and explanation includes right. \"30 degrees\" QUANTITY. \"一下\" QUANTITY? Hmm two QUANTITY spans okay. \"只这一回\" EDIT? It restricts repetition. Let's make \"只这一回\" EDIT role? It is a correction? It says only this once, no other turns. It doesn't edit earlier instruction? It reinforces scope. Could role QUANTITY. But coverage roles allowed; \"EDIT\" for edits. There is no correction? \"只这一回\" could be a constraint, not edit. Use QUANTITY? It says number of repetitions. But action_multiplicity and repetition_scope. Explanation.\n\nNeed dimensions:\naction_multiplicity: UNIQUE? There is exactly one turn action. \"一下\" plus \"只这一回\" restrict to one occurrence. Could \"一下\" mean a small amount not one time, but combined \"只这一回\" exact one. Unique.\naction_order: only one action, order inapplicable/unique.\ncorrection_scope: No correction/edit; \"只这一回\" doesn't replace earlier, constrains repetition. UNIQUE/inapplicable.\nrepetition_scope: \"一下\" and \"只这一回\" exactly once; no repetition beyond one. UNIQUE. Need maybe \"一下\" is vague? Does it mean \"briefly\" could suggest duration? For turn, no duration parameter. But \"一下\" in Chinese colloquially means \"once\" or \"a bit\". \"只这一回\" explicitly \"only this once\" resolves to one occurrence. So UNIQUE.\nreference_resolution: No pronouns/ordinal references except \"这一回\" refers to this action/occurrence. Resolve to the single turn action. UNIQUE.\ntemporal_relations: single action; no relations. UNIQUE/inapplicable.\nunresolved_relations: none explicit. UNIQUE.\n\nAuthorized plan: steps [{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]. Wait number finite. angle max 180. -30 fine.\n\nNeed output JSON only. Need include coverage. Need all explanations nonempty. Text values concatenated exactly. Need no markdown. Let's craft JSON valid. Ensure no extra keys in coverage objects exactly text, role, explanation. dimensions exactly seven names. authorized_plan list.\n\nNeed think about source \"30 degrees\" in English amidst Chinese. \"degrees\" means degrees. Legal turn angle. \"朝右转\" right turn negative. \"一下\" maybe often means \"once\" but also \"a little\"; \"只这一回\" says only this once. Candidate angle -30.0. Fine.\n\nPotential issue: \"朝右转一下\" could be interpreted as \"turn right a bit\" not specifying angle? But \"30 degrees\" before comma likely modifies turn. It says \"30 degrees, turn right once, only this once.\" So angle 30 degrees. Direction right. Unique.\n\nNeed maybe source says \"30 degrees，朝右转一下，只这一回。\" The comma is Chinese comma, period Chinese full stop. We must preserve exact punctuation. Coverage text values need concatenate exactly. If split as above, yes.\n\nLet's construct:\n\ncoverage:\n1 {\"text\":\"30 degrees\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the magnitude of the single turn as 30 degrees; it supplies the angle_deg value 30.\"}\n2 {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the angle quantity from the turn instruction; it has no executable effect.\"}\n3 {\"text\":\"朝右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action directed to the right, which compiles to a negative angle.\"}\n4 {\"text\":\"一下\",\"role\":\"QUANTITY\",\"explanation\":\"Indicates a single occurrence/one-time action; read with the later restriction, it does not authorize multiple turns.\"}\n5 {\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the turn phrase from the limiting clause; it has no executable effect.\"}\n6 {\"text\":\"只这一回\",\"role\":\"EDIT\"? Hmm role maybe QUANTITY. Explanation \"Restricts the action to only this one occurrence, fixing repetition scope to exactly one.\" If role EDIT, explanation that it constrains but does not replace prior action. But \"EDIT\" maybe reserved for changes. It is a limiting clause. Could use \"QUANTITY\" for repetition count. Need every action, relation and edit clause. This isn't an edit clause. Use QUANTITY. But there are two quantities: angle and count. Fine.\n7 {\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop ending the instruction; it has no executable effect.\"}\n\nMaybe \"只这一回\" as RELATION? It relates to \"一下\". But QUANTITY okay.\n\nNeed dimensions explanations:\n\naction_multiplicity: UNIQUE. Source contains one turn request (\"朝右转\") and no additional action verbs; \"一下\" and \"只这一回\" quantify that same single action rather than adding another.\n\naction_order: UNIQUE. Only one executable action is authorized, so there is a single trivial order; no multiple-step ordering is left unresolved.\n\ncorrection_scope: UNIQUE. There is no correction or replacement clause; \"只这一回\" limits repetition, it does not edit or supersede any earlier action or parameter.\n\nrepetition_scope: UNIQUE. \"一下\" indicates one occurrence and \"只这一回\" explicitly restricts execution to only this one time; no repetition span beyond a single turn is authorized.\n\nreference_resolution: UNIQUE. \"这一回\" refers to the single just-mentioned turn action; no other referent is present, and shared arguments (direction/angle) are supplied by \"朝右\" and \"30 degrees\".\n\ntemporal_relations: UNIQUE. There is only one action, so no before/after, simultaneous, waiting, or completion relation among multiple steps is required or unresolved.\n\nunresolved_relations: UNIQUE. The source does not explicitly leave any relation unresolved; angle, direction, action count, and repetition are all fixed by the sentence.\n\nStatus AUTHORIZED_UNIQUE. authorized_plan.\n\nNeed ensure \"朝右\" direction right -> negative. \"right/clockwise/顺时针 are negative\"; \"朝右转\" -> right turn -> -30. Good.\n\nPotential issue: \"一下\" could mean \"a little\" and \"只这一回\" only this once. If \"一下\" means \"a little\", then angle maybe vague? But \"30 degrees\" provides angle. \"一下\" maybe aspect particle, not additional quantity. Could our explanation \"indicates one occurrence\" be challenged? \"只这一回\" does exactly. Even if \"一下\" not count, \"只这一回\" count. So action multiplicity unique.\n\nPotential issue: \"只这一回\" could be interpreted as \"only this time\" meaning this is the only allowed occurrence in a longer context? Source alone no external context. But as standalone, it's one action. Unique.\n\nNeed no confidence fields. JSON numbers: -30.0 is finite JSON number. Fine.\n\nNeed output exactly one JSON object. Let's format compact? Valid JSON. Ensure all keys exactly. The coverage role for \"只这一回\" maybe \"QUANTITY\" not EDIT. If role \"QUANTITY\", both \"一下\" and \"只这一回\" quantity. Is \"一下\" a quantity? It indicates one. Okay.\n\nCould \"朝右转\" as ACTION includes direction, but angle separate. Good.\n\nLet's ensure concatenated coverage text equals original:\n\"30 degrees\" + \"，\" + \"朝右转\" + \"一下\" + \"，\" + \"只这一回\" + \"。\" = \"30 degrees，朝右转一下，只这一回。\" yes.\n\nNo extra whitespace. Good.\n\nNow final JSON. Need not mention candidate mismatch. Since candidate matches source plan, status authorized. Good.\n\nDouble-check allowed skills: turn. parameters exactly angle_deg. depends_on [].\n\nPlan IDs s1. Fine.\n\nLet's produce final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"30 degrees\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the magnitude of the turn as 30 degrees and supplies the angle_deg value 30.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the angle quantity from the turn instruction; it has no executable effect.\"},{\"text\":\"朝右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action directed to the right, which compiles to a negative turn angle.\"},{\"text\":\"一下\",\"role\":\"QUANTITY\",\"explanation\":\"Marks the turn as a single occurrence; together with the later limiting clause it does not authorize multiple turns.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the turn phrase from the limiting clause; it has no executable effect.\"},{\"text\":\"只这一回\",\"role\":\"QUANTITY\",\"explanation\":\"Restricts execution to only this one occurrence, fixing the repetition scope to exactly one turn.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop ending the instruction; it has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one turn request, 朝右转, and no additional action verbs; 一下 and 只这一回 quantify that same action rather than adding another.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable action is authorized, so there is exactly one trivial execution order and no ordering among multiple steps is left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or replacement clause; 只这一回 limits repetition but does not edit or supersede any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"一下 marks a single occurrence and 只这一回 explicitly restricts execution to only this one time; no repetition beyond one turn is authorized.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这一回 refers to the single just-mentioned turn action; the direction and angle are supplied by 朝右 and 30 degrees, with no unresolved referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no before/after, simultaneous, waiting, or completion relation among multiple steps is required or left unresolved.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any relation unresolved; action, angle, direction, and repetition are all fixed by the sentence.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_d4dcc186-6457-4927-a11b-90982d69f5e4",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 322,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 2911,
+            "output_tokens_details": {
+              "reasoning_tokens": 2330
+            },
+            "total_tokens": 4129
+          }
+        },
+        "request_sha256": "4cc56c8e23e8bad345d52e07224a78a6cb6055dcd9a5965f9ec355f67685bd14",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 14.127351299999646,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_d4dcc186-6457-4927-a11b-90982d69f5e4",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"30 degrees\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the magnitude of the turn as 30 degrees and supplies the angle_deg value 30.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the angle quantity from the turn instruction; it has no executable effect.\"},{\"text\":\"朝右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action directed to the right, which compiles to a negative turn angle.\"},{\"text\":\"一下\",\"role\":\"QUANTITY\",\"explanation\":\"Marks the turn as a single occurrence; together with the later limiting clause it does not authorize multiple turns.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the turn phrase from the limiting clause; it has no executable effect.\"},{\"text\":\"只这一回\",\"role\":\"QUANTITY\",\"explanation\":\"Restricts execution to only this one occurrence, fixing the repetition scope to exactly one turn.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop ending the instruction; it has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one turn request, 朝右转, and no additional action verbs; 一下 and 只这一回 quantify that same action rather than adding another.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable action is authorized, so there is exactly one trivial execution order and no ordering among multiple steps is left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or replacement clause; 只这一回 limits repetition but does not edit or supersede any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"一下 marks a single occurrence and 只这一回 explicitly restricts execution to only this one time; no repetition beyond one turn is authorized.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这一回 refers to the single just-mentioned turn action; the direction and angle are supplied by 朝右 and 30 degrees, with no unresolved referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no before/after, simultaneous, waiting, or completion relation among multiple steps is required or left unresolved.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any relation unresolved; action, angle, direction, and repetition are all fixed by the sentence.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 322,
+          "output_tokens": 2911,
+          "total_tokens": 4129
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 5.313765000000785,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-right-30",
+      "model": "deepseek-flash",
+      "normalized_length": 20,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 190,
+      "raw_response_sha256": "cea4360c3971b4bc1c5c7a8411c02a25a7853b9682f9948a77baf78761537ce8",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_299468f5-e958-4562-8a64-6e305b88d200",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 14.131751200000508,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 14.127351299999646,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"30 degrees\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the magnitude of the turn as 30 degrees and supplies the angle_deg value 30.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the angle quantity from the turn instruction; it has no executable effect.\"},{\"text\":\"朝右转\",\"role\":\"ACTION\",\"explanation\":\"Requests one turn action directed to the right, which compiles to a negative turn angle.\"},{\"text\":\"一下\",\"role\":\"QUANTITY\",\"explanation\":\"Marks the turn as a single occurrence; together with the later limiting clause it does not authorize multiple turns.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese comma separating the turn phrase from the limiting clause; it has no executable effect.\"},{\"text\":\"只这一回\",\"role\":\"QUANTITY\",\"explanation\":\"Restricts execution to only this one occurrence, fixing the repetition scope to exactly one turn.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Chinese full stop ending the instruction; it has no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one turn request, 朝右转, and no additional action verbs; 一下 and 只这一回 quantify that same action rather than adding another.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one executable action is authorized, so there is exactly one trivial execution order and no ordering among multiple steps is left unresolved.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction or replacement clause; 只这一回 limits repetition but does not edit or supersede any earlier action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"一下 marks a single occurrence and 只这一回 explicitly restricts execution to only this one time; no repetition beyond one turn is authorized.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这一回 refers to the single just-mentioned turn action; the direction and angle are supplied by 朝右 and 30 degrees, with no unresolved referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one action, so no before/after, simultaneous, waiting, or completion relation among multiple steps is required or left unresolved.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any relation unresolved; action, angle, direction, and repetition are all fixed by the sentence.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "f01f81b62d88ccafa46429b29bd339a1a99dcb314fd7be5871a8a1658558876f",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_d4dcc186-6457-4927-a11b-90982d69f5e4",
+          "source_aware": true,
+          "source_sha256": "a1746f721be2e24a39e16d158e9ae6be5db3198629c3fba7215b0a92b90639e5",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 322,
+            "output_tokens": 2911,
+            "total_tokens": 4129
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": -30.0
+                },
+                "skill": "turn"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Specifies the magnitude of the turn as 30 degrees and supplies the angle_deg value 30.",
+                "role": "QUANTITY",
+                "text": "30 degrees"
+              },
+              {
+                "explanation": "Chinese comma separating the angle quantity from the turn instruction; it has no executable effect.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Requests one turn action directed to the right, which compiles to a negative turn angle.",
+                "role": "ACTION",
+                "text": "朝右转"
+              },
+              {
+                "explanation": "Marks the turn as a single occurrence; together with the later limiting clause it does not authorize multiple turns.",
+                "role": "QUANTITY",
+                "text": "一下"
+              },
+              {
+                "explanation": "Chinese comma separating the turn phrase from the limiting clause; it has no executable effect.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Restricts execution to only this one occurrence, fixing the repetition scope to exactly one turn.",
+                "role": "QUANTITY",
+                "text": "只这一回"
+              },
+              {
+                "explanation": "Chinese full stop ending the instruction; it has no executable effect.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains one turn request, 朝右转, and no additional action verbs; 一下 and 只这一回 quantify that same action rather than adding another.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one executable action is authorized, so there is exactly one trivial execution order and no ordering among multiple steps is left unresolved.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no correction or replacement clause; 只这一回 limits repetition but does not edit or supersede any earlier action or parameter.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "这一回 refers to the single just-mentioned turn action; the direction and angle are supplied by 朝右 and 30 degrees, with no unresolved referent.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "一下 marks a single occurrence and 只这一回 explicitly restricts execution to only this one time; no repetition beyond one turn is authorized.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "There is only one action, so no before/after, simultaneous, waiting, or completion relation among multiple steps is required or left unresolved.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any relation unresolved; action, angle, direction, and repetition are all fixed by the sentence.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 211,
+        "output_tokens": 819,
+        "total_tokens": 2566
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-right-30",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "30degrees,朝右转一下,只这一回",
+    "status": "SUCCESS"
+  }
+}

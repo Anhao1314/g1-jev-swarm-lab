@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.166389699999854,
+  "provider_document": {
+    "created_at": 1791360533,
+    "id": "resp_1d757445-02ea-4a90-bcd8-4ad3ef5d61ac",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_1d757445-02ea-4a90-bcd8-4ad3ef5d61ac",
+        "reasoning_content": "We need answer JSON only. Need parse Chinese command: \"往前走四米，接着逆时针转45度，最后立即停止\"\n\nNeed map to steps:\n- 往前走四米 -> walk_forward distance_m 4.0. \"往前走\" means walk forward, \"四米\" Chinese numeral 4 meters. Is that allowed? Probably yes. Need convert Chinese numerals? We can.\n- 接着逆时针转45度 -> turn angle_deg positive 45.0 (逆时针 positive left/counter-clockwise).\n- 最后立即停止 -> stop.\n\nNeed mission_id path-safe. Can choose e.g. \"cmd-walk4-turn45-stop\". Must match. Steps s1,s2,s3 with dependencies s1->s2, s2->s3.\n\nNeed ensure exactly fields. status SUCCESS mission object error_code null. No extra.\n\nCheck if \"立即停止\" is stop, supported.\n\nNeed output exactly JSON object. Fine.\n\nPotential issue: \"四米\" Chinese numeral. Need parse. It says examples with numerals? \"站立5秒\", \"站好2s\", \"前进4米\". Chinese numeral 四 likely valid. We can map.\n\nNeed decide if \"往前走\" vague? No, 四米 specifies distance, so not vague. \"往前走四米\" is clear forward 4m. Good.\n\nReturn:\n{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-walk4-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}\n\nNeed ensure mission_id doesn't end dot. good.\n\nFinal only JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse Chinese command: \"往前走四米，接着逆时针转45度，最后立即停止\"\n\nNeed map to steps:\n- 往前走四米 -> walk_forward distance_m 4.0. \"往前走\" means walk forward, \"四米\" Chinese numeral 4 meters. Is that allowed? Probably yes. Need convert Chinese numerals? We can.\n- 接着逆时针转45度 -> turn angle_deg positive 45.0 (逆时针 positive left/counter-clockwise).\n- 最后立即停止 -> stop.\n\nNeed mission_id path-safe. Can choose e.g. \"cmd-walk4-turn45-stop\". Must match. Steps s1,s2,s3 with dependencies s1->s2, s2->s3.\n\nNeed ensure exactly fields. status SUCCESS mission object error_code null. No extra.\n\nCheck if \"立即停止\" is stop, supported.\n\nNeed output exactly JSON object. Fine.\n\nPotential issue: \"四米\" Chinese numeral. Need parse. It says examples with numerals? \"站立5秒\", \"站好2s\", \"前进4米\". Chinese numeral 四 likely valid. We can map.\n\nNeed decide if \"往前走\" vague? No, 四米 specifies distance, so not vague. \"往前走四米\" is clear forward 4m. Good.\n\nReturn:\n{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-walk4-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}\n\nNeed ensure mission_id doesn't end dot. good.\n\nFinal only JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-walk4-turn45-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_1d757445-02ea-4a90-bcd8-4ad3ef5d61ac",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 213,
+      "input_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "output_tokens": 526,
+      "output_tokens_details": {
+        "reasoning_tokens": 409
+      },
+      "total_tokens": 2275
+    }
+  },
+  "request_sha256": "61a1a5ec745ec80d03c70bcc448440da49b164c8c2bbf5719426e15a5aac0b54",
+  "status": "SUCCESS"
+}

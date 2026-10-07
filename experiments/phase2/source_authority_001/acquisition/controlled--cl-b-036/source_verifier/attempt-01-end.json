@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.307889700001397,
+  "provider_document": {
+    "created_at": 1791360568,
+    "id": "resp_23648507-5457-466b-94cb-bbf2ff1375ca",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_23648507-5457-466b-94cb-bbf2ff1375ca",
+        "reasoning_content": "We need answer only JSON. Need derive plan. Source Chinese: \"左转45度然后停止\". Means turn left 45 degrees then stop. Legal skills include turn angle_deg. Left positive, so angle 45. Then stop. Sequence two steps. Need coverage split exact entire source. Need dimensions all unique. Authorized_plan s1 turn 45.0 depends [] s2 stop {} depends [\"s1\"]. Candidate matches. Need output exactly JSON object.\n\nNeed ensure coverage text concatenated equals source exactly. We can split into spans meaningful. Source \"左转45度然后停止\". Characters: 左 转 4 5 度 然 后 停 止. We can split \"左转\" ACTION? \"45\" QUANTITY, \"度\" QUANTITY? \"然后\" RELATION, \"停止\" ACTION. Or \"左转45度\" ACTION? Need every action relation. We'll make coverage:\n- text \"左转45度\" role ACTION explanation turn left 45 degrees.\n- text \"然后\" role RELATION explanation temporal order after previous.\n- text \"停止\" role ACTION explanation stop.\nConcatenates exact. That's fine. Maybe \"左转45度\" includes quantity, but role ACTION ok? Need analyze quantity? The coverage can have \"左转\" ACTION, \"45\" QUANTITY, \"度\" QUANTITY? But each explanation nonempty. Better split:\ntext \"左转\" role ACTION explanation requests turn left; left positive.\ntext \"45\" role QUANTITY explanation magnitude 45.\ntext \"度\" role QUANTITY explanation unit degrees.\ntext \"然后\" role RELATION explanation then.\ntext \"停止\" role ACTION explanation stop.\nConcatenate \"左转45度然后停止\". Good.\n\nNeed dimensions. \naction_multiplicity: two actions turn then stop. UNIQUE.\naction_order: turn before stop via 然后. UNIQUE.\ncorrection_scope: no corrections/edits. UNIQUE inapplicable.\nrepetition_scope: no repetition. UNIQUE inapplicable.\nreference_resolution: no pronouns/ordinals except 然后 sequential. UNIQUE.\ntemporal_relations: 然后 indicates strict sequence; single linear order. UNIQUE.\nunresolved_relations: none. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output JSON no markdown. Ensure exactly keys status, coverage, dimensions, authorized_plan. dimensions exactly seven names. Each value status and explanation. authorized_plan list steps exactly id skill parameters depends_on. Numbers finite. For turn angle_deg 45.0. stop {}. depends_on arrays.\n\nNeed not mention candidate mismatch? Candidate matches. No extra fields.\n\nLet's craft valid JSON. Ensure coverage text values exact: \"左转\", \"45\", \"度\", \"然后\", \"停止\". Concatenate: 左转45度然后停止. Yes.\n\nNo newline? Output JSON object.\n\nWe should be careful: \"左转45度\" could be parsed as turn angle -45? Wait rule: Left/counterclockwise/逆时针 are positive; right/clockwise negative. Thus left turn is positive 45. Good.\n\n\"然后停止\": then stop. depends_on s1. OK.\n\nPotential issue: Chinese \"左转45度然后停止\" no punctuation. \"然后\" relation. Fine.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need derive plan. Source Chinese: \"左转45度然后停止\". Means turn left 45 degrees then stop. Legal skills include turn angle_deg. Left positive, so angle 45. Then stop. Sequence two steps. Need coverage split exact entire source. Need dimensions all unique. Authorized_plan s1 turn 45.0 depends [] s2 stop {} depends [\"s1\"]. Candidate matches. Need output exactly JSON object.\n\nNeed ensure coverage text concatenated equals source exactly. We can split into spans meaningful. Source \"左转45度然后停止\". Characters: 左 转 4 5 度 然 后 停 止. We can split \"左转\" ACTION? \"45\" QUANTITY, \"度\" QUANTITY? \"然后\" RELATION, \"停止\" ACTION. Or \"左转45度\" ACTION? Need every action relation. We'll make coverage:\n- text \"左转45度\" role ACTION explanation turn left 45 degrees.\n- text \"然后\" role RELATION explanation temporal order after previous.\n- text \"停止\" role ACTION explanation stop.\nConcatenates exact. That's fine. Maybe \"左转45度\" includes quantity, but role ACTION ok? Need analyze quantity? The coverage can have \"左转\" ACTION, \"45\" QUANTITY, \"度\" QUANTITY? But each explanation nonempty. Better split:\ntext \"左转\" role ACTION explanation requests turn left; left positive.\ntext \"45\" role QUANTITY explanation magnitude 45.\ntext \"度\" role QUANTITY explanation unit degrees.\ntext \"然后\" role RELATION explanation then.\ntext \"停止\" role ACTION explanation stop.\nConcatenate \"左转45度然后停止\". Good.\n\nNeed dimensions. \naction_multiplicity: two actions turn then stop. UNIQUE.\naction_order: turn before stop via 然后. UNIQUE.\ncorrection_scope: no corrections/edits. UNIQUE inapplicable.\nrepetition_scope: no repetition. UNIQUE inapplicable.\nreference_resolution: no pronouns/ordinals except 然后 sequential. UNIQUE.\ntemporal_relations: 然后 indicates strict sequence; single linear order. UNIQUE.\nunresolved_relations: none. UNIQUE.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed output JSON no markdown. Ensure exactly keys status, coverage, dimensions, authorized_plan. dimensions exactly seven names. Each value status and explanation. authorized_plan list steps exactly id skill parameters depends_on. Numbers finite. For turn angle_deg 45.0. stop {}. depends_on arrays.\n\nNeed not mention candidate mismatch? Candidate matches. No extra fields.\n\nLet's craft valid JSON. Ensure coverage text values exact: \"左转\", \"45\", \"度\", \"然后\", \"停止\". Concatenate: 左转45度然后停止. Yes.\n\nNo newline? Output JSON object.\n\nWe should be careful: \"左转45度\" could be parsed as turn angle -45? Wait rule: Left/counterclockwise/逆时针 are positive; right/clockwise negative. Thus left turn is positive 45. Good.\n\n\"然后停止\": then stop. depends_on s1. OK.\n\nPotential issue: Chinese \"左转45度然后停止\" no punctuation. \"然后\" relation. Fine.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn action; 左 indicates a left/counterclockwise turn, which compiles as a positive angle.\"},{\"text\":\"45\",\"role\":\"QUANTITY\",\"explanation\":\"Provides the numeric magnitude 45 for the turn angle.\"},{\"text\":\"度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the unit degrees for the turn angle, so angle_deg is 45.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Establishes that the following action occurs after the preceding turn in a single linear order.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Requests a stop action with no parameters; it is executed after the turn.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly contains two requested actions: one left turn and one stop. No action is repeated or replaced.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 fixes the order: the turn occurs first, then the stop. This yields exactly s1 turn followed by s2 stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, edit, negation, or replacement clause in the source, so no earlier instruction is changed.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition or iteration marker; both requested actions occur exactly once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns or ordinal references requiring external resolution. 然后 directly relates the stop to the preceding turn.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后 requires sequential temporal relation without overlap or waiting: turn, then stop. This is representable as a single linear ordered plan.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no relation, order, scope, or choice unresolved; it fully specifies one turn followed by one stop.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_23648507-5457-466b-94cb-bbf2ff1375ca",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 208,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1185,
+      "output_tokens_details": {
+        "reasoning_tokens": 699
+      },
+      "total_tokens": 2417
+    }
+  },
+  "request_sha256": "e39b8e895b2745dd610cb56bf4bba72ea7f45f30687c4053948e3b6d73a3925e",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,256 @@
+{
+  "added_wall_s": 6.104180600003019,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.098205800000869,
+        "provider_document": {
+          "created_at": 1791360632,
+          "id": "resp_0b9e2e7a-5fc1-4a71-b1c8-387a945c33db",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_0b9e2e7a-5fc1-4a71-b1c8-387a945c33db",
+              "reasoning_content": "We need answer only JSON. Need derive source. Source \"左转30°\" means turn left 30 degrees. Rules: left/counterclockwise/逆时针 positive. So angle_deg 30.0. Legal turn nonzero finite max 180. One step s1 turn params angle_deg 30.0 depends_on []. Need coverage split source exactly. Source Chinese characters. \"左转30°\" maybe split into \"左转\" and \"30°\"? Need concatenation exact. roles ACTION? QUANTITY? Need all spans meaningful. Could do text \"左转\" role ACTION explanation indicates turn left, sets skill turn and positive sign. text \"30°\" role QUANTITY explanation specifies magnitude 30 degrees, parameter angle_deg 30.0. Concatenated \"左转30°\" exact. Every action relation edit clause? There's no separator. Good.\n\nDimensions all UNIQUE. Need status AUTHORIZED_UNIQUE. authorized_plan as list with step. Note candidate has mission_id extra but doesn't matter. We output status etc.\n\nNeed ensure JSON exact. dimensions keys exactly seven. Each value has status and explanation. Need nonempty.\n\nPotential nuance: Is \"左转\" left turn; positive. Unit ° degrees. angle_deg 30.0 finite. IDs s1. depends_on []. Good.\n\nNeed no markdown. Let's craft. Need coverage list nonempty. Each object exactly text, role, explanation. We can split as two objects. Concatenated equals source. Role for \"左转\" ACTION, \"30°\" QUANTITY. Explanation: \"左转\" designates a left turn, so turn skill with positive angle per semantics. \"30°\" specifies angle magnitude 30 degrees, so angle_deg 30.0; no duration etc. It says every action relation edit clause analyzed. Fine.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: source requests exactly one action: a turn. No conjunction/repetition/edit.\naction_order: UNIQUE. Explanation: only one action, so order s1.\ncorrection_scope: UNIQUE. Explanation: no correction/edit markers; no earlier action replaced/preserved.\nrepetition_scope: UNIQUE. Explanation: no repetition markers; exactly once.\nreference_resolution: UNIQUE. Explanation: \"左转\" self-contained; no pronouns/ordinals/shared omitted arguments needing external referent; angle argument explicit.\ntemporal_relations: UNIQUE. Explanation: single instantaneous-ish action; no before/after/wait/completion relations; linear order trivially one step.\nunresolved_relations: UNIQUE. Explanation: no explicitly unresolved choices/scope/order; left and 30° fully resolve.\n\nAuthorized plan:\n[\n {\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[]}\n]\n\nNeed no mission_id. JSON numbers finite. \"30.0\" okay. Return exact.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need derive source. Source \"左转30°\" means turn left 30 degrees. Rules: left/counterclockwise/逆时针 positive. So angle_deg 30.0. Legal turn nonzero finite max 180. One step s1 turn params angle_deg 30.0 depends_on []. Need coverage split source exactly. Source Chinese characters. \"左转30°\" maybe split into \"左转\" and \"30°\"? Need concatenation exact. roles ACTION? QUANTITY? Need all spans meaningful. Could do text \"左转\" role ACTION explanation indicates turn left, sets skill turn and positive sign. text \"30°\" role QUANTITY explanation specifies magnitude 30 degrees, parameter angle_deg 30.0. Concatenated \"左转30°\" exact. Every action relation edit clause? There's no separator. Good.\n\nDimensions all UNIQUE. Need status AUTHORIZED_UNIQUE. authorized_plan as list with step. Note candidate has mission_id extra but doesn't matter. We output status etc.\n\nNeed ensure JSON exact. dimensions keys exactly seven. Each value has status and explanation. Need nonempty.\n\nPotential nuance: Is \"左转\" left turn; positive. Unit ° degrees. angle_deg 30.0 finite. IDs s1. depends_on []. Good.\n\nNeed no markdown. Let's craft. Need coverage list nonempty. Each object exactly text, role, explanation. We can split as two objects. Concatenated equals source. Role for \"左转\" ACTION, \"30°\" QUANTITY. Explanation: \"左转\" designates a left turn, so turn skill with positive angle per semantics. \"30°\" specifies angle magnitude 30 degrees, so angle_deg 30.0; no duration etc. It says every action relation edit clause analyzed. Fine.\n\nDimensions:\naction_multiplicity: UNIQUE. Explanation: source requests exactly one action: a turn. No conjunction/repetition/edit.\naction_order: UNIQUE. Explanation: only one action, so order s1.\ncorrection_scope: UNIQUE. Explanation: no correction/edit markers; no earlier action replaced/preserved.\nrepetition_scope: UNIQUE. Explanation: no repetition markers; exactly once.\nreference_resolution: UNIQUE. Explanation: \"左转\" self-contained; no pronouns/ordinals/shared omitted arguments needing external referent; angle argument explicit.\ntemporal_relations: UNIQUE. Explanation: single instantaneous-ish action; no before/after/wait/completion relations; linear order trivially one step.\nunresolved_relations: UNIQUE. Explanation: no explicitly unresolved choices/scope/order; left and 30° fully resolve.\n\nAuthorized plan:\n[\n {\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[]}\n]\n\nNeed no mission_id. JSON numbers finite. \"30.0\" okay. Return exact.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"This span specifies a left turn. Under the compilation semantics, left is positive, so it authorizes the turn skill with a positive angle.\"\n    },\n    {\n      \"text\": \"30°\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"This span specifies the angle magnitude as 30 degrees. It resolves the turn parameter angle_deg to 30.0, with no other action, repetition, or relation.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one requested action: a left turn. There is no conjunction, repetition, edit, or additional action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one action is requested, so the execution order is the single step s1.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction or edit marker, so no earlier action, parameter, group, or relation is replaced or preserved.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition marker or count, so the single turn action occurs exactly once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The instruction is self-contained: the action is left turn and the angle is explicitly 30 degrees. There are no pronouns, ordinals, or omitted arguments requiring external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no before/after, simultaneous, waiting, or completion relations. A single action gives one representable linear order.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any choice, scope, order, or relation unresolved. Left direction and 30-degree magnitude fully determine the turn.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": 30.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0b9e2e7a-5fc1-4a71-b1c8-387a945c33db",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 185,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1159,
+            "output_tokens_details": {
+              "reasoning_tokens": 619
+            },
+            "total_tokens": 2368
+          }
+        },
+        "request_sha256": "4d0065ea250d42951512882e6bdd9b78022e02025e9dc49133d9097a5e404900",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.096743699999934,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_0b9e2e7a-5fc1-4a71-b1c8-387a945c33db",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"This span specifies a left turn. Under the compilation semantics, left is positive, so it authorizes the turn skill with a positive angle.\"\n    },\n    {\n      \"text\": \"30°\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"This span specifies the angle magnitude as 30 degrees. It resolves the turn parameter angle_deg to 30.0, with no other action, repetition, or relation.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one requested action: a left turn. There is no conjunction, repetition, edit, or additional action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one action is requested, so the execution order is the single step s1.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction or edit marker, so no earlier action, parameter, group, or relation is replaced or preserved.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition marker or count, so the single turn action occurs exactly once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The instruction is self-contained: the action is left turn and the angle is explicitly 30 degrees. There are no pronouns, ordinals, or omitted arguments requiring external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no before/after, simultaneous, waiting, or completion relations. A single action gives one representable linear order.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any choice, scope, order, or relation unresolved. Left direction and 30-degree magnitude fully determine the turn.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": 30.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+        "usage": {
+          "input_tokens": 185,
+          "output_tokens": 1159,
+          "total_tokens": 2368
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.6686145999992732,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "left-turn-30",
+      "model": "deepseek-flash",
+      "normalized_length": 5,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"left-turn-30\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":30.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "d23ba671590d9e4306baf4f6ec59b3e9c8c2ec5088c22f0ed9df3ae29dc093c5",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_482db54c-ff3e-4193-9e16-442d9b0bbeff",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 6.1035937999986345,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 6.096743699999934,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"左转\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"This span specifies a left turn. Under the compilation semantics, left is positive, so it authorizes the turn skill with a positive angle.\"\n    },\n    {\n      \"text\": \"30°\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"This span specifies the angle magnitude as 30 degrees. It resolves the turn parameter angle_deg to 30.0, with no other action, repetition, or relation.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one requested action: a left turn. There is no conjunction, repetition, edit, or additional action.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"Only one action is requested, so the execution order is the single step s1.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction or edit marker, so no earlier action, parameter, group, or relation is replaced or preserved.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition marker or count, so the single turn action occurs exactly once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The instruction is self-contained: the action is left turn and the angle is explicitly 30 degrees. There are no pronouns, ordinals, or omitted arguments requiring external context.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no before/after, simultaneous, waiting, or completion relations. A single action gives one representable linear order.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any choice, scope, order, or relation unresolved. Left direction and 30-degree magnitude fully determine the turn.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": 30.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+          "raw_response_sha256": "4ddd3bb0df347800b71f2ac5a75599fdaeab57559f95ce486348fefffc1a5ac8",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_0b9e2e7a-5fc1-4a71-b1c8-387a945c33db",
+          "source_aware": true,
+          "source_sha256": "4b02f4f92b6289fa45287f264f65cf87a81c1d202f561817246122575c159178",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 185,
+            "output_tokens": 1159,
+            "total_tokens": 2368
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": 30.0
+                },
+                "skill": "turn"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "This span specifies a left turn. Under the compilation semantics, left is positive, so it authorizes the turn skill with a positive angle.",
+                "role": "ACTION",
+                "text": "左转"
+              },
+              {
+                "explanation": "This span specifies the angle magnitude as 30 degrees. It resolves the turn parameter angle_deg to 30.0, with no other action, repetition, or relation.",
+                "role": "QUANTITY",
+                "text": "30°"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one requested action: a left turn. There is no conjunction, repetition, edit, or additional action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so the execution order is the single step s1.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no correction or edit marker, so no earlier action, parameter, group, or relation is replaced or preserved.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The instruction is self-contained: the action is left turn and the angle is explicitly 30 degrees. There are no pronouns, ordinals, or omitted arguments requiring external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker or count, so the single turn action occurs exactly once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "There are no before/after, simultaneous, waiting, or completion relations. A single action gives one representable linear order.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, order, or relation unresolved. Left direction and 30-degree magnitude fully determine the turn.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 142,
+        "total_tokens": 1881
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "left-turn-30",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 30.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "左转30°",
+    "status": "SUCCESS"
+  }
+}

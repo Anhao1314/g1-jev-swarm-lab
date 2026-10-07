@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.038685499999701,
+  "provider_document": {
+    "created_at": 1791360792,
+    "id": "resp_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+        "reasoning_content": "We need answer JSON only. Need analyze source \"左转120度\". Need derive plan. Chinese: 左转 = turn left. 120度 = 120 degrees. turn parameters angle_deg, left positive, max abs 180, nonzero finite. So angle_deg 120. Plan one step s1 turn angle_deg 120 depends_on [].\n\nNeed seven dimensions all UNIQUE likely. Coverage split meaningful spans and concatenated exactly source. Need decide spans. Source exactly \"左转120度\". We can split \"左转\" ACTION? \"120\" QUANTITY? \"度\" QUANTITY? Need text concatenated equals source. Could split into \"左转\" and \"120度\". Role ACTION and QUANTITY. Explanation nonempty. Need maybe \"左转\" action, \"120度\" quantity. Since action includes direction and verb. \"120度\" quantity. Fine.\n\nNeed dimensions exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status UNIQUE explanation. All unique. Need maybe action_order single action, inapplicable unique. correction none. repetition none. reference none? \"左转\" direction resolved. temporal none. unresolved none.\n\nNeed authorized_plan list step. IDs exactly s1 etc. parameters exactly angle_deg: 120.0? JSON number. Use 120.0 maybe okay. Candidate has 120.0. Need output JSON object no markdown.\n\nNeed ensure status AUTHORIZED_UNIQUE only if all seven UNIQUE. Yes.\n\nCoverage list objects exactly text role explanation. Text values concatenated equal original. Use \"左转\" and \"120度\". Explanation for \"左转\" states turn skill with left direction positive. \"120度\" states angle quantity 120 degrees -> angle_deg=120.0. Role QUANTITY. Need mention no additional actions.\n\nPotential issue: Chinese \"左转120度\" could mean turn left 120 degrees. It's unambiguous. Yes.\n\nNeed output exactly JSON object. No extra.\n\nLet's craft. But need be careful: Coverage text \"左转120度\" split. If split \"左转\" and \"120度\", concatenated equals. Good.\n\nDimensions explanation nonempty. Could mention \"No correction markers...\" etc.\n\nAuthorized plan:\n{\n \"schema_version\"? The instructions for authorized_plan says each step has id, skill, parameters, depends_on. It says For AUTHORIZED_UNIQUE it is complete source-derived list of steps. It doesn't mention schema_version. So authorized_plan should be list, not object. Yes: \"authorized_plan is null for ... For AUTHORIZED_UNIQUE it is the complete source-derived list of steps.\" So output:\n\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]\nNo schema_version.\n\nNeed include status, coverage, dimensions, authorized_plan. Exact keys.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source \"左转120度\". Need derive plan. Chinese: 左转 = turn left. 120度 = 120 degrees. turn parameters angle_deg, left positive, max abs 180, nonzero finite. So angle_deg 120. Plan one step s1 turn angle_deg 120 depends_on [].\n\nNeed seven dimensions all UNIQUE likely. Coverage split meaningful spans and concatenated exactly source. Need decide spans. Source exactly \"左转120度\". We can split \"左转\" ACTION? \"120\" QUANTITY? \"度\" QUANTITY? Need text concatenated equals source. Could split into \"左转\" and \"120度\". Role ACTION and QUANTITY. Explanation nonempty. Need maybe \"左转\" action, \"120度\" quantity. Since action includes direction and verb. \"120度\" quantity. Fine.\n\nNeed dimensions exactly action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations. Each status UNIQUE explanation. All unique. Need maybe action_order single action, inapplicable unique. correction none. repetition none. reference none? \"左转\" direction resolved. temporal none. unresolved none.\n\nNeed authorized_plan list step. IDs exactly s1 etc. parameters exactly angle_deg: 120.0? JSON number. Use 120.0 maybe okay. Candidate has 120.0. Need output JSON object no markdown.\n\nNeed ensure status AUTHORIZED_UNIQUE only if all seven UNIQUE. Yes.\n\nCoverage list objects exactly text role explanation. Text values concatenated equal original. Use \"左转\" and \"120度\". Explanation for \"左转\" states turn skill with left direction positive. \"120度\" states angle quantity 120 degrees -> angle_deg=120.0. Role QUANTITY. Need mention no additional actions.\n\nPotential issue: Chinese \"左转120度\" could mean turn left 120 degrees. It's unambiguous. Yes.\n\nNeed output exactly JSON object. No extra.\n\nLet's craft. But need be careful: Coverage text \"左转120度\" split. If split \"左转\" and \"120度\", concatenated equals. Good.\n\nDimensions explanation nonempty. Could mention \"No correction markers...\" etc.\n\nAuthorized plan:\n{\n \"schema_version\"? The instructions for authorized_plan says each step has id, skill, parameters, depends_on. It says For AUTHORIZED_UNIQUE it is complete source-derived list of steps. It doesn't mention schema_version. So authorized_plan should be list, not object. Yes: \"authorized_plan is null for ... For AUTHORIZED_UNIQUE it is the complete source-derived list of steps.\" So output:\n\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]\nNo schema_version.\n\nNeed include status, coverage, dimensions, authorized_plan. Exact keys.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Specifies the single requested action: turn left. Under the turn semantics, left is positive, so the turn angle must be positive.\"},{\"text\":\"120度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 120 degrees. This resolves the turn parameter to angle_deg = 120.0, which is finite, nonzero, and within the maximum absolute angle of 180 degrees.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: one left turn. There is no conjunction, repetition, or additional action clause.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one action, the execution order is uniquely the single turn step.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, cancellation, replacement, or correction clause affecting any action or parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker or count, so no action is repeated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction and quantity are explicit within the source: left turn and 120 degrees. No pronoun, ordinal, or omitted referent requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source specifies no before/after, waiting, simultaneous, condition, or completion relation, so a single-step linear plan fully represents it.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no action, parameter, order, scope, or relation explicitly unresolved.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":120.0},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_f71df47a-84a1-4cb4-bdf2-cc48512f9003",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 185,
+      "input_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "output_tokens": 1027,
+      "output_tokens_details": {
+        "reasoning_tokens": 628
+      },
+      "total_tokens": 2236
+    }
+  },
+  "request_sha256": "e2b81299df836fdbdc3ed764180068e9234a48b81a1a03452955aba8144de5c9",
+  "status": "SUCCESS"
+}

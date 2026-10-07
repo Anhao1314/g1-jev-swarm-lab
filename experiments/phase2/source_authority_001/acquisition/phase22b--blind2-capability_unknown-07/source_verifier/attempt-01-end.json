@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.3524397000001045,
+  "provider_document": {
+    "created_at": 1791360268,
+    "id": "resp_6a0992b6-042c-4a86-98c1-dfa21a072679",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_6a0992b6-042c-4a86-98c1-dfa21a072679",
+        "reasoning_content": "We need answer JSON only. Need analyze source Chinese: \"帮我向前移动40米\" Means \"Help me move forward 40 meters.\" Need derive plan. Skills: walk_forward. Parameters distance_m positive finite. \"向前移动\" = move forward. 40米 = 40 meters. One action. No duration. Candidate matches one step s1 walk_forward distance_m 40.0 depends_on [].\n\nNeed coverage exact split. Entire source string. Need concatenated text exactly original. We can split into meaningful spans: \"帮我\" maybe CONTEXT? \"向前移动\" ACTION. \"40\" QUANTITY. \"米\" QUANTITY? Or combine \"40米\" QUANTITY. Need coverage nonempty. Text values concatenated equal entire original. Need every action relation edit clause analyzed. Source has no explicit edit/relation. Could split:\n1. \"帮我\" role CONTEXT, meaning request/politeness, does not alter action.\n2. \"向前移动\" role ACTION, means walk_forward forward motion.\n3. \"40米\" role QUANTITY, distance 40 meters.\n\nConcatenation \"帮我\" + \"向前移动\" + \"40米\" = \"帮我向前移动40米\". Yes exact. Explanations nonempty.\n\nDimensions:\naction_multiplicity: UNIQUE, exactly one movement action.\naction_order: UNIQUE, only one action, no ordering beyond trivial.\ncorrection_scope: UNIQUE, no correction/edit clauses.\nrepetition_scope: UNIQUE, no repetition.\nreference_resolution: UNIQUE, no pronouns/ordinals/shared omitted args? \"帮我\" not referent; \"向前\" direction intrinsic. distance explicit.\ntemporal_relations: UNIQUE, no before/after/waiting; single immediate action.\nunresolved_relations: UNIQUE, no explicit unresolved choices.\n\nstatus AUTHORIZED_UNIQUE.\n\nauthorized_plan: steps one: id s1 skill walk_forward parameters {\"distance_m\":40} or 40.0? JSON number can be 40.0. Candidate uses 40.0. Source \"40米\" yields 40. Use 40 or 40.0 both finite. The compiler likely expects number. No extra fields. depends_on [].\n\nNeed output exactly JSON object. Ensure no markdown.\n\nLet's craft valid JSON. Need use Chinese text values exactly. Ensure escaping? JSON can contain Chinese directly. Keys exactly. coverage list objects exactly text, role, explanation. Dimensions exactly seven names. authorized_plan list of step objects exactly id, skill, parameters, depends_on.\n\nPotential subtle: \"向前移动\" could be walk_forward. Legal skill. \"移动\" generic move, but only legal skill for forward movement is walk_forward. Source uniquely authorizes? Since legal skills only stand, walk_forward, turn, stop. \"向前移动40米\" maps to walk_forward. Yes.\n\nPotential issue: \"帮我\" could be interpreted as request context, no effect. Good.\n\nNeed maybe include \"向前移动\" action, \"40米\" quantity. Role for \"米\" maybe QUANTITY. Fine.\n\nLet's ensure explanation for coverage includes why nonexecuting text doesn't alter authorization. For \"帮我\": polite request marker, no executable action or parameter. For \"向前移动\": forward locomotion maps to walk_forward. For \"40米\": distance_m=40.\n\nDimensions explanations. Need nonempty.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source Chinese: \"帮我向前移动40米\" Means \"Help me move forward 40 meters.\" Need derive plan. Skills: walk_forward. Parameters distance_m positive finite. \"向前移动\" = move forward. 40米 = 40 meters. One action. No duration. Candidate matches one step s1 walk_forward distance_m 40.0 depends_on [].\n\nNeed coverage exact split. Entire source string. Need concatenated text exactly original. We can split into meaningful spans: \"帮我\" maybe CONTEXT? \"向前移动\" ACTION. \"40\" QUANTITY. \"米\" QUANTITY? Or combine \"40米\" QUANTITY. Need coverage nonempty. Text values concatenated equal entire original. Need every action relation edit clause analyzed. Source has no explicit edit/relation. Could split:\n1. \"帮我\" role CONTEXT, meaning request/politeness, does not alter action.\n2. \"向前移动\" role ACTION, means walk_forward forward motion.\n3. \"40米\" role QUANTITY, distance 40 meters.\n\nConcatenation \"帮我\" + \"向前移动\" + \"40米\" = \"帮我向前移动40米\". Yes exact. Explanations nonempty.\n\nDimensions:\naction_multiplicity: UNIQUE, exactly one movement action.\naction_order: UNIQUE, only one action, no ordering beyond trivial.\ncorrection_scope: UNIQUE, no correction/edit clauses.\nrepetition_scope: UNIQUE, no repetition.\nreference_resolution: UNIQUE, no pronouns/ordinals/shared omitted args? \"帮我\" not referent; \"向前\" direction intrinsic. distance explicit.\ntemporal_relations: UNIQUE, no before/after/waiting; single immediate action.\nunresolved_relations: UNIQUE, no explicit unresolved choices.\n\nstatus AUTHORIZED_UNIQUE.\n\nauthorized_plan: steps one: id s1 skill walk_forward parameters {\"distance_m\":40} or 40.0? JSON number can be 40.0. Candidate uses 40.0. Source \"40米\" yields 40. Use 40 or 40.0 both finite. The compiler likely expects number. No extra fields. depends_on [].\n\nNeed output exactly JSON object. Ensure no markdown.\n\nLet's craft valid JSON. Need use Chinese text values exactly. Ensure escaping? JSON can contain Chinese directly. Keys exactly. coverage list objects exactly text, role, explanation. Dimensions exactly seven names. authorized_plan list of step objects exactly id, skill, parameters, depends_on.\n\nPotential subtle: \"向前移动\" could be walk_forward. Legal skill. \"移动\" generic move, but only legal skill for forward movement is walk_forward. Source uniquely authorizes? Since legal skills only stand, walk_forward, turn, stop. \"向前移动40米\" maps to walk_forward. Yes.\n\nPotential issue: \"帮我\" could be interpreted as request context, no effect. Good.\n\nNeed maybe include \"向前移动\" action, \"40米\" quantity. Role for \"米\" maybe QUANTITY. Fine.\n\nLet's ensure explanation for coverage includes why nonexecuting text doesn't alter authorization. For \"帮我\": polite request marker, no executable action or parameter. For \"向前移动\": forward locomotion maps to walk_forward. For \"40米\": distance_m=40.\n\nDimensions explanations. Need nonempty.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"帮我\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request framing. It asks the addressee to perform the following action but does not specify, replace, repeat, or order any executable action or parameter, so it does not alter authorization.\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"Specifies one forward movement action. Under the legal skills, forward movement is compiled as walk_forward.\"},{\"text\":\"40米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance for the forward movement as 40 meters, so distance_m is 40.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: moving forward. There is no second action, no conjunction adding another action, and no replacement instruction.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With exactly one executable action, the only execution order is that single walk_forward step; no alternative ordering is present.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit or correction clause and does not replace or revise any earlier action, parameter, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker, count, or span, so the single forward movement is executed once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"The direction '向前' is explicit and the distance '40米' is explicit. There are no pronouns, ordinals, or omitted arguments requiring an external referent.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source gives no before/after, waiting, simultaneous, or completion relation. It describes one immediate action, representable as a single step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no unresolved choice of action, distance, order, repetition, or relation. All executable content is fixed by the text.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":40},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_6a0992b6-042c-4a86-98c1-dfa21a072679",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 316,
+      "input_tokens_details": {
+        "cached_tokens": 896
+      },
+      "output_tokens": 1176,
+      "output_tokens_details": {
+        "reasoning_tokens": 712
+      },
+      "total_tokens": 2388
+    }
+  },
+  "request_sha256": "387397cbb338928c3071d3c02dbf73d65024d0f6117ee7ff57bc323e9ab5459c",
+  "status": "SUCCESS"
+}

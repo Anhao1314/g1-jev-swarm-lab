@@ -1,0 +1,1062 @@
+{
+  "B": {
+    "added_wall_s": 2.7608915000018897,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 2.6955329999982496,
+          "provider_document": {
+            "created_at": 1791360648,
+            "id": "resp_ee242717-5097-42a5-8290-caf69b8a2449",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_ee242717-5097-42a5-8290-caf69b8a2449",
+                "reasoning_content": "We need answer JSON only. Need parse Chinese command sequence: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\n\nNeed produce Mission IR. Skills: stand duration 5.0, walk_forward distance 4.0, turn angle left/counterclockwise positive 45.0, walk_forward 4.0, stop. Steps s1-s5 dependencies previous. mission_id path-safe. Need exactly fields. Use maybe \"mission-stand-walk-turn-walk-stop\". Ensure not too long? max 64. Let's count. \"mission-stand-walk-turn-walk-stop\" length: mission(7)+-(1)=8+stand5=13? Let's count: m i s s i o n =7, - =8, stand=5 =>13, -14, walk=4=>18, -19, turn=4=>23, -24, walk=4=>28, -29, stop=4=>33. Good.\n\nNeed ensure no markdown. Final JSON.\n\nPotential nuance: \"先站立5秒\" stand duration_s 5.0. \"再左转45度\" turn positive 45.0. Good.\n\nNeed output exactly one JSON object.",
+                "summary": [
+                  {
+                    "text": "We need answer JSON only. Need parse Chinese command sequence: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\n\nNeed produce Mission IR. Skills: stand duration 5.0, walk_forward distance 4.0, turn angle left/counterclockwise positive 45.0, walk_forward 4.0, stop. Steps s1-s5 dependencies previous. mission_id path-safe. Need exactly fields. Use maybe \"mission-stand-walk-turn-walk-stop\". Ensure not too long? max 64. Let's count. \"mission-stand-walk-turn-walk-stop\" length: mission(7)+-(1)=8+stand5=13? Let's count: m i s s i o n =7, - =8, stand=5 =>13, -14, walk=4=>18, -19, turn=4=>23, -24, walk=4=>28, -29, stop=4=>33. Good.\n\nNeed ensure no markdown. Final JSON.\n\nPotential nuance: \"先站立5秒\" stand duration_s 5.0. \"再左转45度\" turn positive 45.0. Good.\n\nNeed output exactly one JSON object.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_ee242717-5097-42a5-8290-caf69b8a2449",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 223,
+              "input_tokens_details": {
+                "cached_tokens": 1536
+              },
+              "output_tokens": 440,
+              "output_tokens_details": {
+                "reasoning_tokens": 263
+              },
+              "total_tokens": 2199
+            }
+          },
+          "request_sha256": "01fc96f9186be4f113b3bf67c0ec450297376bd22a612b95a792e3cefad9d600",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 2.693909599998733,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ee242717-5097-42a5-8290-caf69b8a2449",
+          "text": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 440,
+            "total_tokens": 2199
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_v1",
+        "attempts": 1,
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 2.693909599998733,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "mission-stand-walk-turn-walk-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 27,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+        "raw_response_sha256": "0f3d2165a9a727c10df9ff38ffe209711707496b927a292470b730327fc33a02",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_ee242717-5097-42a5-8290-caf69b8a2449",
+        "route": "GUARDED_DIRECT_LLM",
+        "step_count": 5,
+        "usage": {
+          "input_tokens": 223,
+          "output_tokens": 440,
+          "total_tokens": 2199
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "mission-stand-walk-turn-walk-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "duration_s": 5.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": 45.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s4"
+            ],
+            "id": "s5",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "先站立5秒然后前进4米再左转45度之后前进4米最后停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  },
+  "baseline_kind": "new_frozen_B_first_response",
+  "gate_order": [
+    "source_verifier",
+    "ambiguity"
+  ],
+  "sample": {
+    "baseline_recorded": null,
+    "expected_mission": {
+      "mission_id": "oracle-cl-e-003",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "expected_status": "SUCCESS",
+    "family": "composition",
+    "population": "controlled",
+    "sample_id": "cl-e-003",
+    "source": "先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。",
+    "split": "already_seen_regression"
+  },
+  "treatments": {
+    "ambiguity": {
+      "added_wall_s": 14.662266600000294,
+      "live_evidence": {
+        "events": [
+          {
+            "index": 1,
+            "latency_s": 14.658360999997967,
+            "provider_document": {
+              "created_at": 1791360668,
+              "id": "resp_b281e887-2fd0-4336-9a09-e5c2586a583f",
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "object": "response",
+              "output": [
+                {
+                  "id": "rs_resp_b281e887-2fd0-4336-9a09-e5c2586a583f",
+                  "reasoning_content": "We need answer JSON only. Need inspect Chinese source: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\"\n\nNeed decide dimensions. Looks unique legal interpretation. Need coverage split exact text equal entire source. Need roles.\n\nWe need parse:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nActions:\nstand 5s\nwalk_forward 4m\nturn left 45 deg (left/counterclockwise positive => +45)\nwalk_forward 4m\nstop\n\nOrder explicit: 先, 然后, 再, 之后, 最后. Unique. Repetition? None. Correction? None. References? \"再左转45度\" no pronoun; \"之后前进4米\" same distance but distinct action. Temporal relations sequential.\n\nNeed coverage list with text exact. Could split:\n\"先站立5秒\" ACTION? includes 先 maybe separator? Need meaningful spans. Entire source exact.\n\nNeed ensure concatenation equals entire original source exactly. We can have spans:\n1 \"先\" maybe SEPARATOR or CONTEXT? But coverage text must concatenate. If split into sentences tokens:\n\"先站立5秒\" ACTION\n\"，\" SEPARATOR\n\"然后前进4米\" ACTION? Then\n\"，\"\n\"再左转45度\"\n\"，\"\n\"之后前进4米\"\n\"，\"\n\"最后停止\"\n\"。\"\n\nBut then relation words 先/然后/再/之后/最后 embedded in ACTION spans. Role ACTION for action with relation? Explanation can say includes ordering marker. That’s okay? They ask every action, relation and editing clause considered. Could instead split markers separately:\n\"先\" RELATION\n\"站立5秒\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"前进4米\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"左转45度\" ACTION\n\"，\" SEPARATOR\n\"之后\" RELATION\n\"前进4米\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停止\" ACTION\n\"。\" SEPARATOR\n\nThis concatenates exact. This better. Roles: 先, 然后, 再, 之后, 最后 are RELATION; punctuation SEPARATOR; actions ACTION; quantities embedded in actions? Could split quantities? E.g. \"站立5秒\" ACTION includes quantity. Or split \"站立\" ACTION and \"5秒\" QUANTITY? But if split, relation? Need ensure every action/quantity considered. Better granular:\n\"先\" RELATION\n\"站立\" ACTION\n\"5秒\" QUANTITY\n...\n\"前进\" ACTION\n\"4米\" QUANTITY\n...\n\"左转\" ACTION\n\"45度\" QUANTITY\n...\n\"前进\" ACTION\n\"4米\" QUANTITY\n...\n\"停止\" ACTION\n\"。\" SEPARATOR\nThen commas separators. This concatenates exactly if include each. Need source exact:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\n\nBreak:\n\"先\" RELATION\n\"站立\" ACTION\n\"5秒\" QUANTITY\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"前进\" ACTION\n\"4米\" QUANTITY\n\"，\"\n\"再\" RELATION\n\"左转\" ACTION\n\"45度\" QUANTITY\n\"，\"\n\"之后\" RELATION\n\"前进\" ACTION\n\"4米\" QUANTITY\n\"，\"\n\"最后\" RELATION\n\"停止\" ACTION\n\"。\" SEPARATOR\nThis equals source? 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。 Yes.\n\nNeed status AUTHORIZED_UNIQUE. dimensions all UNIQUE.\n\nNeed explanations each dimension, using source evidence. No markdown. JSON only. Need valid JSON with Chinese characters okay. Ensure exactly keys status, coverage, dimensions. Dimensions object exactly seven dimension names:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nEach has status and explanation nonempty.\n\nNeed be careful: \"coverage\" list of objects exactly text, role, explanation. Nonempty. Text copied exactly. Our text values concatenated in order equal entire original source. Yes.\n\nNeed mention \"先\" relation? It denotes first action. \"然后\", \"再\", \"之后\", \"最后\" sequential. Punctuation separators do not alter authority.\n\nDimension explanations:\naction_multiplicity UNIQUE: source contains five explicit actions: stand 5s, walk 4m, left turn 45°, walk 4m, stop. The two 前进4米 are separate occurrences due to intervening turn and sequence markers, not repetition/replacement. There are no edited/replaced actions. Every action accounted.\naction_order UNIQUE: markers 先,然后,再,之后,最后 establish exact linear sequence: s1 stand, s2 walk, s3 turn left, s4 walk, s5 stop.\ncorrection_scope UNIQUE: no correction/edit clause; no prior instruction replaced or preserved. Inapplicable no alternative.\nrepetition_scope UNIQUE: no explicit repetition words; the repeated-looking \"前进4米\" appears as two distinct commanded actions at different sequence positions, not a repeated span with count. Need ensure not ambiguous? Could someone interpret \"再\" as \"again\" (again walk?) Wait \"再\" can mean \"then/again\"; in Chinese, \"再左转45度\" = then turn left 45. But \"再\" could be interpreted as \"again\" (turn again). Source: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\" It is unambiguous sequential. No repetition count.\nreference_resolution UNIQUE: no pronouns or omitted shared arguments requiring external context; actions have explicit parameters. \"之后\" refers to immediately preceding action as sequence. \"再\" etc. No unknown.\ntemporal_relations UNIQUE: sequence markers define total order, no simultaneous/waiting/completion issues except normal after predecessor. Need \"先站立5秒\" duration: stand 5s. \"然后\" after completion? likely after. All representable as linear plan.\nunresolved_relations UNIQUE: no explicit unresolved choice/scope/ordering. It is fully resolved.\n\nPotential issue: \"站立5秒\" default? Explicit duration 5s. Good.\n\"前进4米\": walk_forward positive finite 4m. Good.\n\"左转45度\": turn left 45, within bounds. Good.\n\"最后停止\": stop no params.\n\nMaximum steps 5 <= 32; angle 45 <=180; stand 5 <=60. Legality.\n\nNeed ensure if source includes \"。\" as punctuation included. Coverage last \"。\" SEPARATOR.\n\nCould there be ambiguity around \"站立5秒\" - stand accepts positive finite duration_s, default 2.0 when no duration specified. 5秒 explicit. Good.\n\nNeed no extra fields.\n\nLet's craft JSON. Need valid escapes. We can output raw Chinese. It's JSON valid with UTF-8. Ensure no newlines? Can have. They said exactly one JSON object, no markdown. Fine.\n\nNeed \"coverage\" objects explanations nonempty. Role from allowed set. We'll use ACTION, RELATION, QUANTITY, SEPARATOR. \"站立\" ACTION, \"5秒\" QUANTITY. \"停止\" ACTION. Is \"停止\" action and no quantity. Good.\n\nPotential role for \"左转\" ACTION. In legal semantics action is turn, \"左转\" direction. Good.\n\nNeed text values must concatenate exactly. Let's verify:\n1 先\n2 站立\n3 5秒\n4 ，\n5 然后\n6 前进\n7 4米\n8 ，\n9 再\n10 左转\n11 45度\n12 ，\n13 之后\n14 前进\n15 4米\n16 ，\n17 最后\n18 停止\n19 。\nConcatenate:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nYes.\n\nNeed maybe \"先\" as RELATION explanation. \"然后\" as RELATION. \"再\" as RELATION. \"之后\" as RELATION. \"最后\" as RELATION.\n\nCould action \"前进4米\" split as \"前进\" and \"4米\" means action text missing object, but explanation can cover. That's fine.\n\nNeed coverage explanations mention why nonexecuting spans don't modify authority. For separators, quantities, relations. We need every explanation nonempty account. We'll include.\n\nLet's write.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed dimensions explanations maybe mention unique and inapplicable.\n\nLet's ensure no hidden ambiguity: The source \"再左转45度\" could \"再\" mean \"again\" and \"左转45度\" maybe repeated? But it's after walking, not repeating turn. Even if \"再\" as then, no alternate material. Reference \"之后前进4米\" maybe \"之后\" could refer to after turning? It is sequential. The order is explicit. Good.\n\nOne subtlety: action_order: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\" It defines order. No ambiguity.\n\nTemporal: \"站立5秒\" means stand for 5 seconds. Does next action begin after stand completes? \"然后\" after. The IR linear plan after predecessor implicitly. Unique.\n\nUnresolved_relations: none.\n\nNeed \"coverage copying alone does not establish semantic authorization\" but explanations cover. OK.\n\nLet's produce final JSON. Ensure exactly one object. No markdown.\n\nNeed status etc. Let's format compact but readable.",
+                  "summary": [
+                    {
+                      "text": "We need answer JSON only. Need inspect Chinese source: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\"\n\nNeed decide dimensions. Looks unique legal interpretation. Need coverage split exact text equal entire source. Need roles.\n\nWe need parse:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nActions:\nstand 5s\nwalk_forward 4m\nturn left 45 deg (left/counterclockwise positive => +45)\nwalk_forward 4m\nstop\n\nOrder explicit: 先, 然后, 再, 之后, 最后. Unique. Repetition? None. Correction? None. References? \"再左转45度\" no pronoun; \"之后前进4米\" same distance but distinct action. Temporal relations sequential.\n\nNeed coverage list with text exact. Could split:\n\"先站立5秒\" ACTION? includes 先 maybe separator? Need meaningful spans. Entire source exact.\n\nNeed ensure concatenation equals entire original source exactly. We can have spans:\n1 \"先\" maybe SEPARATOR or CONTEXT? But coverage text must concatenate. If split into sentences tokens:\n\"先站立5秒\" ACTION\n\"，\" SEPARATOR\n\"然后前进4米\" ACTION? Then\n\"，\"\n\"再左转45度\"\n\"，\"\n\"之后前进4米\"\n\"，\"\n\"最后停止\"\n\"。\"\n\nBut then relation words 先/然后/再/之后/最后 embedded in ACTION spans. Role ACTION for action with relation? Explanation can say includes ordering marker. That’s okay? They ask every action, relation and editing clause considered. Could instead split markers separately:\n\"先\" RELATION\n\"站立5秒\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"前进4米\" ACTION\n\"，\" SEPARATOR\n\"再\" RELATION\n\"左转45度\" ACTION\n\"，\" SEPARATOR\n\"之后\" RELATION\n\"前进4米\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停止\" ACTION\n\"。\" SEPARATOR\n\nThis concatenates exact. This better. Roles: 先, 然后, 再, 之后, 最后 are RELATION; punctuation SEPARATOR; actions ACTION; quantities embedded in actions? Could split quantities? E.g. \"站立5秒\" ACTION includes quantity. Or split \"站立\" ACTION and \"5秒\" QUANTITY? But if split, relation? Need ensure every action/quantity considered. Better granular:\n\"先\" RELATION\n\"站立\" ACTION\n\"5秒\" QUANTITY\n...\n\"前进\" ACTION\n\"4米\" QUANTITY\n...\n\"左转\" ACTION\n\"45度\" QUANTITY\n...\n\"前进\" ACTION\n\"4米\" QUANTITY\n...\n\"停止\" ACTION\n\"。\" SEPARATOR\nThen commas separators. This concatenates exactly if include each. Need source exact:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\n\nBreak:\n\"先\" RELATION\n\"站立\" ACTION\n\"5秒\" QUANTITY\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"前进\" ACTION\n\"4米\" QUANTITY\n\"，\"\n\"再\" RELATION\n\"左转\" ACTION\n\"45度\" QUANTITY\n\"，\"\n\"之后\" RELATION\n\"前进\" ACTION\n\"4米\" QUANTITY\n\"，\"\n\"最后\" RELATION\n\"停止\" ACTION\n\"。\" SEPARATOR\nThis equals source? 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。 Yes.\n\nNeed status AUTHORIZED_UNIQUE. dimensions all UNIQUE.\n\nNeed explanations each dimension, using source evidence. No markdown. JSON only. Need valid JSON with Chinese characters okay. Ensure exactly keys status, coverage, dimensions. Dimensions object exactly seven dimension names:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nEach has status and explanation nonempty.\n\nNeed be careful: \"coverage\" list of objects exactly text, role, explanation. Nonempty. Text copied exactly. Our text values concatenated in order equal entire original source. Yes.\n\nNeed mention \"先\" relation? It denotes first action. \"然后\", \"再\", \"之后\", \"最后\" sequential. Punctuation separators do not alter authority.\n\nDimension explanations:\naction_multiplicity UNIQUE: source contains five explicit actions: stand 5s, walk 4m, left turn 45°, walk 4m, stop. The two 前进4米 are separate occurrences due to intervening turn and sequence markers, not repetition/replacement. There are no edited/replaced actions. Every action accounted.\naction_order UNIQUE: markers 先,然后,再,之后,最后 establish exact linear sequence: s1 stand, s2 walk, s3 turn left, s4 walk, s5 stop.\ncorrection_scope UNIQUE: no correction/edit clause; no prior instruction replaced or preserved. Inapplicable no alternative.\nrepetition_scope UNIQUE: no explicit repetition words; the repeated-looking \"前进4米\" appears as two distinct commanded actions at different sequence positions, not a repeated span with count. Need ensure not ambiguous? Could someone interpret \"再\" as \"again\" (again walk?) Wait \"再\" can mean \"then/again\"; in Chinese, \"再左转45度\" = then turn left 45. But \"再\" could be interpreted as \"again\" (turn again). Source: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\" It is unambiguous sequential. No repetition count.\nreference_resolution UNIQUE: no pronouns or omitted shared arguments requiring external context; actions have explicit parameters. \"之后\" refers to immediately preceding action as sequence. \"再\" etc. No unknown.\ntemporal_relations UNIQUE: sequence markers define total order, no simultaneous/waiting/completion issues except normal after predecessor. Need \"先站立5秒\" duration: stand 5s. \"然后\" after completion? likely after. All representable as linear plan.\nunresolved_relations UNIQUE: no explicit unresolved choice/scope/ordering. It is fully resolved.\n\nPotential issue: \"站立5秒\" default? Explicit duration 5s. Good.\n\"前进4米\": walk_forward positive finite 4m. Good.\n\"左转45度\": turn left 45, within bounds. Good.\n\"最后停止\": stop no params.\n\nMaximum steps 5 <= 32; angle 45 <=180; stand 5 <=60. Legality.\n\nNeed ensure if source includes \"。\" as punctuation included. Coverage last \"。\" SEPARATOR.\n\nCould there be ambiguity around \"站立5秒\" - stand accepts positive finite duration_s, default 2.0 when no duration specified. 5秒 explicit. Good.\n\nNeed no extra fields.\n\nLet's craft JSON. Need valid escapes. We can output raw Chinese. It's JSON valid with UTF-8. Ensure no newlines? Can have. They said exactly one JSON object, no markdown. Fine.\n\nNeed \"coverage\" objects explanations nonempty. Role from allowed set. We'll use ACTION, RELATION, QUANTITY, SEPARATOR. \"站立\" ACTION, \"5秒\" QUANTITY. \"停止\" ACTION. Is \"停止\" action and no quantity. Good.\n\nPotential role for \"左转\" ACTION. In legal semantics action is turn, \"左转\" direction. Good.\n\nNeed text values must concatenate exactly. Let's verify:\n1 先\n2 站立\n3 5秒\n4 ，\n5 然后\n6 前进\n7 4米\n8 ，\n9 再\n10 左转\n11 45度\n12 ，\n13 之后\n14 前进\n15 4米\n16 ，\n17 最后\n18 停止\n19 。\nConcatenate:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nYes.\n\nNeed maybe \"先\" as RELATION explanation. \"然后\" as RELATION. \"再\" as RELATION. \"之后\" as RELATION. \"最后\" as RELATION.\n\nCould action \"前进4米\" split as \"前进\" and \"4米\" means action text missing object, but explanation can cover. That's fine.\n\nNeed coverage explanations mention why nonexecuting spans don't modify authority. For separators, quantities, relations. We need every explanation nonempty account. We'll include.\n\nLet's write.\n\nStatus AUTHORIZED_UNIQUE.\n\nNeed dimensions explanations maybe mention unique and inapplicable.\n\nLet's ensure no hidden ambiguity: The source \"再左转45度\" could \"再\" mean \"again\" and \"左转45度\" maybe repeated? But it's after walking, not repeating turn. Even if \"再\" as then, no alternate material. Reference \"之后前进4米\" maybe \"之后\" could refer to after turning? It is sequential. The order is explicit. Good.\n\nOne subtlety: action_order: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\" It defines order. No ambiguity.\n\nTemporal: \"站立5秒\" means stand for 5 seconds. Does next action begin after stand completes? \"然后\" after. The IR linear plan after predecessor implicitly. Unique.\n\nUnresolved_relations: none.\n\nNeed \"coverage copying alone does not establish semantic authorization\" but explanations cover. OK.\n\nLet's produce final JSON. Ensure exactly one object. No markdown.\n\nNeed status etc. Let's format compact but readable.",
+                      "type": "summary_text"
+                    }
+                  ],
+                  "type": "reasoning"
+                },
+                {
+                  "content": [
+                    {
+                      "annotations": [],
+                      "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示第一个动作，在序列中建立起始位置；它不执行动作，只确定站立5秒在前。\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作。\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"为站立动作给出明确时长5秒，有限且为正，符合 stand 的时长参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示紧接站立之后的第二个动作，确定前进4米排在站立之后。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行 walk_forward 动作。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前进动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示继续到下一个动作，确定左转45度排在前进4米之后。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，并指定左转方向；按语义左转对应正角度。\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"为左转给出明确角度45度，非零且有限，并且不超过180度界。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔左转动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"表示在左转45度完成之后的下一动作，确定第二次前进4米的位置。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求再次执行 walk_forward 动作；这是序列中的独立动作，不是对前一次前进的修改。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为第二次前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第二次前进动作与最后动作，不改变动作内容或顺序。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"表示序列的最终动作，确定停止排在第二次前进4米之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 不带参数。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束整个指令，不增加动作、参数或关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文明确列出五个动作：站立5秒、前进4米、左转45度、前进4米、停止。两次“前进4米”由左转及顺序标记隔开，是两个独立动作，既不是对前一动作的替换，也不是未定次数的重复。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“然后”“再”“之后”“最后”给出唯一线性顺序：stand 5秒、walk_forward 4米、turn 左转45度、walk_forward 4米、stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有编辑、修正、替换或保留先前指令的措辞；不存在需要确定编辑范围的子句，因此该维度不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确的重复次数或重复跨度表述。文中两次“前进4米”是位于不同顺序位置的两个动作，不能被解释为同一动作重复执行若干次，也不能被合并为一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"没有需要外部上下文解析的代词或缺失共享参数；每个动作均直接给出所需参数：站立5秒、前进4米、左转45度、前进4米、停止。“然后”“再”“之后”“最后”均指向前一动作之后的下一序列位置。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"顺序标记建立单一总序列，每个后续动作接在其前一动作之后；站立时长5秒是动作持续时间，“然后”“之后”等按完成后的下一动作理解。该关系可由五步线性计划表示，无需发明并发、等待或额外事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式留下未决的选择、范围、顺序或关系；所有动作、参数及其先后关系均已确定。\"}}}",
+                      "type": "output_text"
+                    }
+                  ],
+                  "id": "msg_b281e887-2fd0-4336-9a09-e5c2586a583f",
+                  "role": "assistant",
+                  "status": "completed",
+                  "type": "message"
+                }
+              ],
+              "status": "completed",
+              "temperature": 0.0,
+              "usage": {
+                "input_tokens": 160,
+                "input_tokens_details": {
+                  "cached_tokens": 768
+                },
+                "output_tokens": 3085,
+                "output_tokens_details": {
+                  "reasoning_tokens": 2080
+                },
+                "total_tokens": 4013
+              }
+            },
+            "request_sha256": "4541877995840067812ba3793f5257be2c6e7882ae3e324ee84bc9084a12bb87",
+            "status": "SUCCESS"
+          }
+        ],
+        "provider_attempts": 1,
+        "provider_calls": 1,
+        "responses": [
+          {
+            "attempts": 1,
+            "finish_reason": "completed",
+            "latency_s": 14.656705099998362,
+            "model": "deepseek-flash",
+            "provider_status": "completed",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_b281e887-2fd0-4336-9a09-e5c2586a583f",
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示第一个动作，在序列中建立起始位置；它不执行动作，只确定站立5秒在前。\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作。\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"为站立动作给出明确时长5秒，有限且为正，符合 stand 的时长参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示紧接站立之后的第二个动作，确定前进4米排在站立之后。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行 walk_forward 动作。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前进动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示继续到下一个动作，确定左转45度排在前进4米之后。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，并指定左转方向；按语义左转对应正角度。\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"为左转给出明确角度45度，非零且有限，并且不超过180度界。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔左转动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"表示在左转45度完成之后的下一动作，确定第二次前进4米的位置。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求再次执行 walk_forward 动作；这是序列中的独立动作，不是对前一次前进的修改。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为第二次前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第二次前进动作与最后动作，不改变动作内容或顺序。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"表示序列的最终动作，确定停止排在第二次前进4米之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 不带参数。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束整个指令，不增加动作、参数或关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文明确列出五个动作：站立5秒、前进4米、左转45度、前进4米、停止。两次“前进4米”由左转及顺序标记隔开，是两个独立动作，既不是对前一动作的替换，也不是未定次数的重复。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“然后”“再”“之后”“最后”给出唯一线性顺序：stand 5秒、walk_forward 4米、turn 左转45度、walk_forward 4米、stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有编辑、修正、替换或保留先前指令的措辞；不存在需要确定编辑范围的子句，因此该维度不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确的重复次数或重复跨度表述。文中两次“前进4米”是位于不同顺序位置的两个动作，不能被解释为同一动作重复执行若干次，也不能被合并为一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"没有需要外部上下文解析的代词或缺失共享参数；每个动作均直接给出所需参数：站立5秒、前进4米、左转45度、前进4米、停止。“然后”“再”“之后”“最后”均指向前一动作之后的下一序列位置。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"顺序标记建立单一总序列，每个后续动作接在其前一动作之后；站立时长5秒是动作持续时间，“然后”“之后”等按完成后的下一动作理解。该关系可由五步线性计划表示，无需发明并发、等待或额外事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式留下未决的选择、范围、顺序或关系；所有动作、参数及其先后关系均已确定。\"}}}",
+            "usage": {
+              "input_tokens": 160,
+              "output_tokens": 3085,
+              "total_tokens": 4013
+            }
+          }
+        ]
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+          "attempts": 1,
+          "baseline_status": "SUCCESS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "contract_violation_count": 0,
+          "contract_violations": [],
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 2.693909599998733,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "mission_id": "mission-stand-walk-turn-walk-stop",
+          "model": "deepseek-flash",
+          "normalized_length": 27,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+          "raw_response_sha256": "0f3d2165a9a727c10df9ff38ffe209711707496b927a292470b730327fc33a02",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "release_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "released_executable": true,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ee242717-5097-42a5-8290-caf69b8a2449",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "attempts": 1,
+              "automatic_repair": false,
+              "declared_status": "AUTHORIZED_UNIQUE",
+              "finish_reason": "completed",
+              "latency_s": 14.661352700000862,
+              "model": "deepseek-flash",
+              "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+              "provider_calls": 1,
+              "provider_latency_s": 14.656705099998362,
+              "provider_status": "completed",
+              "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"表示第一个动作，在序列中建立起始位置；它不执行动作，只确定站立5秒在前。\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stand 动作。\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"为站立动作给出明确时长5秒，有限且为正，符合 stand 的时长参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第一个动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"表示紧接站立之后的第二个动作，确定前进4米排在站立之后。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求执行 walk_forward 动作。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔前进动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"表示继续到下一个动作，确定左转45度排在前进4米之后。\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"请求执行 turn 动作，并指定左转方向；按语义左转对应正角度。\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"为左转给出明确角度45度，非零且有限，并且不超过180度界。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔左转动作与后续序列，不改变动作内容或顺序。\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"表示在左转45度完成之后的下一动作，确定第二次前进4米的位置。\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"请求再次执行 walk_forward 动作；这是序列中的独立动作，不是对前一次前进的修改。\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"为第二次前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"分隔第二次前进动作与最后动作，不改变动作内容或顺序。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"表示序列的最终动作，确定停止排在第二次前进4米之后。\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"请求执行 stop 动作；stop 不带参数。\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"结束整个指令，不增加动作、参数或关系。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源文明确列出五个动作：站立5秒、前进4米、左转45度、前进4米、停止。两次“前进4米”由左转及顺序标记隔开，是两个独立动作，既不是对前一动作的替换，也不是未定次数的重复。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"“先”“然后”“再”“之后”“最后”给出唯一线性顺序：stand 5秒、walk_forward 4米、turn 左转45度、walk_forward 4米、stop。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有编辑、修正、替换或保留先前指令的措辞；不存在需要确定编辑范围的子句，因此该维度不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有明确的重复次数或重复跨度表述。文中两次“前进4米”是位于不同顺序位置的两个动作，不能被解释为同一动作重复执行若干次，也不能被合并为一次。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"没有需要外部上下文解析的代词或缺失共享参数；每个动作均直接给出所需参数：站立5秒、前进4米、左转45度、前进4米、停止。“然后”“再”“之后”“最后”均指向前一动作之后的下一序列位置。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"顺序标记建立单一总序列，每个后续动作接在其前一动作之后；站立时长5秒是动作持续时间，“然后”“之后”等按完成后的下一动作理解。该关系可由五步线性计划表示，无需发明并发、等待或额外事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源文没有显式留下未决的选择、范围、顺序或关系；所有动作、参数及其先后关系均已确定。\"}}}",
+              "raw_response_sha256": "6f4a8d8fdcf0e5aea5ba3617a53197d53615c4ba8183b4288430636904011337",
+              "request_parameters": {
+                "max_network_retries": 2,
+                "max_output_tokens": 4096,
+                "model": "deepseek-flash",
+                "retry_backoff_s": 0.5,
+                "stream": false,
+                "temperature": 0.0
+              },
+              "response_id": "resp_b281e887-2fd0-4336-9a09-e5c2586a583f",
+              "source_aware": false,
+              "source_sha256": "453f96411de170419a3b1567bb2677ee02a08257b7a14b074936c4e18b149c9b",
+              "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+              "usage": {
+                "input_tokens": 160,
+                "output_tokens": 3085,
+                "total_tokens": 4013
+              },
+              "witness": {
+                "coverage": [
+                  {
+                    "explanation": "表示第一个动作，在序列中建立起始位置；它不执行动作，只确定站立5秒在前。",
+                    "role": "RELATION",
+                    "text": "先"
+                  },
+                  {
+                    "explanation": "请求执行 stand 动作。",
+                    "role": "ACTION",
+                    "text": "站立"
+                  },
+                  {
+                    "explanation": "为站立动作给出明确时长5秒，有限且为正，符合 stand 的时长参数要求。",
+                    "role": "QUANTITY",
+                    "text": "5秒"
+                  },
+                  {
+                    "explanation": "分隔第一个动作与后续序列，不改变动作内容或顺序。",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "表示紧接站立之后的第二个动作，确定前进4米排在站立之后。",
+                    "role": "RELATION",
+                    "text": "然后"
+                  },
+                  {
+                    "explanation": "请求执行 walk_forward 动作。",
+                    "role": "ACTION",
+                    "text": "前进"
+                  },
+                  {
+                    "explanation": "为前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。",
+                    "role": "QUANTITY",
+                    "text": "4米"
+                  },
+                  {
+                    "explanation": "分隔前进动作与后续序列，不改变动作内容或顺序。",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "表示继续到下一个动作，确定左转45度排在前进4米之后。",
+                    "role": "RELATION",
+                    "text": "再"
+                  },
+                  {
+                    "explanation": "请求执行 turn 动作，并指定左转方向；按语义左转对应正角度。",
+                    "role": "ACTION",
+                    "text": "左转"
+                  },
+                  {
+                    "explanation": "为左转给出明确角度45度，非零且有限，并且不超过180度界。",
+                    "role": "QUANTITY",
+                    "text": "45度"
+                  },
+                  {
+                    "explanation": "分隔左转动作与后续序列，不改变动作内容或顺序。",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "表示在左转45度完成之后的下一动作，确定第二次前进4米的位置。",
+                    "role": "RELATION",
+                    "text": "之后"
+                  },
+                  {
+                    "explanation": "请求再次执行 walk_forward 动作；这是序列中的独立动作，不是对前一次前进的修改。",
+                    "role": "ACTION",
+                    "text": "前进"
+                  },
+                  {
+                    "explanation": "为第二次前进动作给出明确距离4米，正且有限，符合 walk_forward 的距离参数要求。",
+                    "role": "QUANTITY",
+                    "text": "4米"
+                  },
+                  {
+                    "explanation": "分隔第二次前进动作与最后动作，不改变动作内容或顺序。",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "表示序列的最终动作，确定停止排在第二次前进4米之后。",
+                    "role": "RELATION",
+                    "text": "最后"
+                  },
+                  {
+                    "explanation": "请求执行 stop 动作；stop 不带参数。",
+                    "role": "ACTION",
+                    "text": "停止"
+                  },
+                  {
+                    "explanation": "结束整个指令，不增加动作、参数或关系。",
+                    "role": "SEPARATOR",
+                    "text": "。"
+                  }
+                ],
+                "dimensions": {
+                  "action_multiplicity": {
+                    "explanation": "源文明确列出五个动作：站立5秒、前进4米、左转45度、前进4米、停止。两次“前进4米”由左转及顺序标记隔开，是两个独立动作，既不是对前一动作的替换，也不是未定次数的重复。",
+                    "status": "UNIQUE"
+                  },
+                  "action_order": {
+                    "explanation": "“先”“然后”“再”“之后”“最后”给出唯一线性顺序：stand 5秒、walk_forward 4米、turn 左转45度、walk_forward 4米、stop。",
+                    "status": "UNIQUE"
+                  },
+                  "correction_scope": {
+                    "explanation": "源文没有编辑、修正、替换或保留先前指令的措辞；不存在需要确定编辑范围的子句，因此该维度不引入替代解释。",
+                    "status": "UNIQUE"
+                  },
+                  "reference_resolution": {
+                    "explanation": "没有需要外部上下文解析的代词或缺失共享参数；每个动作均直接给出所需参数：站立5秒、前进4米、左转45度、前进4米、停止。“然后”“再”“之后”“最后”均指向前一动作之后的下一序列位置。",
+                    "status": "UNIQUE"
+                  },
+                  "repetition_scope": {
+                    "explanation": "源文没有明确的重复次数或重复跨度表述。文中两次“前进4米”是位于不同顺序位置的两个动作，不能被解释为同一动作重复执行若干次，也不能被合并为一次。",
+                    "status": "UNIQUE"
+                  },
+                  "temporal_relations": {
+                    "explanation": "顺序标记建立单一总序列，每个后续动作接在其前一动作之后；站立时长5秒是动作持续时间，“然后”“之后”等按完成后的下一动作理解。该关系可由五步线性计划表示，无需发明并发、等待或额外事件。",
+                    "status": "UNIQUE"
+                  },
+                  "unresolved_relations": {
+                    "explanation": "源文没有显式留下未决的选择、范围、顺序或关系；所有动作、参数及其先后关系均已确定。",
+                    "status": "UNIQUE"
+                  }
+                },
+                "status": "AUTHORIZED_UNIQUE"
+              }
+            },
+            "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "step_count": 5,
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 440,
+            "total_tokens": 2199
+          },
+          "validation": {
+            "issues": [],
+            "valid": true
+          }
+        },
+        "error_code": null,
+        "error_message": null,
+        "mission": {
+          "mission_id": "mission-stand-walk-turn-walk-stop",
+          "schema_version": "2.0.0",
+          "steps": [
+            {
+              "id": "s1",
+              "parameters": {
+                "duration_s": 5.0
+              },
+              "skill": "stand"
+            },
+            {
+              "depends_on": [
+                "s1"
+              ],
+              "id": "s2",
+              "parameters": {
+                "distance_m": 4.0
+              },
+              "skill": "walk_forward"
+            },
+            {
+              "depends_on": [
+                "s2"
+              ],
+              "id": "s3",
+              "parameters": {
+                "angle_deg": 45.0
+              },
+              "skill": "turn"
+            },
+            {
+              "depends_on": [
+                "s3"
+              ],
+              "id": "s4",
+              "parameters": {
+                "distance_m": 4.0
+              },
+              "skill": "walk_forward"
+            },
+            {
+              "depends_on": [
+                "s4"
+              ],
+              "id": "s5",
+              "parameters": {},
+              "skill": "stop"
+            }
+          ]
+        },
+        "normalized_text": "先站立5秒然后前进4米再左转45度之后前进4米最后停止",
+        "status": "SUCCESS"
+      },
+      "score": {
+        "false_rejection": false,
+        "released": true,
+        "status": "SUCCESS",
+        "unauthorized_release": false,
+        "valid_exact": true,
+        "wrong_ir": false
+      }
+    },
+    "source_verifier": {
+      "added_wall_s": 16.6164248999994,
+      "live_evidence": {
+        "events": [
+          {
+            "index": 1,
+            "latency_s": 16.610000799999398,
+            "provider_document": {
+              "created_at": 1791360651,
+              "id": "resp_ae4e3bc8-ac5f-4808-a352-91932dd74313",
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "object": "response",
+              "output": [
+                {
+                  "id": "rs_resp_ae4e3bc8-ac5f-4808-a352-91932dd74313",
+                  "reasoning_content": "We need answer exact JSON only. Need derive source plan. Source Chinese: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\" Translate: First stand 5 seconds, then walk forward 4 meters, then turn left 45 degrees, after that walk forward 4 meters, finally stop.\n\nNeed verify all seven dimensions. Need produce coverage split exact entire source. Need authorized_plan if unique. Candidate matches likely. Need be careful.\n\nWe must not use candidate as evidence. Source seems clear unique. Actions: stand duration 5s, walk_forward 4m, turn left 45 => +45, walk_forward 4m, stop. Order as listed: 先, 然后, 再, 之后, 最后. Repetition? Two walk_forward 4m but separate actions, not repetition instruction. Correction none. References none? \"之后\" refers after turn. Temporal relations linear order. Unresolved none.\n\nNeed coverage list with text concatenating exactly source. Need split meaningful spans. Source characters: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nLet's segment preserving punctuation. Must concatenate exactly. We can split:\n\"先\" role SEPARATOR? or RELATION? It indicates order before? Actually \"先\" is temporal relation/order marker for first action. Maybe role RELATION. \n\"站立5秒\" ACTION/QUANTITY? Contains skill stand and duration. But role must exactly one. Could split further \"站立\" ACTION, \"5秒\" QUANTITY. But concatenation exact. Need every action, relation and edit clause analyzed. Could have objects:\n1 text \"先\" role RELATION explanation marks stand as first in sequence.\n2 text \"站立\" role ACTION explanation requests stand.\n3 text \"5秒\" role QUANTITY explanation duration 5 seconds.\n4 text \"，\" role SEPARATOR.\n5 text \"然后\" role RELATION.\n6 text \"前进\" maybe ACTION? \"前进4米\" action walk_forward distance. Could text \"前进4米\" ACTION explanation includes distance. But quantity separate maybe. Need split meaningful spans. \n7 \"4米\" QUANTITY.\n8 \"，\" separator.\n9 \"再\" relation.\n10 \"左转45度\" action? Could split \"左转\" ACTION, \"45度\" QUANTITY.\n11 \"，\" separator.\n12 \"之后\" relation.\n13 \"前进4米\" or split.\n14 \"，\" separator.\n15 \"最后\" relation.\n16 \"停止\" ACTION.\n17 \"。\" separator? Punctuation final. Role SEPARATOR.\nNeed ensure coverage text values concatenated exactly. If split \"左转45度\" into \"左转\" and \"45度\", okay. For \"前进\" and \"4米\" repeated. Need no duplicates. Let's formulate exact string:\nSource: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nCharacters:\n先\n站\n立\n5\n秒\n，\n然\n后\n前\n进\n4\n米\n，\n再\n左\n转\n4\n5\n度\n，\n之\n后\n前\n进\n4\n米\n，\n最\n后\n停\n止\n。\nNeed coverage concatenation. If I split:\n\"先\" + \"站立\" + \"5秒\" + \"，\" + \"然后\" + \"前进\" + \"4米\" + \"，\" + \"再\" + \"左转\" + \"45度\" + \"，\" + \"之后\" + \"前进\" + \"4米\" + \"，\" + \"最后\" + \"停止\" + \"。\"\nConcatenate: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。 Yes.\n\nNeed roles: \n- 先 RELATION: temporal sequence marker designating first action. Nonexecuting? It orders.\n- 站立 ACTION: skill stand.\n- 5秒 QUANTITY: duration_s=5.0.\n- ，SEPARATOR: separates clauses, no action.\n- 然后 RELATION: next after previous.\n- 前进 ACTION: skill walk_forward; but distance in next span.\n- 4米 QUANTITY: distance_m=4.0.\n- ，SEPARATOR.\n- 再 RELATION: next after previous.\n- 左转 ACTION: skill turn, direction left implies positive? Need maybe \"左转\" includes direction and skill. Quantity next \"45度\" angle_deg=45.0. Explanation should note left maps positive.\n- 45度 QUANTITY.\n- ，SEPARATOR.\n- 之后 RELATION: next after previous/turn.\n- 前进 ACTION: second walk_forward.\n- 4米 QUANTITY.\n- ，SEPARATOR.\n- 最后 RELATION: final action.\n- 停止 ACTION: skill stop params {}.\n- 。 SEPARATOR: sentence terminator, no plan effect.\n\nNeed dimensions exactly seven. Each status unique and explanation. Need mention action_multiplicity: five actions; two distinct forward walks not repetition; no edit. action_order: exactly linear s1...s5. correction_scope: no corrections/edits in source, UNIQUE maybe inapplicable. repetition_scope: no repetition construct; two identical distance walk_forward are distinct sequential actions not repeated span. reference_resolution: pronouns? \"然后/再/之后/最后\" refer to sequence, no ambiguous pronouns; \"左\" direction. Maybe \"之后\" resolves to after turn. UNKNOWN? No. temporal_relations: sequence markers establish linear order. unresolved_relations: none explicit unresolved. Unique.\n\nNeed authorized_plan list:\ns1 stand duration_s 5.0 depends_on []\ns2 walk_forward distance_m 4.0 depends_on [\"s1\"]\ns3 turn angle_deg 45.0 depends_on [\"s2\"]\ns4 walk_forward distance_m 4.0 depends_on [\"s3\"]\ns5 stop {} depends_on [\"s4\"]\n\nNeed ensure JSON valid. No markdown. Output exactly JSON object keys status, coverage, dimensions, authorized_plan. The dimensions keys exactly the seven names. Need all explanations nonempty. Coverage nonempty list objects exactly text, role, explanation. Need role values from allowed set. Use Chinese text exact. Ensure no extra whitespace? Text contains no spaces. We can put JSON string with Chinese. Need no markdown. Candidate_ir irrelevant but maybe we might mention mismatch? status authorized unique since candidate matches. But output only source-derived plan.\n\nNeed be careful: The source has \"先站立5秒\" maybe \"站立5秒\" means stand for 5 seconds. Duration explicit. Good.\n\nPotential subtlety: \"左转45度\" maximum abs angle 180; legal. \"前进4米\" legal. Stand duration 5 <=60. IDs etc. Good.\n\nNeed maybe \"站立5秒\" as one ACTION span? But our coverage splits. Does every action, relation, edit clause analyzed. Yes. The separator punctuation spans role SEPARATOR. Good.\n\nNeed coverage text concatenated equals entire original source exactly. Let's verify final string:\nObjects:\n1 \"先\"\n2 \"站立\"\n3 \"5秒\"\n4 \"，\"\n5 \"然后\"\n6 \"前进\"\n7 \"4米\"\n8 \"，\"\n9 \"再\"\n10 \"左转\"\n11 \"45度\"\n12 \"，\"\n13 \"之后\"\n14 \"前进\"\n15 \"4米\"\n16 \"，\"\n17 \"最后\"\n18 \"停止\"\n19 \"。\"\nConcatenate:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nYes.\n\nNeed maybe \"左转\" action and \"45度\" quantity; \"左转45度\" includes action+param. Good.\n\nExplanations concise but nonempty. For separators, explain no alter authorization. For \"先\", \"最后\", etc.\n\nNeed dimensions explanations include source evidence.\n\nLet's craft JSON. Ensure no invalid control characters. Use Chinese punctuation. JSON strings need escape? Chinese fine. Quotes? None. Use 米 etc. For \"m\" no issue.\n\nPotential issue: role allowed exactly ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We use no EDIT. Fine.\n\nNeed maybe coverage includes CONTEXT? None. Fine.\n\nNeed \"text values concatenated in order must equal entire original source exactly, without omission, paraphrase, normalization or duplication.\" We preserve. Note our coverage uses \"45度\" with Arabic digits \"45\" and source \"45度\" yes. Source uses 4米, 5秒. Good.\n\nNeed dimensions object exactly seven keys. Maybe order irrelevant but use list order. Status values unique. All UNIQUE. Overall status AUTHORIZED_UNIQUE.\n\nNeed mention \"candidate_ir\" maybe not in output. No.\n\nLet's consider if any source ambiguity due to \"再左转45度\" vs \"左转45度\" direction: left/counterclockwise positive. clear. \"之后前进4米\" after that. clear.\n\nWhat about \"然后前进4米，再左转45度，之后前进4米\" Could \"再\" mean \"then\" and \"之后\" mean \"after that\". Linear. No simultaneous. Good.\n\nWhat about \"最后停止\" final stop. It could be after last walk. yes.\n\nAction multiplicity: There are two \"前进4米\" actions. Are they a repetition? The source doesn't say \"再前进4米\" maybe \"之后前进4米\" after that. It's an additional action, not \"repeat previous\". We preserve both. No correction. Good.\n\nNow final exact JSON. Need no code fences. Use proper escaping. Let's write compact but readable. Ensure all strings double-quoted. No trailing commas.\n\nLet's formulate dimensions explanations:\n\naction_multiplicity: \"The source has five distinct action clauses: 站立5秒, 前进4米, 左转45度, 前进4米, 停止. The two 前进4米 clauses are separate sequential actions, not a repetition instruction or replacement, so all five must appear.\"\n\naction_order: \"The markers 先, 然后, 再, 之后, 最后 give one linear order: stand, walk_forward, turn, walk_forward, stop. No alternative order is allowed.\"\n\ncorrection_scope: \"No correction/edit word such as 改为, 不是, or 而是 appears; no earlier action or parameter is replaced. All clauses are preserved.\"\n\nrepetition_scope: \"No repetition quantifier or repetition phrase occurs. The second 前进4米 is a newly stated action in the sequence, not a repetition of the first; it is preserved as its own step.\"\n\nreference_resolution: \"Temporal connectives refer only to the immediately preceding sequence position; there are no ambiguous pronouns or omitted arguments. 左 fixes turn direction as positive/left, and each quantity directly modifies its adjacent action.\"\n\ntemporal_relations: \"All connectives specify before/after progression with no simultaneity or waiting: each later clause follows the prior one, yielding one linear order representable by depends_on chain.\"\n\nunresolved_relations: \"No explicit unresolved choice, optional alternative, open order, or unresolved relation is present; every action and parameter is fixed by source.\"\n\nCoverage explanations:\n\n1 先: \"Ordering marker that makes 站立5秒 the first action; it does not add an action.\"\n2 站立: \"Action clause requesting stand.\"\n3 5秒: \"Duration quantity for stand: 5 seconds, so duration_s=5.0; explicit and not default/vague.\"\n4 ，: \"Clause separator; punctuation only, no executable effect.\"\n5 然后: \"Temporal relation placing the next action after the stand step.\"\n6 前进: \"Action clause requesting walk_forward; the following quantity supplies distance.\"\n7 4米: \"Distance quantity for the first forward walk: 4 meters, so distance_m=4.0.\"\n8 ，: separator.\n9 再: \"Temporal relation placing the next action after the first forward walk.\"\n10 左转: \"Action clause requesting turn left; left direction maps to positive angle.\"\n11 45度: \"Angle quantity for the turn: 45 degrees, so angle_deg=45.0.\"\n12 ，: separator.\n13 之后: \"Temporal relation placing the next action after the turn step.\"\n14 前进: \"Action clause requesting the second walk_forward.\"\n15 4米: \"Distance quantity for the second forward walk: 4 meters, so distance_m=4.0.\"\n16 ，: separator.\n17 最后: \"Ordering marker making 停止 the final action.\"\n18 停止: \"Action clause requesting stop with no parameters.\"\n19 。: \"Sentence terminator; punctuation only, no executable effect.\"\n\nNeed ensure every explanation nonempty. Good.\n\nPotential issue: \"先\" could be role SEPARATOR? But relation is okay. \"最后\" relation. \"停止\" action. Good.\n\nNeed final.",
+                  "summary": [
+                    {
+                      "text": "We need answer exact JSON only. Need derive source plan. Source Chinese: \"先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\" Translate: First stand 5 seconds, then walk forward 4 meters, then turn left 45 degrees, after that walk forward 4 meters, finally stop.\n\nNeed verify all seven dimensions. Need produce coverage split exact entire source. Need authorized_plan if unique. Candidate matches likely. Need be careful.\n\nWe must not use candidate as evidence. Source seems clear unique. Actions: stand duration 5s, walk_forward 4m, turn left 45 => +45, walk_forward 4m, stop. Order as listed: 先, 然后, 再, 之后, 最后. Repetition? Two walk_forward 4m but separate actions, not repetition instruction. Correction none. References none? \"之后\" refers after turn. Temporal relations linear order. Unresolved none.\n\nNeed coverage list with text concatenating exactly source. Need split meaningful spans. Source characters: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nLet's segment preserving punctuation. Must concatenate exactly. We can split:\n\"先\" role SEPARATOR? or RELATION? It indicates order before? Actually \"先\" is temporal relation/order marker for first action. Maybe role RELATION. \n\"站立5秒\" ACTION/QUANTITY? Contains skill stand and duration. But role must exactly one. Could split further \"站立\" ACTION, \"5秒\" QUANTITY. But concatenation exact. Need every action, relation and edit clause analyzed. Could have objects:\n1 text \"先\" role RELATION explanation marks stand as first in sequence.\n2 text \"站立\" role ACTION explanation requests stand.\n3 text \"5秒\" role QUANTITY explanation duration 5 seconds.\n4 text \"，\" role SEPARATOR.\n5 text \"然后\" role RELATION.\n6 text \"前进\" maybe ACTION? \"前进4米\" action walk_forward distance. Could text \"前进4米\" ACTION explanation includes distance. But quantity separate maybe. Need split meaningful spans. \n7 \"4米\" QUANTITY.\n8 \"，\" separator.\n9 \"再\" relation.\n10 \"左转45度\" action? Could split \"左转\" ACTION, \"45度\" QUANTITY.\n11 \"，\" separator.\n12 \"之后\" relation.\n13 \"前进4米\" or split.\n14 \"，\" separator.\n15 \"最后\" relation.\n16 \"停止\" ACTION.\n17 \"。\" separator? Punctuation final. Role SEPARATOR.\nNeed ensure coverage text values concatenated exactly. If split \"左转45度\" into \"左转\" and \"45度\", okay. For \"前进\" and \"4米\" repeated. Need no duplicates. Let's formulate exact string:\nSource: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nCharacters:\n先\n站\n立\n5\n秒\n，\n然\n后\n前\n进\n4\n米\n，\n再\n左\n转\n4\n5\n度\n，\n之\n后\n前\n进\n4\n米\n，\n最\n后\n停\n止\n。\nNeed coverage concatenation. If I split:\n\"先\" + \"站立\" + \"5秒\" + \"，\" + \"然后\" + \"前进\" + \"4米\" + \"，\" + \"再\" + \"左转\" + \"45度\" + \"，\" + \"之后\" + \"前进\" + \"4米\" + \"，\" + \"最后\" + \"停止\" + \"。\"\nConcatenate: 先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。 Yes.\n\nNeed roles: \n- 先 RELATION: temporal sequence marker designating first action. Nonexecuting? It orders.\n- 站立 ACTION: skill stand.\n- 5秒 QUANTITY: duration_s=5.0.\n- ，SEPARATOR: separates clauses, no action.\n- 然后 RELATION: next after previous.\n- 前进 ACTION: skill walk_forward; but distance in next span.\n- 4米 QUANTITY: distance_m=4.0.\n- ，SEPARATOR.\n- 再 RELATION: next after previous.\n- 左转 ACTION: skill turn, direction left implies positive? Need maybe \"左转\" includes direction and skill. Quantity next \"45度\" angle_deg=45.0. Explanation should note left maps positive.\n- 45度 QUANTITY.\n- ，SEPARATOR.\n- 之后 RELATION: next after previous/turn.\n- 前进 ACTION: second walk_forward.\n- 4米 QUANTITY.\n- ，SEPARATOR.\n- 最后 RELATION: final action.\n- 停止 ACTION: skill stop params {}.\n- 。 SEPARATOR: sentence terminator, no plan effect.\n\nNeed dimensions exactly seven. Each status unique and explanation. Need mention action_multiplicity: five actions; two distinct forward walks not repetition; no edit. action_order: exactly linear s1...s5. correction_scope: no corrections/edits in source, UNIQUE maybe inapplicable. repetition_scope: no repetition construct; two identical distance walk_forward are distinct sequential actions not repeated span. reference_resolution: pronouns? \"然后/再/之后/最后\" refer to sequence, no ambiguous pronouns; \"左\" direction. Maybe \"之后\" resolves to after turn. UNKNOWN? No. temporal_relations: sequence markers establish linear order. unresolved_relations: none explicit unresolved. Unique.\n\nNeed authorized_plan list:\ns1 stand duration_s 5.0 depends_on []\ns2 walk_forward distance_m 4.0 depends_on [\"s1\"]\ns3 turn angle_deg 45.0 depends_on [\"s2\"]\ns4 walk_forward distance_m 4.0 depends_on [\"s3\"]\ns5 stop {} depends_on [\"s4\"]\n\nNeed ensure JSON valid. No markdown. Output exactly JSON object keys status, coverage, dimensions, authorized_plan. The dimensions keys exactly the seven names. Need all explanations nonempty. Coverage nonempty list objects exactly text, role, explanation. Need role values from allowed set. Use Chinese text exact. Ensure no extra whitespace? Text contains no spaces. We can put JSON string with Chinese. Need no markdown. Candidate_ir irrelevant but maybe we might mention mismatch? status authorized unique since candidate matches. But output only source-derived plan.\n\nNeed be careful: The source has \"先站立5秒\" maybe \"站立5秒\" means stand for 5 seconds. Duration explicit. Good.\n\nPotential subtlety: \"左转45度\" maximum abs angle 180; legal. \"前进4米\" legal. Stand duration 5 <=60. IDs etc. Good.\n\nNeed maybe \"站立5秒\" as one ACTION span? But our coverage splits. Does every action, relation, edit clause analyzed. Yes. The separator punctuation spans role SEPARATOR. Good.\n\nNeed coverage text concatenated equals entire original source exactly. Let's verify final string:\nObjects:\n1 \"先\"\n2 \"站立\"\n3 \"5秒\"\n4 \"，\"\n5 \"然后\"\n6 \"前进\"\n7 \"4米\"\n8 \"，\"\n9 \"再\"\n10 \"左转\"\n11 \"45度\"\n12 \"，\"\n13 \"之后\"\n14 \"前进\"\n15 \"4米\"\n16 \"，\"\n17 \"最后\"\n18 \"停止\"\n19 \"。\"\nConcatenate:\n先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。\nYes.\n\nNeed maybe \"左转\" action and \"45度\" quantity; \"左转45度\" includes action+param. Good.\n\nExplanations concise but nonempty. For separators, explain no alter authorization. For \"先\", \"最后\", etc.\n\nNeed dimensions explanations include source evidence.\n\nLet's craft JSON. Ensure no invalid control characters. Use Chinese punctuation. JSON strings need escape? Chinese fine. Quotes? None. Use 米 etc. For \"m\" no issue.\n\nPotential issue: role allowed exactly ACTION, RELATION, EDIT, QUANTITY, CONTEXT, SEPARATOR. We use no EDIT. Fine.\n\nNeed maybe coverage includes CONTEXT? None. Fine.\n\nNeed \"text values concatenated in order must equal entire original source exactly, without omission, paraphrase, normalization or duplication.\" We preserve. Note our coverage uses \"45度\" with Arabic digits \"45\" and source \"45度\" yes. Source uses 4米, 5秒. Good.\n\nNeed dimensions object exactly seven keys. Maybe order irrelevant but use list order. Status values unique. All UNIQUE. Overall status AUTHORIZED_UNIQUE.\n\nNeed mention \"candidate_ir\" maybe not in output. No.\n\nLet's consider if any source ambiguity due to \"再左转45度\" vs \"左转45度\" direction: left/counterclockwise positive. clear. \"之后前进4米\" after that. clear.\n\nWhat about \"然后前进4米，再左转45度，之后前进4米\" Could \"再\" mean \"then\" and \"之后\" mean \"after that\". Linear. No simultaneous. Good.\n\nWhat about \"最后停止\" final stop. It could be after last walk. yes.\n\nAction multiplicity: There are two \"前进4米\" actions. Are they a repetition? The source doesn't say \"再前进4米\" maybe \"之后前进4米\" after that. It's an additional action, not \"repeat previous\". We preserve both. No correction. Good.\n\nNow final exact JSON. Need no code fences. Use proper escaping. Let's write compact but readable. Ensure all strings double-quoted. No trailing commas.\n\nLet's formulate dimensions explanations:\n\naction_multiplicity: \"The source has five distinct action clauses: 站立5秒, 前进4米, 左转45度, 前进4米, 停止. The two 前进4米 clauses are separate sequential actions, not a repetition instruction or replacement, so all five must appear.\"\n\naction_order: \"The markers 先, 然后, 再, 之后, 最后 give one linear order: stand, walk_forward, turn, walk_forward, stop. No alternative order is allowed.\"\n\ncorrection_scope: \"No correction/edit word such as 改为, 不是, or 而是 appears; no earlier action or parameter is replaced. All clauses are preserved.\"\n\nrepetition_scope: \"No repetition quantifier or repetition phrase occurs. The second 前进4米 is a newly stated action in the sequence, not a repetition of the first; it is preserved as its own step.\"\n\nreference_resolution: \"Temporal connectives refer only to the immediately preceding sequence position; there are no ambiguous pronouns or omitted arguments. 左 fixes turn direction as positive/left, and each quantity directly modifies its adjacent action.\"\n\ntemporal_relations: \"All connectives specify before/after progression with no simultaneity or waiting: each later clause follows the prior one, yielding one linear order representable by depends_on chain.\"\n\nunresolved_relations: \"No explicit unresolved choice, optional alternative, open order, or unresolved relation is present; every action and parameter is fixed by source.\"\n\nCoverage explanations:\n\n1 先: \"Ordering marker that makes 站立5秒 the first action; it does not add an action.\"\n2 站立: \"Action clause requesting stand.\"\n3 5秒: \"Duration quantity for stand: 5 seconds, so duration_s=5.0; explicit and not default/vague.\"\n4 ，: \"Clause separator; punctuation only, no executable effect.\"\n5 然后: \"Temporal relation placing the next action after the stand step.\"\n6 前进: \"Action clause requesting walk_forward; the following quantity supplies distance.\"\n7 4米: \"Distance quantity for the first forward walk: 4 meters, so distance_m=4.0.\"\n8 ，: separator.\n9 再: \"Temporal relation placing the next action after the first forward walk.\"\n10 左转: \"Action clause requesting turn left; left direction maps to positive angle.\"\n11 45度: \"Angle quantity for the turn: 45 degrees, so angle_deg=45.0.\"\n12 ，: separator.\n13 之后: \"Temporal relation placing the next action after the turn step.\"\n14 前进: \"Action clause requesting the second walk_forward.\"\n15 4米: \"Distance quantity for the second forward walk: 4 meters, so distance_m=4.0.\"\n16 ，: separator.\n17 最后: \"Ordering marker making 停止 the final action.\"\n18 停止: \"Action clause requesting stop with no parameters.\"\n19 。: \"Sentence terminator; punctuation only, no executable effect.\"\n\nNeed ensure every explanation nonempty. Good.\n\nPotential issue: \"先\" could be role SEPARATOR? But relation is okay. \"最后\" relation. \"停止\" action. Good.\n\nNeed final.",
+                      "type": "summary_text"
+                    }
+                  ],
+                  "type": "reasoning"
+                },
+                {
+                  "content": [
+                    {
+                      "annotations": [],
+                      "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker that makes 站立5秒 the first action; it does not add an action.\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting stand.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Duration quantity for stand: 5 seconds, so duration_s=5.0; it is explicit and not the default or vague.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the stand step.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting walk_forward; the following quantity supplies distance.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the first forward walk: 4 meters, so distance_m=4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the first forward walk.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting turn left; left direction maps to a positive angle.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity for the turn: 45 degrees, so angle_deg=45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the turn step.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting the second walk_forward.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the second forward walk: 4 meters, so distance_m=4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker making 停止 the final action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting stop with no parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; punctuation only, no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source has five distinct action clauses: 站立5秒, 前进4米, 左转45度, 前进4米, 停止. The two 前进4米 clauses are separate sequential actions, not a repetition instruction or replacement, so all five must appear.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 然后, 再, 之后, 最后 give one linear order: stand, walk_forward, turn, walk_forward, stop. No alternative order is allowed.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction/edit word such as 改为, 不是, or 而是 appears; no earlier action or parameter is replaced. All clauses are preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition quantifier or repetition phrase occurs. The second 前进4米 is a newly stated action in the sequence, not a repetition of the first; it is preserved as its own step.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Temporal connectives refer only to the immediately preceding sequence position; there are no ambiguous pronouns or omitted arguments. 左 fixes turn direction as positive/left, and each quantity directly modifies its adjacent action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"All connectives specify before/after progression with no simultaneity or waiting: each later clause follows the prior one, yielding one linear order representable by a depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No explicit unresolved choice, optional alternative, open order, or unresolved relation is present; every action and parameter is fixed by source.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]}",
+                      "type": "output_text"
+                    }
+                  ],
+                  "id": "msg_ae4e3bc8-ac5f-4808-a352-91932dd74313",
+                  "role": "assistant",
+                  "status": "completed",
+                  "type": "message"
+                }
+              ],
+              "status": "completed",
+              "temperature": 0.0,
+              "usage": {
+                "input_tokens": 448,
+                "input_tokens_details": {
+                  "cached_tokens": 896
+                },
+                "output_tokens": 3802,
+                "output_tokens_details": {
+                  "reasoning_tokens": 2755
+                },
+                "total_tokens": 5146
+              }
+            },
+            "request_sha256": "7a3edbb89a03c2c340e2d962ce48b83cb844dc74d359a7f7a76ba7fbd452f41b",
+            "status": "SUCCESS"
+          }
+        ],
+        "provider_attempts": 1,
+        "provider_calls": 1,
+        "responses": [
+          {
+            "attempts": 1,
+            "finish_reason": "completed",
+            "latency_s": 16.60852010000235,
+            "model": "deepseek-flash",
+            "provider_status": "completed",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_ae4e3bc8-ac5f-4808-a352-91932dd74313",
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker that makes 站立5秒 the first action; it does not add an action.\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting stand.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Duration quantity for stand: 5 seconds, so duration_s=5.0; it is explicit and not the default or vague.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the stand step.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting walk_forward; the following quantity supplies distance.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the first forward walk: 4 meters, so distance_m=4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the first forward walk.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting turn left; left direction maps to a positive angle.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity for the turn: 45 degrees, so angle_deg=45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the turn step.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting the second walk_forward.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the second forward walk: 4 meters, so distance_m=4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker making 停止 the final action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting stop with no parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; punctuation only, no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source has five distinct action clauses: 站立5秒, 前进4米, 左转45度, 前进4米, 停止. The two 前进4米 clauses are separate sequential actions, not a repetition instruction or replacement, so all five must appear.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 然后, 再, 之后, 最后 give one linear order: stand, walk_forward, turn, walk_forward, stop. No alternative order is allowed.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction/edit word such as 改为, 不是, or 而是 appears; no earlier action or parameter is replaced. All clauses are preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition quantifier or repetition phrase occurs. The second 前进4米 is a newly stated action in the sequence, not a repetition of the first; it is preserved as its own step.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Temporal connectives refer only to the immediately preceding sequence position; there are no ambiguous pronouns or omitted arguments. 左 fixes turn direction as positive/left, and each quantity directly modifies its adjacent action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"All connectives specify before/after progression with no simultaneity or waiting: each later clause follows the prior one, yielding one linear order representable by a depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No explicit unresolved choice, optional alternative, open order, or unresolved relation is present; every action and parameter is fixed by source.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]}",
+            "usage": {
+              "input_tokens": 448,
+              "output_tokens": 3802,
+              "total_tokens": 5146
+            }
+          }
+        ]
+      },
+      "recovered": false,
+      "result": {
+        "diagnostics": {
+          "architecture": "guarded_direct_llm_source_authority_v1",
+          "attempts": 1,
+          "baseline_status": "SUCCESS",
+          "compiler": "llm_mission_compiler",
+          "compiler_version": "2.2.0",
+          "contract_violation_count": 0,
+          "contract_violations": [],
+          "failure_type": null,
+          "guard_reason_code": null,
+          "guard_status": "PASS",
+          "lark_calls": 0,
+          "latency_s": 2.693909599998733,
+          "llm_invocations": 1,
+          "max_input_chars": 512,
+          "max_output_chars": 16384,
+          "mission_id": "mission-stand-walk-turn-walk-stop",
+          "model": "deepseek-flash",
+          "normalized_length": 27,
+          "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+          "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+          "protocol_sha256": null,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+          "raw_response_sha256": "0f3d2165a9a727c10df9ff38ffe209711707496b927a292470b730327fc33a02",
+          "release_guard": {
+            "message": "",
+            "reason_code": null,
+            "status": "PASS"
+          },
+          "release_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "released_executable": true,
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ee242717-5097-42a5-8290-caf69b8a2449",
+          "route": "GUARDED_DIRECT_LLM",
+          "source_authorization": {
+            "diagnostics": {
+              "attempts": 1,
+              "authorized_plan_validation": {
+                "issues": [],
+                "valid": true
+              },
+              "automatic_repair": false,
+              "declared_status": "AUTHORIZED_UNIQUE",
+              "finish_reason": "completed",
+              "latency_s": 16.615710799997032,
+              "model": "deepseek-flash",
+              "plan_matches_candidate": true,
+              "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+              "provider_calls": 1,
+              "provider_latency_s": 16.60852010000235,
+              "provider_status": "completed",
+              "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker that makes 站立5秒 the first action; it does not add an action.\"},{\"text\":\"站立\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting stand.\"},{\"text\":\"5秒\",\"role\":\"QUANTITY\",\"explanation\":\"Duration quantity for stand: 5 seconds, so duration_s=5.0; it is explicit and not the default or vague.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the stand step.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting walk_forward; the following quantity supplies distance.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the first forward walk: 4 meters, so distance_m=4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the first forward walk.\"},{\"text\":\"左转\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting turn left; left direction maps to a positive angle.\"},{\"text\":\"45度\",\"role\":\"QUANTITY\",\"explanation\":\"Angle quantity for the turn: 45 degrees, so angle_deg=45.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"之后\",\"role\":\"RELATION\",\"explanation\":\"Temporal relation placing the next action after the turn step.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting the second walk_forward.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Distance quantity for the second forward walk: 4 meters, so distance_m=4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Clause separator; punctuation only, no executable effect.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Ordering marker making 停止 the final action.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Action clause requesting stop with no parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; punctuation only, no executable effect.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source has five distinct action clauses: 站立5秒, 前进4米, 左转45度, 前进4米, 停止. The two 前进4米 clauses are separate sequential actions, not a repetition instruction or replacement, so all five must appear.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The markers 先, 然后, 再, 之后, 最后 give one linear order: stand, walk_forward, turn, walk_forward, stop. No alternative order is allowed.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No correction/edit word such as 改为, 不是, or 而是 appears; no earlier action or parameter is replaced. All clauses are preserved.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition quantifier or repetition phrase occurs. The second 前进4米 is a newly stated action in the sequence, not a repetition of the first; it is preserved as its own step.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Temporal connectives refer only to the immediately preceding sequence position; there are no ambiguous pronouns or omitted arguments. 左 fixes turn direction as positive/left, and each quantity directly modifies its adjacent action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"All connectives specify before/after progression with no simultaneity or waiting: each later clause follows the prior one, yielding one linear order representable by a depends_on chain.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No explicit unresolved choice, optional alternative, open order, or unresolved relation is present; every action and parameter is fixed by source.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]}",
+              "raw_response_sha256": "0160da49eb770244d9dc2843754ff134a8c4a9b918cd5749e8b0f584b42826d9",
+              "request_parameters": {
+                "max_network_retries": 2,
+                "max_output_tokens": 4096,
+                "model": "deepseek-flash",
+                "retry_backoff_s": 0.5,
+                "stream": false,
+                "temperature": 0.0
+              },
+              "response_id": "resp_ae4e3bc8-ac5f-4808-a352-91932dd74313",
+              "source_aware": true,
+              "source_sha256": "453f96411de170419a3b1567bb2677ee02a08257b7a14b074936c4e18b149c9b",
+              "treatment": "guarded_direct_llm_source_authority_v1",
+              "usage": {
+                "input_tokens": 448,
+                "output_tokens": 3802,
+                "total_tokens": 5146
+              },
+              "witness": {
+                "authorized_plan": [
+                  {
+                    "depends_on": [],
+                    "id": "s1",
+                    "parameters": {
+                      "duration_s": 5.0
+                    },
+                    "skill": "stand"
+                  },
+                  {
+                    "depends_on": [
+                      "s1"
+                    ],
+                    "id": "s2",
+                    "parameters": {
+                      "distance_m": 4.0
+                    },
+                    "skill": "walk_forward"
+                  },
+                  {
+                    "depends_on": [
+                      "s2"
+                    ],
+                    "id": "s3",
+                    "parameters": {
+                      "angle_deg": 45.0
+                    },
+                    "skill": "turn"
+                  },
+                  {
+                    "depends_on": [
+                      "s3"
+                    ],
+                    "id": "s4",
+                    "parameters": {
+                      "distance_m": 4.0
+                    },
+                    "skill": "walk_forward"
+                  },
+                  {
+                    "depends_on": [
+                      "s4"
+                    ],
+                    "id": "s5",
+                    "parameters": {},
+                    "skill": "stop"
+                  }
+                ],
+                "coverage": [
+                  {
+                    "explanation": "Ordering marker that makes 站立5秒 the first action; it does not add an action.",
+                    "role": "RELATION",
+                    "text": "先"
+                  },
+                  {
+                    "explanation": "Action clause requesting stand.",
+                    "role": "ACTION",
+                    "text": "站立"
+                  },
+                  {
+                    "explanation": "Duration quantity for stand: 5 seconds, so duration_s=5.0; it is explicit and not the default or vague.",
+                    "role": "QUANTITY",
+                    "text": "5秒"
+                  },
+                  {
+                    "explanation": "Clause separator; punctuation only, no executable effect.",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "Temporal relation placing the next action after the stand step.",
+                    "role": "RELATION",
+                    "text": "然后"
+                  },
+                  {
+                    "explanation": "Action clause requesting walk_forward; the following quantity supplies distance.",
+                    "role": "ACTION",
+                    "text": "前进"
+                  },
+                  {
+                    "explanation": "Distance quantity for the first forward walk: 4 meters, so distance_m=4.0.",
+                    "role": "QUANTITY",
+                    "text": "4米"
+                  },
+                  {
+                    "explanation": "Clause separator; punctuation only, no executable effect.",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "Temporal relation placing the next action after the first forward walk.",
+                    "role": "RELATION",
+                    "text": "再"
+                  },
+                  {
+                    "explanation": "Action clause requesting turn left; left direction maps to a positive angle.",
+                    "role": "ACTION",
+                    "text": "左转"
+                  },
+                  {
+                    "explanation": "Angle quantity for the turn: 45 degrees, so angle_deg=45.0.",
+                    "role": "QUANTITY",
+                    "text": "45度"
+                  },
+                  {
+                    "explanation": "Clause separator; punctuation only, no executable effect.",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "Temporal relation placing the next action after the turn step.",
+                    "role": "RELATION",
+                    "text": "之后"
+                  },
+                  {
+                    "explanation": "Action clause requesting the second walk_forward.",
+                    "role": "ACTION",
+                    "text": "前进"
+                  },
+                  {
+                    "explanation": "Distance quantity for the second forward walk: 4 meters, so distance_m=4.0.",
+                    "role": "QUANTITY",
+                    "text": "4米"
+                  },
+                  {
+                    "explanation": "Clause separator; punctuation only, no executable effect.",
+                    "role": "SEPARATOR",
+                    "text": "，"
+                  },
+                  {
+                    "explanation": "Ordering marker making 停止 the final action.",
+                    "role": "RELATION",
+                    "text": "最后"
+                  },
+                  {
+                    "explanation": "Action clause requesting stop with no parameters.",
+                    "role": "ACTION",
+                    "text": "停止"
+                  },
+                  {
+                    "explanation": "Sentence terminator; punctuation only, no executable effect.",
+                    "role": "SEPARATOR",
+                    "text": "。"
+                  }
+                ],
+                "dimensions": {
+                  "action_multiplicity": {
+                    "explanation": "The source has five distinct action clauses: 站立5秒, 前进4米, 左转45度, 前进4米, 停止. The two 前进4米 clauses are separate sequential actions, not a repetition instruction or replacement, so all five must appear.",
+                    "status": "UNIQUE"
+                  },
+                  "action_order": {
+                    "explanation": "The markers 先, 然后, 再, 之后, 最后 give one linear order: stand, walk_forward, turn, walk_forward, stop. No alternative order is allowed.",
+                    "status": "UNIQUE"
+                  },
+                  "correction_scope": {
+                    "explanation": "No correction/edit word such as 改为, 不是, or 而是 appears; no earlier action or parameter is replaced. All clauses are preserved.",
+                    "status": "UNIQUE"
+                  },
+                  "reference_resolution": {
+                    "explanation": "Temporal connectives refer only to the immediately preceding sequence position; there are no ambiguous pronouns or omitted arguments. 左 fixes turn direction as positive/left, and each quantity directly modifies its adjacent action.",
+                    "status": "UNIQUE"
+                  },
+                  "repetition_scope": {
+                    "explanation": "No repetition quantifier or repetition phrase occurs. The second 前进4米 is a newly stated action in the sequence, not a repetition of the first; it is preserved as its own step.",
+                    "status": "UNIQUE"
+                  },
+                  "temporal_relations": {
+                    "explanation": "All connectives specify before/after progression with no simultaneity or waiting: each later clause follows the prior one, yielding one linear order representable by a depends_on chain.",
+                    "status": "UNIQUE"
+                  },
+                  "unresolved_relations": {
+                    "explanation": "No explicit unresolved choice, optional alternative, open order, or unresolved relation is present; every action and parameter is fixed by source.",
+                    "status": "UNIQUE"
+                  }
+                },
+                "status": "AUTHORIZED_UNIQUE"
+              }
+            },
+            "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "step_count": 5,
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 440,
+            "total_tokens": 2199
+          },
+          "validation": {
+            "issues": [],
+            "valid": true
+          }
+        },
+        "error_code": null,
+        "error_message": null,
+        "mission": {
+          "mission_id": "mission-stand-walk-turn-walk-stop",
+          "schema_version": "2.0.0",
+          "steps": [
+            {
+              "id": "s1",
+              "parameters": {
+                "duration_s": 5.0
+              },
+              "skill": "stand"
+            },
+            {
+              "depends_on": [
+                "s1"
+              ],
+              "id": "s2",
+              "parameters": {
+                "distance_m": 4.0
+              },
+              "skill": "walk_forward"
+            },
+            {
+              "depends_on": [
+                "s2"
+              ],
+              "id": "s3",
+              "parameters": {
+                "angle_deg": 45.0
+              },
+              "skill": "turn"
+            },
+            {
+              "depends_on": [
+                "s3"
+              ],
+              "id": "s4",
+              "parameters": {
+                "distance_m": 4.0
+              },
+              "skill": "walk_forward"
+            },
+            {
+              "depends_on": [
+                "s4"
+              ],
+              "id": "s5",
+              "parameters": {},
+              "skill": "stop"
+            }
+          ]
+        },
+        "normalized_text": "先站立5秒然后前进4米再左转45度之后前进4米最后停止",
+        "status": "SUCCESS"
+      },
+      "score": {
+        "false_rejection": false,
+        "released": true,
+        "status": "SUCCESS",
+        "unauthorized_release": false,
+        "valid_exact": true,
+        "wrong_ir": false
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "completed",
+  "latency_s": 17.11754429999928,
+  "model": "deepseek-flash",
+  "provider_status": "completed",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_a4439cf8-04e8-416d-99a9-e80ffe43586b",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"停\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stop skill as the first action.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Separates the first action clause from the following action clause; it does not alter execution order by itself.\"\n    },\n    {\n      \"text\": \"站\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Requests the stand skill as the second action.\"\n    },\n    {\n      \"text\": \"1秒\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies an explicit stand duration of 1 second, so duration_s is 1.0 rather than the default 2.0.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Ends the first sentence containing the two action clauses; it introduces no additional action.\"\n    },\n    {\n      \"text\": \"顺序照这两句念的来\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Fixes the execution order to follow the two preceding clauses as read: 停 first, then 站1秒. It does not add, remove, or replace actions.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Separates the order instruction from the confirming phrase about 停 being first.\"\n    },\n    {\n      \"text\": \"停在前头\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Refers back to the initial stop action and confirms it is ahead/first in the sequence; it is not a second stop action.\"\n    },\n    {\n      \"text\": \"。\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Final punctuation; it has no executable effect.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly two action requests: 停 and 站1秒. The later 停在前头 refers back to the initial stop, so it does not create a third action, repetition, or replacement.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly orders the two action clauses by saying the order follows these two sentences as read and that 停 is first. Therefore stop is s1 and stand is s2.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is no edit, correction, cancellation, or replacement clause. The order statement governs sequencing only and does not replace either action.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"No repetition is requested. Each action occurs once; 这两句 counts the two action clauses, not repeated executions.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"这两句 resolves to the two preceding clauses 停 and 站1秒. 停在前头 resolves 停 to the initial stop action. 1秒 modifies 站 and specifies its duration.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source fixes a single linear sequence: stop first, then stand for 1 second. No simultaneous, waiting, or completion relation beyond the explicit stand duration is introduced.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source does not explicitly leave any action, parameter, order, repetition, or reference unresolved.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stand\",\n      \"parameters\": {\n        \"duration_s\": 1.0\n      },\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+  "usage": {
+    "input_tokens": 348,
+    "output_tokens": 3802,
+    "total_tokens": 5046
+  }
+}

@@ -1,0 +1,276 @@
+{
+  "added_wall_s": 16.434687400000257,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 16.431026299998848,
+        "provider_document": {
+          "created_at": 1791359390,
+          "id": "resp_866864d7-5304-41df-bdcb-794f6b8c2a2e",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_866864d7-5304-41df-bdcb-794f6b8c2a2e",
+              "reasoning_content": "We need answer JSON only. Need analyze source. Source Chinese: \"就左拐60度，OK。别再做第二个动作。\" Need parse. Means \"Just turn left 60 degrees, OK. Don't do a second action.\" So action: turn left 60 deg. \"别再做第二个动作\" = don't do another/second action. Candidate has single turn left 60. Need derive authorized plan. Need dimensions. Need coverage exact splits concatenating source exactly. Source includes \"就左拐60度，OK。别再做第二个动作。\" Need split meaningful spans. Need be careful.\n\nNeed determine if source uniquely authorizes one action turn angle +60. \"就\" just/only maybe emphatic restriction. \"左拐60度\" turn left 60 degrees. \"OK。\" maybe acknowledgment/context. \"别再做第二个动作。\" prohibits a second action. No repetitions, no correction? \"就\" maybe indicates only action, not add. \"别再做第二个动作\" confirms only one action, no second. So action multiplicity: exactly one action. action_order: only one. correction_scope: none? Maybe \"别再做第二个动作\" is a constraint/negative instruction, not edit? It doesn't correct previous, it prohibits additional action. Could be relation/EDIT? Need classify coverage role. Dimensions statuses unique.\n\nPotential issue: \"左拐\" could be turn left, angle positive. Max 180, 60 OK. \"就\" maybe \"just\" and \"OK\" not action. Need no mission_id. candidate has mission_id but candidate mismatch? The authorized plan should not include mission_id. Also candidate matches steps. But our plan no mission_id. Status AUTHORIZED_UNIQUE. Need output with coverage list.\n\nNeed ensure coverage text concatenated equals source exactly. Let's design spans:\n1 \"就\" role CONTEXT? Explanation: restrictive adverb \"just/only\", emphasizes single action; does not change skill/params.\n2 \"左拐60度\" role ACTION? This includes skill and qty. Or split \"左拐\" and \"60度\"? Need every action, relation, edit clause analyzed. Could split into ACTION \"左拐\" and QUANTITY \"60度\". But \"左拐60度\" is a meaningful action clause. Role ACTION maybe includes parameters. But dimensions quantity? Need role QUANTITY maybe for 60度. We can split:\n- \"就\" CONTEXT\n- \"左拐\" ACTION\n- \"60度\" QUANTITY\n- \"，OK。\" SEPARATOR? Maybe \"，OK。\" contains punctuation and OK. Need exact. Source: 就左拐60度，OK。别再做第二个动作。\nWe can split:\n\"就\" CONTEXT\n\"左拐\" ACTION\n\"60度\" QUANTITY\n\"，OK。\" SEPARATOR? Actually comma+OK+period. Explanation: punctuation and acknowledgment are nonexecuting; separates clauses.\n\"别再做第二个动作\" ACTION? It's negative instruction/RELATION? It constrains multiplicity, not an executable action. Role RELATION or CONTEXT. It says do not perform second action; relation to action count. Use RELATION.\n\"。\" SEPARATOR? Need if we split final period. Source ends with 。 after \"动作\". We can include in RELATION span \"别再做第二个动作。\" or separate. Need concatenate exact. Let's use exact spans:\n1 text \"就\" role CONTEXT\n2 text \"左拐\" role ACTION\n3 text \"60度\" role QUANTITY\n4 text \"，OK。\" role SEPARATOR\n5 text \"别再做第二个动作\" role RELATION\n6 text \"。\" role SEPARATOR\nConcatenate: 就左拐60度，OK。别再做第二个动作。 yes.\n\nCould also combine \"左拐60度\" as ACTION. But if split, role ACTION for 左拐 and QUANTITY for 60度. Need explanation nonempty.\n\nNeed dimensions exactly names:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nEach status UNIQUE and explanation.\n\nNeed authorized_plan list one step:\n{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}\nNeed maybe angle_deg 60 (JSON number). Positive. depends_on [].\n\nNeed \"coverage\" text values copied exactly. The source in JSON string includes Chinese no spaces. Need ensure exact. It is: 就左拐60度，OK。别再做第二个动作。\nLet's count: 就 左 拐 6 0 度 ， O K 。 别 再 做 第 二 个 动 作 。\nOur spans:\n\"就\" + \"左拐\" + \"60度\" + \"，OK。\" + \"别再做第二个动作\" + \"。\" = \n就左拐60度，OK。别再做第二个动作。 Correct. Note \"60\" is digits, okay.\n\nNeed discuss \"别再做第二个动作\" not executable action, constrains multiplicity to one; does not add skill stop or anything. \"OK\" acknowledgment not action. \"就\" restricts. \"60度\" parameter.\n\nNeed consider \"别再做第二个动作\" could be interpreted as \"don't do a second action\" but if source only asks one action, it's a negative constraint. Does it create ambiguity? If no second action specified, no. It reinforces one action. It doesn't forbid the first. Good.\n\nPotential issue: \"左拐\" in Chinese maybe \"turn left\" could be \"turn\" with angle_deg +60. \"拐\" could mean turn, but skills only turn. Yes.\n\nPotential issue: \"就\" could mean \"then\" or \"just\" but no issue.\n\nPotential issue: \"OK。\" maybe could be user saying \"OK\" after command? It doesn't change. Good.\n\nNeed status AUTHORIZED_UNIQUE only if all dimensions unique and complete source uniquely authorizes one legal interpretation. Yes.\n\nNeed output exactly JSON, no markdown. Need valid JSON. Explanations strings nonempty. Need no extra fields in authorized_plan. The JSON top-level keys exactly status, coverage, dimensions, authorized_plan. Each coverage object exactly text, role, explanation. Dimensions exactly seven keys. Each dimension object exactly status, explanation. authorized_plan steps exactly id, skill, parameters, depends_on.\n\nNeed ensure role values among allowed. Use ACTION, RELATION, QUANTITY, CONTEXT, SEPARATOR. Good.\n\nNeed perhaps \"correction_scope\" explanation: no correction/edit in source; \"就\" restriction not replacing prior action. \"别再做第二个动作\" not an edit to action, a constraint. UNIQUE. \"repetition_scope\": no repetition. \"reference_resolution\": no pronouns/ordinals except \"第二个动作\" refers to any additional action after first, resolved to prohibition of second step; no missing external context. \"temporal_relations\": single step, no before/after/wait. \"unresolved_relations\": none explicit unresolved.\n\nNeed maybe \"action_order\": one action, no order ambiguity.\n\nNeed mention candidate? Not required but can mention? Output must exactly keys. We can mention in explanations maybe not needed. Should not include candidate anchoring. The final plan source-derived.\n\nLet's craft. Ensure JSON escapes? Chinese okay. Use double quotes. Need no newline? Fine.\n\nLet's write:\n\n{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\"text\":\"就\",\"role\":\"CONTEXT\",\"explanation\":\"Restrictive adverb 'just/only'; emphasizes that the following turn is the sole requested executable action and does not change its parameters.\"},\n    {\"text\":\"左拐\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn skill with left/counterclockwise direction, which compiles to a positive angle_deg.\"},\n    {\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 60 degrees; valid nonzero finite angle within 180, so angle_deg=60.0.\"},\n    {\"text\":\"，OK。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation and acknowledgment 'OK'; nonexecuting and does not add, remove or alter any step or parameter.\"},\n    {\"text\":\"别再做第二个动作\",\"role\":\"RELATION\",\"explanation\":\"Negative constraint forbidding a second action; it confirms the plan contains exactly one executable action rather than adding a stop or replacement.\"},\n    {\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation; nonexecuting and leaves the authorized action unchanged.\"}\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\"status\":\"UNIQUE\",\"explanation\":\"Exactly one executable action is requested: 左拐 60 度. '就' restricts to this action and '别再做第二个动作' explicitly prohibits a second action, so no additional, repeated or replacement action is authorized.\"},\n    \"action_order\": {\"status\":\"UNIQUE\",\"explanation\":\"With only one executable action, the sole order is turn once at 60 degrees; there are no before/after relations among multiple steps.\"},\n    \"correction_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction clause is present; '别再做第二个动作' is a prohibition on adding another action, not a replacement of the requested turn or its parameter.\"},\n    \"repetition_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. The source asks for one turn and explicitly forbids a second action, so the turn must not be duplicated.\"},\n    \"reference_resolution\": {\"status\":\"UNIQUE\",\"explanation\":\"No unresolved pronoun or external referent is needed. '第二个动作' refers to any action after the first and resolves to the prohibition of an additional step.\"},\n    \"temporal_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"No waiting, completion, simultaneous or before/after relation is stated. The single requested action has no temporal dependency beyond being the first and only step.\"},\n    \"unresolved_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, parameter or relation unresolved; it fixes one turn and rules out a second action.\"}\n  },\n  \"authorized_plan\": [\n    {\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}\n  ]\n}\n\nNeed ensure \"coverage\" concatenated exactly. Our spans:\n\"就\" + \"左拐\" + \"60度\" + \"，OK。\" + \"别再做第二个动作\" + \"。\" = exact. Good.\n\nPotential concern: The source says \"别再做第二个动作\" maybe \"Don't do another second action\" could mean after this, don't do second action. It doesn't prevent first. Good.\n\nNeed no markdown. Final exactly JSON.\n\nDouble-check top-level keys exactly status coverage dimensions authorized_plan. Yes.\n\nNeed \"Numbers must be finite JSON numbers.\" 60.0 okay. If JSON number 60.0 okay. No extra confidence fields. Good.\n\nShould I include mission_id? No. Candidate had mission_id but instructions: No mission_id needed: identity is not semantic authority. authorized_plan steps no mission_id. The plan object itself? The authorized_plan is complete source-derived list of steps, not plan object. So list only. Good.\n\nPotential issue: \"authorized_plan is null for AMBIGUOUS or UNKNOWN. For AUTHORIZED_UNIQUE it is the complete source-derived list of steps. Each step has exactly id, skill, parameters, depends_on as defined above.\" So list. Good.\n\nNeed ensure explanations nonempty. Yes.\n\nPotential issue: Role \"RELATION\" for negative constraint. It's not exactly relation? Could be CONTEXT. But role choices. It's a relation on action multiplicity. Fine.\n\nPotential issue: \"，OK。\" as SEPARATOR includes comma, OK, period. Is \"OK\" context? Could be CONTEXT. But role SEPARATOR? It is punctuation + acknowledgment. It separates clauses. Explanation says acknowledgment nonexecuting. Accept.\n\nPotential issue: \"别再做第二个动作\" contains \"再\" could mean \"again\" or \"further\". It could imply don't do a second action again? Actually \"别再做第二个动作\" = \"Don't do a second action anymore.\" It might be a correction of a previous (maybe not in source) action? Source has only this utterance. It says \"Don't do a second action.\" It doesn't refer to previous external context. No external context needed. It prohibits second action. Good.\n\nPotential issue: \"就左拐60度\" maybe \"Just turn left 60 degrees\". \"就\" may also mean \"then\" if after something, but no prior. It's just emphasis. Could there be ambiguity between \"only turn left 60\" and \"then turn left 60\"? \"就\" alone at start could mean \"just\" or \"then\"; either way single action. No effect.\n\nPotential issue: \"左拐\" maybe \"turn left\" not \"turn left 60 degrees\" because \"拐\" not standard \"转\". But semantic okay. Compiler skill turn. Not ambiguous.\n\nPotential issue: \"60度\" could be angle 60. Yes.\n\nThus final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source. Source Chinese: \"就左拐60度，OK。别再做第二个动作。\" Need parse. Means \"Just turn left 60 degrees, OK. Don't do a second action.\" So action: turn left 60 deg. \"别再做第二个动作\" = don't do another/second action. Candidate has single turn left 60. Need derive authorized plan. Need dimensions. Need coverage exact splits concatenating source exactly. Source includes \"就左拐60度，OK。别再做第二个动作。\" Need split meaningful spans. Need be careful.\n\nNeed determine if source uniquely authorizes one action turn angle +60. \"就\" just/only maybe emphatic restriction. \"左拐60度\" turn left 60 degrees. \"OK。\" maybe acknowledgment/context. \"别再做第二个动作。\" prohibits a second action. No repetitions, no correction? \"就\" maybe indicates only action, not add. \"别再做第二个动作\" confirms only one action, no second. So action multiplicity: exactly one action. action_order: only one. correction_scope: none? Maybe \"别再做第二个动作\" is a constraint/negative instruction, not edit? It doesn't correct previous, it prohibits additional action. Could be relation/EDIT? Need classify coverage role. Dimensions statuses unique.\n\nPotential issue: \"左拐\" could be turn left, angle positive. Max 180, 60 OK. \"就\" maybe \"just\" and \"OK\" not action. Need no mission_id. candidate has mission_id but candidate mismatch? The authorized plan should not include mission_id. Also candidate matches steps. But our plan no mission_id. Status AUTHORIZED_UNIQUE. Need output with coverage list.\n\nNeed ensure coverage text concatenated equals source exactly. Let's design spans:\n1 \"就\" role CONTEXT? Explanation: restrictive adverb \"just/only\", emphasizes single action; does not change skill/params.\n2 \"左拐60度\" role ACTION? This includes skill and qty. Or split \"左拐\" and \"60度\"? Need every action, relation, edit clause analyzed. Could split into ACTION \"左拐\" and QUANTITY \"60度\". But \"左拐60度\" is a meaningful action clause. Role ACTION maybe includes parameters. But dimensions quantity? Need role QUANTITY maybe for 60度. We can split:\n- \"就\" CONTEXT\n- \"左拐\" ACTION\n- \"60度\" QUANTITY\n- \"，OK。\" SEPARATOR? Maybe \"，OK。\" contains punctuation and OK. Need exact. Source: 就左拐60度，OK。别再做第二个动作。\nWe can split:\n\"就\" CONTEXT\n\"左拐\" ACTION\n\"60度\" QUANTITY\n\"，OK。\" SEPARATOR? Actually comma+OK+period. Explanation: punctuation and acknowledgment are nonexecuting; separates clauses.\n\"别再做第二个动作\" ACTION? It's negative instruction/RELATION? It constrains multiplicity, not an executable action. Role RELATION or CONTEXT. It says do not perform second action; relation to action count. Use RELATION.\n\"。\" SEPARATOR? Need if we split final period. Source ends with 。 after \"动作\". We can include in RELATION span \"别再做第二个动作。\" or separate. Need concatenate exact. Let's use exact spans:\n1 text \"就\" role CONTEXT\n2 text \"左拐\" role ACTION\n3 text \"60度\" role QUANTITY\n4 text \"，OK。\" role SEPARATOR\n5 text \"别再做第二个动作\" role RELATION\n6 text \"。\" role SEPARATOR\nConcatenate: 就左拐60度，OK。别再做第二个动作。 yes.\n\nCould also combine \"左拐60度\" as ACTION. But if split, role ACTION for 左拐 and QUANTITY for 60度. Need explanation nonempty.\n\nNeed dimensions exactly names:\naction_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nEach status UNIQUE and explanation.\n\nNeed authorized_plan list one step:\n{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}\nNeed maybe angle_deg 60 (JSON number). Positive. depends_on [].\n\nNeed \"coverage\" text values copied exactly. The source in JSON string includes Chinese no spaces. Need ensure exact. It is: 就左拐60度，OK。别再做第二个动作。\nLet's count: 就 左 拐 6 0 度 ， O K 。 别 再 做 第 二 个 动 作 。\nOur spans:\n\"就\" + \"左拐\" + \"60度\" + \"，OK。\" + \"别再做第二个动作\" + \"。\" = \n就左拐60度，OK。别再做第二个动作。 Correct. Note \"60\" is digits, okay.\n\nNeed discuss \"别再做第二个动作\" not executable action, constrains multiplicity to one; does not add skill stop or anything. \"OK\" acknowledgment not action. \"就\" restricts. \"60度\" parameter.\n\nNeed consider \"别再做第二个动作\" could be interpreted as \"don't do a second action\" but if source only asks one action, it's a negative constraint. Does it create ambiguity? If no second action specified, no. It reinforces one action. It doesn't forbid the first. Good.\n\nPotential issue: \"左拐\" in Chinese maybe \"turn left\" could be \"turn\" with angle_deg +60. \"拐\" could mean turn, but skills only turn. Yes.\n\nPotential issue: \"就\" could mean \"then\" or \"just\" but no issue.\n\nPotential issue: \"OK。\" maybe could be user saying \"OK\" after command? It doesn't change. Good.\n\nNeed status AUTHORIZED_UNIQUE only if all dimensions unique and complete source uniquely authorizes one legal interpretation. Yes.\n\nNeed output exactly JSON, no markdown. Need valid JSON. Explanations strings nonempty. Need no extra fields in authorized_plan. The JSON top-level keys exactly status, coverage, dimensions, authorized_plan. Each coverage object exactly text, role, explanation. Dimensions exactly seven keys. Each dimension object exactly status, explanation. authorized_plan steps exactly id, skill, parameters, depends_on.\n\nNeed ensure role values among allowed. Use ACTION, RELATION, QUANTITY, CONTEXT, SEPARATOR. Good.\n\nNeed perhaps \"correction_scope\" explanation: no correction/edit in source; \"就\" restriction not replacing prior action. \"别再做第二个动作\" not an edit to action, a constraint. UNIQUE. \"repetition_scope\": no repetition. \"reference_resolution\": no pronouns/ordinals except \"第二个动作\" refers to any additional action after first, resolved to prohibition of second step; no missing external context. \"temporal_relations\": single step, no before/after/wait. \"unresolved_relations\": none explicit unresolved.\n\nNeed maybe \"action_order\": one action, no order ambiguity.\n\nNeed mention candidate? Not required but can mention? Output must exactly keys. We can mention in explanations maybe not needed. Should not include candidate anchoring. The final plan source-derived.\n\nLet's craft. Ensure JSON escapes? Chinese okay. Use double quotes. Need no newline? Fine.\n\nLet's write:\n\n{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\"text\":\"就\",\"role\":\"CONTEXT\",\"explanation\":\"Restrictive adverb 'just/only'; emphasizes that the following turn is the sole requested executable action and does not change its parameters.\"},\n    {\"text\":\"左拐\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn skill with left/counterclockwise direction, which compiles to a positive angle_deg.\"},\n    {\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 60 degrees; valid nonzero finite angle within 180, so angle_deg=60.0.\"},\n    {\"text\":\"，OK。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation and acknowledgment 'OK'; nonexecuting and does not add, remove or alter any step or parameter.\"},\n    {\"text\":\"别再做第二个动作\",\"role\":\"RELATION\",\"explanation\":\"Negative constraint forbidding a second action; it confirms the plan contains exactly one executable action rather than adding a stop or replacement.\"},\n    {\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation; nonexecuting and leaves the authorized action unchanged.\"}\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\"status\":\"UNIQUE\",\"explanation\":\"Exactly one executable action is requested: 左拐 60 度. '就' restricts to this action and '别再做第二个动作' explicitly prohibits a second action, so no additional, repeated or replacement action is authorized.\"},\n    \"action_order\": {\"status\":\"UNIQUE\",\"explanation\":\"With only one executable action, the sole order is turn once at 60 degrees; there are no before/after relations among multiple steps.\"},\n    \"correction_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction clause is present; '别再做第二个动作' is a prohibition on adding another action, not a replacement of the requested turn or its parameter.\"},\n    \"repetition_scope\": {\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. The source asks for one turn and explicitly forbids a second action, so the turn must not be duplicated.\"},\n    \"reference_resolution\": {\"status\":\"UNIQUE\",\"explanation\":\"No unresolved pronoun or external referent is needed. '第二个动作' refers to any action after the first and resolves to the prohibition of an additional step.\"},\n    \"temporal_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"No waiting, completion, simultaneous or before/after relation is stated. The single requested action has no temporal dependency beyond being the first and only step.\"},\n    \"unresolved_relations\": {\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, parameter or relation unresolved; it fixes one turn and rules out a second action.\"}\n  },\n  \"authorized_plan\": [\n    {\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}\n  ]\n}\n\nNeed ensure \"coverage\" concatenated exactly. Our spans:\n\"就\" + \"左拐\" + \"60度\" + \"，OK。\" + \"别再做第二个动作\" + \"。\" = exact. Good.\n\nPotential concern: The source says \"别再做第二个动作\" maybe \"Don't do another second action\" could mean after this, don't do second action. It doesn't prevent first. Good.\n\nNeed no markdown. Final exactly JSON.\n\nDouble-check top-level keys exactly status coverage dimensions authorized_plan. Yes.\n\nNeed \"Numbers must be finite JSON numbers.\" 60.0 okay. If JSON number 60.0 okay. No extra confidence fields. Good.\n\nShould I include mission_id? No. Candidate had mission_id but instructions: No mission_id needed: identity is not semantic authority. authorized_plan steps no mission_id. The plan object itself? The authorized_plan is complete source-derived list of steps, not plan object. So list only. Good.\n\nPotential issue: \"authorized_plan is null for AMBIGUOUS or UNKNOWN. For AUTHORIZED_UNIQUE it is the complete source-derived list of steps. Each step has exactly id, skill, parameters, depends_on as defined above.\" So list. Good.\n\nNeed ensure explanations nonempty. Yes.\n\nPotential issue: Role \"RELATION\" for negative constraint. It's not exactly relation? Could be CONTEXT. But role choices. It's a relation on action multiplicity. Fine.\n\nPotential issue: \"，OK。\" as SEPARATOR includes comma, OK, period. Is \"OK\" context? Could be CONTEXT. But role SEPARATOR? It is punctuation + acknowledgment. It separates clauses. Explanation says acknowledgment nonexecuting. Accept.\n\nPotential issue: \"别再做第二个动作\" contains \"再\" could mean \"again\" or \"further\". It could imply don't do a second action again? Actually \"别再做第二个动作\" = \"Don't do a second action anymore.\" It might be a correction of a previous (maybe not in source) action? Source has only this utterance. It says \"Don't do a second action.\" It doesn't refer to previous external context. No external context needed. It prohibits second action. Good.\n\nPotential issue: \"就左拐60度\" maybe \"Just turn left 60 degrees\". \"就\" may also mean \"then\" if after something, but no prior. It's just emphasis. Could there be ambiguity between \"only turn left 60\" and \"then turn left 60\"? \"就\" alone at start could mean \"just\" or \"then\"; either way single action. No effect.\n\nPotential issue: \"左拐\" maybe \"turn left\" not \"turn left 60 degrees\" because \"拐\" not standard \"转\". But semantic okay. Compiler skill turn. Not ambiguous.\n\nPotential issue: \"60度\" could be angle 60. Yes.\n\nThus final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"就\",\"role\":\"CONTEXT\",\"explanation\":\"Restrictive adverb 'just/only'; emphasizes that the following turn is the sole requested executable action and does not change its parameters.\"},{\"text\":\"左拐\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn skill with left/counterclockwise direction, which compiles to a positive angle_deg.\"},{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 60 degrees; valid nonzero finite angle within 180, so angle_deg=60.0.\"},{\"text\":\"，OK。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation and acknowledgment 'OK'; nonexecuting and does not add, remove or alter any step or parameter.\"},{\"text\":\"别再做第二个动作\",\"role\":\"RELATION\",\"explanation\":\"Negative constraint forbidding a second action; it confirms the plan contains exactly one executable action rather than adding a stop or replacement.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation; nonexecuting and leaves the authorized action unchanged.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one executable action is requested: 左拐 60 度. '就' restricts to this action and '别再做第二个动作' explicitly prohibits a second action, so no additional, repeated or replacement action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one executable action, the sole order is turn once at 60 degrees; there are no before/after relations among multiple steps.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction clause is present; '别再做第二个动作' is a prohibition on adding another action, not a replacement of the requested turn or its parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. The source asks for one turn and explicitly forbids a second action, so the turn must not be duplicated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No unresolved pronoun or external referent is needed. '第二个动作' refers to any action after the first and resolves to the prohibition of an additional step.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No waiting, completion, simultaneous or before/after relation is stated. The single requested action has no temporal dependency beyond being the first and only step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, parameter or relation unresolved; it fixes one turn and rules out a second action.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_866864d7-5304-41df-bdcb-794f6b8c2a2e",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 322,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 3402,
+            "output_tokens_details": {
+              "reasoning_tokens": 2800
+            },
+            "total_tokens": 4620
+          }
+        },
+        "request_sha256": "e80d578af745874061e014d9606f62ca7f5ac56847e4b58c01a4bccae08afbcd",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 16.429333300000508,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_866864d7-5304-41df-bdcb-794f6b8c2a2e",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"就\",\"role\":\"CONTEXT\",\"explanation\":\"Restrictive adverb 'just/only'; emphasizes that the following turn is the sole requested executable action and does not change its parameters.\"},{\"text\":\"左拐\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn skill with left/counterclockwise direction, which compiles to a positive angle_deg.\"},{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 60 degrees; valid nonzero finite angle within 180, so angle_deg=60.0.\"},{\"text\":\"，OK。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation and acknowledgment 'OK'; nonexecuting and does not add, remove or alter any step or parameter.\"},{\"text\":\"别再做第二个动作\",\"role\":\"RELATION\",\"explanation\":\"Negative constraint forbidding a second action; it confirms the plan contains exactly one executable action rather than adding a stop or replacement.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation; nonexecuting and leaves the authorized action unchanged.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one executable action is requested: 左拐 60 度. '就' restricts to this action and '别再做第二个动作' explicitly prohibits a second action, so no additional, repeated or replacement action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one executable action, the sole order is turn once at 60 degrees; there are no before/after relations among multiple steps.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction clause is present; '别再做第二个动作' is a prohibition on adding another action, not a replacement of the requested turn or its parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. The source asks for one turn and explicitly forbids a second action, so the turn must not be duplicated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No unresolved pronoun or external referent is needed. '第二个动作' refers to any action after the first and resolves to the prohibition of an additional step.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No waiting, completion, simultaneous or before/after relation is stated. The single requested action has no temporal dependency beyond being the first and only step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, parameter or relation unresolved; it fixes one turn and rules out a second action.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 322,
+          "output_tokens": 3402,
+          "total_tokens": 4620
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.499323699999877,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-left-60",
+      "model": "deepseek-flash",
+      "normalized_length": 18,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 188,
+      "raw_response_sha256": "c89141d03a1419a12b47e90500cc59a49e278172952d2897726ab1d47fc43322",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_240f9bdb-8bb0-47cc-a279-8e468625aa6f",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 16.433929900000294,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 16.429333300000508,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"就\",\"role\":\"CONTEXT\",\"explanation\":\"Restrictive adverb 'just/only'; emphasizes that the following turn is the sole requested executable action and does not change its parameters.\"},{\"text\":\"左拐\",\"role\":\"ACTION\",\"explanation\":\"Requests a turn skill with left/counterclockwise direction, which compiles to a positive angle_deg.\"},{\"text\":\"60度\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the turn magnitude as 60 degrees; valid nonzero finite angle within 180, so angle_deg=60.0.\"},{\"text\":\"，OK。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation and acknowledgment 'OK'; nonexecuting and does not add, remove or alter any step or parameter.\"},{\"text\":\"别再做第二个动作\",\"role\":\"RELATION\",\"explanation\":\"Negative constraint forbidding a second action; it confirms the plan contains exactly one executable action rather than adding a stop or replacement.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence-final punctuation; nonexecuting and leaves the authorized action unchanged.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Exactly one executable action is requested: 左拐 60 度. '就' restricts to this action and '别再做第二个动作' explicitly prohibits a second action, so no additional, repeated or replacement action is authorized.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"With only one executable action, the sole order is turn once at 60 degrees; there are no before/after relations among multiple steps.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No edit or correction clause is present; '别再做第二个动作' is a prohibition on adding another action, not a replacement of the requested turn or its parameter.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition is requested. The source asks for one turn and explicitly forbids a second action, so the turn must not be duplicated.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"No unresolved pronoun or external referent is needed. '第二个动作' refers to any action after the first and resolves to the prohibition of an additional step.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No waiting, completion, simultaneous or before/after relation is stated. The single requested action has no temporal dependency beyond being the first and only step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any scope, order, parameter or relation unresolved; it fixes one turn and rules out a second action.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":60.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "c07df37882c49b33bf48ecaa61a616fb92db7257ca42f326aae63c0f867384dc",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_866864d7-5304-41df-bdcb-794f6b8c2a2e",
+          "source_aware": true,
+          "source_sha256": "b6012af9624e5d97c3c083195b6a4ded63d23b3f7b6b8a77654ca02ec299ac7b",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 322,
+            "output_tokens": 3402,
+            "total_tokens": 4620
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "angle_deg": 60.0
+                },
+                "skill": "turn"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Restrictive adverb 'just/only'; emphasizes that the following turn is the sole requested executable action and does not change its parameters.",
+                "role": "CONTEXT",
+                "text": "就"
+              },
+              {
+                "explanation": "Requests a turn skill with left/counterclockwise direction, which compiles to a positive angle_deg.",
+                "role": "ACTION",
+                "text": "左拐"
+              },
+              {
+                "explanation": "Specifies the turn magnitude as 60 degrees; valid nonzero finite angle within 180, so angle_deg=60.0.",
+                "role": "QUANTITY",
+                "text": "60度"
+              },
+              {
+                "explanation": "Punctuation and acknowledgment 'OK'; nonexecuting and does not add, remove or alter any step or parameter.",
+                "role": "SEPARATOR",
+                "text": "，OK。"
+              },
+              {
+                "explanation": "Negative constraint forbidding a second action; it confirms the plan contains exactly one executable action rather than adding a stop or replacement.",
+                "role": "RELATION",
+                "text": "别再做第二个动作"
+              },
+              {
+                "explanation": "Sentence-final punctuation; nonexecuting and leaves the authorized action unchanged.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Exactly one executable action is requested: 左拐 60 度. '就' restricts to this action and '别再做第二个动作' explicitly prohibits a second action, so no additional, repeated or replacement action is authorized.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "With only one executable action, the sole order is turn once at 60 degrees; there are no before/after relations among multiple steps.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No edit or correction clause is present; '别再做第二个动作' is a prohibition on adding another action, not a replacement of the requested turn or its parameter.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "No unresolved pronoun or external referent is needed. '第二个动作' refers to any action after the first and resolves to the prohibition of an additional step.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition is requested. The source asks for one turn and explicitly forbids a second action, so the turn must not be duplicated.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No waiting, completion, simultaneous or before/after relation is stated. The single requested action has no temporal dependency beyond being the first and only step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any scope, order, parameter or relation unresolved; it fixes one turn and rules out a second action.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 212,
+        "output_tokens": 231,
+        "total_tokens": 1979
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-left-60",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "就左拐60度,OK,别再做第二个动作",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 8.882901000000857,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.876014600002236,
+        "provider_document": {
+          "created_at": 1791360268,
+          "id": "resp_760cc7ba-6474-41f5-81f0-b4af2013352d",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_760cc7ba-6474-41f5-81f0-b4af2013352d",
+              "reasoning_content": "We need answer JSON. Need inspect source Chinese: \"请往前走50米\" means \"Please walk forward 50 meters\". Need decide unique legal Mission IR interpretation. Dimensions.\n\nNeed output exact JSON. Need coverage split entire source exactly. Source string: 请往前走50米. We can split into spans. Need ensure concatenation equals entire source. Meaningful spans: \"请\" context/politeness, \"往前走\" action, \"50\" quantity, \"米\" unit maybe quantity/separator? Need role. Text values concatenated exactly: \"请\" + \"往前走\" + \"50\" + \"米\" = 请往前走50米. Good.\n\nDimension action_multiplicity: one action walk_forward. Unique. Action_order: single action no ordering ambiguity. Unique. Correction_scope: no edits. Unique? Inapplicable, no alternative. Repetition_scope: no repetition. Unique. Reference_resolution: no pronouns/ordinal; \"往前走\" self-contained direction forward. Unique. Temporal_relations: no before/after, single action. Unique. Unresolved_relations: no explicit unresolved. Unique. Entire source supports legal interpretation: walk_forward distance_m 50 positive finite. \"请\" doesn't change. Direction \"往前走\" means forward. Is there any ambiguity? In Chinese, \"往前走\" means go forward/walk forward. Could \"往\" be toward? It's clear. \"50米\" = 50m. Unique.\n\nNeed status AUTHORIZED_UNIQUE. Coverage list objects with text role explanation. Need every explanation nonempty. Dimensions exactly seven names. No extra.\n\nNeed be careful \"请\" role CONTEXT or SEPARATOR. It is context/politeness. \"往前走\" ACTION. \"50\" QUANTITY. \"米\" QUANTITY? Unit part of quantity. Since text concatenation, can separate. Role maybe QUANTITY for \"50\", QUANTITY for \"米\" or CONTEXT? We need role enum. QUANTITY for both? Explanation for 米 identifies unit meter. Or SEPARATOR? Better QUANTITY. Need coverage every action, relation, editing clause. No relation/edit. That's okay.\n\nNeed mention source contains no correction/repetition/reference/temporal relation, so inapplicable. Status unique.\n\nNeed output exactly JSON. No markdown.\n\nDouble-check instructions: coverage is nonempty list of objects with exactly text, role, explanation. text copied exactly preserving whitespace punctuation. Source has no spaces. Concatenated in list order equals entire original source. We can split as above. Explanation for each nonempty. It says every explanation is nonempty account of span's meaning and effect, including why a nonexecuting span does not modify authority. For \"请\", explain politeness marker, no action authority. For \"往前走\", action. For \"50\", quantity. For \"米\", unit. Could combine \"50米\" as one span? Then coverage list: \"请\", \"往前走\", \"50米\". Role: CONTEXT, ACTION, QUANTITY. That is simpler and concatenates. But \"meaningful spans so every action, relation and editing clause considered.\" Splitting unit separately okay. Maybe better \"50米\" as QUANTITY. But need preserve exact text. Both fine. The output text values concatenated in list order must equal entire original source. If \"50米\" text includes both characters. Role QUANTITY. Explanation quantity 50 meters. That's fine. But then only 3 spans. However, maybe \"50\" and \"米\" are separate meaningful? Unit not action. Either.\n\nNeed ensure \"请\" not action. Role CONTEXT. \"往前走\" ACTION. \"50米\" QUANTITY. That is concise.\n\nDimensions:\naction_multiplicity status UNIQUE explanation: Source contains exactly one action verb phrase \"往前走\"; no coordination/repetition/edit adds another action. \"请\" is politeness marker, not action. The action maps to walk_forward.\n\naction_order status UNIQUE: One requested action; no preceding/following action, so the linear plan is a single step s1 with no ordering choice.\n\ncorrection_scope status UNIQUE: No edit/correction clause in source; nothing replaces or preserves prior instruction; inapplicable and introduces no alternative.\n\nrepetition_scope status UNIQUE: No repetition marker; action occurs once, no span repeated.\n\nreference_resolution status UNIQUE: No pronouns/ordinals/omitted shared arguments needing prior context. \"往前\" resolves to forward direction within the phrase; \"50米\" is explicit distance.\n\ntemporal_relations status UNIQUE: No temporal connectives; single action requires no before/after/waiting/completion relation. linear.\n\nunresolved_relations status UNIQUE: Source explicitly leaves no unresolved choice/scope/order; it fully specifies one forward walk distance.\n\nNeed maybe mention legal: walk_forward requires positive finite distance_m, 50 meters positive finite. No turn/stand/stop.\n\nStatus authorized unique.\n\nNeed no extra fields. Valid JSON. Use Unicode Chinese. Ensure quotes. Fine.\n\nPotential issue: The source \"请往前走50米\" - does \"走\" mean walk, \"往前走\" go forward. It maps to walk_forward. Good.\n\nLet's craft final. JSON object exactly keys status, coverage, dimensions. Explanation strings. Ensure JSON valid. No markdown.",
+              "summary": [
+                {
+                  "text": "We need answer JSON. Need inspect source Chinese: \"请往前走50米\" means \"Please walk forward 50 meters\". Need decide unique legal Mission IR interpretation. Dimensions.\n\nNeed output exact JSON. Need coverage split entire source exactly. Source string: 请往前走50米. We can split into spans. Need ensure concatenation equals entire source. Meaningful spans: \"请\" context/politeness, \"往前走\" action, \"50\" quantity, \"米\" unit maybe quantity/separator? Need role. Text values concatenated exactly: \"请\" + \"往前走\" + \"50\" + \"米\" = 请往前走50米. Good.\n\nDimension action_multiplicity: one action walk_forward. Unique. Action_order: single action no ordering ambiguity. Unique. Correction_scope: no edits. Unique? Inapplicable, no alternative. Repetition_scope: no repetition. Unique. Reference_resolution: no pronouns/ordinal; \"往前走\" self-contained direction forward. Unique. Temporal_relations: no before/after, single action. Unique. Unresolved_relations: no explicit unresolved. Unique. Entire source supports legal interpretation: walk_forward distance_m 50 positive finite. \"请\" doesn't change. Direction \"往前走\" means forward. Is there any ambiguity? In Chinese, \"往前走\" means go forward/walk forward. Could \"往\" be toward? It's clear. \"50米\" = 50m. Unique.\n\nNeed status AUTHORIZED_UNIQUE. Coverage list objects with text role explanation. Need every explanation nonempty. Dimensions exactly seven names. No extra.\n\nNeed be careful \"请\" role CONTEXT or SEPARATOR. It is context/politeness. \"往前走\" ACTION. \"50\" QUANTITY. \"米\" QUANTITY? Unit part of quantity. Since text concatenation, can separate. Role maybe QUANTITY for \"50\", QUANTITY for \"米\" or CONTEXT? We need role enum. QUANTITY for both? Explanation for 米 identifies unit meter. Or SEPARATOR? Better QUANTITY. Need coverage every action, relation, editing clause. No relation/edit. That's okay.\n\nNeed mention source contains no correction/repetition/reference/temporal relation, so inapplicable. Status unique.\n\nNeed output exactly JSON. No markdown.\n\nDouble-check instructions: coverage is nonempty list of objects with exactly text, role, explanation. text copied exactly preserving whitespace punctuation. Source has no spaces. Concatenated in list order equals entire original source. We can split as above. Explanation for each nonempty. It says every explanation is nonempty account of span's meaning and effect, including why a nonexecuting span does not modify authority. For \"请\", explain politeness marker, no action authority. For \"往前走\", action. For \"50\", quantity. For \"米\", unit. Could combine \"50米\" as one span? Then coverage list: \"请\", \"往前走\", \"50米\". Role: CONTEXT, ACTION, QUANTITY. That is simpler and concatenates. But \"meaningful spans so every action, relation and editing clause considered.\" Splitting unit separately okay. Maybe better \"50米\" as QUANTITY. But need preserve exact text. Both fine. The output text values concatenated in list order must equal entire original source. If \"50米\" text includes both characters. Role QUANTITY. Explanation quantity 50 meters. That's fine. But then only 3 spans. However, maybe \"50\" and \"米\" are separate meaningful? Unit not action. Either.\n\nNeed ensure \"请\" not action. Role CONTEXT. \"往前走\" ACTION. \"50米\" QUANTITY. That is concise.\n\nDimensions:\naction_multiplicity status UNIQUE explanation: Source contains exactly one action verb phrase \"往前走\"; no coordination/repetition/edit adds another action. \"请\" is politeness marker, not action. The action maps to walk_forward.\n\naction_order status UNIQUE: One requested action; no preceding/following action, so the linear plan is a single step s1 with no ordering choice.\n\ncorrection_scope status UNIQUE: No edit/correction clause in source; nothing replaces or preserves prior instruction; inapplicable and introduces no alternative.\n\nrepetition_scope status UNIQUE: No repetition marker; action occurs once, no span repeated.\n\nreference_resolution status UNIQUE: No pronouns/ordinals/omitted shared arguments needing prior context. \"往前\" resolves to forward direction within the phrase; \"50米\" is explicit distance.\n\ntemporal_relations status UNIQUE: No temporal connectives; single action requires no before/after/waiting/completion relation. linear.\n\nunresolved_relations status UNIQUE: Source explicitly leaves no unresolved choice/scope/order; it fully specifies one forward walk distance.\n\nNeed maybe mention legal: walk_forward requires positive finite distance_m, 50 meters positive finite. No turn/stand/stop.\n\nStatus authorized unique.\n\nNeed no extra fields. Valid JSON. Use Unicode Chinese. Ensure quotes. Fine.\n\nPotential issue: The source \"请往前走50米\" - does \"走\" mean walk, \"往前走\" go forward. It maps to walk_forward. Good.\n\nLet's craft final. JSON object exactly keys status, coverage, dimensions. Explanation strings. Ensure JSON valid. No markdown.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker meaning 'please'; it does not request an additional action or modify the authority of the walking instruction.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"The sole action request: walk forward, corresponding to walk_forward. It supplies the direction but no distance by itself.\"},{\"text\":\"50米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as 50 meters for the walk_forward action. 米 is meters, so the legal positive finite distance_m is 50.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action phrase, 往前走, with one distance quantity 50米. 请 is only a politeness marker and does not add another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so the linear plan is a single step and no alternative execution order exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or preservation clause, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated action span appears; the single forward walk is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted arguments requiring prior context. 往前 directly resolves to forward, and 50米 directly supplies the distance.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneity, waiting, or completion relation is stated. A single action requires no temporal sequencing beyond one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It fully specifies one forward walk of 50 meters.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_760cc7ba-6474-41f5-81f0-b4af2013352d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 140,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1542,
+            "output_tokens_details": {
+              "reasoning_tokens": 1116
+            },
+            "total_tokens": 2450
+          }
+        },
+        "request_sha256": "b147548d67a2609123a53cadd6e91014be79a6feb0e700e19a5ba61292bc73ce",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.874506200001633,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_760cc7ba-6474-41f5-81f0-b4af2013352d",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker meaning 'please'; it does not request an additional action or modify the authority of the walking instruction.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"The sole action request: walk forward, corresponding to walk_forward. It supplies the direction but no distance by itself.\"},{\"text\":\"50米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as 50 meters for the walk_forward action. 米 is meters, so the legal positive finite distance_m is 50.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action phrase, 往前走, with one distance quantity 50米. 请 is only a politeness marker and does not add another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so the linear plan is a single step and no alternative execution order exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or preservation clause, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated action span appears; the single forward walk is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted arguments requiring prior context. 往前 directly resolves to forward, and 50米 directly supplies the distance.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneity, waiting, or completion relation is stated. A single action requires no temporal sequencing beyond one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It fully specifies one forward walk of 50 meters.\"}}}",
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 1542,
+          "total_tokens": 2450
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.8917159000011452,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk50",
+      "model": "deepseek-flash",
+      "normalized_length": 7,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk50\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":50.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "679b6769efc01c1a261b3036bf16aee3ab4ddc2c8d5f9758f6019adab6878d14",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_0a367a3c-0fec-4fd1-912d-b1da99cbf735",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 8.882232100000692,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.874506200001633,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker meaning 'please'; it does not request an additional action or modify the authority of the walking instruction.\"},{\"text\":\"往前走\",\"role\":\"ACTION\",\"explanation\":\"The sole action request: walk forward, corresponding to walk_forward. It supplies the direction but no distance by itself.\"},{\"text\":\"50米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the distance as 50 meters for the walk_forward action. 米 is meters, so the legal positive finite distance_m is 50.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one action phrase, 往前走, with one distance quantity 50米. 请 is only a politeness marker and does not add another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so the linear plan is a single step and no alternative execution order exists.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, correction, replacement, or preservation clause, so correction scope is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated action span appears; the single forward walk is requested once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted arguments requiring prior context. 往前 directly resolves to forward, and 50米 directly supplies the distance.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneity, waiting, or completion relation is stated. A single action requires no temporal sequencing beyond one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It fully specifies one forward walk of 50 meters.\"}}}",
+          "raw_response_sha256": "1f09ebdc2a6c71c555be5929bf9e08be621102665e6944ce5f279b662da7f531",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_760cc7ba-6474-41f5-81f0-b4af2013352d",
+          "source_aware": false,
+          "source_sha256": "2391bc069565edea5ba719ab65f4ecc6eb319c28035f5e55c727ae0180364f76",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 140,
+            "output_tokens": 1542,
+            "total_tokens": 2450
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Politeness marker meaning 'please'; it does not request an additional action or modify the authority of the walking instruction.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "The sole action request: walk forward, corresponding to walk_forward. It supplies the direction but no distance by itself.",
+                "role": "ACTION",
+                "text": "往前走"
+              },
+              {
+                "explanation": "Specifies the distance as 50 meters for the walk_forward action. 米 is meters, so the legal positive finite distance_m is 50.",
+                "role": "QUANTITY",
+                "text": "50米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action phrase, 往前走, with one distance quantity 50米. 请 is only a politeness marker and does not add another action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one requested action, so the linear plan is a single step and no alternative execution order exists.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no edit, correction, replacement, or preservation clause, so correction scope is inapplicable and introduces no alternative.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinal references, or omitted arguments requiring prior context. 往前 directly resolves to forward, and 50米 directly supplies the distance.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or repeated action span appears; the single forward walk is requested once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "No before, after, simultaneity, waiting, or completion relation is stated. A single action requires no temporal sequencing beyond one linear step.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. It fully specifies one forward walk of 50 meters.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 203,
+        "output_tokens": 154,
+        "total_tokens": 1893
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk50",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 50.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "请往前走50米",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,292 @@
+{
+  "added_wall_s": 9.024977000000945,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 9.020449699997698,
+        "provider_document": {
+          "created_at": 1791360027,
+          "id": "resp_a56ee0cc-3cbd-4086-96ed-161d79149b80",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_a56ee0cc-3cbd-4086-96ed-161d79149b80",
+              "reasoning_content": "We need answer JSON only. Need analyze source Chinese: \"先向前走4m，再停止\" Means first walk forward 4m, then stop. Need derive plan unique. Candidate matches likely. Need coverage exact spans concatenated equal source. Need split meaningful spans with roles. Source exact: 先向前走4m，再停止\nNeed coverage list objects text role explanation. Must concatenate exactly entire source. Need split into spans. We need decide spans: \"先\" maybe RELATION or SEPARATOR? \"向前走4m\" ACTION with quantity inside? \"，\" separator. \"再\" relation. \"停止\" action. But coverage text must concatenate exactly. Each object text copied exactly. Need all clauses analyzed. Could split \"先\" as RELATION, \"向前走\" ACTION? \"4m\" QUANTITY, \"，\" SEPARATOR, \"再\" RELATION, \"停止\" ACTION. Need ensure no omission. Yes concatenate 先 + 向前走 + 4m + ， + 再 + 停止 = 先向前走4m，再停止. This works. But maybe \"先\" denotes order first. \"向前走\" action with distance quantity 4m. \"再\" denotes after/then. Need explanations nonempty.\n\nNeed dimensions:\naction_multiplicity UNIQUE: two actions: walk_forward once distance 4m, stop once. No edits/repetitions.\naction_order UNIQUE: walk_forward then stop.\ncorrection_scope UNIQUE: no correction clauses. Inapplicable.\nrepetition_scope UNIQUE: none.\nreference_resolution UNIQUE: no pronouns? Omitted subject? \"向前走\" imperative, no external referent needed. Stop after walk. No ambiguous reference.\ntemporal_relations UNIQUE: sequential first then stop. depends_on chain.\nunresolved_relations UNIQUE: none.\n\nauthorized_plan list steps:\ns1 walk_forward parameters distance_m 4 (or 4.0). id s1 depends_on [].\ns2 stop parameters {} depends_on [\"s1\"].\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed output exactly JSON object no markdown. Ensure valid JSON. Use Chinese chars.\n\nNeed careful: The system says candidate_ir as untrusted. We don't mention candidate except maybe no. But coverage only source. dimensions.\n\nNeed potentially role for \"先\": RELATION. \"向前走\": ACTION. \"4m\": QUANTITY. \"，\": SEPARATOR. \"再\": RELATION. \"停止\": ACTION.\n\nExplanations in English or Chinese? Any. Nonempty. Might use English. Need \"text is copied exactly, with all original punctuation and whitespace.\" For split, no spaces. Source no trailing spaces? It is \"先向前走4m，再停止\". Chinese comma full-width. Good.\n\nPotential issue: \"向前走\" and \"4m\": Does \"向前走\" alone include direction? It is action. But source action phrase is \"向前走4m\" entire. Splitting into action and quantity okay. Explanation: action walk_forward, quantity distance_m 4.0. The coverage concatenation equal.\n\nNeed make sure coverage spans every action, relation edit clause. There is no edit. Role options include CONTEXT. Fine.\n\nCould there be ambiguity due to \"m\" maybe meters per semantics. It's explicit. Unique.\n\nNeed mention default stand not relevant. Stop parameters {}.\n\nNeed maybe action_multiplicity: \"停止\" after walking. No repetition. UNIQUE.\n\nNeed action_order: \"先...再...\" gives exact order.\n\nNeed correction_scope: no correction. Inapplicable, unique.\n\nNeed repetition_scope: no repetition. Inapplicable, unique.\n\nNeed reference_resolution: The implicit actor is instruction giver/robot, not a source referent? Source is imperative. No pronoun. \"再\" refers to after previous action, resolved by order. Unique.\n\nNeed temporal_relations: \"先...再...\" sequence, no simultaneity/waiting. Unique.\n\nNeed unresolved_relations: none explicit. Unique.\n\nNeed authorized_plan complete. No mission_id. depends_on s2 [\"s1\"]. Parameters exactly. JSON numbers finite. distance_m maybe 4.0. Fine.\n\nPotential hidden concern: \"先向前走4m，再停止\": At most 32, okay. \"先\" not a step. \"停止\" stop. Good.\n\nNeed final only JSON. Let's craft.\n\n Ensure no extra fields. Dimensions exactly seven names. Each value exactly status, explanation. Good.\n\nCoverage list nonempty. Each object exactly text, role, explanation. Good.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source Chinese: \"先向前走4m，再停止\" Means first walk forward 4m, then stop. Need derive plan unique. Candidate matches likely. Need coverage exact spans concatenated equal source. Need split meaningful spans with roles. Source exact: 先向前走4m，再停止\nNeed coverage list objects text role explanation. Must concatenate exactly entire source. Need split into spans. We need decide spans: \"先\" maybe RELATION or SEPARATOR? \"向前走4m\" ACTION with quantity inside? \"，\" separator. \"再\" relation. \"停止\" action. But coverage text must concatenate exactly. Each object text copied exactly. Need all clauses analyzed. Could split \"先\" as RELATION, \"向前走\" ACTION? \"4m\" QUANTITY, \"，\" SEPARATOR, \"再\" RELATION, \"停止\" ACTION. Need ensure no omission. Yes concatenate 先 + 向前走 + 4m + ， + 再 + 停止 = 先向前走4m，再停止. This works. But maybe \"先\" denotes order first. \"向前走\" action with distance quantity 4m. \"再\" denotes after/then. Need explanations nonempty.\n\nNeed dimensions:\naction_multiplicity UNIQUE: two actions: walk_forward once distance 4m, stop once. No edits/repetitions.\naction_order UNIQUE: walk_forward then stop.\ncorrection_scope UNIQUE: no correction clauses. Inapplicable.\nrepetition_scope UNIQUE: none.\nreference_resolution UNIQUE: no pronouns? Omitted subject? \"向前走\" imperative, no external referent needed. Stop after walk. No ambiguous reference.\ntemporal_relations UNIQUE: sequential first then stop. depends_on chain.\nunresolved_relations UNIQUE: none.\n\nauthorized_plan list steps:\ns1 walk_forward parameters distance_m 4 (or 4.0). id s1 depends_on [].\ns2 stop parameters {} depends_on [\"s1\"].\n\nNeed status AUTHORIZED_UNIQUE. coverage nonempty.\n\nNeed output exactly JSON object no markdown. Ensure valid JSON. Use Chinese chars.\n\nNeed careful: The system says candidate_ir as untrusted. We don't mention candidate except maybe no. But coverage only source. dimensions.\n\nNeed potentially role for \"先\": RELATION. \"向前走\": ACTION. \"4m\": QUANTITY. \"，\": SEPARATOR. \"再\": RELATION. \"停止\": ACTION.\n\nExplanations in English or Chinese? Any. Nonempty. Might use English. Need \"text is copied exactly, with all original punctuation and whitespace.\" For split, no spaces. Source no trailing spaces? It is \"先向前走4m，再停止\". Chinese comma full-width. Good.\n\nPotential issue: \"向前走\" and \"4m\": Does \"向前走\" alone include direction? It is action. But source action phrase is \"向前走4m\" entire. Splitting into action and quantity okay. Explanation: action walk_forward, quantity distance_m 4.0. The coverage concatenation equal.\n\nNeed make sure coverage spans every action, relation edit clause. There is no edit. Role options include CONTEXT. Fine.\n\nCould there be ambiguity due to \"m\" maybe meters per semantics. It's explicit. Unique.\n\nNeed mention default stand not relevant. Stop parameters {}.\n\nNeed maybe action_multiplicity: \"停止\" after walking. No repetition. UNIQUE.\n\nNeed action_order: \"先...再...\" gives exact order.\n\nNeed correction_scope: no correction. Inapplicable, unique.\n\nNeed repetition_scope: no repetition. Inapplicable, unique.\n\nNeed reference_resolution: The implicit actor is instruction giver/robot, not a source referent? Source is imperative. No pronoun. \"再\" refers to after previous action, resolved by order. Unique.\n\nNeed temporal_relations: \"先...再...\" sequence, no simultaneity/waiting. Unique.\n\nNeed unresolved_relations: none explicit. Unique.\n\nNeed authorized_plan complete. No mission_id. depends_on s2 [\"s1\"]. Parameters exactly. JSON numbers finite. distance_m maybe 4.0. Fine.\n\nPotential hidden concern: \"先向前走4m，再停止\": At most 32, okay. \"先\" not a step. \"停止\" stop. Good.\n\nNeed final only JSON. Let's craft.\n\n Ensure no extra fields. Dimensions exactly seven names. Each value exactly status, explanation. Good.\n\nCoverage list nonempty. Each object exactly text, role, explanation. Good.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the first action in the requested order; it does not create a step by itself.\"\n    },\n    {\n      \"text\": \"向前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Specifies a forward walking action, which compiles to the legal skill walk_forward.\"\n    },\n    {\n      \"text\": \"4m\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the walking distance as 4 meters, so distance_m is 4.0.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Separates the two requested clauses; it has no executable effect of its own.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Indicates that the following action occurs after the preceding walking action, establishing a sequential dependency.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Specifies a stopping action, which compiles to the legal skill stop with parameters {}.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly two actions: one forward walk of 4 meters and one stop. There are no edits, additions, removals, or repetitions.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The words 先 and 再 establish one exact order: walk_forward first, then stop.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction or replacement clause, so no earlier instruction is modified or revoked.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition or loop. Each requested action occurs once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns or ordinal references requiring external resolution. The imperative actions are directed to the executing agent, and 再 refers unambiguously to the preceding walk action.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requires a single linear sequence: complete the 4-meter forward walk, then stop. No simultaneity, waiting, or conditional timing is specified.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit choice of scope, order, parameter, or relationship unresolved.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 4.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_a56ee0cc-3cbd-4086-96ed-161d79149b80",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 213,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1685,
+            "output_tokens_details": {
+              "reasoning_tokens": 970
+            },
+            "total_tokens": 2922
+          }
+        },
+        "request_sha256": "132b551f34f99b6c9d0f2bb10bb766fdb419480d0440f0394d6f2e77d07f3ce7",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 9.018858499999624,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_a56ee0cc-3cbd-4086-96ed-161d79149b80",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the first action in the requested order; it does not create a step by itself.\"\n    },\n    {\n      \"text\": \"向前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Specifies a forward walking action, which compiles to the legal skill walk_forward.\"\n    },\n    {\n      \"text\": \"4m\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the walking distance as 4 meters, so distance_m is 4.0.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Separates the two requested clauses; it has no executable effect of its own.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Indicates that the following action occurs after the preceding walking action, establishing a sequential dependency.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Specifies a stopping action, which compiles to the legal skill stop with parameters {}.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly two actions: one forward walk of 4 meters and one stop. There are no edits, additions, removals, or repetitions.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The words 先 and 再 establish one exact order: walk_forward first, then stop.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction or replacement clause, so no earlier instruction is modified or revoked.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition or loop. Each requested action occurs once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns or ordinal references requiring external resolution. The imperative actions are directed to the executing agent, and 再 refers unambiguously to the preceding walk action.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requires a single linear sequence: complete the 4-meter forward walk, then stop. No simultaneity, waiting, or conditional timing is specified.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit choice of scope, order, parameter, or relationship unresolved.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 4.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+        "usage": {
+          "input_tokens": 213,
+          "output_tokens": 1685,
+          "total_tokens": 2922
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.370720499999152,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk4-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 9,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk4-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s1\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "a9f5a6d4f5786013160bcea74a8f9f935b34e82c664d776552a0f806f5837ec2",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_a34c0d6c-034d-4f0a-9b53-da771186639a",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 9.024298000000272,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 9.018858499999624,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Marks the first action in the requested order; it does not create a step by itself.\"\n    },\n    {\n      \"text\": \"向前走\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Specifies a forward walking action, which compiles to the legal skill walk_forward.\"\n    },\n    {\n      \"text\": \"4m\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the walking distance as 4 meters, so distance_m is 4.0.\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"Separates the two requested clauses; it has no executable effect of its own.\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"Indicates that the following action occurs after the preceding walking action, establishing a sequential dependency.\"\n    },\n    {\n      \"text\": \"停止\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Specifies a stopping action, which compiles to the legal skill stop with parameters {}.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requests exactly two actions: one forward walk of 4 meters and one stop. There are no edits, additions, removals, or repetitions.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The words 先 and 再 establish one exact order: walk_forward first, then stop.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no correction or replacement clause, so no earlier instruction is modified or revoked.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition or loop. Each requested action occurs once.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There are no pronouns or ordinal references requiring external resolution. The imperative actions are directed to the executing agent, and 再 refers unambiguously to the preceding walk action.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source requires a single linear sequence: complete the 4-meter forward walk, then stop. No simultaneity, waiting, or conditional timing is specified.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source leaves no explicit choice of scope, order, parameter, or relationship unresolved.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 4.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"stop\",\n      \"parameters\": {},\n      \"depends_on\": [\n        \"s1\"\n      ]\n    }\n  ]\n}",
+          "raw_response_sha256": "79ad072cc85c53c1a61402cec3c1067bf1d5aec53348e1b7a4283b3958362b87",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_a56ee0cc-3cbd-4086-96ed-161d79149b80",
+          "source_aware": true,
+          "source_sha256": "7110babb2040dd7ff2b84cccdab39bce7736ee64179335e085890b74b5fdf342",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 213,
+            "output_tokens": 1685,
+            "total_tokens": 2922
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {},
+                "skill": "stop"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Marks the first action in the requested order; it does not create a step by itself.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Specifies a forward walking action, which compiles to the legal skill walk_forward.",
+                "role": "ACTION",
+                "text": "向前走"
+              },
+              {
+                "explanation": "Specifies the walking distance as 4 meters, so distance_m is 4.0.",
+                "role": "QUANTITY",
+                "text": "4m"
+              },
+              {
+                "explanation": "Separates the two requested clauses; it has no executable effect of its own.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Indicates that the following action occurs after the preceding walking action, establishing a sequential dependency.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Specifies a stopping action, which compiles to the legal skill stop with parameters {}.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly two actions: one forward walk of 4 meters and one stop. There are no edits, additions, removals, or repetitions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The words 先 and 再 establish one exact order: walk_forward first, then stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no correction or replacement clause, so no earlier instruction is modified or revoked.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns or ordinal references requiring external resolution. The imperative actions are directed to the executing agent, and 再 refers unambiguously to the preceding walk action.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition or loop. Each requested action occurs once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source requires a single linear sequence: complete the 4-meter forward walk, then stop. No simultaneity, waiting, or conditional timing is specified.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit choice of scope, order, parameter, or relationship unresolved.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 207,
+        "output_tokens": 234,
+        "total_tokens": 1977
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk4-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先向前走4m再停止",
+    "status": "SUCCESS"
+  }
+}

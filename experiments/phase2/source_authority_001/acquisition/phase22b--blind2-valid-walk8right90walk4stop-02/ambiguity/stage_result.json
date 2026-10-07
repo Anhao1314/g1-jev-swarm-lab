@@ -1,0 +1,319 @@
+{
+  "added_wall_s": 12.05633300000045,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.049162499999511,
+        "provider_document": {
+          "created_at": 1791360153,
+          "id": "resp_40464ba2-4b4d-4ffb-9768-0eb1cf00bfe4",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_40464ba2-4b4d-4ffb-9768-0eb1cf00bfe4",
+              "reasoning_content": "We need answer JSON only. Need analyze Chinese source: \"麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止\"\n\nNeed decide dimensions. Actions:\n1 向前移动8m -> walk_forward distance 8m\n2 顺时针转90度 -> turn angle -90 (clockwise negative)\n3 前进4米 -> walk_forward 4m\n4 停止 -> stop\n\nOrder: 先...接着...然后...最后 clearly sequence. Unique. Action multiplicity: 4 actions, all distinct, no edits/repetition. Correction scope: no corrections. Repetition: no repetition. Reference resolution: \"前进4米\" refers to forward, no ambiguous pronoun; \"先\" etc. temporal: explicit linear order. unresolved: none. All unique. Need coverage split exact source preserving whitespace punctuation. Source no spaces? \"麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止\". Need coverage text concatenation equals entire original source. Need split meaningful spans, every action relation editing considered. We can list spans exactly. Need ensure concatenation. We can split into spans:\n\"麻烦\" maybe CONTEXT? \"先向前移动8m\" ACTION? \"，\" SEPARATOR, \"接着顺时针转90度\" ACTION? maybe includes relation \"接着\"? \"，\" SEPARATOR, \"然后前进4米\" ACTION? \"，\" SEPARATOR, \"最后停止\" ACTION.\nBut need include relation words. Could split:\n1 text: \"麻烦\" role CONTEXT explanation polite preamble, doesn't modify authority.\n2 text: \"先向前移动8m\" role ACTION? It includes 先 relation. Explanation: first action walk_forward 8m, 先 marks initial order. But role maybe ACTION. \n3 text: \"，\" SEPARATOR.\n4 text: \"接着顺时针转90度\" role ACTION.\n5 text: \"，\" SEPARATOR.\n6 text: \"然后前进4米\" role ACTION.\n7 text: \"，\" SEPARATOR.\n8 text: \"最后停止\" role ACTION.\nConcatenate: 麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止. Yes.\n\nBut role ACTION for spans including order connectors? The dimension explanation can cover. Alternatively split connectors separately:\n\"麻烦\" CONTEXT\n\"先\" RELATION? But \"先\" alone maybe relation.\n\"向前移动8m\" ACTION\n\"，\" SEPARATOR\n\"接着\" RELATION\n\"顺时针转90度\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"前进4米\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停止\" ACTION. That concatenates too. But \"先\" by itself is a relation. \"接着\" relation. \"然后\" relation. \"最后\" relation. Maybe better because every relation considered. Need text exact. Role for \"先\" is RELATION. Explanation: marks first action before subsequent ones. \"向前移动8m\" action. \"顺时针转90度\" action. \"前进4米\" action. \"停止\" action. Context \"麻烦\" polite request. Separators commas. This seems more granular. Need ensure no whitespace. Source includes no spaces. Good.\n\nNeed dimensions statuses. All UNIQUE. Need explain each with source evidence.\n\nNeed be careful: \"麻烦\" could be \"please\" no effect. \"先\" \"接着\" \"然后\" \"最后\" establish exact sequence. \"顺时针转90度\" = clockwise 90 degrees -> angle -90 within max. \"8m\" positive finite. \"4米\" positive finite. \"停止\" no params. Max steps 4 <=32. stand none. turn max 180. Legal. Unique.\n\nPotential nuance: \"向前移动8m\" and \"前进4米\": both forward, no ambiguity. \"顺时针\" clockwise negative. Good.\n\nNeed output exactly JSON object no markdown. We can include coverage list. Each explanation nonempty. Dimensions object exactly seven keys.\n\nNeed decide status AUTHORIZED_UNIQUE. Because all dimensions unique. The instruction: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and the entire source supports one legal interpretation.\" Yes.\n\nNeed coverage text values concatenated in list order equal entire original source exactly. Let's craft.\n\nList:\n1 text \"麻烦\" role CONTEXT explanation: Polite request marker; it adds no executable action or parameter and does not alter the sequence.\n2 text \"先\" role RELATION explanation: Marks the following forward movement as the first action in the linear order, before the turn, later forward movement, and stop.\n3 text \"向前移动8m\" role ACTION explanation: Executable walk_forward with positive finite distance 8 m in the forward direction.\n4 text \"，\" role SEPARATOR explanation: Separates the first action from the next relation/action; it does not change authority.\n5 text \"接着\" role RELATION explanation: Marks the following clockwise turn as immediately after the first forward movement.\n6 text \"顺时针转90度\" role ACTION explanation: Executable turn of 90 degrees clockwise, i.e. angle -90 degrees, nonzero finite and within the 180-degree legal limit.\n7 text \"，\" SEPARATOR.\n8 text \"然后\" RELATION: Marks following forward movement as next after the turn.\n9 text \"前进4米\" ACTION: walk_forward 4 m.\n10 text \"，\" SEPARATOR.\n11 text \"最后\" RELATION: Marks stop as final action after the second forward movement.\n12 text \"停止\" ACTION: stop with no parameters.\n\nConcatenate: \"麻烦\" + \"先\" = 麻烦先; + \"向前移动8m\" = 麻烦先向前移动8m; + \"，\" = ...，; + \"接着\" = ...，接着; + \"顺时针转90度\" = ...，接着顺时针转90度; + \"，\" ; + \"然后\" ; + \"前进4米\"; + \"，\"; + \"最后\"; + \"停止\". Matches.\n\nNeed dimensions explanations:\naction_multiplicity UNIQUE: Four requested actions: forward 8m, clockwise 90 turn, forward 4m, stop. No action is edited, replaced, or repeated; the second forward is another action.\naction_order UNIQUE: The connectives 先, 接着, 然后, 最后 plus the comma-separated order establish s1 walk_forward 8m, s2 turn -90, s3 walk_forward 4m, s4 stop. Single linear order.\ncorrection_scope UNIQUE: There are no correction/edit terms; no prior instruction is replaced or preserved beyond the natural sequence. So inapplicable, no alternative.\nrepetition_scope UNIQUE: No repetition markers or repeated spans; each action occurs once. Not applicable.\nreference_resolution UNIQUE: \"向前移动8m\" and \"前进4米\" independently specify direction and distance; no pronouns/ordinals requiring external context. \"顺时针\" modifies the turn; \"最后停止\" resolved to stop. No missing context.\ntemporal_relations UNIQUE: 先...接着...然后...最后 create strict sequential completion/order, representable as s1->s2->s3->s4 with each after predecessor. No simultaneity/waiting ambiguity.\nunresolved_relations UNIQUE: No explicit unresolved choice/scope/order; all relations resolved by ordered connectives. \nNeed mention no stand, etc.\n\nPotential issue: \"麻烦先向前移动8m\" action order etc. \"接着\" means \"next\" after first. \"然后\" \"then\". \"最后\" \"finally\". Good.\n\nNeed final exactly JSON. Ensure JSON strings escaped? Chinese okay. No markdown. Use double quotes. Make sure no trailing commas. Let's produce.\n\nNeed maybe coverage \"role\" allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. We use CONTEXT, RELATION, ACTION, SEPARATOR. Good.\n\nNeed \"coverage\" nonempty list objects exactly text, role, explanation. Yes.\n\nNeed dimensions object exactly seven names. Yes.\n\nLet's produce final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze Chinese source: \"麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止\"\n\nNeed decide dimensions. Actions:\n1 向前移动8m -> walk_forward distance 8m\n2 顺时针转90度 -> turn angle -90 (clockwise negative)\n3 前进4米 -> walk_forward 4m\n4 停止 -> stop\n\nOrder: 先...接着...然后...最后 clearly sequence. Unique. Action multiplicity: 4 actions, all distinct, no edits/repetition. Correction scope: no corrections. Repetition: no repetition. Reference resolution: \"前进4米\" refers to forward, no ambiguous pronoun; \"先\" etc. temporal: explicit linear order. unresolved: none. All unique. Need coverage split exact source preserving whitespace punctuation. Source no spaces? \"麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止\". Need coverage text concatenation equals entire original source. Need split meaningful spans, every action relation editing considered. We can list spans exactly. Need ensure concatenation. We can split into spans:\n\"麻烦\" maybe CONTEXT? \"先向前移动8m\" ACTION? \"，\" SEPARATOR, \"接着顺时针转90度\" ACTION? maybe includes relation \"接着\"? \"，\" SEPARATOR, \"然后前进4米\" ACTION? \"，\" SEPARATOR, \"最后停止\" ACTION.\nBut need include relation words. Could split:\n1 text: \"麻烦\" role CONTEXT explanation polite preamble, doesn't modify authority.\n2 text: \"先向前移动8m\" role ACTION? It includes 先 relation. Explanation: first action walk_forward 8m, 先 marks initial order. But role maybe ACTION. \n3 text: \"，\" SEPARATOR.\n4 text: \"接着顺时针转90度\" role ACTION.\n5 text: \"，\" SEPARATOR.\n6 text: \"然后前进4米\" role ACTION.\n7 text: \"，\" SEPARATOR.\n8 text: \"最后停止\" role ACTION.\nConcatenate: 麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止. Yes.\n\nBut role ACTION for spans including order connectors? The dimension explanation can cover. Alternatively split connectors separately:\n\"麻烦\" CONTEXT\n\"先\" RELATION? But \"先\" alone maybe relation.\n\"向前移动8m\" ACTION\n\"，\" SEPARATOR\n\"接着\" RELATION\n\"顺时针转90度\" ACTION\n\"，\" SEPARATOR\n\"然后\" RELATION\n\"前进4米\" ACTION\n\"，\" SEPARATOR\n\"最后\" RELATION\n\"停止\" ACTION. That concatenates too. But \"先\" by itself is a relation. \"接着\" relation. \"然后\" relation. \"最后\" relation. Maybe better because every relation considered. Need text exact. Role for \"先\" is RELATION. Explanation: marks first action before subsequent ones. \"向前移动8m\" action. \"顺时针转90度\" action. \"前进4米\" action. \"停止\" action. Context \"麻烦\" polite request. Separators commas. This seems more granular. Need ensure no whitespace. Source includes no spaces. Good.\n\nNeed dimensions statuses. All UNIQUE. Need explain each with source evidence.\n\nNeed be careful: \"麻烦\" could be \"please\" no effect. \"先\" \"接着\" \"然后\" \"最后\" establish exact sequence. \"顺时针转90度\" = clockwise 90 degrees -> angle -90 within max. \"8m\" positive finite. \"4米\" positive finite. \"停止\" no params. Max steps 4 <=32. stand none. turn max 180. Legal. Unique.\n\nPotential nuance: \"向前移动8m\" and \"前进4米\": both forward, no ambiguity. \"顺时针\" clockwise negative. Good.\n\nNeed output exactly JSON object no markdown. We can include coverage list. Each explanation nonempty. Dimensions object exactly seven keys.\n\nNeed decide status AUTHORIZED_UNIQUE. Because all dimensions unique. The instruction: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and the entire source supports one legal interpretation.\" Yes.\n\nNeed coverage text values concatenated in list order equal entire original source exactly. Let's craft.\n\nList:\n1 text \"麻烦\" role CONTEXT explanation: Polite request marker; it adds no executable action or parameter and does not alter the sequence.\n2 text \"先\" role RELATION explanation: Marks the following forward movement as the first action in the linear order, before the turn, later forward movement, and stop.\n3 text \"向前移动8m\" role ACTION explanation: Executable walk_forward with positive finite distance 8 m in the forward direction.\n4 text \"，\" role SEPARATOR explanation: Separates the first action from the next relation/action; it does not change authority.\n5 text \"接着\" role RELATION explanation: Marks the following clockwise turn as immediately after the first forward movement.\n6 text \"顺时针转90度\" role ACTION explanation: Executable turn of 90 degrees clockwise, i.e. angle -90 degrees, nonzero finite and within the 180-degree legal limit.\n7 text \"，\" SEPARATOR.\n8 text \"然后\" RELATION: Marks following forward movement as next after the turn.\n9 text \"前进4米\" ACTION: walk_forward 4 m.\n10 text \"，\" SEPARATOR.\n11 text \"最后\" RELATION: Marks stop as final action after the second forward movement.\n12 text \"停止\" ACTION: stop with no parameters.\n\nConcatenate: \"麻烦\" + \"先\" = 麻烦先; + \"向前移动8m\" = 麻烦先向前移动8m; + \"，\" = ...，; + \"接着\" = ...，接着; + \"顺时针转90度\" = ...，接着顺时针转90度; + \"，\" ; + \"然后\" ; + \"前进4米\"; + \"，\"; + \"最后\"; + \"停止\". Matches.\n\nNeed dimensions explanations:\naction_multiplicity UNIQUE: Four requested actions: forward 8m, clockwise 90 turn, forward 4m, stop. No action is edited, replaced, or repeated; the second forward is another action.\naction_order UNIQUE: The connectives 先, 接着, 然后, 最后 plus the comma-separated order establish s1 walk_forward 8m, s2 turn -90, s3 walk_forward 4m, s4 stop. Single linear order.\ncorrection_scope UNIQUE: There are no correction/edit terms; no prior instruction is replaced or preserved beyond the natural sequence. So inapplicable, no alternative.\nrepetition_scope UNIQUE: No repetition markers or repeated spans; each action occurs once. Not applicable.\nreference_resolution UNIQUE: \"向前移动8m\" and \"前进4米\" independently specify direction and distance; no pronouns/ordinals requiring external context. \"顺时针\" modifies the turn; \"最后停止\" resolved to stop. No missing context.\ntemporal_relations UNIQUE: 先...接着...然后...最后 create strict sequential completion/order, representable as s1->s2->s3->s4 with each after predecessor. No simultaneity/waiting ambiguity.\nunresolved_relations UNIQUE: No explicit unresolved choice/scope/order; all relations resolved by ordered connectives. \nNeed mention no stand, etc.\n\nPotential issue: \"麻烦先向前移动8m\" action order etc. \"接着\" means \"next\" after first. \"然后\" \"then\". \"最后\" \"finally\". Good.\n\nNeed final exactly JSON. Ensure JSON strings escaped? Chinese okay. No markdown. Use double quotes. Make sure no trailing commas. Let's produce.\n\nNeed maybe coverage \"role\" allowed: ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. We use CONTEXT, RELATION, ACTION, SEPARATOR. Good.\n\nNeed \"coverage\" nonempty list objects exactly text, role, explanation. Yes.\n\nNeed dimensions object exactly seven names. Yes.\n\nLet's produce final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it adds no executable action or parameter and does not alter the requested sequence.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the following forward movement as the first action in the linear order, before the turn, later forward movement, and stop.\"},{\"text\":\"向前移动8m\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward with a positive finite distance of 8 meters in the forward direction.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the first action from the next relation/action; it does not change authority.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the following clockwise turn as coming immediately after the first forward movement.\"},{\"text\":\"顺时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Executable turn of 90 degrees clockwise, i.e. angle -90 degrees, nonzero and within the 180-degree legal limit.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn from the next relation/action; it does not change authority.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following forward movement as the next action after the turn.\"},{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward with a positive finite distance of 4 meters in the forward direction.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the second forward movement from the final relation/action; it does not change authority.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the stop as the final action after the second forward movement.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Executable stop action with no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests four actions: forward 8m, clockwise turn 90 degrees, forward 4m, and stop. No action is edited, replaced, or repeated; the second forward movement is a distinct requested action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 接着, 然后, and 最后 plus the comma-separated listing establish one exact linear order: walk_forward 8m, then turn -90 degrees, then walk_forward 4m, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction or edit terms such as changing, replacing, or excepting a prior instruction. No prior action, parameter, group, or relation is modified, so correction scope is inapplicable and introduces no alternative reading.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated action span appears. Each action is requested exactly once, so repetition scope is inapplicable and introduces no alternative reading.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前移动8m and 前进4米 independently specify forward motion and their distances; 顺时针 resolves the turn direction; 最后停止 resolves to a final stop. No pronoun, ordinal, or omitted shared argument requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"先...接着...然后...最后 create a strict sequential order without simultaneity or waiting ambiguity, representable as s1 walk_forward 8m, s2 turn -90 degrees, s3 walk_forward 4m, s4 stop, with each step depending on its predecessor.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes the four actions, their parameters, and their order. It leaves no unresolved choice, scope, ordering, or relationship open for interpretation.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_40464ba2-4b4d-4ffb-9768-0eb1cf00bfe4",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 156,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2513,
+            "output_tokens_details": {
+              "reasoning_tokens": 1705
+            },
+            "total_tokens": 3437
+          }
+        },
+        "request_sha256": "fade48d81e0ba4bea1f2b9bf9ac3c6fdd13f4b39b33b567982ea97cf467dd3ba",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.047589399997378,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_40464ba2-4b4d-4ffb-9768-0eb1cf00bfe4",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it adds no executable action or parameter and does not alter the requested sequence.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the following forward movement as the first action in the linear order, before the turn, later forward movement, and stop.\"},{\"text\":\"向前移动8m\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward with a positive finite distance of 8 meters in the forward direction.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the first action from the next relation/action; it does not change authority.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the following clockwise turn as coming immediately after the first forward movement.\"},{\"text\":\"顺时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Executable turn of 90 degrees clockwise, i.e. angle -90 degrees, nonzero and within the 180-degree legal limit.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn from the next relation/action; it does not change authority.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following forward movement as the next action after the turn.\"},{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward with a positive finite distance of 4 meters in the forward direction.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the second forward movement from the final relation/action; it does not change authority.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the stop as the final action after the second forward movement.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Executable stop action with no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests four actions: forward 8m, clockwise turn 90 degrees, forward 4m, and stop. No action is edited, replaced, or repeated; the second forward movement is a distinct requested action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 接着, 然后, and 最后 plus the comma-separated listing establish one exact linear order: walk_forward 8m, then turn -90 degrees, then walk_forward 4m, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction or edit terms such as changing, replacing, or excepting a prior instruction. No prior action, parameter, group, or relation is modified, so correction scope is inapplicable and introduces no alternative reading.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated action span appears. Each action is requested exactly once, so repetition scope is inapplicable and introduces no alternative reading.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前移动8m and 前进4米 independently specify forward motion and their distances; 顺时针 resolves the turn direction; 最后停止 resolves to a final stop. No pronoun, ordinal, or omitted shared argument requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"先...接着...然后...最后 create a strict sequential order without simultaneity or waiting ambiguity, representable as s1 walk_forward 8m, s2 turn -90 degrees, s3 walk_forward 4m, s4 stop, with each step depending on its predecessor.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes the four actions, their parameters, and their order. It leaves no unresolved choice, scope, ordering, or relationship open for interpretation.\"}}}",
+        "usage": {
+          "input_tokens": 156,
+          "output_tokens": 2513,
+          "total_tokens": 3437
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.3458028999993985,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "g1-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 28,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"g1-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "51d191080d5fff923a3bec29b044dbf4b5d310a2bb194c42e701632687baeea1",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_8a4bca89-d2b7-445a-84f9-7a42e9daff28",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 12.05519060000006,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 12.047589399997378,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite request marker; it adds no executable action or parameter and does not alter the requested sequence.\"},{\"text\":\"先\",\"role\":\"RELATION\",\"explanation\":\"Marks the following forward movement as the first action in the linear order, before the turn, later forward movement, and stop.\"},{\"text\":\"向前移动8m\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward with a positive finite distance of 8 meters in the forward direction.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the first action from the next relation/action; it does not change authority.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the following clockwise turn as coming immediately after the first forward movement.\"},{\"text\":\"顺时针转90度\",\"role\":\"ACTION\",\"explanation\":\"Executable turn of 90 degrees clockwise, i.e. angle -90 degrees, nonzero and within the 180-degree legal limit.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the turn from the next relation/action; it does not change authority.\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"Marks the following forward movement as the next action after the turn.\"},{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"Executable walk_forward with a positive finite distance of 4 meters in the forward direction.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Separates the second forward movement from the final relation/action; it does not change authority.\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"Marks the stop as the final action after the second forward movement.\"},{\"text\":\"停止\",\"role\":\"ACTION\",\"explanation\":\"Executable stop action with no parameters.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests four actions: forward 8m, clockwise turn 90 degrees, forward 4m, and stop. No action is edited, replaced, or repeated; the second forward movement is a distinct requested action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The sequence markers 先, 接着, 然后, and 最后 plus the comma-separated listing establish one exact linear order: walk_forward 8m, then turn -90 degrees, then walk_forward 4m, then stop.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no correction or edit terms such as changing, replacing, or excepting a prior instruction. No prior action, parameter, group, or relation is modified, so correction scope is inapplicable and introduces no alternative reading.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition marker or repeated action span appears. Each action is requested exactly once, so repetition scope is inapplicable and introduces no alternative reading.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"向前移动8m and 前进4米 independently specify forward motion and their distances; 顺时针 resolves the turn direction; 最后停止 resolves to a final stop. No pronoun, ordinal, or omitted shared argument requires external context.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"先...接着...然后...最后 create a strict sequential order without simultaneity or waiting ambiguity, representable as s1 walk_forward 8m, s2 turn -90 degrees, s3 walk_forward 4m, s4 stop, with each step depending on its predecessor.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly fixes the four actions, their parameters, and their order. It leaves no unresolved choice, scope, ordering, or relationship open for interpretation.\"}}}",
+          "raw_response_sha256": "2e57fdbc0c9a9df2a621d100cffe6879593fc155d8b07c0a0382a6e91e2668fd",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_40464ba2-4b4d-4ffb-9768-0eb1cf00bfe4",
+          "source_aware": false,
+          "source_sha256": "eada4e8735128b186f67c4c23f5c268c5d84f20059fbac0f2a835620381b8368",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 156,
+            "output_tokens": 2513,
+            "total_tokens": 3437
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Polite request marker; it adds no executable action or parameter and does not alter the requested sequence.",
+                "role": "CONTEXT",
+                "text": "麻烦"
+              },
+              {
+                "explanation": "Marks the following forward movement as the first action in the linear order, before the turn, later forward movement, and stop.",
+                "role": "RELATION",
+                "text": "先"
+              },
+              {
+                "explanation": "Executable walk_forward with a positive finite distance of 8 meters in the forward direction.",
+                "role": "ACTION",
+                "text": "向前移动8m"
+              },
+              {
+                "explanation": "Separates the first action from the next relation/action; it does not change authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Marks the following clockwise turn as coming immediately after the first forward movement.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Executable turn of 90 degrees clockwise, i.e. angle -90 degrees, nonzero and within the 180-degree legal limit.",
+                "role": "ACTION",
+                "text": "顺时针转90度"
+              },
+              {
+                "explanation": "Separates the turn from the next relation/action; it does not change authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Marks the following forward movement as the next action after the turn.",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "Executable walk_forward with a positive finite distance of 4 meters in the forward direction.",
+                "role": "ACTION",
+                "text": "前进4米"
+              },
+              {
+                "explanation": "Separates the second forward movement from the final relation/action; it does not change authority.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Marks the stop as the final action after the second forward movement.",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "Executable stop action with no parameters.",
+                "role": "ACTION",
+                "text": "停止"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests four actions: forward 8m, clockwise turn 90 degrees, forward 4m, and stop. No action is edited, replaced, or repeated; the second forward movement is a distinct requested action.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The sequence markers 先, 接着, 然后, and 最后 plus the comma-separated listing establish one exact linear order: walk_forward 8m, then turn -90 degrees, then walk_forward 4m, then stop.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There are no correction or edit terms such as changing, replacing, or excepting a prior instruction. No prior action, parameter, group, or relation is modified, so correction scope is inapplicable and introduces no alternative reading.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "向前移动8m and 前进4米 independently specify forward motion and their distances; 顺时针 resolves the turn direction; 最后停止 resolves to a final stop. No pronoun, ordinal, or omitted shared argument requires external context.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition marker or repeated action span appears. Each action is requested exactly once, so repetition scope is inapplicable and introduces no alternative reading.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "先...接着...然后...最后 create a strict sequential order without simultaneity or waiting ambiguity, representable as s1 walk_forward 8m, s2 turn -90 degrees, s3 walk_forward 4m, s4 stop, with each step depending on its predecessor.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly fixes the four actions, their parameters, and their order. It leaves no unresolved choice, scope, ordering, or relationship open for interpretation.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 318,
+        "total_tokens": 2073
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "g1-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "麻烦先向前移动8m接着顺时针转90度然后前进4米最后停止",
+    "status": "SUCCESS"
+  }
+}

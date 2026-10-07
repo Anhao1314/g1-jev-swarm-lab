@@ -1,0 +1,183 @@
+{
+  "added_wall_s": 8.697774000000209,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.694367799998872,
+        "provider_document": {
+          "created_at": 1791360019,
+          "id": "resp_fd4bdadc-bedb-4f23-9db9-b406e76bcdf3",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_fd4bdadc-bedb-4f23-9db9-b406e76bcdf3",
+              "reasoning_content": "We need answer JSON only. Need inspect source: \"麻烦顺时针转三十度\" Chinese. Means \"Please turn clockwise 30 degrees.\" Need determine unique legal Mission IR 2.0. Actions legal: turn. \"顺时针\" clockwise = right/clockwise negative. Turn requires nonzero finite angle_deg. angle 30 degrees, clockwise => -30. Within max abs 180. Unique. Action multiplicity one. Order one. Correction none. Repetition none. Reference none. Temporal none. Unresolved none. Status AUTHORIZED_UNIQUE.\n\nNeed coverage split source into meaningful spans, text values concatenated exactly equal entire source. Source is \"麻烦顺时针转三十度\". We can split into maybe \"麻烦\" CONTEXT and \"顺时针转三十度\" ACTION. Or \"麻烦\" context, \"顺时针\" quantity/direction, \"转\" action, \"三十\" quantity, \"度\" quantity? Need ensure text exact. Let's do coverage objects:\n1 text \"麻烦\" role CONTEXT explanation polite preface, no executable effect.\n2 text \"顺时针\" role QUANTITY? It's direction modifier. Maybe QUANTITY for direction? Role options include QUANTITY for quantities, context. Direction could be QUANTITY? Or ACTION? We need every action considered. Maybe \"顺时针转三十度\" as ACTION with explanation includes direction and angle. But then \"麻烦\" CONTEXT. That's simplest: text values concatenate. Each action considered. But maybe split \"转\" action and \"三十度\" quantity and \"顺时针\" relation? Let's use meaningful spans:\n- \"麻烦\" CONTEXT: polite marker, no command semantics.\n- \"顺时针\" QUANTITY: clockwise direction, corresponds to negative sign in angle.\n- \"转\" ACTION: turn command.\n- \"三十\" QUANTITY: 30 angle magnitude.\n- \"度\" QUANTITY: unit degree; qualifies angle. But role for \"度\" maybe QUANTITY. That concatenates exactly. Explanations nonempty. However splitting 三十 and 度 maybe okay. But \"三十\" is Chinese numeral 30. \"度\" unit degree. Need mention combined with 顺时针 gives -30. The action span \"转\" alone. Is that meaningful? Yes. But coverage should ensure all action relations editing considered. There is no relation. Maybe \"顺时针转三十度\" as one ACTION span and \"麻烦\" CONTEXT is cleaner. Requirement: split source into meaningful spans so every action, relation and editing clause is considered. Single action span plus context. It copies entire source. Let's do two objects:\n1 \"麻烦\" CONTEXT: politeness marker, does not alter action or introduce sequence.\n2 \"顺时针转三十度\" ACTION: one turn command, clockwise 30 degrees, angle_deg -30, legal. No edits, repetitions, references, temporal relations, or unresolved choices.\n\nNeed dimensions exactly seven. Each with status and explanation. All UNIQUE. Need status string.\n\nNeed be careful: \"顺时针\" in Chinese clockwise. The legal semantics say left/counterclockwise positive, right/clockwise negative. So -30. Legal.\n\nPotential issue: \"三十度\" can mean 30 degrees; number \"三十\" is 30. finite nonzero. Good.\n\nNeed output exactly JSON object, no markdown. Ensure JSON valid. No extra fields. coverage nonempty list. dimensions exactly names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed explanation for each.\n\nLet's craft concise but sufficient. Ensure no markdown. Final only JSON.\n\nNeed maybe mention coverage copying exact entire original source. The source in JSON is \"麻烦顺时针转三十度\". We include text exactly.\n\nCheck if any ambiguity due to \"顺时针转三十度\" could be \"turn clockwise by 30 degrees\" only. Unique. The source lacks explicit \"向右\" but clockwise maps to negative. No ambiguity. Could \"顺时针\" in horizontal plane? It's standard. Unique.\n\nAction_multiplicity: exactly one action turn. No repeated or edited actions. UNIQUE.\nAction_order: only one action, no temporal relation, single step s1. UNIQUE.\nCorrection_scope: no correction/edit/rescission. UNIQUE.\nRepetition_scope: no repetition. UNIQUE.\nReference_resolution: no pronouns/ordinals/omitted shared args/external references. UNIQUE.\nTemporal_relations: no before/after/waiting/simultaneity; one action sequence. UNIQUE.\nUnresolved_relations: no explicitly unresolved relation. UNIQUE.\n\nNeed maybe mention \"麻烦\" is context but not a legal action. Good.\n\nLet's final JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source: \"麻烦顺时针转三十度\" Chinese. Means \"Please turn clockwise 30 degrees.\" Need determine unique legal Mission IR 2.0. Actions legal: turn. \"顺时针\" clockwise = right/clockwise negative. Turn requires nonzero finite angle_deg. angle 30 degrees, clockwise => -30. Within max abs 180. Unique. Action multiplicity one. Order one. Correction none. Repetition none. Reference none. Temporal none. Unresolved none. Status AUTHORIZED_UNIQUE.\n\nNeed coverage split source into meaningful spans, text values concatenated exactly equal entire source. Source is \"麻烦顺时针转三十度\". We can split into maybe \"麻烦\" CONTEXT and \"顺时针转三十度\" ACTION. Or \"麻烦\" context, \"顺时针\" quantity/direction, \"转\" action, \"三十\" quantity, \"度\" quantity? Need ensure text exact. Let's do coverage objects:\n1 text \"麻烦\" role CONTEXT explanation polite preface, no executable effect.\n2 text \"顺时针\" role QUANTITY? It's direction modifier. Maybe QUANTITY for direction? Role options include QUANTITY for quantities, context. Direction could be QUANTITY? Or ACTION? We need every action considered. Maybe \"顺时针转三十度\" as ACTION with explanation includes direction and angle. But then \"麻烦\" CONTEXT. That's simplest: text values concatenate. Each action considered. But maybe split \"转\" action and \"三十度\" quantity and \"顺时针\" relation? Let's use meaningful spans:\n- \"麻烦\" CONTEXT: polite marker, no command semantics.\n- \"顺时针\" QUANTITY: clockwise direction, corresponds to negative sign in angle.\n- \"转\" ACTION: turn command.\n- \"三十\" QUANTITY: 30 angle magnitude.\n- \"度\" QUANTITY: unit degree; qualifies angle. But role for \"度\" maybe QUANTITY. That concatenates exactly. Explanations nonempty. However splitting 三十 and 度 maybe okay. But \"三十\" is Chinese numeral 30. \"度\" unit degree. Need mention combined with 顺时针 gives -30. The action span \"转\" alone. Is that meaningful? Yes. But coverage should ensure all action relations editing considered. There is no relation. Maybe \"顺时针转三十度\" as one ACTION span and \"麻烦\" CONTEXT is cleaner. Requirement: split source into meaningful spans so every action, relation and editing clause is considered. Single action span plus context. It copies entire source. Let's do two objects:\n1 \"麻烦\" CONTEXT: politeness marker, does not alter action or introduce sequence.\n2 \"顺时针转三十度\" ACTION: one turn command, clockwise 30 degrees, angle_deg -30, legal. No edits, repetitions, references, temporal relations, or unresolved choices.\n\nNeed dimensions exactly seven. Each with status and explanation. All UNIQUE. Need status string.\n\nNeed be careful: \"顺时针\" in Chinese clockwise. The legal semantics say left/counterclockwise positive, right/clockwise negative. So -30. Legal.\n\nPotential issue: \"三十度\" can mean 30 degrees; number \"三十\" is 30. finite nonzero. Good.\n\nNeed output exactly JSON object, no markdown. Ensure JSON valid. No extra fields. coverage nonempty list. dimensions exactly names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed explanation for each.\n\nLet's craft concise but sufficient. Ensure no markdown. Final only JSON.\n\nNeed maybe mention coverage copying exact entire original source. The source in JSON is \"麻烦顺时针转三十度\". We include text exactly.\n\nCheck if any ambiguity due to \"顺时针转三十度\" could be \"turn clockwise by 30 degrees\" only. Unique. The source lacks explicit \"向右\" but clockwise maps to negative. No ambiguity. Could \"顺时针\" in horizontal plane? It's standard. Unique.\n\nAction_multiplicity: exactly one action turn. No repeated or edited actions. UNIQUE.\nAction_order: only one action, no temporal relation, single step s1. UNIQUE.\nCorrection_scope: no correction/edit/rescission. UNIQUE.\nRepetition_scope: no repetition. UNIQUE.\nReference_resolution: no pronouns/ordinals/omitted shared args/external references. UNIQUE.\nTemporal_relations: no before/after/waiting/simultaneity; one action sequence. UNIQUE.\nUnresolved_relations: no explicitly unresolved relation. UNIQUE.\n\nNeed maybe mention \"麻烦\" is context but not a legal action. Good.\n\nLet's final JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite preface meaning “please.” It does not add, remove, repeat, reorder, or modify any legal action; it only frames the request.\"},{\"text\":\"顺时针转三十度\",\"role\":\"ACTION\",\"explanation\":\"One turn action. 顺时针 specifies clockwise direction, which maps to a negative angle under the IR semantics, and 三十度 specifies 30 degrees magnitude. This yields a single legal turn step with angle_deg = -30, within the maximum absolute angle of 180 degrees. No other action, correction, repetition, reference, temporal relation, or unresolved choice is present.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: 转 (turn). 顺时针 and 三十度 are parameters of that single action, not additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so the execution order is trivially a single step with no competing order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, replacement, cancellation, or correction clause. Nothing modifies a prior action, parameter, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker. 转 occurs once as the requested action and is not silently expanded into multiple turns.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands. 顺时针 and 三十度 directly qualify the single turn action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action can be represented as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Clockwise maps to a negative turn angle and 三十度 supplies the magnitude.\"}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_fd4bdadc-bedb-4f23-9db9-b406e76bcdf3",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 141,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 1418,
+            "output_tokens_details": {
+              "reasoning_tokens": 972
+            },
+            "total_tokens": 2327
+          }
+        },
+        "request_sha256": "8d5c79314dd5a18e39e56686ffbccc847634c0a7725fdf8be83e08b326617ab0",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.692800600001647,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_fd4bdadc-bedb-4f23-9db9-b406e76bcdf3",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite preface meaning “please.” It does not add, remove, repeat, reorder, or modify any legal action; it only frames the request.\"},{\"text\":\"顺时针转三十度\",\"role\":\"ACTION\",\"explanation\":\"One turn action. 顺时针 specifies clockwise direction, which maps to a negative angle under the IR semantics, and 三十度 specifies 30 degrees magnitude. This yields a single legal turn step with angle_deg = -30, within the maximum absolute angle of 180 degrees. No other action, correction, repetition, reference, temporal relation, or unresolved choice is present.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: 转 (turn). 顺时针 and 三十度 are parameters of that single action, not additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so the execution order is trivially a single step with no competing order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, replacement, cancellation, or correction clause. Nothing modifies a prior action, parameter, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker. 转 occurs once as the requested action and is not silently expanded into multiple turns.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands. 顺时针 and 三十度 directly qualify the single turn action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action can be represented as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Clockwise maps to a negative turn angle and 三十度 supplies the magnitude.\"}}",
+        "usage": {
+          "input_tokens": 141,
+          "output_tokens": 1418,
+          "total_tokens": 2327
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 2,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.7645556000024953,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-cw-30",
+      "model": "deepseek-flash",
+      "normalized_length": 9,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"turn-cw-30\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-30.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "28efde78c89ddca9ac8f8532110e4f52ef1d6528567ddf5e08076c7b43d8843b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": false,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_41e45a45-64bf-4de8-beca-750c8cc1e6cc",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "finish_reason": "completed",
+          "latency_s": 8.697154900000896,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 8.692800600001647,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"麻烦\",\"role\":\"CONTEXT\",\"explanation\":\"Polite preface meaning “please.” It does not add, remove, repeat, reorder, or modify any legal action; it only frames the request.\"},{\"text\":\"顺时针转三十度\",\"role\":\"ACTION\",\"explanation\":\"One turn action. 顺时针 specifies clockwise direction, which maps to a negative angle under the IR semantics, and 三十度 specifies 30 degrees magnitude. This yields a single legal turn step with angle_deg = -30, within the maximum absolute angle of 180 degrees. No other action, correction, repetition, reference, temporal relation, or unresolved choice is present.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: 转 (turn). 顺时针 and 三十度 are parameters of that single action, not additional actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"There is only one requested action, so the execution order is trivially a single step with no competing order.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no edit, replacement, cancellation, or correction clause. Nothing modifies a prior action, parameter, group, or relation.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains no repetition marker. 转 occurs once as the requested action and is not silently expanded into multiple turns.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinals, omitted shared arguments, or references to earlier commands. 顺时针 and 三十度 directly qualify the single turn action.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting, or completion relation is stated. The single action can be represented as one linear step.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly leaves no choice, scope, ordering, or relationship unresolved. Clockwise maps to a negative turn angle and 三十度 supplies the magnitude.\"}}",
+          "raw_response_sha256": "5d4a31144c559b15f481f56342d36bddff250e150f5a7dfcc59234549ca7464c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_fd4bdadc-bedb-4f23-9db9-b406e76bcdf3",
+          "source_aware": false,
+          "source_sha256": "d713a2af0ffc364d4ce37969eeb1dbaaa32388f7a39467a57f7c6170a669cbaa",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 141,
+            "output_tokens": 1418,
+            "total_tokens": 2327
+          }
+        },
+        "reason_code": "MALFORMED_OUTPUT",
+        "status": "UNKNOWN"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 116,
+        "total_tokens": 1856
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": "LLM_OUTPUT_INVALID",
+    "error_message": "source authorization withheld executable Mission: MALFORMED_OUTPUT",
+    "mission": null,
+    "normalized_text": "麻烦顺时针转三十度",
+    "status": "MALFORMED"
+  }
+}

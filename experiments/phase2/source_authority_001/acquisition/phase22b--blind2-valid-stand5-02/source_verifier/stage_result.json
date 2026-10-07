@@ -1,0 +1,244 @@
+{
+  "added_wall_s": 10.604718599999615,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 10.601033499999176,
+        "provider_document": {
+          "created_at": 1791359837,
+          "id": "resp_1995d81b-e88d-4db7-b294-54ee67d019d0",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_1995d81b-e88d-4db7-b294-54ee67d019d0",
+              "reasoning_content": "We need answer JSON only. Need analyze source Chinese \"请站好5s\". Need derive authorized plan. Need be careful. Source: \"请站好5s\" = \"please stand for 5s\"? Skills: stand. Parameters duration_s positive finite at most 60. No duration specified default 2.0. Here \"5s\" likely 5 seconds. Need parse exact. Chinese \"站好\" means stand (well/properly), duration 5s. Is \"5s\" explicit duration? It says 5s, seconds. Yes duration_s 5.0. Single action. Plan s1 stand duration_s 5.0 depends_on []. Candidate matches. Need output status AUTHORIZED_UNIQUE, coverage exact spans. Need split source into meaningful spans and concatenated equal entire original source exactly. Source string \"请站好5s\" no spaces. Need coverage list text values concatenated exactly. Need include all chars. Could split \"请\" (CONTEXT/SEPARATOR?) \"站好\" ACTION, \"5s\" QUANTITY. Concatenated: \"请\"+\"站好\"+\"5s\" = \"请站好5s\". Yes. Role: \"请\" is politeness marker CONTEXT or SEPARATOR? It requests action, not altering. \"站好\" action stand. \"5s\" quantity duration. Need explanation nonempty. Dimensions seven. Need assess all.\n\nPotential ambiguity: \"站好5s\" could mean \"stand well 5s\" = stand for 5 seconds. The duration \"5s\" explicit. Legal. Unique.\n\nNeed check \"站好\" maybe \"stand\" skill vs \"stand well\" not walk. Skills include stand. Good.\n\nNeed ensure stand duration at most 60: 5 <=60. Positive. Plan 1 step.\n\nNeed output JSON object exactly with keys status, coverage, dimensions, authorized_plan. dimensions exactly seven. Each dimension status + explanation. authorized_plan list step exactly id, skill, parameters, depends_on. No extra fields.\n\nNeed write dimension explanations maybe concise. Need mention action_multiplicity: one action. action_order: single, no order relations. correction_scope: no corrections. repetition_scope: no repetition (5s is duration, not repetition). reference_resolution: no pronouns/ordinals/omitted args except duration explicit. temporal_relations: no before/after etc. unresolved_relations: none.\n\nNeed be wary \"站好5s\" maybe \"stand well 5s\" could be \"stand for 5 seconds\" yes. \"s\" unit seconds. Source doesn't include space. \"5s\" is explicit duration. Could \"s\" be plural? In Chinese contexts, \"5s\" means 5 seconds. Legal.\n\nNeed coverage exact text with punctuation and whitespace. Source has no punctuation. \"请站好5s\". Could split \"请站\" and \"好5s\"? But \"站好\" is meaningful action. \"5s\" quantity. Need concatenated. Role for \"请\": CONTEXT maybe. Explanation: polite request marker, does not add/change action; authorizes same action. For \"站好\": ACTION. \"好\" maybe resultative complement, means stand properly; maps to stand. For \"5s\": QUANTITY. Explanation: duration_s=5.0 seconds explicit, within limits, not repetition. Good.\n\nPotential issue: The coverage text values concatenated in order must equal entire original source exactly. If I split \"请\" + \"站好\" + \"5s\", yes. They don't require every character separate. Good.\n\nNeed ensure JSON valid with Chinese. Output no markdown.\n\nLet's craft.\n\nBut need consider if source \"请站好5s\" has no delimiter between action and quantity; \"站好5s\" could parse as \"stand 5s\" but \"好\" maybe \"done\" as result \"stand done\"? Actually \"站好\" often means \"stand still/stand properly\" as command. It is an action; duration follows. Unique.\n\nCheck action_multiplicity: \"请站好5s\" one command. No repeated. Unique.\n\nAction_order: only one action, so order uniquely s1. Unique.\n\nCorrection_scope: no edit clauses. Unique.\n\nRepetition_scope: \"5s\" is duration quantity, not repetition. No repetition. Unique.\n\nReference_resolution: No pronouns/ordinals; action implicit subject is agent? We don't need. Duration explicit 5s. Unique.\n\nTemporal_relations: single action duration. No sequence. Unique.\n\nUnresolved_relations: none explicit. Unique.\n\nStatus AUTHORIZED_UNIQUE. Candidate matches. Good.\n\nNeed final exactly JSON. Use proper escaping? Chinese okay. JSON values. Coverage list objects exactly text role explanation. Dimensions object with exactly names. authorized_plan list.\n\nLet's ensure no extra fields in step: id skill parameters depends_on. parameters object has duration_s. Good.\n\nNeed numbers finite: 5.0. JSON number.\n\nPotential nuance: \"s\" unit maybe seconds, but source does not say 秒. However in supplied compilation semantics, seconds parameter duration_s; \"s\" common abbreviation. Is \"5s\" explicit? Yes. Could there be ambiguity with \"s\" as plural English? The source Chinese but includes Latin s. In robot command, \"5s\" commonly seconds. The rules don't explicitly define \"s\" abbreviation like 秒? They define stand duration_s positive finite seconds, no unit mention? They state stand parameters contain duration_s, positive finite seconds, at most 60. When no duration specified default. Explicitly vague duration unresolved. They mention 米/m and 厘米/cm for distance, and left/counterclockwise etc. They don't explicitly say \"s\" converts to seconds, but \"5s\" semantically seconds. Should be okay. If strict, \"s\" not defined? The source \"5s\" likely means 5 seconds. Maybe need not overthink. But our role is authorization verifier; source \"请站好5s\". The \"s\" is unit abbreviation. It's explicit. Unique.\n\nWait: Chinese \"站好5s\" could be \"stand good 5s\" = stand for 5s. There is no \"秒\". The system says \"duration_s, positive finite seconds\". It doesn't list unit abbreviations for seconds, but \"s\" is standard. The candidate uses 5.0. The task likely expects authorize. Need not reject due to lack of unit mapping? The rules mention 米/m and 厘米/cm convert; for seconds, \"s\" probably recognized. If not, duration could be vague? But \"5s\" is common. The source uses \"s\", likely seconds. The candidate_ir matched. We should not use candidate as evidence but source says 5s. I'd treat as explicit 5 seconds.\n\nNeed maybe \"站好\" includes \"好\" which could imply \"stand well\" with no duration? But 5s modifies it. Good.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source Chinese \"请站好5s\". Need derive authorized plan. Need be careful. Source: \"请站好5s\" = \"please stand for 5s\"? Skills: stand. Parameters duration_s positive finite at most 60. No duration specified default 2.0. Here \"5s\" likely 5 seconds. Need parse exact. Chinese \"站好\" means stand (well/properly), duration 5s. Is \"5s\" explicit duration? It says 5s, seconds. Yes duration_s 5.0. Single action. Plan s1 stand duration_s 5.0 depends_on []. Candidate matches. Need output status AUTHORIZED_UNIQUE, coverage exact spans. Need split source into meaningful spans and concatenated equal entire original source exactly. Source string \"请站好5s\" no spaces. Need coverage list text values concatenated exactly. Need include all chars. Could split \"请\" (CONTEXT/SEPARATOR?) \"站好\" ACTION, \"5s\" QUANTITY. Concatenated: \"请\"+\"站好\"+\"5s\" = \"请站好5s\". Yes. Role: \"请\" is politeness marker CONTEXT or SEPARATOR? It requests action, not altering. \"站好\" action stand. \"5s\" quantity duration. Need explanation nonempty. Dimensions seven. Need assess all.\n\nPotential ambiguity: \"站好5s\" could mean \"stand well 5s\" = stand for 5 seconds. The duration \"5s\" explicit. Legal. Unique.\n\nNeed check \"站好\" maybe \"stand\" skill vs \"stand well\" not walk. Skills include stand. Good.\n\nNeed ensure stand duration at most 60: 5 <=60. Positive. Plan 1 step.\n\nNeed output JSON object exactly with keys status, coverage, dimensions, authorized_plan. dimensions exactly seven. Each dimension status + explanation. authorized_plan list step exactly id, skill, parameters, depends_on. No extra fields.\n\nNeed write dimension explanations maybe concise. Need mention action_multiplicity: one action. action_order: single, no order relations. correction_scope: no corrections. repetition_scope: no repetition (5s is duration, not repetition). reference_resolution: no pronouns/ordinals/omitted args except duration explicit. temporal_relations: no before/after etc. unresolved_relations: none.\n\nNeed be wary \"站好5s\" maybe \"stand well 5s\" could be \"stand for 5 seconds\" yes. \"s\" unit seconds. Source doesn't include space. \"5s\" is explicit duration. Could \"s\" be plural? In Chinese contexts, \"5s\" means 5 seconds. Legal.\n\nNeed coverage exact text with punctuation and whitespace. Source has no punctuation. \"请站好5s\". Could split \"请站\" and \"好5s\"? But \"站好\" is meaningful action. \"5s\" quantity. Need concatenated. Role for \"请\": CONTEXT maybe. Explanation: polite request marker, does not add/change action; authorizes same action. For \"站好\": ACTION. \"好\" maybe resultative complement, means stand properly; maps to stand. For \"5s\": QUANTITY. Explanation: duration_s=5.0 seconds explicit, within limits, not repetition. Good.\n\nPotential issue: The coverage text values concatenated in order must equal entire original source exactly. If I split \"请\" + \"站好\" + \"5s\", yes. They don't require every character separate. Good.\n\nNeed ensure JSON valid with Chinese. Output no markdown.\n\nLet's craft.\n\nBut need consider if source \"请站好5s\" has no delimiter between action and quantity; \"站好5s\" could parse as \"stand 5s\" but \"好\" maybe \"done\" as result \"stand done\"? Actually \"站好\" often means \"stand still/stand properly\" as command. It is an action; duration follows. Unique.\n\nCheck action_multiplicity: \"请站好5s\" one command. No repeated. Unique.\n\nAction_order: only one action, so order uniquely s1. Unique.\n\nCorrection_scope: no edit clauses. Unique.\n\nRepetition_scope: \"5s\" is duration quantity, not repetition. No repetition. Unique.\n\nReference_resolution: No pronouns/ordinals; action implicit subject is agent? We don't need. Duration explicit 5s. Unique.\n\nTemporal_relations: single action duration. No sequence. Unique.\n\nUnresolved_relations: none explicit. Unique.\n\nStatus AUTHORIZED_UNIQUE. Candidate matches. Good.\n\nNeed final exactly JSON. Use proper escaping? Chinese okay. JSON values. Coverage list objects exactly text role explanation. Dimensions object with exactly names. authorized_plan list.\n\nLet's ensure no extra fields in step: id skill parameters depends_on. parameters object has duration_s. Good.\n\nNeed numbers finite: 5.0. JSON number.\n\nPotential nuance: \"s\" unit maybe seconds, but source does not say 秒. However in supplied compilation semantics, seconds parameter duration_s; \"s\" common abbreviation. Is \"5s\" explicit? Yes. Could there be ambiguity with \"s\" as plural English? The source Chinese but includes Latin s. In robot command, \"5s\" commonly seconds. The rules don't explicitly define \"s\" abbreviation like 秒? They define stand duration_s positive finite seconds, no unit mention? They state stand parameters contain duration_s, positive finite seconds, at most 60. When no duration specified default. Explicitly vague duration unresolved. They mention 米/m and 厘米/cm for distance, and left/counterclockwise etc. They don't explicitly say \"s\" converts to seconds, but \"5s\" semantically seconds. Should be okay. If strict, \"s\" not defined? The source \"5s\" likely means 5 seconds. Maybe need not overthink. But our role is authorization verifier; source \"请站好5s\". The \"s\" is unit abbreviation. It's explicit. Unique.\n\nWait: Chinese \"站好5s\" could be \"stand good 5s\" = stand for 5s. There is no \"秒\". The system says \"duration_s, positive finite seconds\". It doesn't list unit abbreviations for seconds, but \"s\" is standard. The candidate uses 5.0. The task likely expects authorize. Need not reject due to lack of unit mapping? The rules mention 米/m and 厘米/cm convert; for seconds, \"s\" probably recognized. If not, duration could be vague? But \"5s\" is common. The source uses \"s\", likely seconds. The candidate_ir matched. We should not use candidate as evidence but source says 5s. I'd treat as explicit 5 seconds.\n\nNeed maybe \"站好\" includes \"好\" which could imply \"stand well\" with no duration? But 5s modifies it. Good.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker introducing the request; it does not add an action, change parameters, or alter the authorized plan.\"},{\"text\":\"站好\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand skill. The resultative '好' describes standing properly/still; it does not create a separate action or parameter.\"},{\"text\":\"5s\",\"role\":\"QUANTITY\",\"explanation\":\"Explicit duration of 5 seconds for the stand action. It maps to duration_s = 5.0, which is positive and not greater than 60, and it is not a repetition count.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: stand. There are no added, replaced, or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the execution order is uniquely a single first step, s1.\"},\"correction_scope\":{\"status\":\"UNKNOWN\",\"explanation\":\"No correction or edit clause is present; this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction. The '5s' span is a duration quantity, not a repetition count or repeated action span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted arguments requiring external resolution; the duration is explicitly 5 seconds.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action with a specified duration and no before/after, simultaneous, waiting, or completion relation between multiple actions.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship; the only action and its duration are specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_1995d81b-e88d-4db7-b294-54ee67d019d0",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 185,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1916,
+            "output_tokens_details": {
+              "reasoning_tokens": 1471
+            },
+            "total_tokens": 3125
+          }
+        },
+        "request_sha256": "d6231a42f386f1cfaa62de53d421860c7a6556dcd1f5b7c7a5e9e74bc69da6ae",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 10.599501700002293,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_1995d81b-e88d-4db7-b294-54ee67d019d0",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker introducing the request; it does not add an action, change parameters, or alter the authorized plan.\"},{\"text\":\"站好\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand skill. The resultative '好' describes standing properly/still; it does not create a separate action or parameter.\"},{\"text\":\"5s\",\"role\":\"QUANTITY\",\"explanation\":\"Explicit duration of 5 seconds for the stand action. It maps to duration_s = 5.0, which is positive and not greater than 60, and it is not a repetition count.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: stand. There are no added, replaced, or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the execution order is uniquely a single first step, s1.\"},\"correction_scope\":{\"status\":\"UNKNOWN\",\"explanation\":\"No correction or edit clause is present; this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction. The '5s' span is a duration quantity, not a repetition count or repeated action span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted arguments requiring external resolution; the duration is explicitly 5 seconds.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action with a specified duration and no before/after, simultaneous, waiting, or completion relation between multiple actions.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship; the only action and its duration are specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]}",
+        "usage": {
+          "input_tokens": 185,
+          "output_tokens": 1916,
+          "total_tokens": 3125
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.9222226999991108,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-5s",
+      "model": "deepseek-flash",
+      "normalized_length": 5,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"stand-5s\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "43ab03ee233d6b45c9c84eff017aed5cb434659582297bd4e948fed9e38c7731",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": false,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_c63b900a-936d-46fb-b9ca-fe35cd6a7192",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 10.604092599998694,
+          "model": "deepseek-flash",
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 10.599501700002293,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker introducing the request; it does not add an action, change parameters, or alter the authorized plan.\"},{\"text\":\"站好\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand skill. The resultative '好' describes standing properly/still; it does not create a separate action or parameter.\"},{\"text\":\"5s\",\"role\":\"QUANTITY\",\"explanation\":\"Explicit duration of 5 seconds for the stand action. It maps to duration_s = 5.0, which is positive and not greater than 60, and it is not a repetition count.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source requests exactly one action: stand. There are no added, replaced, or repeated actions.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the execution order is uniquely a single first step, s1.\"},\"correction_scope\":{\"status\":\"UNKNOWN\",\"explanation\":\"No correction or edit clause is present; this dimension is inapplicable and introduces no alternative.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition instruction. The '5s' span is a duration quantity, not a repetition count or repeated action span.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"There are no pronouns, ordinal references, or omitted arguments requiring external resolution; the duration is explicitly 5 seconds.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains one action with a specified duration and no before/after, simultaneous, waiting, or completion relation between multiple actions.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no explicit unresolved choice, scope, order, or relationship; the only action and its duration are specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":5.0},\"depends_on\":[]}]}",
+          "raw_response_sha256": "ce10ccab5587382a7aa804c7473b461ad479e0d1a1056de6c4e54284f191d4cc",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_1995d81b-e88d-4db7-b294-54ee67d019d0",
+          "source_aware": true,
+          "source_sha256": "284b70c96558a024985537fe115009f181f0a814204717f68cb6e060dd5a0849",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 185,
+            "output_tokens": 1916,
+            "total_tokens": 3125
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "duration_s": 5.0
+                },
+                "skill": "stand"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Politeness marker introducing the request; it does not add an action, change parameters, or alter the authorized plan.",
+                "role": "CONTEXT",
+                "text": "请"
+              },
+              {
+                "explanation": "Requests the stand skill. The resultative '好' describes standing properly/still; it does not create a separate action or parameter.",
+                "role": "ACTION",
+                "text": "站好"
+              },
+              {
+                "explanation": "Explicit duration of 5 seconds for the stand action. It maps to duration_s = 5.0, which is positive and not greater than 60, and it is not a repetition count.",
+                "role": "QUANTITY",
+                "text": "5s"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source requests exactly one action: stand. There are no added, replaced, or repeated actions.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "Only one action is requested, so the execution order is uniquely a single first step, s1.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "No correction or edit clause is present; this dimension is inapplicable and introduces no alternative.",
+                "status": "UNKNOWN"
+              },
+              "reference_resolution": {
+                "explanation": "There are no pronouns, ordinal references, or omitted arguments requiring external resolution; the duration is explicitly 5 seconds.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "There is no repetition instruction. The '5s' span is a duration quantity, not a repetition count or repeated action span.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source contains one action with a specified duration and no before/after, simultaneous, waiting, or completion relation between multiple actions.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source leaves no explicit unresolved choice, scope, order, or relationship; the only action and its duration are specified.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "VERIFIER_STATUS_DISAGREEMENT",
+        "status": "UNKNOWN"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 137,
+        "total_tokens": 1877
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": "LLM_OUTPUT_INVALID",
+    "error_message": "source authorization withheld executable Mission: VERIFIER_STATUS_DISAGREEMENT",
+    "mission": null,
+    "normalized_text": "请站好5s",
+    "status": "MALFORMED"
+  }
+}

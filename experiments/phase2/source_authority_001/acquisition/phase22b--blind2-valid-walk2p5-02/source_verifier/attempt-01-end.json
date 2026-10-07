@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.152944900000875,
+  "provider_document": {
+    "created_at": 1791359878,
+    "id": "resp_c022f442-d06d-474a-b1e4-b3a4a70719c0",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_c022f442-d06d-474a-b1e4-b3a4a70719c0",
+        "reasoning_content": "We need answer JSON only. Need analyze source Chinese: \"请向前移动250厘米\" means \"Please move forward 250 centimeters\". Candidate IR walk_forward distance_m 2.5. Need derive authorized plan. Need inspect dimensions.\n\nSource only one action: move forward 250 cm. Skill walk_forward. distance_m = 250 cm = 2.5 m positive finite. Legal. No duration, no turn. One step s1 depends_on []. Coverage split meaningful spans. Need concatenate exactly entire source. Source: 请向前移动250厘米. We can split: \"请\" CONTEXT? \"向前移动\" ACTION? \"250\" QUANTITY? \"厘米\" QUANTITY? Need roles. Every action, relation, edit clause. There is no explicit relation. We need coverage list with text exact, concatenated equals. Could split into \"请\" CONTEXT, \"向前移动\" ACTION, \"250\" QUANTITY, \"厘米\" QUANTITY. Or \"请向前移动\" ACTION, \"250厘米\" QUANTITY. Need explanations nonempty. Since source has no spaces. \"请\" is politeness context, not altering plan. \"向前移动\" action. \"250\" quantity. \"厘米\" unit. Fine.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one forward movement.\naction_order UNIQUE: only one action order trivial.\ncorrection_scope UNIQUE: no edits/corrections.\nrepetition_scope UNIQUE: no repetitions.\nreference_resolution UNIQUE: no pronouns/ordinals/omitted args? The direction is explicit forward, distance explicit 250 cm; no external referent. Could say unique/inapplicable.\ntemporal_relations UNIQUE: single action no temporal relations.\nunresolved_relations UNIQUE: no explicit unresolved relations.\n\nstatus AUTHORIZED_UNIQUE. authorized_plan with skill walk_forward parameters distance_m 2.5 depends_on [].\n\nNeed ensure output exactly JSON. No markdown. Use Chinese text in coverage exact. Need valid JSON. Explanation maybe English. Let's craft.\n\nNeed be careful: candidate has schema_version etc but we ignore. authorized_plan step exactly id, skill, parameters, depends_on. No mission_id. JSON object keys exactly status, coverage, dimensions, authorized_plan. coverage nonempty list. Need all seven dimension names exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nUse \"请\" as CONTEXT? Role allowed CONTEXT. \"向前移动\" ACTION. \"250\" QUANTITY. \"厘米\" QUANTITY. Or perhaps \"250厘米\" QUANTITY. The concatenated must equal entire original: \"请\" + \"向前移动\" + \"250\" + \"厘米\" = 请向前移动250厘米. Good.\n\nExplanation for \"厘米\": unit conversion. Good.\n\nNeed mention no other skills. candidate not oracle. Fine.\n\nLet's output.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need analyze source Chinese: \"请向前移动250厘米\" means \"Please move forward 250 centimeters\". Candidate IR walk_forward distance_m 2.5. Need derive authorized plan. Need inspect dimensions.\n\nSource only one action: move forward 250 cm. Skill walk_forward. distance_m = 250 cm = 2.5 m positive finite. Legal. No duration, no turn. One step s1 depends_on []. Coverage split meaningful spans. Need concatenate exactly entire source. Source: 请向前移动250厘米. We can split: \"请\" CONTEXT? \"向前移动\" ACTION? \"250\" QUANTITY? \"厘米\" QUANTITY? Need roles. Every action, relation, edit clause. There is no explicit relation. We need coverage list with text exact, concatenated equals. Could split into \"请\" CONTEXT, \"向前移动\" ACTION, \"250\" QUANTITY, \"厘米\" QUANTITY. Or \"请向前移动\" ACTION, \"250厘米\" QUANTITY. Need explanations nonempty. Since source has no spaces. \"请\" is politeness context, not altering plan. \"向前移动\" action. \"250\" quantity. \"厘米\" unit. Fine.\n\nDimensions:\naction_multiplicity UNIQUE: exactly one forward movement.\naction_order UNIQUE: only one action order trivial.\ncorrection_scope UNIQUE: no edits/corrections.\nrepetition_scope UNIQUE: no repetitions.\nreference_resolution UNIQUE: no pronouns/ordinals/omitted args? The direction is explicit forward, distance explicit 250 cm; no external referent. Could say unique/inapplicable.\ntemporal_relations UNIQUE: single action no temporal relations.\nunresolved_relations UNIQUE: no explicit unresolved relations.\n\nstatus AUTHORIZED_UNIQUE. authorized_plan with skill walk_forward parameters distance_m 2.5 depends_on [].\n\nNeed ensure output exactly JSON. No markdown. Use Chinese text in coverage exact. Need valid JSON. Explanation maybe English. Let's craft.\n\nNeed be careful: candidate has schema_version etc but we ignore. authorized_plan step exactly id, skill, parameters, depends_on. No mission_id. JSON object keys exactly status, coverage, dimensions, authorized_plan. coverage nonempty list. Need all seven dimension names exactly: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nUse \"请\" as CONTEXT? Role allowed CONTEXT. \"向前移动\" ACTION. \"250\" QUANTITY. \"厘米\" QUANTITY. Or perhaps \"250厘米\" QUANTITY. The concatenated must equal entire original: \"请\" + \"向前移动\" + \"250\" + \"厘米\" = 请向前移动250厘米. Good.\n\nExplanation for \"厘米\": unit conversion. Good.\n\nNeed mention no other skills. candidate not oracle. Fine.\n\nLet's output.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"请\",\"role\":\"CONTEXT\",\"explanation\":\"Politeness marker requesting the action; it does not add, remove, reorder or parameterize any executable step.\"},{\"text\":\"向前移动\",\"role\":\"ACTION\",\"explanation\":\"Requests exactly one forward movement, which maps to the legal skill walk_forward with no turn or stop action.\"},{\"text\":\"250\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the numeric distance quantity for the single forward movement.\"},{\"text\":\"厘米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the unit centimeters; 250 centimeters converts exactly to 2.5 meters, the distance_m parameter for walk_forward.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source contains exactly one requested action: move forward once by 250 centimeters. There is no conjunction, additional verb, edit or repetition creating another action.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"Only one action is requested, so the exact execution order is trivially the single step s1.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no correction, replacement or edit clause in the source; no earlier instruction is modified or preserved against a later one.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no repetition marker or repeated span; the single movement is to be executed once, not multiple times.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"Direction 'forward' and distance '250 centimeters' are explicit. There are no pronouns, ordinals, omitted arguments or external referents requiring resolution.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No before, after, simultaneous, waiting or completion relation is expressed; a single linear plan with one step fully represents the request.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source leaves no action, parameter, order, scope or relationship explicitly unresolved; the distance and direction are fully specified.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":2.5},\"depends_on\":[]}]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_c022f442-d06d-474a-b1e4-b3a4a70719c0",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 316,
+      "input_tokens_details": {
+        "cached_tokens": 896
+      },
+      "output_tokens": 1092,
+      "output_tokens_details": {
+        "reasoning_tokens": 618
+      },
+      "total_tokens": 2304
+    }
+  },
+  "request_sha256": "a692cebccc72c05cc38468ecac4aa3fe773feb7e7e6ce5aba385d56f10866cf5",
+  "status": "SUCCESS"
+}

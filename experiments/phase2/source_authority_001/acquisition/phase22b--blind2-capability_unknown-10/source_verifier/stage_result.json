@@ -1,0 +1,256 @@
+{
+  "added_wall_s": 6.711994599998434,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.708613999999216,
+        "provider_document": {
+          "created_at": 1791360286,
+          "id": "resp_bca4baa0-6912-4f1e-afc0-571e488d5a2e",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_bca4baa0-6912-4f1e-afc0-571e488d5a2e",
+              "reasoning_content": "We need answer JSON only. Need analyze source. Source Chinese: \"向前移动10000厘米\". Means move forward 10000 cm. Convert to meters: 10000 cm = 100 m. Legal walk_forward distance_m positive finite. Plan one step s1 walk_forward distance_m 100.0 depends_on []. Candidate matches. Need coverage split entire source exactly. Could split \"向前移动\" and \"10000厘米\". Both? Need roles. Coverage nonempty list objects exactly text role explanation. Concatenation equals source. Source has no spaces. Could use one span all source role ACTION? But requirement split into meaningful spans so every action, relation, edit clause. Here only action plus quantity. We can split \"向前移动\" role ACTION? \"向前\" means forward, \"移动\" move. \"10000厘米\" role QUANTITY. Need ensure concatenation exact: \"向前移动\" + \"10000厘米\" = \"向前移动10000厘米\". Good.\n\nNeed dimensions all seven. action_multiplicity UNIQUE: one action. action_order UNIQUE: only one step. correction_scope UNIQUE: no edit. Could be inapplicable and introduces no alternatives. repetition_scope UNIQUE: no repetition. reference_resolution UNIQUE: no pronouns/omitted args; 向前移动 maps to walk_forward, quantity 10000厘米 maps to distance_m. temporal_relations UNIQUE: no temporal relations. unresolved_relations UNIQUE: none. status AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed be careful: source says \"向前移动10000厘米\" does not explicitly mention skill walk_forward, but legal skills mapping? We assume \"向前移动\" compiles to walk_forward? The prompt says legal skills are stand, walk_forward, turn, stop. Source is imperative \"move forward 10000 cm\". Should map to walk_forward. Is \"移动\" exactly walk_forward? It doesn't say walk, but move forward; probably. Candidate_ir proposes walk_forward. But we must not take candidate as evidence. Source alone: \"向前移动\" = move forward, likely walk_forward. No other skill. Unique.\n\nNeed include coverage explanation. For action span: \"向前移动\" means move forward, authorizes a single walk_forward action. For quantity: \"10000厘米\" specifies 10000 cm converted to 100.0 m as distance_m. This determines parameter. No unresolved.\n\nNeed output exact JSON. Could include numbers 100.0 or 100? Need finite JSON numbers. 100.0 okay. Candidate uses 100.0. Source-derived plan can use 100.0. IDs s1 etc.\n\nNeed dimensions explanation nonempty. Let's craft concise but complete.\n\nEnsure keys exactly status, coverage, dimensions, authorized_plan. Dimensions exactly seven names. Each dimension value exactly status and explanation. Coverage objects exactly text, role, explanation. No markdown. Use valid JSON.\n\nNeed maybe coverage text must preserve original punctuation and whitespace. Since no spaces, split exact. Good.\n\nPotential issue: role for \"向前移动\" maybe ACTION, \"10000厘米\" QUANTITY. Fine.\n\nNeed mention \"米/m are meters; 厘米/cm convert to meters.\" 10000 cm = 100 m. Yes.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source. Source Chinese: \"向前移动10000厘米\". Means move forward 10000 cm. Convert to meters: 10000 cm = 100 m. Legal walk_forward distance_m positive finite. Plan one step s1 walk_forward distance_m 100.0 depends_on []. Candidate matches. Need coverage split entire source exactly. Could split \"向前移动\" and \"10000厘米\". Both? Need roles. Coverage nonempty list objects exactly text role explanation. Concatenation equals source. Source has no spaces. Could use one span all source role ACTION? But requirement split into meaningful spans so every action, relation, edit clause. Here only action plus quantity. We can split \"向前移动\" role ACTION? \"向前\" means forward, \"移动\" move. \"10000厘米\" role QUANTITY. Need ensure concatenation exact: \"向前移动\" + \"10000厘米\" = \"向前移动10000厘米\". Good.\n\nNeed dimensions all seven. action_multiplicity UNIQUE: one action. action_order UNIQUE: only one step. correction_scope UNIQUE: no edit. Could be inapplicable and introduces no alternatives. repetition_scope UNIQUE: no repetition. reference_resolution UNIQUE: no pronouns/omitted args; 向前移动 maps to walk_forward, quantity 10000厘米 maps to distance_m. temporal_relations UNIQUE: no temporal relations. unresolved_relations UNIQUE: none. status AUTHORIZED_UNIQUE. authorized_plan list.\n\nNeed be careful: source says \"向前移动10000厘米\" does not explicitly mention skill walk_forward, but legal skills mapping? We assume \"向前移动\" compiles to walk_forward? The prompt says legal skills are stand, walk_forward, turn, stop. Source is imperative \"move forward 10000 cm\". Should map to walk_forward. Is \"移动\" exactly walk_forward? It doesn't say walk, but move forward; probably. Candidate_ir proposes walk_forward. But we must not take candidate as evidence. Source alone: \"向前移动\" = move forward, likely walk_forward. No other skill. Unique.\n\nNeed include coverage explanation. For action span: \"向前移动\" means move forward, authorizes a single walk_forward action. For quantity: \"10000厘米\" specifies 10000 cm converted to 100.0 m as distance_m. This determines parameter. No unresolved.\n\nNeed output exact JSON. Could include numbers 100.0 or 100? Need finite JSON numbers. 100.0 okay. Candidate uses 100.0. Source-derived plan can use 100.0. IDs s1 etc.\n\nNeed dimensions explanation nonempty. Let's craft concise but complete.\n\nEnsure keys exactly status, coverage, dimensions, authorized_plan. Dimensions exactly seven names. Each dimension value exactly status and explanation. Coverage objects exactly text, role, explanation. No markdown. Use valid JSON.\n\nNeed maybe coverage text must preserve original punctuation and whitespace. Since no spaces, split exact. Good.\n\nPotential issue: role for \"向前移动\" maybe ACTION, \"10000厘米\" QUANTITY. Fine.\n\nNeed mention \"米/m are meters; 厘米/cm convert to meters.\" 10000 cm = 100 m. Yes.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"向前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Imperative forward movement clause. It requests exactly one forward walking action, which maps to the legal skill walk_forward.\"\n    },\n    {\n      \"text\": \"10000厘米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the movement distance as 10000 centimeters. Since 1 meter = 100 centimeters, this converts to 100 meters and becomes the walk_forward parameter distance_m = 100.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one action clause, 向前移动, with no conjunction, repetition, or additional action request. Therefore exactly one walk_forward step is authorized.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so the execution order is trivially a single linear step: the walk_forward action.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no edit, correction, replacement, or revision clause. No earlier instruction is modified or replaced.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition marker or repeated span. The single action is performed once, not multiple times.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source has no pronouns, ordinal references, or shared/omitted arguments requiring external context. The movement direction resolves to walk_forward, and the quantity 10000厘米 resolves directly to distance_m.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source specifies no before, after, simultaneous, waiting, or completion relation. The single-step plan has no temporal ordering alternatives.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly leaves no unresolved choice, scope, order, or relation. The one distance and one action fully determine the plan.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 100.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_bca4baa0-6912-4f1e-afc0-571e488d5a2e",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 188,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 1250,
+            "output_tokens_details": {
+              "reasoning_tokens": 686
+            },
+            "total_tokens": 2462
+          }
+        },
+        "request_sha256": "f555e1d86dba4ccd6410854d77f6406e808f12f7a89e34a1f3ed0dc3f043aa32",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.707156000000396,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_bca4baa0-6912-4f1e-afc0-571e488d5a2e",
+        "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"向前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Imperative forward movement clause. It requests exactly one forward walking action, which maps to the legal skill walk_forward.\"\n    },\n    {\n      \"text\": \"10000厘米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the movement distance as 10000 centimeters. Since 1 meter = 100 centimeters, this converts to 100 meters and becomes the walk_forward parameter distance_m = 100.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one action clause, 向前移动, with no conjunction, repetition, or additional action request. Therefore exactly one walk_forward step is authorized.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so the execution order is trivially a single linear step: the walk_forward action.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no edit, correction, replacement, or revision clause. No earlier instruction is modified or replaced.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition marker or repeated span. The single action is performed once, not multiple times.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source has no pronouns, ordinal references, or shared/omitted arguments requiring external context. The movement direction resolves to walk_forward, and the quantity 10000厘米 resolves directly to distance_m.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source specifies no before, after, simultaneous, waiting, or completion relation. The single-step plan has no temporal ordering alternatives.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly leaves no unresolved choice, scope, order, or relation. The one distance and one action fully determine the plan.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 100.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+        "usage": {
+          "input_tokens": 188,
+          "output_tokens": 1250,
+          "total_tokens": 2462
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.3441868999980215,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk-10000cm",
+      "model": "deepseek-flash",
+      "normalized_length": 11,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"walk-10000cm\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":100.0},\"depends_on\":[]}]},\"error_code\":null}",
+      "raw_response_sha256": "b658fe267aaf0059b68c5a04ba0c930aee4ad4ede1ea357f8f26f6ffcd432c00",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_34dfc1c3-6335-4a0e-a614-5018c9a2d620",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 6.711376399998699,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 6.707156000000396,
+          "provider_status": "completed",
+          "raw_response": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"向前移动\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"Imperative forward movement clause. It requests exactly one forward walking action, which maps to the legal skill walk_forward.\"\n    },\n    {\n      \"text\": \"10000厘米\",\n      \"role\": \"QUANTITY\",\n      \"explanation\": \"Specifies the movement distance as 10000 centimeters. Since 1 meter = 100 centimeters, this converts to 100 meters and becomes the walk_forward parameter distance_m = 100.0.\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains exactly one action clause, 向前移动, with no conjunction, repetition, or additional action request. Therefore exactly one walk_forward step is authorized.\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"There is only one action, so the execution order is trivially a single linear step: the walk_forward action.\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no edit, correction, replacement, or revision clause. No earlier instruction is modified or replaced.\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source contains no repetition marker or repeated span. The single action is performed once, not multiple times.\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source has no pronouns, ordinal references, or shared/omitted arguments requiring external context. The movement direction resolves to walk_forward, and the quantity 10000厘米 resolves directly to distance_m.\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source specifies no before, after, simultaneous, waiting, or completion relation. The single-step plan has no temporal ordering alternatives.\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"The source explicitly leaves no unresolved choice, scope, order, or relation. The one distance and one action fully determine the plan.\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 100.0\n      },\n      \"depends_on\": []\n    }\n  ]\n}",
+          "raw_response_sha256": "17e35e6c7a4205949a442d658c2e635228d61e513f7ae8d4c42b0a593665c14c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_bca4baa0-6912-4f1e-afc0-571e488d5a2e",
+          "source_aware": true,
+          "source_sha256": "194900a0a64e5da0daf83459697f6ee827e9a1ed29f4cd8a2616b4ef9742ea06",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 188,
+            "output_tokens": 1250,
+            "total_tokens": 2462
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 100.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Imperative forward movement clause. It requests exactly one forward walking action, which maps to the legal skill walk_forward.",
+                "role": "ACTION",
+                "text": "向前移动"
+              },
+              {
+                "explanation": "Specifies the movement distance as 10000 centimeters. Since 1 meter = 100 centimeters, this converts to 100 meters and becomes the walk_forward parameter distance_m = 100.0.",
+                "role": "QUANTITY",
+                "text": "10000厘米"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source contains exactly one action clause, 向前移动, with no conjunction, repetition, or additional action request. Therefore exactly one walk_forward step is authorized.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "There is only one action, so the execution order is trivially a single linear step: the walk_forward action.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "The source contains no edit, correction, replacement, or revision clause. No earlier instruction is modified or replaced.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "The source has no pronouns, ordinal references, or shared/omitted arguments requiring external context. The movement direction resolves to walk_forward, and the quantity 10000厘米 resolves directly to distance_m.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "The source contains no repetition marker or repeated span. The single action is performed once, not multiple times.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The source specifies no before, after, simultaneous, waiting, or completion relation. The single-step plan has no temporal ordering alternatives.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source explicitly leaves no unresolved choice, scope, order, or relation. The one distance and one action fully determine the plan.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 204,
+        "output_tokens": 64,
+        "total_tokens": 1804
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk-10000cm",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 100.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "向前移动10000厘米",
+    "status": "SUCCESS"
+  }
+}

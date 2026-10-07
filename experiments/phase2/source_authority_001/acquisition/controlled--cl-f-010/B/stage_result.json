@@ -1,0 +1,131 @@
+{
+  "added_wall_s": 3.3847170999979426,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 3.3397963999996136,
+        "provider_document": {
+          "created_at": 1791360749,
+          "id": "resp_351015df-bd2c-4207-b0f1-c5b8eaff5414",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_351015df-bd2c-4207-b0f1-c5b8eaff5414",
+              "reasoning_content": "We need answer only JSON. User: \"转一下\" means \"turn a bit\" vague. Need classify. Turn without angle/direction? \"转一下\" vague quantity/direction. According rules: vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS_COMMAND. Also missing angle is MISSING_PARAMETER. Which takes precedence? \"转一下\" = turn once/a bit. No direction, no angle. Could be AMBIGUOUS_COMMAND due to vague \"一下\", or MISSING_PARAMETER because turn requires angle and direction. Example \"右转\" -> AMBIGUOUS MISSING_PARAMETER. Here \"转一下\" has no direction and no angle, plus vague \"一下\". I think AMBIGUOUS_COMMAND because vague/under-specified with no unique mission. The decision rule 1: \"Missing distance or angle is AMBIGUOUS with MISSING_PARAMETER. Vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS with AMBIGUOUS_COMMAND.\" \"一下\" is similar vague quantity. Since no direction either. Could be MISSING_PARAMETER because angle absent. Which error code expected? Let's reason. \"转一下\" = \"turn a bit\"; it's vague about angle/direction. It's under-specified with no unique mission. AMBIGUOUS_COMMAND likely. But if command is \"turn\" with missing angle, MISSING_PARAMETER. Example \"右转\" missing angle -> MISSING_PARAMETER. \"转一下\" also missing angle, but additionally vague. In these tasks, they expect AMBIGUOUS_COMMAND for vague. I lean AMBIGUOUS_COMMAND. Need output exact JSON.\n\nEnsure no extra.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. User: \"转一下\" means \"turn a bit\" vague. Need classify. Turn without angle/direction? \"转一下\" vague quantity/direction. According rules: vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS_COMMAND. Also missing angle is MISSING_PARAMETER. Which takes precedence? \"转一下\" = turn once/a bit. No direction, no angle. Could be AMBIGUOUS_COMMAND due to vague \"一下\", or MISSING_PARAMETER because turn requires angle and direction. Example \"右转\" -> AMBIGUOUS MISSING_PARAMETER. Here \"转一下\" has no direction and no angle, plus vague \"一下\". I think AMBIGUOUS_COMMAND because vague/under-specified with no unique mission. The decision rule 1: \"Missing distance or angle is AMBIGUOUS with MISSING_PARAMETER. Vague quantities such as 一点, 一会, 一段, 那边, 随便, 几米, 大概 are AMBIGUOUS with AMBIGUOUS_COMMAND.\" \"一下\" is similar vague quantity. Since no direction either. Could be MISSING_PARAMETER because angle absent. Which error code expected? Let's reason. \"转一下\" = \"turn a bit\"; it's vague about angle/direction. It's under-specified with no unique mission. AMBIGUOUS_COMMAND likely. But if command is \"turn\" with missing angle, MISSING_PARAMETER. Example \"右转\" missing angle -> MISSING_PARAMETER. \"转一下\" also missing angle, but additionally vague. In these tasks, they expect AMBIGUOUS_COMMAND for vague. I lean AMBIGUOUS_COMMAND. Need output exact JSON.\n\nEnsure no extra.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_351015df-bd2c-4207-b0f1-c5b8eaff5414",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 201,
+            "input_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "output_tokens": 423,
+            "output_tokens_details": {
+              "reasoning_tokens": 400
+            },
+            "total_tokens": 2160
+          }
+        },
+        "request_sha256": "55b29c3067bd955b0d444cac25fdfe52027eeb71b744d0aaf8005c294f908f97",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 3.338091699999495,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_351015df-bd2c-4207-b0f1-c5b8eaff5414",
+        "text": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+        "usage": {
+          "input_tokens": 201,
+          "output_tokens": 423,
+          "total_tokens": 2160
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_v1",
+      "attempts": 1,
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 3.338091699999495,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "model": "deepseek-flash",
+      "normalized_length": 3,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"AMBIGUOUS\",\"mission\":null,\"error_code\":\"AMBIGUOUS_COMMAND\"}",
+      "raw_response_sha256": "954691d873bc5faa5b8b13bd5f64082a85a610821026714efb4bde19e30f09c7",
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_351015df-bd2c-4207-b0f1-c5b8eaff5414",
+      "route": "GUARDED_DIRECT_LLM",
+      "usage": {
+        "input_tokens": 201,
+        "output_tokens": 423,
+        "total_tokens": 2160
+      },
+      "validation": null
+    },
+    "error_code": "AMBIGUOUS_COMMAND",
+    "error_message": "model returned AMBIGUOUS (AMBIGUOUS_COMMAND)",
+    "mission": null,
+    "normalized_text": "转一下",
+    "status": "AMBIGUOUS"
+  }
+}

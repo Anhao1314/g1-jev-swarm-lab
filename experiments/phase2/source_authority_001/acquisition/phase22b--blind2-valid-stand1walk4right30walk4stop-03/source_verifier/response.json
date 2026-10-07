@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "finish_reason": "max_output_tokens",
+  "latency_s": 18.232505600000877,
+  "model": "deepseek-flash",
+  "provider_status": "incomplete",
+  "request_parameters": {
+    "max_network_retries": 2,
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "retry_backoff_s": 0.5,
+    "stream": false,
+    "temperature": 0.0
+  },
+  "response_id": "resp_5115a3b6-0bcd-4acb-9c5c-e6716614bf2f",
+  "text": "{\n  \"status\": \"AUTHORIZED_UNIQUE\",\n  \"coverage\": [\n    {\n      \"text\": \"先\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"顺序标记“先”确立后续“保持站立1秒”为该线性计划的第一项，位于其他动作之前。\"\n    },\n    {\n      \"text\": \"保持站立1秒\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"动作“保持站立”并显式给出1秒时长；编译为 stand，duration_s=1.0，无其他参数。\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔第一动作与下一顺序动作，仅作分隔，不改变动作内容或顺序。\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"“再”表示紧接前一步之后的下一动作，确立“向前走400厘米”位于 stand 之后。\"\n    },\n    {\n      \"text\": \"向前走400厘米\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"动作“向前走”且距离为400厘米；换算为4.0米，编译为 walk_forward，distance_m=4.0。\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔第二动作与下一顺序动作，仅作分隔，不改变动作内容或顺序。\"\n    },\n    {\n      \"text\": \"然后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"“然后”表示在前一 walk_forward 之后执行下一动作，确立“向右转30度”的紧随顺序。\"\n    },\n    {\n      \"text\": \"向右转30度\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"动作“向右转”且角度为30度；右转/顺时针为负，编译为 turn，angle_deg=-30.0。\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔第三动作与下一顺序动作，仅作分隔，不改变动作内容或顺序。\"\n    },\n    {\n      \"text\": \"再\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"“再”表示紧接前一 turn 之后的下一动作，确立“前进4米”的后续位置。\"\n    },\n    {\n      \"text\": \"前进4米\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"动作“前进”且距离为4米；编译为 walk_forward，distance_m=4.0。\"\n    },\n    {\n      \"text\": \"，\",\n      \"role\": \"SEPARATOR\",\n      \"explanation\": \"标点分隔第四动作与最后动作，仅作分隔，不改变动作内容或顺序。\"\n    },\n    {\n      \"text\": \"最后\",\n      \"role\": \"RELATION\",\n      \"explanation\": \"“最后”表示该动作位于整个线性序列末端，确立“停下”为最终步骤。\"\n    },\n    {\n      \"text\": \"停下\",\n      \"role\": \"ACTION\",\n      \"explanation\": \"动作“停下”编译为 stop，参数为空对象 {}，并位于所有先前动作之后。\"\n    }\n  ],\n  \"dimensions\": {\n    \"action_multiplicity\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源列出五个独立动作：stand 1秒、walk_forward 400厘米、turn右30度、walk_forward 4米、stop；没有增加、替换或重复标记，故五个动作均保留。\"\n    },\n    \"action_order\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"“先/再/然后/再/最后”给出唯一线性顺序：stand，walk_forward 400厘米，turn右30度，walk_forward 4米，stop；不存在其他允许顺序。\"\n    },\n    \"correction_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源中无修正、撤销或替换标记；没有编辑改变任何动作、参数或关系。\"\n    },\n    \"repetition_scope\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源中无重复标记；每个动作只出现一次，两个 walk_forward 是顺序不同的独立动作而非重复。\"\n    },\n    \"reference_resolution\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"顺序连接词“再”指紧邻前一步的下一动作，由唯一线性序列消解；没有代词、省略参数或外部指代需要推断。\"\n    },\n    \"temporal_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"“先…再…然后…再…最后”表示严格依次执行，无并行、等待或完成条件；可表示为 s1→s2→s3→s4→s5。\"\n    },\n    \"unresolved_relations\": {\n      \"status\": \"UNIQUE\",\n      \"explanation\": \"源没有显式未决的选择、可选顺序、范围或关系；所有动作、参数和先后关系均被确定。\"\n    }\n  },\n  \"authorized_plan\": [\n    {\n      \"id\": \"s1\",\n      \"skill\": \"stand\",\n      \"parameters\": {\n        \"duration_s\": 1.0\n      },\n      \"depends_on\": []\n    },\n    {\n      \"id\": \"s2\",\n      \"skill\": \"walk_forward\",\n      \"parameters\": {\n        \"distance_m\": 4.0\n      },\n      \"depends_on\": [\n        \"s1\"\n      ]\n    },\n    {\n      \"id\": \"s3\",\n      \"skill\": \"turn\",\n      \"parameters\": {\n        \"angle_deg\": -30.0\n      },\n      \"depends_on\":",
+  "usage": {
+    "input_tokens": 450,
+    "output_tokens": 4096,
+    "total_tokens": 5442
+  }
+}

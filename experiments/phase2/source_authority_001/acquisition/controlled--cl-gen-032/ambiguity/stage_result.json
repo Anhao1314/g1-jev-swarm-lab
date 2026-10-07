@@ -1,0 +1,309 @@
+{
+  "added_wall_s": 12.581973899999866,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.57533229999899,
+        "provider_document": {
+          "created_at": 1791360970,
+          "id": "resp_99e8fdbc-b3e8-4ffc-b85e-f5152bbd83f4",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_99e8fdbc-b3e8-4ffc-b85e-f5152bbd83f4",
+              "reasoning_content": "We need answer JSON only. Need inspect Chinese source: \"前进4米，然后向左转45度，接着前进400厘米，最后停下\"\n\nNeed decide seven dimensions. Need output coverage split exactly entire source. Need status likely AUTHORIZED_UNIQUE? Let's analyze.\n\nSource: 前进4米，然后向左转45度，接着前进400厘米，最后停下\nActions:\n1 walk_forward distance 4 m\n2 turn left 45 degrees (left/counterclockwise positive => +45)\n3 walk_forward distance 400 cm = 4 m positive finite\n4 stop\nOrder explicit: 前进4米, 然后 向左转45度, 接着 前进400厘米, 最后 停下. One linear order. No corrections. No repetition. References? None pronouns. Temporal: then, next, finally sequential. Unresolved? None. All legal: max turn angle 45 <=180, steps 4 <=32. Stop no params. Stand not used. So AUTHORIZED_UNIQUE.\n\nNeed coverage list with text spans exactly concatenating entire original source. Need preserve punctuation. We can split into spans. Need cover every action, relation, editing clause. Source has actions and separators/relations in words. Could split:\n\"前进4米\" ACTION\n\"，然后\" maybe RELATION? But comma punctuation and 然后. Need ensure concatenation. If use text spans, exact equality. We can make:\n1 \"前进4米\" ACTION\n2 \"，然后\" RELATION? contains comma plus then. Or split comma SEPARATOR and 然后 RELATION. Need exact.\n3 \"向左转45度\" ACTION\n4 \"，接着\" RELATION? \n5 \"前进400厘米\" ACTION\n6 \"，最后\" RELATION\n7 \"停下\" ACTION\nConcatenate: 前进4米，然后向左转45度，接着前进400厘米，最后停下. Yes if spans:\n\"前进4米\"\n\"，然后\"\n\"向左转45度\"\n\"，接着\"\n\"前进400厘米\"\n\"，最后\"\n\"停下\"\nConcatenate exactly: 前进4米 + ，然后 + 向左转45度 + ，接着 + 前进400厘米 + ，最后 + 停下 = source. Good. Roles: ACTION for actions, RELATION for \"，然后\" etc? But \"，然后\" includes comma and relation. role RELATION acceptable. Maybe separate comma as SEPARATOR and 然后 as RELATION would require more spans:\n\"前进4米\", \"，\", \"然后\", \"向左转45度\", \"，\", \"接着\", \"前进400厘米\", \"，\", \"最后\", \"停下\". That covers separators and relations more explicitly. All text exact. This is fine. Role: ACTION, SEPARATOR, RELATION, ACTION, SEPARATOR, RELATION, ACTION, SEPARATOR, RELATION, ACTION. Explanations.\n\nNeed mention quantities? The action spans include quantities. Could have QUANTITY spans separate: \"4米\", \"45度\", \"400厘米\". But then action words separate? Let's design coverage robust. Need every action, relation, editing clause considered. We can split into:\n- \"前进\" ACTION? Hmm action + quantity as one maybe okay. But role ACTION with quantity embedded. The coverage object role only one. For \"前进4米\" explanation includes distance. That's fine.\nMaybe split \"向左转45度\" includes direction/angle. Fine.\n\nNeed dimensions statuses. action_multiplicity UNIQUE: Four explicit actions, no edits/repeats, each distinct. action_order UNIQUE: sequence markers 然后, 接着, 最后. correction_scope UNIQUE: no corrections/edits; not applicable. repetition_scope UNIQUE: no repetition; not applicable. reference_resolution UNIQUE: no pronouns/ordinals/omitted args? \"向左\" explicit; \"前进\" distances explicit. Shared arguments? none. temporal_relations UNIQUE: linear order. unresolved_relations UNIQUE: no explicit unresolved relation.\n\nNeed final JSON exactly. Ensure no markdown. Keys exactly status, coverage, dimensions. coverage nonempty list objects exactly text, role, explanation. dimensions exactly seven names. Each value exactly status and explanation. Use Chinese text exact.\n\nNeed be careful with \"coverage text values concatenated in list order must equal entire original source exactly\". Let's verify if split with individual punctuation:\n1 \"前进4米\" -> 前进4米\n2 \"，\" -> Chinese comma\n3 \"然后\" -> 然后\n4 \"向左转45度\" -> 向左转45度\n5 \"，\" -> ，\n6 \"接着\" -> 接着\n7 \"前进400厘米\" -> 前进400厘米\n8 \"，\" -> ，\n9 \"最后\" -> 最后\n10 \"停下\" -> 停下\nConcatenate: 前进4米，然后向左转45度，接着前进400厘米，最后停下. Yes.\n\nRole for \"然后\" RELATION, \"接着\" RELATION, \"最后\" RELATION. Comma SEPARATOR. \"最后\" also temporal relation / sequence marker. Fine.\n\nNeed maybe status AUTHORIZED_UNIQUE. But let's consider \"向左转45度\" in Chinese: left/counterclockwise positive, angle 45 degrees. Legal. \"前进400厘米\" convert to 4.0 m. Legal. \"停下\" stop. Legal.\n\nCould there be ambiguity in \"向左转45度\" vs turn angle sign? Spec says left/counterclockwise positive, so resolves. \"前进4米\" vs 400厘米 both forward. Fine.\n\nNeed no confidence fields. Explanation nonempty.\n\nPotential issue: \"前进400厘米\" perhaps distance_m = 400 cm converted to meters = 4.0. Legal. Fine.\n\nPotential issue: \"最后停下\" \"最后\" indicates final step stop. Unique.\n\nPotential issue: Maximum steps 4, okay.\n\nNeed output JSON with Chinese characters. Use valid JSON strings. No trailing.\n\nLet's craft explanations succinct but complete. In dimensions, mention no edits. For correction_scope, status UNIQUE because inapplicable: no edit/correction. But if inapplicable and introduces no alternative, UNIQUE. Same for repetition.\n\nNeed coverage explanations: For action spans, explain legal IR action. For relation spans, explain sequencing; non-executing. For separators, punctuation separates clauses and does not create authority.\n\nNeed ensure every explanation nonempty. Good.\n\nLet's formulate.\n\nStatus: AUTHORIZED_UNIQUE.\n\nCoverage:\n[\n {\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"第一个动作：向前行走 4 米；距离为正有限值，转换为 IR 的 walk_forward distance_m=4。\"}\n etc.\nBut explanation can mention IR? Allowed. It says no mission/candidate/tool/executable field. Explanations can mention action meaning. Maybe okay to mention \"walk_forward\"? Probably okay. But to avoid executable? It's just explanation. Fine.\nFor \"向左转45度\": \"第二个动作：向左转45度；左转为正，因此为 +45 度，非零有限且在 180 度内。\"\nFor \"前进400厘米\": \"第三个动作：向前行走400厘米；400厘米等于4米，正有限。\"\nFor \"停下\": \"第四个动作：停止；无参数。\"\nFor commas: \"逗号分隔相邻动作，不新增动作或修改参数。\"\nFor 然后: \"顺序关系：标明左转发生在前述前进之后。\"\nFor 接着: \"顺序关系：标明第二次前进发生在左转之后。\"\nFor 最后: \"顺序关系：标明停下是最后一步。\"\n\nDimensions:\naction_multiplicity UNIQUE: \"源中恰好列出四个动作：前进4米、向左转45度、前进400厘米、停下；没有编辑、替换或重复，因此每个动作仅计一次。\"\naction_order UNIQUE: \"顺序标记然后、接着、最后与逗号分隔共同确定唯一的线性顺序：前进4米 -> 左转45度 -> 前进400厘米 -> 停下。\"\ncorrection_scope UNIQUE: \"源中没有编辑、更正或替换子句；没有任何参数、动作、组或关系被修改，因此该维度不适用且不引入替代解释。\"\nrepetition_scope UNIQUE: \"源中没有重复词或重复范围；四个动作均为不同动作，不存在需判定重复跨度或次数的问题。\"\nreference_resolution UNIQUE: \"各动作参数均就地明确：前进距离分别为4米和400厘米，转向为向左45度；没有代词、序数引用、省略共享参数或外部指代需要解析。\"\ntemporal_relations UNIQUE: \"然后、接着、最后给出单一顺序关系，所有动作依次发生；无需引入等待、同时发生或额外事件。\"\nunresolved_relations UNIQUE: \"源没有显式留下未决的选择、范围、顺序或关系；所有动作及顺序均已确定。\"\n\nNeed ensure coverage list text concatenation exactly. Let's maybe use no spaces. Good.\n\nPotential issue with JSON escaping? Chinese okay. Use standard JSON. Need no markdown. final only.\n\nDouble-check role \"RELATION\" for \"然后\" etc. The comma role SEPARATOR. Fine.\n\nPotential issue: \"coverage is a nonempty list of objects with exactly text, role, explanation.\" We do exactly.\n\nPotential issue: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and entire source supports one legal interpretation.\" Yes.\n\nPotential issue: \"If any dimension AMBIGUOUS use AMBIGUOUS. Otherwise if any UNKNOWN use UNKNOWN.\" All unique.\n\nNow final JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect Chinese source: \"前进4米，然后向左转45度，接着前进400厘米，最后停下\"\n\nNeed decide seven dimensions. Need output coverage split exactly entire source. Need status likely AUTHORIZED_UNIQUE? Let's analyze.\n\nSource: 前进4米，然后向左转45度，接着前进400厘米，最后停下\nActions:\n1 walk_forward distance 4 m\n2 turn left 45 degrees (left/counterclockwise positive => +45)\n3 walk_forward distance 400 cm = 4 m positive finite\n4 stop\nOrder explicit: 前进4米, 然后 向左转45度, 接着 前进400厘米, 最后 停下. One linear order. No corrections. No repetition. References? None pronouns. Temporal: then, next, finally sequential. Unresolved? None. All legal: max turn angle 45 <=180, steps 4 <=32. Stop no params. Stand not used. So AUTHORIZED_UNIQUE.\n\nNeed coverage list with text spans exactly concatenating entire original source. Need preserve punctuation. We can split into spans. Need cover every action, relation, editing clause. Source has actions and separators/relations in words. Could split:\n\"前进4米\" ACTION\n\"，然后\" maybe RELATION? But comma punctuation and 然后. Need ensure concatenation. If use text spans, exact equality. We can make:\n1 \"前进4米\" ACTION\n2 \"，然后\" RELATION? contains comma plus then. Or split comma SEPARATOR and 然后 RELATION. Need exact.\n3 \"向左转45度\" ACTION\n4 \"，接着\" RELATION? \n5 \"前进400厘米\" ACTION\n6 \"，最后\" RELATION\n7 \"停下\" ACTION\nConcatenate: 前进4米，然后向左转45度，接着前进400厘米，最后停下. Yes if spans:\n\"前进4米\"\n\"，然后\"\n\"向左转45度\"\n\"，接着\"\n\"前进400厘米\"\n\"，最后\"\n\"停下\"\nConcatenate exactly: 前进4米 + ，然后 + 向左转45度 + ，接着 + 前进400厘米 + ，最后 + 停下 = source. Good. Roles: ACTION for actions, RELATION for \"，然后\" etc? But \"，然后\" includes comma and relation. role RELATION acceptable. Maybe separate comma as SEPARATOR and 然后 as RELATION would require more spans:\n\"前进4米\", \"，\", \"然后\", \"向左转45度\", \"，\", \"接着\", \"前进400厘米\", \"，\", \"最后\", \"停下\". That covers separators and relations more explicitly. All text exact. This is fine. Role: ACTION, SEPARATOR, RELATION, ACTION, SEPARATOR, RELATION, ACTION, SEPARATOR, RELATION, ACTION. Explanations.\n\nNeed mention quantities? The action spans include quantities. Could have QUANTITY spans separate: \"4米\", \"45度\", \"400厘米\". But then action words separate? Let's design coverage robust. Need every action, relation, editing clause considered. We can split into:\n- \"前进\" ACTION? Hmm action + quantity as one maybe okay. But role ACTION with quantity embedded. The coverage object role only one. For \"前进4米\" explanation includes distance. That's fine.\nMaybe split \"向左转45度\" includes direction/angle. Fine.\n\nNeed dimensions statuses. action_multiplicity UNIQUE: Four explicit actions, no edits/repeats, each distinct. action_order UNIQUE: sequence markers 然后, 接着, 最后. correction_scope UNIQUE: no corrections/edits; not applicable. repetition_scope UNIQUE: no repetition; not applicable. reference_resolution UNIQUE: no pronouns/ordinals/omitted args? \"向左\" explicit; \"前进\" distances explicit. Shared arguments? none. temporal_relations UNIQUE: linear order. unresolved_relations UNIQUE: no explicit unresolved relation.\n\nNeed final JSON exactly. Ensure no markdown. Keys exactly status, coverage, dimensions. coverage nonempty list objects exactly text, role, explanation. dimensions exactly seven names. Each value exactly status and explanation. Use Chinese text exact.\n\nNeed be careful with \"coverage text values concatenated in list order must equal entire original source exactly\". Let's verify if split with individual punctuation:\n1 \"前进4米\" -> 前进4米\n2 \"，\" -> Chinese comma\n3 \"然后\" -> 然后\n4 \"向左转45度\" -> 向左转45度\n5 \"，\" -> ，\n6 \"接着\" -> 接着\n7 \"前进400厘米\" -> 前进400厘米\n8 \"，\" -> ，\n9 \"最后\" -> 最后\n10 \"停下\" -> 停下\nConcatenate: 前进4米，然后向左转45度，接着前进400厘米，最后停下. Yes.\n\nRole for \"然后\" RELATION, \"接着\" RELATION, \"最后\" RELATION. Comma SEPARATOR. \"最后\" also temporal relation / sequence marker. Fine.\n\nNeed maybe status AUTHORIZED_UNIQUE. But let's consider \"向左转45度\" in Chinese: left/counterclockwise positive, angle 45 degrees. Legal. \"前进400厘米\" convert to 4.0 m. Legal. \"停下\" stop. Legal.\n\nCould there be ambiguity in \"向左转45度\" vs turn angle sign? Spec says left/counterclockwise positive, so resolves. \"前进4米\" vs 400厘米 both forward. Fine.\n\nNeed no confidence fields. Explanation nonempty.\n\nPotential issue: \"前进400厘米\" perhaps distance_m = 400 cm converted to meters = 4.0. Legal. Fine.\n\nPotential issue: \"最后停下\" \"最后\" indicates final step stop. Unique.\n\nPotential issue: Maximum steps 4, okay.\n\nNeed output JSON with Chinese characters. Use valid JSON strings. No trailing.\n\nLet's craft explanations succinct but complete. In dimensions, mention no edits. For correction_scope, status UNIQUE because inapplicable: no edit/correction. But if inapplicable and introduces no alternative, UNIQUE. Same for repetition.\n\nNeed coverage explanations: For action spans, explain legal IR action. For relation spans, explain sequencing; non-executing. For separators, punctuation separates clauses and does not create authority.\n\nNeed ensure every explanation nonempty. Good.\n\nLet's formulate.\n\nStatus: AUTHORIZED_UNIQUE.\n\nCoverage:\n[\n {\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"第一个动作：向前行走 4 米；距离为正有限值，转换为 IR 的 walk_forward distance_m=4。\"}\n etc.\nBut explanation can mention IR? Allowed. It says no mission/candidate/tool/executable field. Explanations can mention action meaning. Maybe okay to mention \"walk_forward\"? Probably okay. But to avoid executable? It's just explanation. Fine.\nFor \"向左转45度\": \"第二个动作：向左转45度；左转为正，因此为 +45 度，非零有限且在 180 度内。\"\nFor \"前进400厘米\": \"第三个动作：向前行走400厘米；400厘米等于4米，正有限。\"\nFor \"停下\": \"第四个动作：停止；无参数。\"\nFor commas: \"逗号分隔相邻动作，不新增动作或修改参数。\"\nFor 然后: \"顺序关系：标明左转发生在前述前进之后。\"\nFor 接着: \"顺序关系：标明第二次前进发生在左转之后。\"\nFor 最后: \"顺序关系：标明停下是最后一步。\"\n\nDimensions:\naction_multiplicity UNIQUE: \"源中恰好列出四个动作：前进4米、向左转45度、前进400厘米、停下；没有编辑、替换或重复，因此每个动作仅计一次。\"\naction_order UNIQUE: \"顺序标记然后、接着、最后与逗号分隔共同确定唯一的线性顺序：前进4米 -> 左转45度 -> 前进400厘米 -> 停下。\"\ncorrection_scope UNIQUE: \"源中没有编辑、更正或替换子句；没有任何参数、动作、组或关系被修改，因此该维度不适用且不引入替代解释。\"\nrepetition_scope UNIQUE: \"源中没有重复词或重复范围；四个动作均为不同动作，不存在需判定重复跨度或次数的问题。\"\nreference_resolution UNIQUE: \"各动作参数均就地明确：前进距离分别为4米和400厘米，转向为向左45度；没有代词、序数引用、省略共享参数或外部指代需要解析。\"\ntemporal_relations UNIQUE: \"然后、接着、最后给出单一顺序关系，所有动作依次发生；无需引入等待、同时发生或额外事件。\"\nunresolved_relations UNIQUE: \"源没有显式留下未决的选择、范围、顺序或关系；所有动作及顺序均已确定。\"\n\nNeed ensure coverage list text concatenation exactly. Let's maybe use no spaces. Good.\n\nPotential issue with JSON escaping? Chinese okay. Use standard JSON. Need no markdown. final only.\n\nDouble-check role \"RELATION\" for \"然后\" etc. The comma role SEPARATOR. Fine.\n\nPotential issue: \"coverage is a nonempty list of objects with exactly text, role, explanation.\" We do exactly.\n\nPotential issue: \"status is AUTHORIZED_UNIQUE only if all seven dimensions are UNIQUE and entire source supports one legal interpretation.\" Yes.\n\nPotential issue: \"If any dimension AMBIGUOUS use AMBIGUOUS. Otherwise if any UNKNOWN use UNKNOWN.\" All unique.\n\nNow final JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"第一个动作：向前行走 4 米；距离为正有限值，转换为 IR 的 walk_forward distance_m=4。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明后续动作发生在前述前进动作之后。\"},{\"text\":\"向左转45度\",\"role\":\"ACTION\",\"explanation\":\"第二个动作：向左转 45 度；左转为正，因此为 +45 度，非零有限且在 180 度内。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明第二次前进发生在左转之后。\"},{\"text\":\"前进400厘米\",\"role\":\"ACTION\",\"explanation\":\"第三个动作：向前行走 400 厘米；400 厘米等于 4 米，为正有限距离。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明停下是整段指令的最后一步。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"第四个动作：停止；stop 无参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好列出四个动作：前进4米、向左转45度、前进400厘米、停下；没有编辑、替换或重复，因此每个动作仅计一次。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"顺序标记然后、接着、最后与逗号分隔共同确定唯一的线性顺序：前进4米 -> 左转45度 -> 前进400厘米 -> 停下。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、更正或替换子句；没有任何参数、动作、组或关系被修改，因此该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词或重复范围；四个动作均为不同动作，不存在需判定重复跨度或次数的问题。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"各动作参数均就地明确：前进距离分别为4米和400厘米，转向为向左45度；没有代词、序数引用、省略共享参数或外部指代需要解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后、接着、最后给出单一顺序关系，所有动作依次发生；无需引入等待、同时发生或额外事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；所有动作及顺序均已确定。\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_99e8fdbc-b3e8-4ffc-b85e-f5152bbd83f4",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 153,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 2655,
+            "output_tokens_details": {
+              "reasoning_tokens": 2017
+            },
+            "total_tokens": 3576
+          }
+        },
+        "request_sha256": "d7c76c2fd5ec91b347a07cb5cd7079d3db0f08e92b5490618ec39205ce3f4cb9",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.57342509999944,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_99e8fdbc-b3e8-4ffc-b85e-f5152bbd83f4",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"第一个动作：向前行走 4 米；距离为正有限值，转换为 IR 的 walk_forward distance_m=4。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明后续动作发生在前述前进动作之后。\"},{\"text\":\"向左转45度\",\"role\":\"ACTION\",\"explanation\":\"第二个动作：向左转 45 度；左转为正，因此为 +45 度，非零有限且在 180 度内。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明第二次前进发生在左转之后。\"},{\"text\":\"前进400厘米\",\"role\":\"ACTION\",\"explanation\":\"第三个动作：向前行走 400 厘米；400 厘米等于 4 米，为正有限距离。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明停下是整段指令的最后一步。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"第四个动作：停止；stop 无参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好列出四个动作：前进4米、向左转45度、前进400厘米、停下；没有编辑、替换或重复，因此每个动作仅计一次。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"顺序标记然后、接着、最后与逗号分隔共同确定唯一的线性顺序：前进4米 -> 左转45度 -> 前进400厘米 -> 停下。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、更正或替换子句；没有任何参数、动作、组或关系被修改，因此该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词或重复范围；四个动作均为不同动作，不存在需判定重复跨度或次数的问题。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"各动作参数均就地明确：前进距离分别为4米和400厘米，转向为向左45度；没有代词、序数引用、省略共享参数或外部指代需要解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后、接着、最后给出单一顺序关系，所有动作依次发生；无需引入等待、同时发生或额外事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；所有动作及顺序均已确定。\"}}}",
+        "usage": {
+          "input_tokens": 153,
+          "output_tokens": 2655,
+          "total_tokens": 3576
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.8745652999969025,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 25,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "d9e3f5b50b10cac945747163664163a2f27f878e03bb21c394d96e8f928abe82",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b9bb9920-e04f-46ca-9b09-6ded33a7afbd",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 12.581243199998426,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 12.57342509999944,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进4米\",\"role\":\"ACTION\",\"explanation\":\"第一个动作：向前行走 4 米；距离为正有限值，转换为 IR 的 walk_forward distance_m=4。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"然后\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明后续动作发生在前述前进动作之后。\"},{\"text\":\"向左转45度\",\"role\":\"ACTION\",\"explanation\":\"第二个动作：向左转 45 度；左转为正，因此为 +45 度，非零有限且在 180 度内。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明第二次前进发生在左转之后。\"},{\"text\":\"前进400厘米\",\"role\":\"ACTION\",\"explanation\":\"第三个动作：向前行走 400 厘米；400 厘米等于 4 米，为正有限距离。\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"逗号分隔相邻子句，不新增动作或修改参数。\"},{\"text\":\"最后\",\"role\":\"RELATION\",\"explanation\":\"顺序关系：标明停下是整段指令的最后一步。\"},{\"text\":\"停下\",\"role\":\"ACTION\",\"explanation\":\"第四个动作：停止；stop 无参数。\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"源中恰好列出四个动作：前进4米、向左转45度、前进400厘米、停下；没有编辑、替换或重复，因此每个动作仅计一次。\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"顺序标记然后、接着、最后与逗号分隔共同确定唯一的线性顺序：前进4米 -> 左转45度 -> 前进400厘米 -> 停下。\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有编辑、更正或替换子句；没有任何参数、动作、组或关系被修改，因此该维度不适用且不引入替代解释。\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"源中没有重复词或重复范围；四个动作均为不同动作，不存在需判定重复跨度或次数的问题。\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"各动作参数均就地明确：前进距离分别为4米和400厘米，转向为向左45度；没有代词、序数引用、省略共享参数或外部指代需要解析。\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"然后、接着、最后给出单一顺序关系，所有动作依次发生；无需引入等待、同时发生或额外事件。\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"源没有显式留下未决的选择、范围、顺序或关系；所有动作及顺序均已确定。\"}}}",
+          "raw_response_sha256": "fdc6034bd9fbe15619cba5f5a844e5a96896e31cb4f5ed2b4b983e904df7522b",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_99e8fdbc-b3e8-4ffc-b85e-f5152bbd83f4",
+          "source_aware": false,
+          "source_sha256": "c165ce631e106a47f6c0eeae3f7d67fff98fc0d4a45ebc670a90ece61bdd24c4",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 153,
+            "output_tokens": 2655,
+            "total_tokens": 3576
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "第一个动作：向前行走 4 米；距离为正有限值，转换为 IR 的 walk_forward distance_m=4。",
+                "role": "ACTION",
+                "text": "前进4米"
+              },
+              {
+                "explanation": "逗号分隔相邻子句，不新增动作或修改参数。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "顺序关系：标明后续动作发生在前述前进动作之后。",
+                "role": "RELATION",
+                "text": "然后"
+              },
+              {
+                "explanation": "第二个动作：向左转 45 度；左转为正，因此为 +45 度，非零有限且在 180 度内。",
+                "role": "ACTION",
+                "text": "向左转45度"
+              },
+              {
+                "explanation": "逗号分隔相邻子句，不新增动作或修改参数。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "顺序关系：标明第二次前进发生在左转之后。",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "第三个动作：向前行走 400 厘米；400 厘米等于 4 米，为正有限距离。",
+                "role": "ACTION",
+                "text": "前进400厘米"
+              },
+              {
+                "explanation": "逗号分隔相邻子句，不新增动作或修改参数。",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "顺序关系：标明停下是整段指令的最后一步。",
+                "role": "RELATION",
+                "text": "最后"
+              },
+              {
+                "explanation": "第四个动作：停止；stop 无参数。",
+                "role": "ACTION",
+                "text": "停下"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "源中恰好列出四个动作：前进4米、向左转45度、前进400厘米、停下；没有编辑、替换或重复，因此每个动作仅计一次。",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "顺序标记然后、接着、最后与逗号分隔共同确定唯一的线性顺序：前进4米 -> 左转45度 -> 前进400厘米 -> 停下。",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "源中没有编辑、更正或替换子句；没有任何参数、动作、组或关系被修改，因此该维度不适用且不引入替代解释。",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "各动作参数均就地明确：前进距离分别为4米和400厘米，转向为向左45度；没有代词、序数引用、省略共享参数或外部指代需要解析。",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "源中没有重复词或重复范围；四个动作均为不同动作，不存在需判定重复跨度或次数的问题。",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "然后、接着、最后给出单一顺序关系，所有动作依次发生；无需引入等待、同时发生或额外事件。",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "源没有显式留下未决的选择、范围、顺序或关系；所有动作及顺序均已确定。",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 216,
+        "output_tokens": 307,
+        "total_tokens": 2059
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "前进4米然后向左转45度接着前进400厘米最后停下",
+    "status": "SUCCESS"
+  }
+}

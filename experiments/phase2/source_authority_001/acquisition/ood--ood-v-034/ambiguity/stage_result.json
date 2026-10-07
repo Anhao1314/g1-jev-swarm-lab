@@ -1,0 +1,289 @@
+{
+  "added_wall_s": 18.348887699999977,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 18.345447699999568,
+        "provider_document": {
+          "created_at": 1791359394,
+          "id": "resp_69dcfb49-8bf4-4f17-82f4-ca9850534a8f",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_69dcfb49-8bf4-4f17-82f4-ca9850534a8f",
+              "reasoning_content": "We need answer JSON only. Need analyze source: \"两件事儿，站一秒；接着停。就这两件。\"\n\nWe need decide seven dimensions. Need coverage split exact. Source entire string including Chinese punctuation.\n\nWe need determine if uniquely authorizes exactly one legal linear Mission IR 2.0 interpretation.\n\nSource Chinese: \"两件事儿，站一秒；接着停。就这两件。\"\n\nMeaning: \"Two things, stand one second; then stop. Just these two.\"\n\nActions: stand duration 1 second? \"站一秒\" stand one second. stop. Order: stand then stop (\"接着\" means then/following). \"两件事儿\" says two things, \"就这两件\" just these two. Seems unique: s1 stand duration_s 1.0, s2 stop. Need assess dimensions.\n\nPotential issues: \"两件事儿\" and \"就这两件\" context constraints exactly two actions; no extra. Action multiplicity UNIQUE? Two actions requested: stand one second, stop. The count is explicit. action_order UNIQUE: \"接着\" clearly sequential stand then stop. correction_scope: no edits, UNIQUE/inapplicable. repetition_scope: no repetition, UNIQUE/inapplicable. reference_resolution: pronouns? \"这\" refers to the two things? \"就这两件\" refers to preceding two items. Could be resolved exactly. \"接着\" maybe omitted subject? But action sequence. Shared arguments? none. temporal_relations: \"接着\" after stand, then stop. Unique. unresolved_relations: none. Should be AUTHORIZED_UNIQUE.\n\nBut need be careful: Chinese \"站一秒\" could mean \"stand for one second\" (duration_s=1.0) legal. \"接着停\" stop. Good.\n\nNeed output exact JSON. Coverage: need split into meaningful spans, concatenated equals source exactly. We can split:\n\n1 \"两件事儿，\" role CONTEXT or QUANTITY? It declares two items. Could role QUANTITY? It's a count of actions. Maybe CONTEXT? The role choices include QUANTITY. \"两件事儿\" indicates number of actions = 2. \"，\" separator. Need text values concatenated equal source.\n\nPossible coverage list:\n- text: \"两件事儿\" role: QUANTITY explanation: declares exactly two requested items.\n- text: \"，\" role: SEPARATOR explanation: separates count declaration from first action.\n- text: \"站一秒\" role: ACTION explanation: requests stand with duration 1 second.\n- text: \"；\" role: SEPARATOR explanation: separates first action from next action.\n- text: \"接着\" role: RELATION explanation: marks second action follows first.\n- text: \"停\" role: ACTION explanation: requests stop.\n- text: \"。\" role: SEPARATOR explanation: ends sentence.\n- text: \"就这两件\" role: CONTEXT or QUANTITY? It reinforces exactly these two items, no others.\n- text: \"。\" role: SEPARATOR.\n\nNeed ensure exact string: \"两件事儿，站一秒；接着停。就这两件。\" Yes concatenation:\n\"两件事儿\" + \"，\" + \"站一秒\" + \"；\" + \"接着\" + \"停\" + \"。\" + \"就这两件\" + \"。\" equals source. Good.\n\nShould \"两件事儿\" role QUANTITY. \"就这两件\" maybe CONTEXT or QUANTITY? It is a constraining clause; role CONTEXT? It refers to quantity/exclusivity. Could be QUANTITY too maybe. Role can be CONTEXT. Explanation nonempty.\n\nNeed dimensions object exactly seven names:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nEach status UNIQUE/AMBIGUOUS/UNKNOWN and explanation.\n\nNeed decide if any ambiguity due to \"站一秒\" maybe \"stand one second\" has no explicit duration_s? \"一秒\" = one second, positive finite, yes. Stand default not needed. \"停\" no params.\n\nPotential issue: \"两件事儿\" and \"就这两件\" maybe if \"站一秒\" could be parsed as \"stand for one second\" exactly. Good.\n\nWhat about \"站一秒；接着停\" maybe \"接着\" after stand, but could \"接着停\" mean \"then stop\" after stand completed? Temporal relation: \"接着\" sequential. It doesn't explicitly say wait for completion? In IR linear order each step depends on predecessor; that's fine. Is \"接着\" simultaneous? It means then/next, not simultaneous. So unique.\n\nCould \"站一秒\" require duration_s positive finite. Yes 1.0. Maximum stand duration 60, 1 legal. 2 steps <=32.\n\nNeed maybe mention \"就这两件\" ensures no omitted action beyond those. Reference resolution: \"这两件\" refers to stand and stop. Unique. No pronouns ambiguous. \"两件事儿\" maybe not pronoun but quantifier.\n\nNeed output JSON with no markdown. Ensure valid JSON with Chinese characters.\n\nWe should not include confidence etc. Status AUTHORIZED_UNIQUE. coverage nonempty. dimensions all UNIQUE. Explanation no claims compiler.\n\nNeed be careful: The system says status is AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation. Yes.\n\nBut let's think deeper: The source itself \"两件事儿，站一秒；接着停。就这两件。\" It says \"两件事儿\" (two things), \"站一秒\" and \"停\" are two actions. \"就这两件\" reinforces exactly two. Unique.\n\nCould there be ambiguity in \"站一秒\" whether duration is 1 second or action \"stand\" repeated for one second? It is stand with duration 1s. Legal stand duration_s. Good.\n\nAction multiplicity: They explicitly count two. \"站一秒\" maybe \"stand one second\" is one action. \"停\" another. No repeated actions. Unique.\n\nAction order: \"接着\" means after. Unique. Could punctuation \"；\" separate. Good.\n\nCorrection_scope: no corrections, no prior replacement. UNIQUE/inapplicable. Need explanation mention no edit clause, so no correction scope.\n\nRepetition_scope: no repetition/repeat. UNIQUE/inapplicable.\n\nReference_resolution: \"这\" in \"就这两件\" refers to the two just listed (stand one second, stop). \"两件事儿\" count. No external context. Unique.\n\nTemporal_relations: sequence stand then stop. One linear order s1 stand, s2 stop. No waiting timing invented. Unique.\n\nUnresolved_relations: None explicitly unresolved; all relations settled. Unique.\n\nCoverage explanations: Need every span considered, including nonexecuting. \"两件事儿\" is quantity declaration, doesn't itself modify action but constrains count. \"就这两件\" constrains exactly two, no extra. Punctuation roles SEPARATOR.\n\nNeed maybe include \"两件事儿\" and \"就这两件\" as QUANTITY. The role choices: ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. Both quantifiers. \"就这两件\" maybe CONTEXT/QUANTITY. I'll assign QUANTITY for both? \"就这两件\" includes \"just these two items\" quantity/consistency. Role QUANTITY. It is a constraining clause. The punctuation after \"两件事儿\" is \"，\" role SEPARATOR. After stand \"；\" SEPARATOR. \"接着\" RELATION. \"停\" ACTION. \"。\" SEPARATOR. \"就这两件\" QUANTITY? Then \"。\" SEPARATOR. That covers.\n\nBut \"就这两件\" could also be CONTEXT (exclusivity). Role QUANTITY is acceptable. Need explanation: reinforces exactly two requested items, no additional actions.\n\nNeed ensure text values concatenated in list order equal entire original source exactly. Let's verify string:\nOriginal: 两件事儿，站一秒；接着停。就这两件。\nOur items:\n1 两件事儿\n2 ，\n3 站一秒\n4 ；\n5 接着\n6 停\n7 。\n8 就这两件\n9 。\nConcatenate: 两件事儿，站一秒；接着停。就这两件。 yes.\n\nPotential issue: Should \"站一秒\" be split into \"站\" and \"一秒\"? The instruction says split into meaningful spans so every action, relation and editing clause considered. \"站一秒\" is an action with quantity embedded. Could split action \"站\" and quantity \"一秒\"? But text values must concatenate. Role for \"站\" ACTION, \"一秒\" QUANTITY? That may be more granular. Either is fine. We need every action, relation, editing clause considered. If we keep \"站一秒\" as ACTION, explanation covers duration. That is okay. But maybe coverage list should include \"一秒\" as QUANTITY separately. The role choices include QUANTITY. The source \"站一秒\" contains action and quantity. The coverage requirement says split source into meaningful spans so every action, relation and editing clause is considered. It doesn't require every quantity separate, but meaningful. Could split \"站\" ACTION and \"一秒\" QUANTITY to be thorough. Then text concatenation still okay. Let's decide.\n\nIf split:\n1 \"两件事儿\" QUANTITY\n2 \"，\" SEPARATOR\n3 \"站\" ACTION\n4 \"一秒\" QUANTITY\n5 \"；\" SEPARATOR\n6 \"接着\" RELATION\n7 \"停\" ACTION\n8 \"。\" SEPARATOR\n9 \"就这两件\" QUANTITY\n10 \"。\" SEPARATOR\n\nThis is more granular. Explanation for \"站\": requests stand action. \"一秒\": specifies duration of one second for preceding stand. That seems good. Need ensure no issue with action_multiplicity: \"站\" and \"一秒\" not two actions. The coverage roles clarify.\n\nMaybe \"两件事儿\" QUANTITY: declares two items/actions. \"就这两件\" QUANTITY: limits to exactly these two. Good.\n\nCould \"接着\" be RELATION. Yes.\n\nWhat about \"停\" no params. Good.\n\nNeed maybe mention \"站\" + \"一秒\" forms stand duration_s=1.0; \"停\" forms stop no params.\n\nNow final JSON. Need no markdown. Ensure all strings valid. Chinese characters okay. Need escape? JSON can include Chinese. Need no trailing commas.\n\nLet's craft explanations concise but sufficient.\n\nDimensions:\naction_multiplicity status UNIQUE explanation: Source explicitly declares two items/actions (\"两件事儿\" and \"就这两件\"): stand for one second and stop. No other action, no repeated action, no edited action. Thus exactly two actions: stand duration_s 1.0; stop.\n\naction_order status UNIQUE explanation: \"接着\" explicitly orders stop after the preceding stand; no alternate order or simultaneity. Linear plan s1 stand, s2 stop.\n\ncorrection_scope status UNIQUE explanation: There is no edit/correction/replacement clause in source. \"就这两件\" only confirms count, does not revise an action. No correction scope to resolve.\n\nrepetition_scope status UNIQUE explanation: No repetition or loop words; neither stand nor stop is repeated. \"两件事儿/这两件\" counts two distinct actions, not a repeated span.\n\nreference_resolution status UNIQUE explanation: \"这\" in \"就这两件\" refers to the immediately listed two items: stand one second and stop. \"两件事儿\" predicts the same two. No external referent required.\n\ntemporal_relations status UNIQUE explanation: \"接着\" establishes sequential completion/order: stand then stop. This is representable as one linear two-step plan with each step after predecessor; no waiting, simultaneity, or invented timing.\n\nunresolved_relations status UNIQUE explanation: Source does not explicitly leave order, choice, scope, or relationship unresolved; the only relation is \"接着\" and is resolved.\n\nNeed mention legal bounds? Maybe in action_multiplicity explanation: durations/angles legal. \"stand duration 1s within 60, 2 steps <=32.\" Could mention. Not necessary but maybe good. But dimension explanations can mention legal. We need if entire source supports legal interpretation. Maybe in status? There is no separate. We can include in action_multiplicity or action_order. But dimensions specific. Maybe action_multiplicity explanation: \"stand duration_s=1.0 is positive finite and within stand bound; stop has no params.\" Could mention. The source supports one legal interpretation. The output doesn't have a general explanation except dimensions. We can add to action_multiplicity.\n\nCoverage explanations:\n- \"两件事儿\" role QUANTITY: Declares exactly two requested items/actions; it does not itself execute an action but constrains the mission to two actions.\n- \"，\" role SEPARATOR: Punctuation separating the count declaration from the first action.\n- \"站\" role ACTION: Requests the stand action.\n- \"一秒\" role QUANTITY: Specifies the stand duration as one second; this makes duration_s=1.0, a positive finite legal stand duration.\n- \"；\" role SEPARATOR: Separates the first action from the next sequence element.\n- \"接着\" role RELATION: Marks the following action as next/after the stand.\n- \"停\" role ACTION: Requests stop with no parameters.\n- \"。\" role SEPARATOR: Ends the action sentence.\n- \"就这两件\" role QUANTITY: Reinforces that only the two listed items are authorized and no extra action is added.\n- \"。\" role SEPARATOR: Ends the source.\n\nThis covers all spans. Concatenation exact. Good.\n\nNeed ensure \"coverage\" list order and text exactly. The original includes Chinese full stop \"。\" and semicolon \"；\" and comma \"，\". We copy.\n\nPotential issue: The source starts with \"两件事儿，站一秒；接着停。就这两件。\" We split \"站\" and \"一秒\" no space. Concatenation \"站\"+\"一秒\" = \"站一秒\". Good.\n\nNeed final JSON only.\n\nLet's ensure JSON syntax with Chinese quotes? We use standard double quotes. Explanations contain quotes? Avoid internal double quotes or escape. We can use Chinese quotation marks? Better avoid quotes in explanations or use single quotes? JSON accepts single quotes as normal chars. But explanations can include Chinese terms without quotes. We can mention source terms without quotes. No need to quote.\n\nNeed no markdown.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need analyze source: \"两件事儿，站一秒；接着停。就这两件。\"\n\nWe need decide seven dimensions. Need coverage split exact. Source entire string including Chinese punctuation.\n\nWe need determine if uniquely authorizes exactly one legal linear Mission IR 2.0 interpretation.\n\nSource Chinese: \"两件事儿，站一秒；接着停。就这两件。\"\n\nMeaning: \"Two things, stand one second; then stop. Just these two.\"\n\nActions: stand duration 1 second? \"站一秒\" stand one second. stop. Order: stand then stop (\"接着\" means then/following). \"两件事儿\" says two things, \"就这两件\" just these two. Seems unique: s1 stand duration_s 1.0, s2 stop. Need assess dimensions.\n\nPotential issues: \"两件事儿\" and \"就这两件\" context constraints exactly two actions; no extra. Action multiplicity UNIQUE? Two actions requested: stand one second, stop. The count is explicit. action_order UNIQUE: \"接着\" clearly sequential stand then stop. correction_scope: no edits, UNIQUE/inapplicable. repetition_scope: no repetition, UNIQUE/inapplicable. reference_resolution: pronouns? \"这\" refers to the two things? \"就这两件\" refers to preceding two items. Could be resolved exactly. \"接着\" maybe omitted subject? But action sequence. Shared arguments? none. temporal_relations: \"接着\" after stand, then stop. Unique. unresolved_relations: none. Should be AUTHORIZED_UNIQUE.\n\nBut need be careful: Chinese \"站一秒\" could mean \"stand for one second\" (duration_s=1.0) legal. \"接着停\" stop. Good.\n\nNeed output exact JSON. Coverage: need split into meaningful spans, concatenated equals source exactly. We can split:\n\n1 \"两件事儿，\" role CONTEXT or QUANTITY? It declares two items. Could role QUANTITY? It's a count of actions. Maybe CONTEXT? The role choices include QUANTITY. \"两件事儿\" indicates number of actions = 2. \"，\" separator. Need text values concatenated equal source.\n\nPossible coverage list:\n- text: \"两件事儿\" role: QUANTITY explanation: declares exactly two requested items.\n- text: \"，\" role: SEPARATOR explanation: separates count declaration from first action.\n- text: \"站一秒\" role: ACTION explanation: requests stand with duration 1 second.\n- text: \"；\" role: SEPARATOR explanation: separates first action from next action.\n- text: \"接着\" role: RELATION explanation: marks second action follows first.\n- text: \"停\" role: ACTION explanation: requests stop.\n- text: \"。\" role: SEPARATOR explanation: ends sentence.\n- text: \"就这两件\" role: CONTEXT or QUANTITY? It reinforces exactly these two items, no others.\n- text: \"。\" role: SEPARATOR.\n\nNeed ensure exact string: \"两件事儿，站一秒；接着停。就这两件。\" Yes concatenation:\n\"两件事儿\" + \"，\" + \"站一秒\" + \"；\" + \"接着\" + \"停\" + \"。\" + \"就这两件\" + \"。\" equals source. Good.\n\nShould \"两件事儿\" role QUANTITY. \"就这两件\" maybe CONTEXT or QUANTITY? It is a constraining clause; role CONTEXT? It refers to quantity/exclusivity. Could be QUANTITY too maybe. Role can be CONTEXT. Explanation nonempty.\n\nNeed dimensions object exactly seven names:\naction_multiplicity\naction_order\ncorrection_scope\nrepetition_scope\nreference_resolution\ntemporal_relations\nunresolved_relations\n\nEach status UNIQUE/AMBIGUOUS/UNKNOWN and explanation.\n\nNeed decide if any ambiguity due to \"站一秒\" maybe \"stand one second\" has no explicit duration_s? \"一秒\" = one second, positive finite, yes. Stand default not needed. \"停\" no params.\n\nPotential issue: \"两件事儿\" and \"就这两件\" maybe if \"站一秒\" could be parsed as \"stand for one second\" exactly. Good.\n\nWhat about \"站一秒；接着停\" maybe \"接着\" after stand, but could \"接着停\" mean \"then stop\" after stand completed? Temporal relation: \"接着\" sequential. It doesn't explicitly say wait for completion? In IR linear order each step depends on predecessor; that's fine. Is \"接着\" simultaneous? It means then/next, not simultaneous. So unique.\n\nCould \"站一秒\" require duration_s positive finite. Yes 1.0. Maximum stand duration 60, 1 legal. 2 steps <=32.\n\nNeed maybe mention \"就这两件\" ensures no omitted action beyond those. Reference resolution: \"这两件\" refers to stand and stop. Unique. No pronouns ambiguous. \"两件事儿\" maybe not pronoun but quantifier.\n\nNeed output JSON with no markdown. Ensure valid JSON with Chinese characters.\n\nWe should not include confidence etc. Status AUTHORIZED_UNIQUE. coverage nonempty. dimensions all UNIQUE. Explanation no claims compiler.\n\nNeed be careful: The system says status is AUTHORIZED_UNIQUE only if all seven UNIQUE and entire source supports one legal interpretation. Yes.\n\nBut let's think deeper: The source itself \"两件事儿，站一秒；接着停。就这两件。\" It says \"两件事儿\" (two things), \"站一秒\" and \"停\" are two actions. \"就这两件\" reinforces exactly two. Unique.\n\nCould there be ambiguity in \"站一秒\" whether duration is 1 second or action \"stand\" repeated for one second? It is stand with duration 1s. Legal stand duration_s. Good.\n\nAction multiplicity: They explicitly count two. \"站一秒\" maybe \"stand one second\" is one action. \"停\" another. No repeated actions. Unique.\n\nAction order: \"接着\" means after. Unique. Could punctuation \"；\" separate. Good.\n\nCorrection_scope: no corrections, no prior replacement. UNIQUE/inapplicable. Need explanation mention no edit clause, so no correction scope.\n\nRepetition_scope: no repetition/repeat. UNIQUE/inapplicable.\n\nReference_resolution: \"这\" in \"就这两件\" refers to the two just listed (stand one second, stop). \"两件事儿\" count. No external context. Unique.\n\nTemporal_relations: sequence stand then stop. One linear order s1 stand, s2 stop. No waiting timing invented. Unique.\n\nUnresolved_relations: None explicitly unresolved; all relations settled. Unique.\n\nCoverage explanations: Need every span considered, including nonexecuting. \"两件事儿\" is quantity declaration, doesn't itself modify action but constrains count. \"就这两件\" constrains exactly two, no extra. Punctuation roles SEPARATOR.\n\nNeed maybe include \"两件事儿\" and \"就这两件\" as QUANTITY. The role choices: ACTION, RELATION, EDIT, QUANTITY, CONTEXT or SEPARATOR. Both quantifiers. \"就这两件\" maybe CONTEXT/QUANTITY. I'll assign QUANTITY for both? \"就这两件\" includes \"just these two items\" quantity/consistency. Role QUANTITY. It is a constraining clause. The punctuation after \"两件事儿\" is \"，\" role SEPARATOR. After stand \"；\" SEPARATOR. \"接着\" RELATION. \"停\" ACTION. \"。\" SEPARATOR. \"就这两件\" QUANTITY? Then \"。\" SEPARATOR. That covers.\n\nBut \"就这两件\" could also be CONTEXT (exclusivity). Role QUANTITY is acceptable. Need explanation: reinforces exactly two requested items, no additional actions.\n\nNeed ensure text values concatenated in list order equal entire original source exactly. Let's verify string:\nOriginal: 两件事儿，站一秒；接着停。就这两件。\nOur items:\n1 两件事儿\n2 ，\n3 站一秒\n4 ；\n5 接着\n6 停\n7 。\n8 就这两件\n9 。\nConcatenate: 两件事儿，站一秒；接着停。就这两件。 yes.\n\nPotential issue: Should \"站一秒\" be split into \"站\" and \"一秒\"? The instruction says split into meaningful spans so every action, relation and editing clause considered. \"站一秒\" is an action with quantity embedded. Could split action \"站\" and quantity \"一秒\"? But text values must concatenate. Role for \"站\" ACTION, \"一秒\" QUANTITY? That may be more granular. Either is fine. We need every action, relation, editing clause considered. If we keep \"站一秒\" as ACTION, explanation covers duration. That is okay. But maybe coverage list should include \"一秒\" as QUANTITY separately. The role choices include QUANTITY. The source \"站一秒\" contains action and quantity. The coverage requirement says split source into meaningful spans so every action, relation and editing clause is considered. It doesn't require every quantity separate, but meaningful. Could split \"站\" ACTION and \"一秒\" QUANTITY to be thorough. Then text concatenation still okay. Let's decide.\n\nIf split:\n1 \"两件事儿\" QUANTITY\n2 \"，\" SEPARATOR\n3 \"站\" ACTION\n4 \"一秒\" QUANTITY\n5 \"；\" SEPARATOR\n6 \"接着\" RELATION\n7 \"停\" ACTION\n8 \"。\" SEPARATOR\n9 \"就这两件\" QUANTITY\n10 \"。\" SEPARATOR\n\nThis is more granular. Explanation for \"站\": requests stand action. \"一秒\": specifies duration of one second for preceding stand. That seems good. Need ensure no issue with action_multiplicity: \"站\" and \"一秒\" not two actions. The coverage roles clarify.\n\nMaybe \"两件事儿\" QUANTITY: declares two items/actions. \"就这两件\" QUANTITY: limits to exactly these two. Good.\n\nCould \"接着\" be RELATION. Yes.\n\nWhat about \"停\" no params. Good.\n\nNeed maybe mention \"站\" + \"一秒\" forms stand duration_s=1.0; \"停\" forms stop no params.\n\nNow final JSON. Need no markdown. Ensure all strings valid. Chinese characters okay. Need escape? JSON can include Chinese. Need no trailing commas.\n\nLet's craft explanations concise but sufficient.\n\nDimensions:\naction_multiplicity status UNIQUE explanation: Source explicitly declares two items/actions (\"两件事儿\" and \"就这两件\"): stand for one second and stop. No other action, no repeated action, no edited action. Thus exactly two actions: stand duration_s 1.0; stop.\n\naction_order status UNIQUE explanation: \"接着\" explicitly orders stop after the preceding stand; no alternate order or simultaneity. Linear plan s1 stand, s2 stop.\n\ncorrection_scope status UNIQUE explanation: There is no edit/correction/replacement clause in source. \"就这两件\" only confirms count, does not revise an action. No correction scope to resolve.\n\nrepetition_scope status UNIQUE explanation: No repetition or loop words; neither stand nor stop is repeated. \"两件事儿/这两件\" counts two distinct actions, not a repeated span.\n\nreference_resolution status UNIQUE explanation: \"这\" in \"就这两件\" refers to the immediately listed two items: stand one second and stop. \"两件事儿\" predicts the same two. No external referent required.\n\ntemporal_relations status UNIQUE explanation: \"接着\" establishes sequential completion/order: stand then stop. This is representable as one linear two-step plan with each step after predecessor; no waiting, simultaneity, or invented timing.\n\nunresolved_relations status UNIQUE explanation: Source does not explicitly leave order, choice, scope, or relationship unresolved; the only relation is \"接着\" and is resolved.\n\nNeed mention legal bounds? Maybe in action_multiplicity explanation: durations/angles legal. \"stand duration 1s within 60, 2 steps <=32.\" Could mention. Not necessary but maybe good. But dimension explanations can mention legal. We need if entire source supports legal interpretation. Maybe in status? There is no separate. We can include in action_multiplicity or action_order. But dimensions specific. Maybe action_multiplicity explanation: \"stand duration_s=1.0 is positive finite and within stand bound; stop has no params.\" Could mention. The source supports one legal interpretation. The output doesn't have a general explanation except dimensions. We can add to action_multiplicity.\n\nCoverage explanations:\n- \"两件事儿\" role QUANTITY: Declares exactly two requested items/actions; it does not itself execute an action but constrains the mission to two actions.\n- \"，\" role SEPARATOR: Punctuation separating the count declaration from the first action.\n- \"站\" role ACTION: Requests the stand action.\n- \"一秒\" role QUANTITY: Specifies the stand duration as one second; this makes duration_s=1.0, a positive finite legal stand duration.\n- \"；\" role SEPARATOR: Separates the first action from the next sequence element.\n- \"接着\" role RELATION: Marks the following action as next/after the stand.\n- \"停\" role ACTION: Requests stop with no parameters.\n- \"。\" role SEPARATOR: Ends the action sentence.\n- \"就这两件\" role QUANTITY: Reinforces that only the two listed items are authorized and no extra action is added.\n- \"。\" role SEPARATOR: Ends the source.\n\nThis covers all spans. Concatenation exact. Good.\n\nNeed ensure \"coverage\" list order and text exactly. The original includes Chinese full stop \"。\" and semicolon \"；\" and comma \"，\". We copy.\n\nPotential issue: The source starts with \"两件事儿，站一秒；接着停。就这两件。\" We split \"站\" and \"一秒\" no space. Concatenation \"站\"+\"一秒\" = \"站一秒\". Good.\n\nNeed final JSON only.\n\nLet's ensure JSON syntax with Chinese quotes? We use standard double quotes. Explanations contain quotes? Avoid internal double quotes or escape. We can use Chinese quotation marks? Better avoid quotes in explanations or use single quotes? JSON accepts single quotes as normal chars. But explanations can include Chinese terms without quotes. We can mention source terms without quotes. No need to quote.\n\nNeed no markdown.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两件事儿\",\"role\":\"QUANTITY\",\"explanation\":\"Declares that exactly two items or actions are requested; this constrains the mission count but does not itself execute an action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the count declaration from the first listed action.\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand action.\"},{\"text\":\"一秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies one second as the duration for the immediately preceding stand action, giving stand duration_s = 1.0, a positive finite legal stand duration.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action from the following sequence element.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as next after the stand, establishing a sequential relation.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action with no parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation ending the action sentence.\"},{\"text\":\"就这两件\",\"role\":\"QUANTITY\",\"explanation\":\"Reinforces that only the two listed items are authorized and no additional action is introduced; it does not modify either action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation ending the source.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly declares two items and later confirms just these two: stand for one second and stop. There are exactly two distinct actions, with no repeated action, edited action, or additional action. The stand duration_s = 1.0 is legal and stop has no parameters.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 接着 explicitly places stop after the preceding stand. This yields one linear order: first stand duration_s = 1.0, then stop. No alternative order or simultaneity is offered.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, replacement, or parameter-changing clause in the source. 就这两件 only confirms the count of items and does not revise any prior action, so correction scope is inapplicable and introduces no ambiguity.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or looping is requested. 两件事儿 and 就这两件 count two distinct actions rather than repeating one action or expanding a span; stand and stop each occur once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这 in 就这两件 refers to the immediately listed two items: the stand action and the stop action. 两件事儿 anticipates the same two actions, so no external referent is needed and no other reading is materially supported.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"接着 establishes a single sequential relation: stand first, then stop. This is representable as one linear two-step plan with each step after the first depending on its predecessor, without inventing waiting, simultaneity, or extra timing events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The only relational term, 接着, is resolved to stand-then-stop, and the count is resolved to exactly two actions.\"}}}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_69dcfb49-8bf4-4f17-82f4-ca9850534a8f",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 150,
+            "input_tokens_details": {
+              "cached_tokens": 768
+            },
+            "output_tokens": 3783,
+            "output_tokens_details": {
+              "reasoning_tokens": 3055
+            },
+            "total_tokens": 4701
+          }
+        },
+        "request_sha256": "95f45073d3757dacef9837b977117caf1c3108df9b3c04f86920a1ba4dcbbb0a",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 18.34404170000016,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_69dcfb49-8bf4-4f17-82f4-ca9850534a8f",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两件事儿\",\"role\":\"QUANTITY\",\"explanation\":\"Declares that exactly two items or actions are requested; this constrains the mission count but does not itself execute an action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the count declaration from the first listed action.\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand action.\"},{\"text\":\"一秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies one second as the duration for the immediately preceding stand action, giving stand duration_s = 1.0, a positive finite legal stand duration.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action from the following sequence element.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as next after the stand, establishing a sequential relation.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action with no parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation ending the action sentence.\"},{\"text\":\"就这两件\",\"role\":\"QUANTITY\",\"explanation\":\"Reinforces that only the two listed items are authorized and no additional action is introduced; it does not modify either action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation ending the source.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly declares two items and later confirms just these two: stand for one second and stop. There are exactly two distinct actions, with no repeated action, edited action, or additional action. The stand duration_s = 1.0 is legal and stop has no parameters.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 接着 explicitly places stop after the preceding stand. This yields one linear order: first stand duration_s = 1.0, then stop. No alternative order or simultaneity is offered.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, replacement, or parameter-changing clause in the source. 就这两件 only confirms the count of items and does not revise any prior action, so correction scope is inapplicable and introduces no ambiguity.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or looping is requested. 两件事儿 and 就这两件 count two distinct actions rather than repeating one action or expanding a span; stand and stop each occur once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这 in 就这两件 refers to the immediately listed two items: the stand action and the stop action. 两件事儿 anticipates the same two actions, so no external referent is needed and no other reading is materially supported.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"接着 establishes a single sequential relation: stand first, then stop. This is representable as one linear two-step plan with each step after the first depending on its predecessor, without inventing waiting, simultaneity, or extra timing events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The only relational term, 接着, is resolved to stand-then-stop, and the count is resolved to exactly two actions.\"}}}",
+        "usage": {
+          "input_tokens": 150,
+          "output_tokens": 3783,
+          "total_tokens": 4701
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_semantic_ambiguity_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 1.7389714999990247,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand1-then-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 16,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 256,
+      "raw_response_sha256": "3afa6751fcfec79485849e88219b0c26e606e17578aebb9cea67e7304379077d",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_8c304938-7166-4127-ada6-0176d25c4b67",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 18.34822879999956,
+          "model": "deepseek-flash",
+          "prompt_sha256": "597393fef0eef47dead42007d262f4c9aa1d6fb89bbbc9aee7a782d23c6f2ed1",
+          "provider_calls": 1,
+          "provider_latency_s": 18.34404170000016,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"两件事儿\",\"role\":\"QUANTITY\",\"explanation\":\"Declares that exactly two items or actions are requested; this constrains the mission count but does not itself execute an action.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the count declaration from the first listed action.\"},{\"text\":\"站\",\"role\":\"ACTION\",\"explanation\":\"Requests the stand action.\"},{\"text\":\"一秒\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies one second as the duration for the immediately preceding stand action, giving stand duration_s = 1.0, a positive finite legal stand duration.\"},{\"text\":\"；\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the first action from the following sequence element.\"},{\"text\":\"接着\",\"role\":\"RELATION\",\"explanation\":\"Marks the following action as next after the stand, establishing a sequential relation.\"},{\"text\":\"停\",\"role\":\"ACTION\",\"explanation\":\"Requests the stop action with no parameters.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation ending the action sentence.\"},{\"text\":\"就这两件\",\"role\":\"QUANTITY\",\"explanation\":\"Reinforces that only the two listed items are authorized and no additional action is introduced; it does not modify either action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation ending the source.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"The source explicitly declares two items and later confirms just these two: stand for one second and stop. There are exactly two distinct actions, with no repeated action, edited action, or additional action. The stand duration_s = 1.0 is legal and stop has no parameters.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"The word 接着 explicitly places stop after the preceding stand. This yields one linear order: first stand duration_s = 1.0, then stop. No alternative order or simultaneity is offered.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"There is no edit, correction, replacement, or parameter-changing clause in the source. 就这两件 only confirms the count of items and does not revise any prior action, so correction scope is inapplicable and introduces no ambiguity.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repetition or looping is requested. 两件事儿 and 就这两件 count two distinct actions rather than repeating one action or expanding a span; stand and stop each occur once.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"这 in 就这两件 refers to the immediately listed two items: the stand action and the stop action. 两件事儿 anticipates the same two actions, so no external referent is needed and no other reading is materially supported.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"接着 establishes a single sequential relation: stand first, then stop. This is representable as one linear two-step plan with each step after the first depending on its predecessor, without inventing waiting, simultaneity, or extra timing events.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The only relational term, 接着, is resolved to stand-then-stop, and the count is resolved to exactly two actions.\"}}}",
+          "raw_response_sha256": "04aedd64dd6b595324c3edf89f267ceab53d43c5b242a9475e42ffcda868f8fa",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_69dcfb49-8bf4-4f17-82f4-ca9850534a8f",
+          "source_aware": false,
+          "source_sha256": "1f06297464782f624ca72f50ced75cb50b65c2a48749043883320382e39e5eb6",
+          "treatment": "guarded_direct_llm_semantic_ambiguity_v1",
+          "usage": {
+            "input_tokens": 150,
+            "output_tokens": 3783,
+            "total_tokens": 4701
+          },
+          "witness": {
+            "coverage": [
+              {
+                "explanation": "Declares that exactly two items or actions are requested; this constrains the mission count but does not itself execute an action.",
+                "role": "QUANTITY",
+                "text": "两件事儿"
+              },
+              {
+                "explanation": "Punctuation separating the count declaration from the first listed action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Requests the stand action.",
+                "role": "ACTION",
+                "text": "站"
+              },
+              {
+                "explanation": "Specifies one second as the duration for the immediately preceding stand action, giving stand duration_s = 1.0, a positive finite legal stand duration.",
+                "role": "QUANTITY",
+                "text": "一秒"
+              },
+              {
+                "explanation": "Punctuation separating the first action from the following sequence element.",
+                "role": "SEPARATOR",
+                "text": "；"
+              },
+              {
+                "explanation": "Marks the following action as next after the stand, establishing a sequential relation.",
+                "role": "RELATION",
+                "text": "接着"
+              },
+              {
+                "explanation": "Requests the stop action with no parameters.",
+                "role": "ACTION",
+                "text": "停"
+              },
+              {
+                "explanation": "Punctuation ending the action sentence.",
+                "role": "SEPARATOR",
+                "text": "。"
+              },
+              {
+                "explanation": "Reinforces that only the two listed items are authorized and no additional action is introduced; it does not modify either action.",
+                "role": "QUANTITY",
+                "text": "就这两件"
+              },
+              {
+                "explanation": "Punctuation ending the source.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "The source explicitly declares two items and later confirms just these two: stand for one second and stop. There are exactly two distinct actions, with no repeated action, edited action, or additional action. The stand duration_s = 1.0 is legal and stop has no parameters.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "The word 接着 explicitly places stop after the preceding stand. This yields one linear order: first stand duration_s = 1.0, then stop. No alternative order or simultaneity is offered.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "There is no edit, correction, replacement, or parameter-changing clause in the source. 就这两件 only confirms the count of items and does not revise any prior action, so correction scope is inapplicable and introduces no ambiguity.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "这 in 就这两件 refers to the immediately listed two items: the stand action and the stop action. 两件事儿 anticipates the same two actions, so no external referent is needed and no other reading is materially supported.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repetition or looping is requested. 两件事儿 and 就这两件 count two distinct actions rather than repeating one action or expanding a span; stand and stop each occur once.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "接着 establishes a single sequential relation: stand first, then stop. This is representable as one linear two-step plan with each step after the first depending on its predecessor, without inventing waiting, simultaneity, or extra timing events.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "The source does not explicitly leave any choice, scope, ordering, or relationship unresolved. The only relational term, 接着, is resolved to stand-then-stop, and the count is resolved to exactly two actions.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 213,
+        "output_tokens": 152,
+        "total_tokens": 1901
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand1-then-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 1.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "两件事儿,站一秒接着停,就这两件",
+    "status": "SUCCESS"
+  }
+}

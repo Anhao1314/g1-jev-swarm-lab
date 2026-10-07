@@ -1,0 +1,316 @@
+{
+  "added_wall_s": 16.171629000000394,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 16.168064699999377,
+        "provider_document": {
+          "created_at": 1791359539,
+          "id": "resp_053c8b3e-9711-47dc-8cdd-8084f36d91a2",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_053c8b3e-9711-47dc-8cdd-8084f36d91a2",
+              "reasoning_content": "We need answer only JSON. Need analyze source Chinese. Need derive plan independent. Source: \"前进15米再前进4米，第二段另算，别合并成一段。\"\n\nNeed determine authorization. Actions: walk_forward 15m, then walk_forward 4m. \"第二段另算，别合并成一段\" means second segment counted separately, don't merge into one segment. This seems explicitly two actions. Candidate has s1 walk 15, s2 walk 4 depends s1. Seems correct.\n\nNeed inspect dimensions. action_multiplicity: two actions, second separate, no merge. Unique. action_order: \"再\" means then; likely sequential. Need exact order: first forward 15m, then forward 4m. Unique. correction_scope: \"第二段另算\" maybe edit/instruction about second segment separate, \"别合并成一段\" prohibits merging. Not a correction replacing previous action; it clarifies segmentation. Does it change any action? It specifies second action separate from first. Unique. repetition_scope: no repetition? \"第二段\" refers second segment, not repetition. Unique/inapplicable. reference_resolution: \"第二段\" resolves to the 4m action. Unique. temporal_relations: \"再\" indicates sequential after previous. Unique. unresolved_relations: none. Status AUTHORIZED_UNIQUE.\n\nNeed output coverage list splitting source exactly concatenated. Need meaningful spans. The source has no spaces. Need split into spans preserving exact text. We can choose spans like \"前进15米\", \"再\", \"前进4米\", \"，\", \"第二段另算\", \"，\", \"别合并成一段\", \"。\"? Must concatenate exactly. Need all punctuation and whitespace. Roles.\n\nNeed ensure each explanation nonempty. Text copied exactly. Roles among allowed. QUANTITY for quantities. ACTION for action clauses. RELATION for \"再\" maybe relation. EDIT for \"第二段另算，别合并成一段\" maybe edit/clarification. SEPARATOR for punctuation? We need roles exactly. Could split punctuation into separators. Need text concatenated equals original.\n\nOriginal: 前进15米再前进4米，第二段另算，别合并成一段。\nLet's index:\n前进15米\n再\n前进4米\n，\n第二段另算\n，\n别合并成一段\n。\n\nIs that entire? Yes: \"前进15米\" + \"再\" + \"前进4米\" + \"，\" + \"第二段另算\" + \"，\" + \"别合并成一段\" + \"。\" = original. Good.\n\nBut \"第二段另算\" contains quantity? not numeric. Role EDIT maybe. \"别合并成一段\" EDIT. \"再\" RELATION. Punctuation SEPARATOR.\n\nNeed dimensions exactly seven names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed authorized_plan list. Steps:\ns1 skill walk_forward parameters {\"distance_m\":15} depends_on []\ns2 skill walk_forward parameters {\"distance_m\":4} depends_on [\"s1\"]\n\nNeed be careful: \"第二段另算\" could imply second segment is accounted separately, maybe not merged. It is not a correction to first? It explicitly says don't merge into one segment. So two steps. Good.\n\nPotential nuance: \"另算\" maybe \"counted separately\" could be meta-instruction not executable? But it reinforces segmentation. Doesn't require additional action. In plan two actions. Fine.\n\nPotential issue: \"前进15米再前进4米\" could be interpreted as walk_forward 15 then walk_forward 4, or as a single walk_forward 19? \"别合并成一段\" explicitly forbids merging. Candidate matches. Unique.\n\nPotential issue: \"第二段\" is ordinal reference to second segment. It refers to \"前进4米\". Good.\n\nNo stand/stop. No duration.\n\nNeed output exactly JSON. Ensure no markdown. Need maybe include status AUTHORIZED_UNIQUE, coverage nonempty, dimensions with status and explanation.\n\nNeed not mention candidate mismatch? Could mention source alone.\n\nLet's craft JSON valid. Need escape? Chinese fine. Text values exact. Punctuation Chinese comma and period.\n\nNeed ensure coverage text concatenated exactly. We can include 8 objects:\n1 text \"前进15米\" role ACTION explanation \"Specifies first action: walk_forward distance_m 15.\"\n2 text \"再\" role RELATION explanation \"Sequential relation: next action occurs after the preceding one.\"\n3 text \"前进4米\" role ACTION explanation \"Specifies second action: walk_forward distance_m 4.\"\n4 text \"，\" role SEPARATOR explanation \"Separates action/relation span from following edit/segmentation clause; punctuation alone adds no action.\"\n5 text \"第二段另算\" role EDIT explanation \"Specifies the second segment is accounted separately, confirming the 4-meter forward action is a distinct step from the 15-meter action.\"\n6 text \"，\" role SEPARATOR explanation \"Separates the two edit clauses; punctuation alone adds no action.\"\n7 text \"别合并成一段\" role EDIT explanation \"Explicitly forbids merging the two forward movements into one segment/action.\"\n8 text \"。\" role SEPARATOR explanation \"Sentence terminator; adds no executable action.\"\n\nNeed maybe role QUANTITY for \"15米\" and \"4米\"? But if spans are \"前进15米\" role ACTION includes quantity. That's okay. The instructions says split meaningful spans so every action, relation and edit clause is analyzed. QUANTITY can be included in action? Could be okay. But maybe better to split quantities too? Need every action, relation, edit. Roles allowed. We can split \"前进\" + \"15米\" + \"再\" etc. But then roles: \"前进\" ACTION maybe skill? \"15米\" QUANTITY. However action clause includes skill and distance. The coverage explanation can state. But if text values concatenate exactly. Let's decide maximum clarity. We can split:\n\"前进\" ACTION (skill walk_forward)\n\"15米\" QUANTITY\n\"再\" RELATION\n\"前进\" ACTION\n\"4米\" QUANTITY\n\"，\" SEPARATOR\n\"第二段另算\" EDIT\n\"，\" SEPARATOR\n\"别合并成一段\" EDIT\n\"。\" SEPARATOR\n\nIs \"前进\" alone an action? Yes. \"15米\" quantity. But \"前进15米\" is an action clause. The role ACTION for \"前进\" and QUANTITY for \"15米\". That seems good. Need explain \"前进\" maps to walk_forward; \"15米\" gives distance_m 15. Similarly second. This more precise. Is \"前进\" repeated; yes. The coverage can have two ACTION spans same text \"前进\". That's okay. Text concatenation exact: 前进 + 15米 + 再 + 前进 + 4米 + ， + 第二段另算 + ， + 别合并成一段 + 。 = original? Original \"前进15米再前进4米，第二段另算，别合并成一段。\" Yes.\n\nNeed ensure roles: \"15米\" QUANTITY. \"4米\" QUANTITY. Good.\n\nCould also split \"第二段\" reference and \"另算\" edit? But as one edit is fine. \"第二段另算\" contains reference. Explanation can mention \"第二段\" resolves to second forward action. Good.\n\nNeed dimensions explanations.\n\nLet's think if any ambiguity due to \"再\" can mean \"then\" or \"and then\" but exact order? Yes first then second. Unique.\n\nCould \"另算\" mean second segment is counted separately not necessarily after? But \"再\" gives order. \"第二段\" ordinal second. Unique.\n\n\"别合并成一段\" explicitly unresolved? No, resolves segmentation. It forbids merge.\n\nAction multiplicity: two actions, second distinct. Unique.\nAction order: first 15m then 4m. Unique.\nCorrection scope: \"第二段另算，别合并成一段\" is an edit/clarification that preserves both actions, enforces separate accounting; it does not replace distance/order. Unique.\nRepetition scope: no repetition requested; \"第二段\" is ordinal reference, not repeated execution. Unique.\nReference resolution: \"第二段\" resolves to the second action, the 4-meter forward segment. Unique.\nTemporal relations: \"再\" creates immediate sequential dependency; no waiting/simultaneous. Unique.\nUnresolved relations: none; all explicit. Unique.\n\nNeed if no duration for stand irrelevant.\n\nAuthorized plan: no mission_id. Each step exactly id, skill, parameters, depends_on. Use numbers 15.0? JSON number can be 15 or 15.0. Source says 15米. Use 15.0? Either. Candidate uses 15.0. Need \"Numbers must be finite JSON numbers.\" 15.0 valid. Use 15.0, 4.0.\n\nNeed output exactly one JSON object no markdown. Let's ensure JSON valid. Chinese characters okay. Double quotes. No trailing commas.\n\nPotential issue: status AUTHORIZED_UNIQUE only if all seven dimensions UNIQUE and complete source uniquely authorizes one legal interpretation. Yes.\n\nNeed not include candidate. We can mention source-derived plan. But output only fields. Good.\n\nLet's compose final JSON.\n\nNeed be cautious: The \"coverage\" text values concatenated in order must equal entire original source exactly. If we split \"前进\" and \"15米\", concatenation yields \"前进15米...\" yes. Good.\n\nLet's write coverage:\n[\n{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the first walk_forward action; the following quantity supplies its distance.\"},\n{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the first walk_forward distance as 15 meters, i.e. distance_m 15.0.\"},\n{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Indicates the next action is executed after the first, enforcing sequential order.\"},\n{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the second walk_forward action; the following quantity supplies its distance.\"},\n{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second walk_forward distance as 4 meters, i.e. distance_m 4.0.\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the movement clause from the segmentation/edit clause; it adds no executable action.\"},\n{\"text\":\"第二段另算\",\"role\":\"EDIT\",\"explanation\":\"States that the second segment is accounted separately; this resolves '第二段' to the 4-meter forward action and preserves it as a distinct step.\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the two edit clauses; it adds no executable action.\"},\n{\"text\":\"别合并成一段\",\"role\":\"EDIT\",\"explanation\":\"Explicitly forbids merging the two forward movements into one segment or action.\"},\n{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it adds no executable action.\"}\n]\n\nThe concatenation: \"前进15米再前进4米，第二段另算，别合并成一段。\" Yes.\n\nDimensions:\n{\n\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source requests two forward actions: 15米 and then 4米. The edit clauses explicitly treat the second as separate and forbid merging, so both are counted.\"},\n\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' places the 4米 forward after the 15米 forward; no alternative order is permitted.\"},\n\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段另算，别合并成一段' is an edit/clarification that applies to the second segment, preserving both actions and requiring they not be merged; it does not replace a distance or reorder an action.\"},\n\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repeated execution is requested. '第二段' is an ordinal reference to the second segment, not a request to repeat any action.\"},\n\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段' resolves to the second action, the forward movement of 4米.\"},\n\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is sequential: first 15米, then 4米. No waiting, simultaneity, or completion-condition relation is expressed.\"},\n\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No source clause leaves action count, order, scope, or relation unresolved; the no-merge instruction resolves segmentation explicitly.\"}\n}\n\nAuthorized plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}\n]\n\nNeed ensure no extra fields. Good.\n\nCould there be issue with \"第二段另算\" as not an edit but a RELATION? But role EDIT allowed. Explanation says. Fine.\n\nNeed final only JSON.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need analyze source Chinese. Need derive plan independent. Source: \"前进15米再前进4米，第二段另算，别合并成一段。\"\n\nNeed determine authorization. Actions: walk_forward 15m, then walk_forward 4m. \"第二段另算，别合并成一段\" means second segment counted separately, don't merge into one segment. This seems explicitly two actions. Candidate has s1 walk 15, s2 walk 4 depends s1. Seems correct.\n\nNeed inspect dimensions. action_multiplicity: two actions, second separate, no merge. Unique. action_order: \"再\" means then; likely sequential. Need exact order: first forward 15m, then forward 4m. Unique. correction_scope: \"第二段另算\" maybe edit/instruction about second segment separate, \"别合并成一段\" prohibits merging. Not a correction replacing previous action; it clarifies segmentation. Does it change any action? It specifies second action separate from first. Unique. repetition_scope: no repetition? \"第二段\" refers second segment, not repetition. Unique/inapplicable. reference_resolution: \"第二段\" resolves to the 4m action. Unique. temporal_relations: \"再\" indicates sequential after previous. Unique. unresolved_relations: none. Status AUTHORIZED_UNIQUE.\n\nNeed output coverage list splitting source exactly concatenated. Need meaningful spans. The source has no spaces. Need split into spans preserving exact text. We can choose spans like \"前进15米\", \"再\", \"前进4米\", \"，\", \"第二段另算\", \"，\", \"别合并成一段\", \"。\"? Must concatenate exactly. Need all punctuation and whitespace. Roles.\n\nNeed ensure each explanation nonempty. Text copied exactly. Roles among allowed. QUANTITY for quantities. ACTION for action clauses. RELATION for \"再\" maybe relation. EDIT for \"第二段另算，别合并成一段\" maybe edit/clarification. SEPARATOR for punctuation? We need roles exactly. Could split punctuation into separators. Need text concatenated equals original.\n\nOriginal: 前进15米再前进4米，第二段另算，别合并成一段。\nLet's index:\n前进15米\n再\n前进4米\n，\n第二段另算\n，\n别合并成一段\n。\n\nIs that entire? Yes: \"前进15米\" + \"再\" + \"前进4米\" + \"，\" + \"第二段另算\" + \"，\" + \"别合并成一段\" + \"。\" = original. Good.\n\nBut \"第二段另算\" contains quantity? not numeric. Role EDIT maybe. \"别合并成一段\" EDIT. \"再\" RELATION. Punctuation SEPARATOR.\n\nNeed dimensions exactly seven names: action_multiplicity, action_order, correction_scope, repetition_scope, reference_resolution, temporal_relations, unresolved_relations.\n\nNeed authorized_plan list. Steps:\ns1 skill walk_forward parameters {\"distance_m\":15} depends_on []\ns2 skill walk_forward parameters {\"distance_m\":4} depends_on [\"s1\"]\n\nNeed be careful: \"第二段另算\" could imply second segment is accounted separately, maybe not merged. It is not a correction to first? It explicitly says don't merge into one segment. So two steps. Good.\n\nPotential nuance: \"另算\" maybe \"counted separately\" could be meta-instruction not executable? But it reinforces segmentation. Doesn't require additional action. In plan two actions. Fine.\n\nPotential issue: \"前进15米再前进4米\" could be interpreted as walk_forward 15 then walk_forward 4, or as a single walk_forward 19? \"别合并成一段\" explicitly forbids merging. Candidate matches. Unique.\n\nPotential issue: \"第二段\" is ordinal reference to second segment. It refers to \"前进4米\". Good.\n\nNo stand/stop. No duration.\n\nNeed output exactly JSON. Ensure no markdown. Need maybe include status AUTHORIZED_UNIQUE, coverage nonempty, dimensions with status and explanation.\n\nNeed not mention candidate mismatch? Could mention source alone.\n\nLet's craft JSON valid. Need escape? Chinese fine. Text values exact. Punctuation Chinese comma and period.\n\nNeed ensure coverage text concatenated exactly. We can include 8 objects:\n1 text \"前进15米\" role ACTION explanation \"Specifies first action: walk_forward distance_m 15.\"\n2 text \"再\" role RELATION explanation \"Sequential relation: next action occurs after the preceding one.\"\n3 text \"前进4米\" role ACTION explanation \"Specifies second action: walk_forward distance_m 4.\"\n4 text \"，\" role SEPARATOR explanation \"Separates action/relation span from following edit/segmentation clause; punctuation alone adds no action.\"\n5 text \"第二段另算\" role EDIT explanation \"Specifies the second segment is accounted separately, confirming the 4-meter forward action is a distinct step from the 15-meter action.\"\n6 text \"，\" role SEPARATOR explanation \"Separates the two edit clauses; punctuation alone adds no action.\"\n7 text \"别合并成一段\" role EDIT explanation \"Explicitly forbids merging the two forward movements into one segment/action.\"\n8 text \"。\" role SEPARATOR explanation \"Sentence terminator; adds no executable action.\"\n\nNeed maybe role QUANTITY for \"15米\" and \"4米\"? But if spans are \"前进15米\" role ACTION includes quantity. That's okay. The instructions says split meaningful spans so every action, relation and edit clause is analyzed. QUANTITY can be included in action? Could be okay. But maybe better to split quantities too? Need every action, relation, edit. Roles allowed. We can split \"前进\" + \"15米\" + \"再\" etc. But then roles: \"前进\" ACTION maybe skill? \"15米\" QUANTITY. However action clause includes skill and distance. The coverage explanation can state. But if text values concatenate exactly. Let's decide maximum clarity. We can split:\n\"前进\" ACTION (skill walk_forward)\n\"15米\" QUANTITY\n\"再\" RELATION\n\"前进\" ACTION\n\"4米\" QUANTITY\n\"，\" SEPARATOR\n\"第二段另算\" EDIT\n\"，\" SEPARATOR\n\"别合并成一段\" EDIT\n\"。\" SEPARATOR\n\nIs \"前进\" alone an action? Yes. \"15米\" quantity. But \"前进15米\" is an action clause. The role ACTION for \"前进\" and QUANTITY for \"15米\". That seems good. Need explain \"前进\" maps to walk_forward; \"15米\" gives distance_m 15. Similarly second. This more precise. Is \"前进\" repeated; yes. The coverage can have two ACTION spans same text \"前进\". That's okay. Text concatenation exact: 前进 + 15米 + 再 + 前进 + 4米 + ， + 第二段另算 + ， + 别合并成一段 + 。 = original? Original \"前进15米再前进4米，第二段另算，别合并成一段。\" Yes.\n\nNeed ensure roles: \"15米\" QUANTITY. \"4米\" QUANTITY. Good.\n\nCould also split \"第二段\" reference and \"另算\" edit? But as one edit is fine. \"第二段另算\" contains reference. Explanation can mention \"第二段\" resolves to second forward action. Good.\n\nNeed dimensions explanations.\n\nLet's think if any ambiguity due to \"再\" can mean \"then\" or \"and then\" but exact order? Yes first then second. Unique.\n\nCould \"另算\" mean second segment is counted separately not necessarily after? But \"再\" gives order. \"第二段\" ordinal second. Unique.\n\n\"别合并成一段\" explicitly unresolved? No, resolves segmentation. It forbids merge.\n\nAction multiplicity: two actions, second distinct. Unique.\nAction order: first 15m then 4m. Unique.\nCorrection scope: \"第二段另算，别合并成一段\" is an edit/clarification that preserves both actions, enforces separate accounting; it does not replace distance/order. Unique.\nRepetition scope: no repetition requested; \"第二段\" is ordinal reference, not repeated execution. Unique.\nReference resolution: \"第二段\" resolves to the second action, the 4-meter forward segment. Unique.\nTemporal relations: \"再\" creates immediate sequential dependency; no waiting/simultaneous. Unique.\nUnresolved relations: none; all explicit. Unique.\n\nNeed if no duration for stand irrelevant.\n\nAuthorized plan: no mission_id. Each step exactly id, skill, parameters, depends_on. Use numbers 15.0? JSON number can be 15 or 15.0. Source says 15米. Use 15.0? Either. Candidate uses 15.0. Need \"Numbers must be finite JSON numbers.\" 15.0 valid. Use 15.0, 4.0.\n\nNeed output exactly one JSON object no markdown. Let's ensure JSON valid. Chinese characters okay. Double quotes. No trailing commas.\n\nPotential issue: status AUTHORIZED_UNIQUE only if all seven dimensions UNIQUE and complete source uniquely authorizes one legal interpretation. Yes.\n\nNeed not include candidate. We can mention source-derived plan. But output only fields. Good.\n\nLet's compose final JSON.\n\nNeed be cautious: The \"coverage\" text values concatenated in order must equal entire original source exactly. If we split \"前进\" and \"15米\", concatenation yields \"前进15米...\" yes. Good.\n\nLet's write coverage:\n[\n{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the first walk_forward action; the following quantity supplies its distance.\"},\n{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the first walk_forward distance as 15 meters, i.e. distance_m 15.0.\"},\n{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Indicates the next action is executed after the first, enforcing sequential order.\"},\n{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the second walk_forward action; the following quantity supplies its distance.\"},\n{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second walk_forward distance as 4 meters, i.e. distance_m 4.0.\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the movement clause from the segmentation/edit clause; it adds no executable action.\"},\n{\"text\":\"第二段另算\",\"role\":\"EDIT\",\"explanation\":\"States that the second segment is accounted separately; this resolves '第二段' to the 4-meter forward action and preserves it as a distinct step.\"},\n{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the two edit clauses; it adds no executable action.\"},\n{\"text\":\"别合并成一段\",\"role\":\"EDIT\",\"explanation\":\"Explicitly forbids merging the two forward movements into one segment or action.\"},\n{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it adds no executable action.\"}\n]\n\nThe concatenation: \"前进15米再前进4米，第二段另算，别合并成一段。\" Yes.\n\nDimensions:\n{\n\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source requests two forward actions: 15米 and then 4米. The edit clauses explicitly treat the second as separate and forbid merging, so both are counted.\"},\n\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' places the 4米 forward after the 15米 forward; no alternative order is permitted.\"},\n\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段另算，别合并成一段' is an edit/clarification that applies to the second segment, preserving both actions and requiring they not be merged; it does not replace a distance or reorder an action.\"},\n\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repeated execution is requested. '第二段' is an ordinal reference to the second segment, not a request to repeat any action.\"},\n\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段' resolves to the second action, the forward movement of 4米.\"},\n\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is sequential: first 15米, then 4米. No waiting, simultaneity, or completion-condition relation is expressed.\"},\n\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No source clause leaves action count, order, scope, or relation unresolved; the no-merge instruction resolves segmentation explicitly.\"}\n}\n\nAuthorized plan:\n[\n{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},\n{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}\n]\n\nNeed ensure no extra fields. Good.\n\nCould there be issue with \"第二段另算\" as not an edit but a RELATION? But role EDIT allowed. Explanation says. Fine.\n\nNeed final only JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the first walk_forward action; the following quantity supplies its distance.\"},{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the first walk_forward distance as 15 meters, i.e. distance_m 15.0.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Indicates the next action is executed after the first, enforcing sequential order.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the second walk_forward action; the following quantity supplies its distance.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second walk_forward distance as 4 meters, i.e. distance_m 4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the movement clause from the segmentation/edit clause; it adds no executable action.\"},{\"text\":\"第二段另算\",\"role\":\"EDIT\",\"explanation\":\"States that the second segment is accounted separately; this resolves '第二段' to the 4-meter forward action and preserves it as a distinct step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the two edit clauses; it adds no executable action.\"},{\"text\":\"别合并成一段\",\"role\":\"EDIT\",\"explanation\":\"Explicitly forbids merging the two forward movements into one segment or action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it adds no executable action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source requests two forward actions: 15米 and then 4米. The edit clauses explicitly treat the second as separate and forbid merging, so both are counted.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' places the 4米 forward after the 15米 forward; no alternative order is permitted.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段另算，别合并成一段' is an edit/clarification that applies to the second segment, preserving both actions and requiring they not be merged; it does not replace a distance or reorder an action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repeated execution is requested. '第二段' is an ordinal reference to the second segment, not a request to repeat any action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段' resolves to the second action, the forward movement of 4米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is sequential: first 15米, then 4米. No waiting, simultaneity, or completion-condition relation is expressed.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No source clause leaves action count, order, scope, or relation unresolved; the no-merge instruction resolves segmentation explicitly.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_053c8b3e-9711-47dc-8cdd-8084f36d91a2",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 361,
+            "input_tokens_details": {
+              "cached_tokens": 896
+            },
+            "output_tokens": 3502,
+            "output_tokens_details": {
+              "reasoning_tokens": 2792
+            },
+            "total_tokens": 4759
+          }
+        },
+        "request_sha256": "2538946e43e15deed0b061bc03e10f0107b9cdb9120763c2ad48c2e66e7dc043",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 16.166553299999578,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_053c8b3e-9711-47dc-8cdd-8084f36d91a2",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the first walk_forward action; the following quantity supplies its distance.\"},{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the first walk_forward distance as 15 meters, i.e. distance_m 15.0.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Indicates the next action is executed after the first, enforcing sequential order.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the second walk_forward action; the following quantity supplies its distance.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second walk_forward distance as 4 meters, i.e. distance_m 4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the movement clause from the segmentation/edit clause; it adds no executable action.\"},{\"text\":\"第二段另算\",\"role\":\"EDIT\",\"explanation\":\"States that the second segment is accounted separately; this resolves '第二段' to the 4-meter forward action and preserves it as a distinct step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the two edit clauses; it adds no executable action.\"},{\"text\":\"别合并成一段\",\"role\":\"EDIT\",\"explanation\":\"Explicitly forbids merging the two forward movements into one segment or action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it adds no executable action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source requests two forward actions: 15米 and then 4米. The edit clauses explicitly treat the second as separate and forbid merging, so both are counted.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' places the 4米 forward after the 15米 forward; no alternative order is permitted.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段另算，别合并成一段' is an edit/clarification that applies to the second segment, preserving both actions and requiring they not be merged; it does not replace a distance or reorder an action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repeated execution is requested. '第二段' is an ordinal reference to the second segment, not a request to repeat any action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段' resolves to the second action, the forward movement of 4米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is sequential: first 15米, then 4米. No waiting, simultaneity, or completion-condition relation is expressed.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No source clause leaves action count, order, scope, or relation unresolved; the no-merge instruction resolves segmentation explicitly.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+        "usage": {
+          "input_tokens": 361,
+          "output_tokens": 3502,
+          "total_tokens": 4759
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_source_authority_v1",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.439827199999854,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "walk15-then-walk4",
+      "model": "deepseek-flash",
+      "normalized_length": 23,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 289,
+      "raw_response_sha256": "0ff0e4cbad8930ea606657fdc09c63f79bcfdaacd357bf58162b0ddc16072602",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_d378f175-dec6-44a7-add9-3a260205ba56",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "declared_status": "AUTHORIZED_UNIQUE",
+          "finish_reason": "completed",
+          "latency_s": 16.170934400000988,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "ced545b26049c5c8097f97961f07881aea6d73099cfc93db0bcb90ccc196267d",
+          "provider_calls": 1,
+          "provider_latency_s": 16.166553299999578,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"coverage\":[{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the first walk_forward action; the following quantity supplies its distance.\"},{\"text\":\"15米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the first walk_forward distance as 15 meters, i.e. distance_m 15.0.\"},{\"text\":\"再\",\"role\":\"RELATION\",\"explanation\":\"Indicates the next action is executed after the first, enforcing sequential order.\"},{\"text\":\"前进\",\"role\":\"ACTION\",\"explanation\":\"Maps to the second walk_forward action; the following quantity supplies its distance.\"},{\"text\":\"4米\",\"role\":\"QUANTITY\",\"explanation\":\"Specifies the second walk_forward distance as 4 meters, i.e. distance_m 4.0.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the movement clause from the segmentation/edit clause; it adds no executable action.\"},{\"text\":\"第二段另算\",\"role\":\"EDIT\",\"explanation\":\"States that the second segment is accounted separately; this resolves '第二段' to the 4-meter forward action and preserves it as a distinct step.\"},{\"text\":\"，\",\"role\":\"SEPARATOR\",\"explanation\":\"Punctuation separating the two edit clauses; it adds no executable action.\"},{\"text\":\"别合并成一段\",\"role\":\"EDIT\",\"explanation\":\"Explicitly forbids merging the two forward movements into one segment or action.\"},{\"text\":\"。\",\"role\":\"SEPARATOR\",\"explanation\":\"Sentence terminator; it adds no executable action.\"}],\"dimensions\":{\"action_multiplicity\":{\"status\":\"UNIQUE\",\"explanation\":\"Source requests two forward actions: 15米 and then 4米. The edit clauses explicitly treat the second as separate and forbid merging, so both are counted.\"},\"action_order\":{\"status\":\"UNIQUE\",\"explanation\":\"'再' places the 4米 forward after the 15米 forward; no alternative order is permitted.\"},\"correction_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段另算，别合并成一段' is an edit/clarification that applies to the second segment, preserving both actions and requiring they not be merged; it does not replace a distance or reorder an action.\"},\"repetition_scope\":{\"status\":\"UNIQUE\",\"explanation\":\"No repeated execution is requested. '第二段' is an ordinal reference to the second segment, not a request to repeat any action.\"},\"reference_resolution\":{\"status\":\"UNIQUE\",\"explanation\":\"'第二段' resolves to the second action, the forward movement of 4米.\"},\"temporal_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"The only temporal relation is sequential: first 15米, then 4米. No waiting, simultaneity, or completion-condition relation is expressed.\"},\"unresolved_relations\":{\"status\":\"UNIQUE\",\"explanation\":\"No source clause leaves action count, order, scope, or relation unresolved; the no-merge instruction resolves segmentation explicitly.\"}},\"authorized_plan\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":15.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]}]}",
+          "raw_response_sha256": "cbb187b1ac2f3c6519c8e5d1cd021fc756927a87b2b9ba8923cb18ef4410e67b",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_053c8b3e-9711-47dc-8cdd-8084f36d91a2",
+          "source_aware": true,
+          "source_sha256": "1b5a50740789801a93f0aaea041d3d99efaf50df9a5e75aaa8104e14df04ede0",
+          "treatment": "guarded_direct_llm_source_authority_v1",
+          "usage": {
+            "input_tokens": 361,
+            "output_tokens": 3502,
+            "total_tokens": 4759
+          },
+          "witness": {
+            "authorized_plan": [
+              {
+                "depends_on": [],
+                "id": "s1",
+                "parameters": {
+                  "distance_m": 15.0
+                },
+                "skill": "walk_forward"
+              },
+              {
+                "depends_on": [
+                  "s1"
+                ],
+                "id": "s2",
+                "parameters": {
+                  "distance_m": 4.0
+                },
+                "skill": "walk_forward"
+              }
+            ],
+            "coverage": [
+              {
+                "explanation": "Maps to the first walk_forward action; the following quantity supplies its distance.",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "Specifies the first walk_forward distance as 15 meters, i.e. distance_m 15.0.",
+                "role": "QUANTITY",
+                "text": "15米"
+              },
+              {
+                "explanation": "Indicates the next action is executed after the first, enforcing sequential order.",
+                "role": "RELATION",
+                "text": "再"
+              },
+              {
+                "explanation": "Maps to the second walk_forward action; the following quantity supplies its distance.",
+                "role": "ACTION",
+                "text": "前进"
+              },
+              {
+                "explanation": "Specifies the second walk_forward distance as 4 meters, i.e. distance_m 4.0.",
+                "role": "QUANTITY",
+                "text": "4米"
+              },
+              {
+                "explanation": "Punctuation separating the movement clause from the segmentation/edit clause; it adds no executable action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "States that the second segment is accounted separately; this resolves '第二段' to the 4-meter forward action and preserves it as a distinct step.",
+                "role": "EDIT",
+                "text": "第二段另算"
+              },
+              {
+                "explanation": "Punctuation separating the two edit clauses; it adds no executable action.",
+                "role": "SEPARATOR",
+                "text": "，"
+              },
+              {
+                "explanation": "Explicitly forbids merging the two forward movements into one segment or action.",
+                "role": "EDIT",
+                "text": "别合并成一段"
+              },
+              {
+                "explanation": "Sentence terminator; it adds no executable action.",
+                "role": "SEPARATOR",
+                "text": "。"
+              }
+            ],
+            "dimensions": {
+              "action_multiplicity": {
+                "explanation": "Source requests two forward actions: 15米 and then 4米. The edit clauses explicitly treat the second as separate and forbid merging, so both are counted.",
+                "status": "UNIQUE"
+              },
+              "action_order": {
+                "explanation": "'再' places the 4米 forward after the 15米 forward; no alternative order is permitted.",
+                "status": "UNIQUE"
+              },
+              "correction_scope": {
+                "explanation": "'第二段另算，别合并成一段' is an edit/clarification that applies to the second segment, preserving both actions and requiring they not be merged; it does not replace a distance or reorder an action.",
+                "status": "UNIQUE"
+              },
+              "reference_resolution": {
+                "explanation": "'第二段' resolves to the second action, the forward movement of 4米.",
+                "status": "UNIQUE"
+              },
+              "repetition_scope": {
+                "explanation": "No repeated execution is requested. '第二段' is an ordinal reference to the second segment, not a request to repeat any action.",
+                "status": "UNIQUE"
+              },
+              "temporal_relations": {
+                "explanation": "The only temporal relation is sequential: first 15米, then 4米. No waiting, simultaneity, or completion-condition relation is expressed.",
+                "status": "UNIQUE"
+              },
+              "unresolved_relations": {
+                "explanation": "No source clause leaves action count, order, scope, or relation unresolved; the no-merge instruction resolves segmentation explicitly.",
+                "status": "UNIQUE"
+              }
+            },
+            "status": "AUTHORIZED_UNIQUE"
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 217,
+        "output_tokens": 234,
+        "total_tokens": 1987
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "walk15-then-walk4",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 15.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "前进15米再前进4米,第二段另算,别合并成一段",
+    "status": "SUCCESS"
+  }
+}
