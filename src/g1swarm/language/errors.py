@@ -31,6 +31,9 @@ class LanguageErrorCode(str, Enum):
     LLM_API_ERROR = "LLM_API_ERROR"
     LLM_TIMEOUT = "LLM_TIMEOUT"
     LLM_CONFIGURATION_ERROR = "LLM_CONFIGURATION_ERROR"
+    # Public release errors; not new model/compiler-output status tokens.
+    AUTHORITY_UNRESOLVED = "AUTHORITY_UNRESOLVED"
+    AUTHORITY_DENIED = "AUTHORITY_DENIED"
 
 
 class LanguageCompileError(ValueError):

@@ -84,11 +84,12 @@ def record(label, result, backend=None):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def save_minimal_evidence():
+def save_minimal_evidence(tmp_path_factory):
     yield
     if CASES:
-        DEST.mkdir(exist_ok=True)
-        (DEST / "fixture_results.json").write_text(json.dumps({
+        # Regression receipts are new test output, never frozen release evidence.
+        destination = tmp_path_factory.mktemp("authority_release_receipts")
+        (destination / "fixture_results.json").write_text(json.dumps({
             "scope": "OFFLINE_EXISTING_EVIDENCE_AND_INTEGRATION_FIXTURES",
             "public_release_entry": "g1swarm.source_authority.apply_gate",
             "cases": CASES, "provider_calls": 0, "held_out_calls": 0,

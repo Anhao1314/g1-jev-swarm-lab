@@ -333,6 +333,37 @@ def source_authorization(
         })
 
 
+def _withheld_result_semantics(authority: AuthorizationResult, decision):
+    """Classify a withheld release, never decide permission or inspect model flags.
+
+    Keep the frozen four CompilerStatus tokens. AMBIGUOUS is the existing
+    uncertainty bucket; AUTHORITY_UNRESOLVED distinguishes it from proven
+    semantic ambiguity. UNSUPPORTED/AUTHORITY_DENIED means host release refused,
+    not an authenticated principal's denial or unsupported source capability.
+    """
+    reason = authority.reason_code
+    if reason in {"GUARD_REJECT", "INVALID_SOURCE_INPUT"}:
+        return CompilerStatus.MALFORMED, LanguageErrorCode.LANGUAGE_PARSE_ERROR, "SOURCE_MALFORMED"
+    if authority.status is AuthorizationStatus.AMBIGUOUS:
+        return CompilerStatus.AMBIGUOUS, LanguageErrorCode.AMBIGUOUS_COMMAND, "SEMANTIC_AMBIGUITY"
+    if reason in {"BACKEND_FAILURE", "AUTHORIZER_FAILURE", "INCOMPLETE_PROVIDER_RESPONSE", "PROVIDER_MODEL_MISMATCH"}:
+        failure = authority.diagnostics.get("backend_failure_type")
+        code = (LanguageErrorCode.LLM_TIMEOUT if failure == "TIMEOUT" else
+                LanguageErrorCode.LLM_CONFIGURATION_ERROR if failure == "CONFIGURATION_ERROR" else
+                LanguageErrorCode.LLM_API_ERROR)
+        return CompilerStatus.MALFORMED, code, "BACKEND_FAILURE"
+    if (reason in {"CANDIDATE_MUTATED", "AUTHORIZED_PLAN_DISAGREEMENT"}
+            or decision.reason not in {"RELEASE_PRECONDITION_NOT_MET", "PROPOSAL_NOT_AUTHORIZABLE",
+                                       "AUTHORITY_UNESTABLISHED_CLARIFICATION_REQUIRED"}):
+        return CompilerStatus.UNSUPPORTED, LanguageErrorCode.AUTHORITY_DENIED, "AUTHORITY_DENIED"
+    if (reason in {"NO_LEGAL_CANDIDATE", "INVALID_CANDIDATE_IR", "FORBIDDEN_CANDIDATE_FIELD"}
+            or reason.startswith(("INVALID_", "MALFORMED_", "NON_FINITE_", "DUPLICATE_", "UNUSABLE_"))
+            or reason.endswith(("_DISAGREEMENT", "_MUST_BE_NULL"))
+            or reason in {"INCOMPLETE_SOURCE_COVERAGE", "AUTHORIZED_CERTIFICATE_HAS_ISSUES", "NO_AUTHORIZED_CERTIFICATE_PLAN"}):
+        return CompilerStatus.MALFORMED, LanguageErrorCode.LLM_OUTPUT_INVALID, "MODEL_OUTPUT_MALFORMED"
+    return CompilerStatus.AMBIGUOUS, LanguageErrorCode.AUTHORITY_UNRESOLVED, "AUTHORITY_UNRESOLVED"
+
+
 def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceAuthorizer,
                *, request_context=None, authority_service=None, authority_receipt=None,
                derive_bounded_authority: bool = True) -> CompilerResult:
@@ -397,14 +428,22 @@ def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceA
             authority = AuthorizationResult(AuthorizationStatus.UNKNOWN, "INVALID_CANDIDATE_IR", {"provider_calls": 0})
     diagnostics["source_authorization"] = authority.to_dict()
     diagnostics["independent_release"] = asdict(decision)
-    diagnostics["clarification_required"] = decision.reason == "AUTHORITY_UNESTABLISHED_CLARIFICATION_REQUIRED"
     diagnostics["released_executable"] = bool(decision.allow and authority.authorized)
     if diagnostics["released_executable"]:
+        diagnostics.update(release_outcome="AUTHORIZED_RELEASE", clarification_required=False)
         return CompilerResult(CompilerStatus.SUCCESS, baseline_result.mission, baseline_result.normalized_text, diagnostics=diagnostics)
     if baseline_result.status is not CompilerStatus.SUCCESS and guard.passed:
+        code = baseline_result.error_code
+        outcome = ("AUTHORITY_UNRESOLVED" if code is LanguageErrorCode.AUTHORITY_UNRESOLVED
+                   else "AUTHORITY_DENIED" if code is LanguageErrorCode.AUTHORITY_DENIED
+                   else "BACKEND_FAILURE" if code in {LanguageErrorCode.LLM_API_ERROR, LanguageErrorCode.LLM_TIMEOUT, LanguageErrorCode.LLM_CONFIGURATION_ERROR}
+                   else "SEMANTIC_AMBIGUITY" if baseline_result.status is CompilerStatus.AMBIGUOUS
+                   else "SOURCE_UNSUPPORTED" if baseline_result.status is CompilerStatus.UNSUPPORTED
+                   else "MODEL_OUTPUT_MALFORMED" if code is LanguageErrorCode.LLM_OUTPUT_INVALID else "SOURCE_MALFORMED")
+        diagnostics.update(release_outcome=outcome, clarification_required=outcome == "AUTHORITY_UNRESOLVED")
         return CompilerResult(baseline_result.status, None, baseline_result.normalized_text,
                               baseline_result.error_code, baseline_result.error_message, diagnostics)
-    status = CompilerStatus.AMBIGUOUS if authority.status is AuthorizationStatus.AMBIGUOUS else CompilerStatus.MALFORMED
-    code = LanguageErrorCode.AMBIGUOUS_COMMAND if status is CompilerStatus.AMBIGUOUS else LanguageErrorCode.LLM_OUTPUT_INVALID
+    status, code, outcome = _withheld_result_semantics(authority, decision)
+    diagnostics.update(release_outcome=outcome, clarification_required=outcome == "AUTHORITY_UNRESOLVED")
     return CompilerResult(status, None, baseline_result.normalized_text, code,
                           f"source authorization withheld executable Mission: {authority.reason_code}", diagnostics)
