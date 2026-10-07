@@ -333,29 +333,16 @@ def source_authorization(
         })
 
 
-def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceAuthorizer,
-               *, request_context=None, authority_service=None, authority_receipt=None,
-               derive_bounded_authority: bool = True) -> CompilerResult:
-    """Release unchanged B only after independent source/plan/context authority.
+def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceAuthorizer) -> CompilerResult:
+    """Release exactly B's candidate iff Guard, IR legality and authority pass.
 
     The original B result remains intact for replay/comparison. Rejected gated
     results always have mission=None. Evidence may contain raw model output,
-    which is never treated as executable authority. Host-owned context/service
-    and receipts are never obtained from model text or model diagnostics. The
-    default host service derives only existing bounded authority; open language
-    remains unresolved. Explicit invalid receipts never fall back to derivation.
+    which is never treated as an executable Mission object.
     """
-    # Lazy import keeps certificate/prototype imports acyclic. There is no
-    # legacy/research bypass on this public Mission-returning boundary.
-    from dataclasses import asdict
-    from ..authority_mechanism_001.contract import Decision
-    from ..authority_release_001.gate import claim_request, independent_decision
-
     diagnostics = dict(baseline_result.diagnostics)
     diagnostics["architecture"] = authorizer.treatment
     diagnostics["baseline_status"] = baseline_result.status.value
-    diagnostics["release_contract"] = "independent_authority_release_v1"
-    decision = Decision(False, "RELEASE_PRECONDITION_NOT_MET")
     guard = StructuralGuard().check(source)
     diagnostics["release_guard"] = guard.to_dict()
     if not guard.passed:
@@ -369,37 +356,15 @@ def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceA
             diagnostics["release_validation"] = MissionValidator().validate(candidate).to_dict()
             # Pass a detached data copy across the authorization boundary. Even
             # an erroneous custom authorizer cannot change immutable B evidence.
-            context, context_failure = claim_request(source, request_context)
-            if context_failure is not None:
-                decision = context_failure
-                authority = AuthorizationResult(AuthorizationStatus.UNKNOWN, decision.reason, {"provider_calls": 0})
-            else:
-                diagnostics["request_context_id"] = context.context_id
-                authorization_candidate = Mission.from_dict(before)
-                proposal = source_authorization(source, authorization_candidate, authorizer=authorizer)
-                diagnostics["proposal_authorization"] = proposal.to_dict()
-                authority = proposal
-                if (canonical_document(authorization_candidate, allow_text_numbers=False) != before
-                        or canonical_document(baseline_result.mission, allow_text_numbers=False) != before):
-                    authority = AuthorizationResult(AuthorizationStatus.UNKNOWN, "CANDIDATE_MUTATED", proposal.diagnostics)
-                    decision = Decision(False, "CANDIDATE_MUTATED")
-                elif proposal.authorized:
-                    decision = independent_decision(source=source, candidate=authorization_candidate,
-                        proposal=proposal, authorizer=authorizer, context=context,
-                        service=authority_service, receipt=authority_receipt,
-                        derive_bounded_authority=derive_bounded_authority)
-                    authority = AuthorizationResult(
-                        AuthorizationStatus.AUTHORIZED_UNIQUE if decision.allow else AuthorizationStatus.UNKNOWN,
-                        decision.reason, proposal.diagnostics)
-                else:
-                    decision = Decision(False, "PROPOSAL_NOT_AUTHORIZABLE")
+            authorization_candidate = Mission.from_dict(before)
+            authority = source_authorization(source, authorization_candidate, authorizer=authorizer)
+            if canonical_document(authorization_candidate, allow_text_numbers=False) != before:
+                authority = AuthorizationResult(AuthorizationStatus.UNKNOWN, "CANDIDATE_MUTATED", authority.diagnostics)
         except Exception:
             authority = AuthorizationResult(AuthorizationStatus.UNKNOWN, "INVALID_CANDIDATE_IR", {"provider_calls": 0})
     diagnostics["source_authorization"] = authority.to_dict()
-    diagnostics["independent_release"] = asdict(decision)
-    diagnostics["clarification_required"] = decision.reason == "AUTHORITY_UNESTABLISHED_CLARIFICATION_REQUIRED"
-    diagnostics["released_executable"] = bool(decision.allow and authority.authorized)
-    if diagnostics["released_executable"]:
+    diagnostics["released_executable"] = authority.authorized
+    if authority.authorized:
         return CompilerResult(CompilerStatus.SUCCESS, baseline_result.mission, baseline_result.normalized_text, diagnostics=diagnostics)
     if baseline_result.status is not CompilerStatus.SUCCESS and guard.passed:
         return CompilerResult(baseline_result.status, None, baseline_result.normalized_text,
