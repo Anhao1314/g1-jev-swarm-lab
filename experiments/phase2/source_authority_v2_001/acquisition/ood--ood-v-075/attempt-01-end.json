@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.6383951999996498,
+  "provider_document": {
+    "created_at": 1791364050,
+    "id": "resp_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+        "reasoning_content": "We need answer only JSON. Need inspect source. Need follow instructions. Source Chinese: \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\"\n\nNeed parse. \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" Translation: First forward 20 meters — twenty meters, I didn't change the number — then turn left 45 degrees; then stop.\n\nNeed determine actions. walk_forward 20 meters. turn left 45 degrees => signed +45. stop. Order: walk, turn, stop. Repetition? The dash \"二十米，我没改数\" says 20 meters—twenty meters, I didn't change the number. That's meta clarifying same number, not repetition of action. Could be correction/edit? It is \"I didn't change the number\" explicitly no edit. Not action repetition. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nAction multiplicity: actions: walk_forward, turn, stop = 3. Unique. U.\nAction order: first walk, then turn, then stop. U.\nCorrection/edit scope: There is dash \"我没改数\" explicitly no change. Does it mention correction? \"20米——二十米，我没改数——\" This is not an edit? It clarifies \"20 meters, I didn't change the number\". Could be no correction. U.\nRepetition scope: phrase \"twenty meters\" repeats number, not action. No repetition. U.\nReference resolution: \"完了\" means then/after done? Refers to after previous actions. \"然后\" and \"完了\" clear. U.\nTemporal relations: sequence: 先 ... 然后 ... ；完了 stop. U.\nExplicitly unresolved relations: none. U.\n\nPlan: [\"walk_forward\",20], [\"turn\",45], [\"stop\"]. Note turn left positive. Need ensure turn nonzero signed degrees; left/counterclockwise positive, right negative. 45 positive. Unit degrees explicit \"度\". Good. Meters explicit. Stand none. Actions 3 within 1..32. Stop last. status AUTHORIZED_UNIQUE. Checks all U. Issues [].\n\nNeed maybe \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" The \"没改数\" could be an instruction embedded? \"I didn't change the number\" source data. Not an action. No execution. Good.\n\nNeed return exact JSON, no commentary. Ensure no extra fields. Use plan arrays. \"turn\",45. No \"stop\" scalar. Format exactly.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need inspect source. Need follow instructions. Source Chinese: \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\"\n\nNeed parse. \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" Translation: First forward 20 meters — twenty meters, I didn't change the number — then turn left 45 degrees; then stop.\n\nNeed determine actions. walk_forward 20 meters. turn left 45 degrees => signed +45. stop. Order: walk, turn, stop. Repetition? The dash \"二十米，我没改数\" says 20 meters—twenty meters, I didn't change the number. That's meta clarifying same number, not repetition of action. Could be correction/edit? It is \"I didn't change the number\" explicitly no edit. Not action repetition. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nAction multiplicity: actions: walk_forward, turn, stop = 3. Unique. U.\nAction order: first walk, then turn, then stop. U.\nCorrection/edit scope: There is dash \"我没改数\" explicitly no change. Does it mention correction? \"20米——二十米，我没改数——\" This is not an edit? It clarifies \"20 meters, I didn't change the number\". Could be no correction. U.\nRepetition scope: phrase \"twenty meters\" repeats number, not action. No repetition. U.\nReference resolution: \"完了\" means then/after done? Refers to after previous actions. \"然后\" and \"完了\" clear. U.\nTemporal relations: sequence: 先 ... 然后 ... ；完了 stop. U.\nExplicitly unresolved relations: none. U.\n\nPlan: [\"walk_forward\",20], [\"turn\",45], [\"stop\"]. Note turn left positive. Need ensure turn nonzero signed degrees; left/counterclockwise positive, right negative. 45 positive. Unit degrees explicit \"度\". Good. Meters explicit. Stand none. Actions 3 within 1..32. Stop last. status AUTHORIZED_UNIQUE. Checks all U. Issues [].\n\nNeed maybe \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" The \"没改数\" could be an instruction embedded? \"I didn't change the number\" source data. Not an action. No execution. Good.\n\nNeed return exact JSON, no commentary. Ensure no extra fields. Use plan arrays. \"turn\",45. No \"stop\" scalar. Format exactly.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 202,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 613,
+      "output_tokens_details": {
+        "reasoning_tokens": 563
+      },
+      "total_tokens": 1327
+    }
+  },
+  "request_sha256": "26206e9bc097768edc1dcf986f21acd64d9a8d1962b93d908d7dd8091f8f4a92",
+  "status": "SUCCESS"
+}

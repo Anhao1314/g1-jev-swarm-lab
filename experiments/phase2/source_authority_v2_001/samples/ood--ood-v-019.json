@@ -1,0 +1,316 @@
+{
+  "input_binding": {
+    "population": "ood",
+    "sample_id": "ood-v-019",
+    "source_sha256": "82e05eec8990bfdb5e21dd237c5da22faa0df3992f14df0ea42559e5a22b3445",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/ood--ood-v-019.json",
+    "v1_sample_sha256": "d1d3e1e16e60f635dd3a103469c2d9f34b7b53a891041959f80b89cc16a8ae55"
+  },
+  "v2": {
+    "added_wall_s": 5.096182100001897,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 5.092400800000178,
+          "provider_document": {
+            "created_at": 1791363931,
+            "id": "resp_ddd451a9-6bc1-43e9-922d-3469852500d1",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_ddd451a9-6bc1-43e9-922d-3469852500d1",
+                "reasoning_content": "We need answer only JSON. Need inspect source. Need parse Chinese. We need determine certificate.\n\nSource: \"站一秒、前进四米、左转四十五度、前进六米、右转九十度、停。等下，第四项换成前进八米；别的照旧。\"\n\nTranslation: Stand one second, move forward 4 meters, turn left 45 degrees, move forward 6 meters, turn right 90 degrees, stop. Wait, change the fourth item to move forward 8 meters; everything else stays same.\n\nNeed issue certificate. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed determine final plan? There is correction: \"第四项换成前进八米\" change fourth item to forward 8 meters. Original actions:\n1 stand 1s\n2 walk_forward 4m\n3 turn left 45 deg (positive 45)\n4 walk_forward 6m\n5 turn right 90 deg (negative 90)\n6 stop.\n\nCorrection changes fourth item to walk_forward 8m. So final plan likely:\n[\"stand\",1], [\"walk_forward\",4], [\"turn\",45], [\"walk_forward\",8], [\"turn\",-90], [\"stop\"].\n\nNeed check all dimensions U? Need consider action multiplicity: Does correction replace or add? \"换成\" means replace. Multiplicity is six final actions? Original had six, edit replaces one, so final six. Is multiplicity unique? Need check if \"第四项\" referent unique? It's fourth item in list. Correction/edit scope: \"第四项换成前进八米；别的照旧。\" Clearly change fourth item. Reference resolution: \"第四项\" resolves to fourth item. Temporal relations: Actions ordered by commas, then correction? \"等下\" interjection \"wait\" maybe temporal? It's correction after initial sequence, not action. \"别的照旧\" means others unchanged. No repetition. Explicit unresolved? None.\n\nNeed potential ambiguity: The correction \"第四项换成前进八米\" could change the fourth action (前进六米) to 前进八米. Yes unique. But wait, \"第四项\" could refer to fourth item in the list? There is punctuation: 站一秒、前进四米、左转四十五度、前进六米、右转九十度、停。 The fourth item is 前进六米. Change to 前进八米. Good.\n\nNeed check if \"站一秒\" stand 1 second valid? Stand duration (0,60] yes 1. walk 4m positive. turn left 45 positive <=180. walk 8m. turn right 90 negative. stop.\n\nNeed output status AUTHORIZED_UNIQUE, checks all U, plan as above, issues [].\n\nNeed ensure JSON exactly fields, no extra. Use Chinese source? No.\n\nLet's verify any issue with \"停下？\" Actually \"停。\" stop. stop no scalar. Legal.\n\nNeed consider \"别的照旧\" = others as before, after correction. It might reference original actions. Fine.\n\nNeed maybe action order dimension: \"等下\" after stop might suggest correction applied after sequence? But \"第四项换成...\" modifies plan, not an action. Temporal relations: There is no temporal relation beyond sequential commas. The correction is meta-instruction occurring after original? But final plan retains original order with replacement. Is action order unique? The list order is explicit with commas, then stop. The correction doesn't reorder. So U.\n\nPotential tricky: \"站一秒\" could be \"stand one second\" yes. \"秒\" unit explicit. Good.\n\nNeed include checks: [\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"].\n\nLet's output.",
+                "summary": [
+                  {
+                    "text": "We need answer only JSON. Need inspect source. Need parse Chinese. We need determine certificate.\n\nSource: \"站一秒、前进四米、左转四十五度、前进六米、右转九十度、停。等下，第四项换成前进八米；别的照旧。\"\n\nTranslation: Stand one second, move forward 4 meters, turn left 45 degrees, move forward 6 meters, turn right 90 degrees, stop. Wait, change the fourth item to move forward 8 meters; everything else stays same.\n\nNeed issue certificate. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed determine final plan? There is correction: \"第四项换成前进八米\" change fourth item to forward 8 meters. Original actions:\n1 stand 1s\n2 walk_forward 4m\n3 turn left 45 deg (positive 45)\n4 walk_forward 6m\n5 turn right 90 deg (negative 90)\n6 stop.\n\nCorrection changes fourth item to walk_forward 8m. So final plan likely:\n[\"stand\",1], [\"walk_forward\",4], [\"turn\",45], [\"walk_forward\",8], [\"turn\",-90], [\"stop\"].\n\nNeed check all dimensions U? Need consider action multiplicity: Does correction replace or add? \"换成\" means replace. Multiplicity is six final actions? Original had six, edit replaces one, so final six. Is multiplicity unique? Need check if \"第四项\" referent unique? It's fourth item in list. Correction/edit scope: \"第四项换成前进八米；别的照旧。\" Clearly change fourth item. Reference resolution: \"第四项\" resolves to fourth item. Temporal relations: Actions ordered by commas, then correction? \"等下\" interjection \"wait\" maybe temporal? It's correction after initial sequence, not action. \"别的照旧\" means others unchanged. No repetition. Explicit unresolved? None.\n\nNeed potential ambiguity: The correction \"第四项换成前进八米\" could change the fourth action (前进六米) to 前进八米. Yes unique. But wait, \"第四项\" could refer to fourth item in the list? There is punctuation: 站一秒、前进四米、左转四十五度、前进六米、右转九十度、停。 The fourth item is 前进六米. Change to 前进八米. Good.\n\nNeed check if \"站一秒\" stand 1 second valid? Stand duration (0,60] yes 1. walk 4m positive. turn left 45 positive <=180. walk 8m. turn right 90 negative. stop.\n\nNeed output status AUTHORIZED_UNIQUE, checks all U, plan as above, issues [].\n\nNeed ensure JSON exactly fields, no extra. Use Chinese source? No.\n\nLet's verify any issue with \"停下？\" Actually \"停。\" stop. stop no scalar. Legal.\n\nNeed consider \"别的照旧\" = others as before, after correction. It might reference original actions. Fine.\n\nNeed maybe action order dimension: \"等下\" after stop might suggest correction applied after sequence? But \"第四项换成...\" modifies plan, not an action. Temporal relations: There is no temporal relation beyond sequential commas. The correction is meta-instruction occurring after original? But final plan retains original order with replacement. Is action order unique? The list order is explicit with commas, then stop. The correction doesn't reorder. So U.\n\nPotential tricky: \"站一秒\" could be \"stand one second\" yes. \"秒\" unit explicit. Good.\n\nNeed include checks: [\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"].\n\nLet's output.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",8],[\"turn\",-90],[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_ddd451a9-6bc1-43e9-922d-3469852500d1",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 218,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 848,
+              "output_tokens_details": {
+                "reasoning_tokens": 780
+              },
+              "total_tokens": 1578
+            }
+          },
+          "request_sha256": "423e18c7d8fe1808ce11fb3fc773711b847f9d091cc07c08e234bcd406e84fd8",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 5.090707999999722,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ddd451a9-6bc1-43e9-922d-3469852500d1",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",8],[\"turn\",-90],[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 218,
+            "output_tokens": 848,
+            "total_tokens": 1578
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 4.312280899999678,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "mission-stand-walk-turn-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 46,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+        "provider_status": "completed",
+        "raw_response_chars": 601,
+        "raw_response_sha256": "936d1a9fa206f55305956f3711c0c2d26d403c9d66a4acbb30f39bc99c3f8236",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_8b2abf06-705c-4426-9a9d-35c61698c1da",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "stand",
+                  1.0
+                ],
+                [
+                  "walk_forward",
+                  4.0
+                ],
+                [
+                  "turn",
+                  45.0
+                ],
+                [
+                  "walk_forward",
+                  8.0
+                ],
+                [
+                  "turn",
+                  -90.0
+                ],
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 5.095182600001863,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 5.090707999999722,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",8],[\"turn\",-90],[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "fc60729f686c6100e4796cdceefd954cf9fec9a819947bf8f750202f84c77e80",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "b3471bc6fa5d840f4e29873f42706936e7dbb26911b8e9680db015fdaeeae1ca",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_ddd451a9-6bc1-43e9-922d-3469852500d1",
+            "source_sha256": "82e05eec8990bfdb5e21dd237c5da22faa0df3992f14df0ea42559e5a22b3445",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 218,
+              "output_tokens": 848,
+              "total_tokens": 1578
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 6,
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 852,
+          "total_tokens": 2624
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "mission-stand-walk-turn-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "duration_s": 1.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": 45.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {
+              "distance_m": 8.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s4"
+            ],
+            "id": "s5",
+            "parameters": {
+              "angle_deg": -90.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s5"
+            ],
+            "id": "s6",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "站一秒,前进四米,左转四十五度,前进六米,右转九十度,停,等下,第四项换成前进八米,别的照旧",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

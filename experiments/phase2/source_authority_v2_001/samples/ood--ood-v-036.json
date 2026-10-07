@@ -1,0 +1,260 @@
+{
+  "input_binding": {
+    "population": "ood",
+    "sample_id": "ood-v-036",
+    "source_sha256": "53fde5c85198382544f0b027ac0eb2918f1741b14bb8e40eda7dfd29fafc16ac",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/ood--ood-v-036.json",
+    "v1_sample_sha256": "f7a9d88c1327f9c6f8155d8830d9b4d2efdaa446f1f817225d9e2279433ffc37"
+  },
+  "v2": {
+    "added_wall_s": 5.068930600002204,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 5.060917199996766,
+          "provider_document": {
+            "created_at": 1791363957,
+            "id": "resp_4f97ad15-1040-4dd7-bb33-94901de6da6e",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_4f97ad15-1040-4dd7-bb33-94901de6da6e",
+                "reasoning_content": "We need answer only JSON. Need process source. Need inspect entire original. Source Chinese: \"向前走20米，到这个距离就停。\" Translate: \"Walk forward 20 meters, stop when reaching this distance.\" Need determine plan? Actions: walk_forward 20 meters, stop. Order walk then stop? \"到这个距离就停\" means stop upon reaching this distance. Is that temporal relation? The instruction asks source only. We need evaluate seven dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed output certificate. Need decide status. We have explicit walk_forward 20 meters. Then stop? The source says \"walk forward 20 meters, stop at this distance.\" Does it specify stop as action? Yes \"就停\" = then stop / stop at that distance. Order: walk forward, then stop (after reaching distance). Is \"到这个距离\" a reference to 20 meters, resolved. Temporal relation: reaching distance triggers stop. The plan should be [[\"walk_forward\",20],[\"stop\"]]. Need ensure units: 20米 -> meters. Walk_forward positive meters. stop no scalar. Action count 2 within 1..32. turn none. stand none. Explicit distance unit supported.\n\nPotential issue: \"到这个距离就停\" could mean \"stop when you reach this distance\" and not necessarily separate action? But it's a stop command. The request says preserve action order, repetition etc. Stop is explicit. No ambiguity? Let's check dimensions.\n\naction multiplicity: actions: walk_forward and stop. Exactly one each? \"向前走20米\" one walking action. \"停\" one stopping action. U.\naction order: walk then stop due \"到...就\". U.\ncorrection/edit scope: no corrections. U.\nrepetition scope: no repetition. U.\nreference resolution: \"这个距离\" refers to 20米. U.\ntemporal relations: stop when reaching distance. Sequence walk completion then stop. U.\nexplicitly unresolved relations: none. U.\n\nStatus AUTHORIZED_UNIQUE? Plan complete. Issues empty. Need be careful: The stop is triggered by reaching distance. In linear plan, [walk_forward 20], [stop]. Good.\n\nBut let's scrutinize: The legal plan action \"stop(no scalar)\" cannot have duration. The source \"到这个距离就停\" has \"到这个距离\" maybe \"to this distance then stop\" meaning the stop occurs exactly at 20m. That is okay.\n\nNeed possibly include checks all U. status authorized. plan [[\"walk_forward\",20],[\"stop\"]]. issues [].\n\nNeed ensure no markdown, just JSON. The final must be exactly JSON object no commentary. Use required field names. \n\nLet's consider if \"向前走20米，到这个距离就停\" could be ambiguous because \"这个距离\" might refer to \"20米\" but maybe \"到这个距离就停\" means \"stop at this distance\" not a separate action? No, it's stop command. \n\nAre there temporal relations explicitly unresolved? It says \"到这个距离就停\" = when reaching this distance, stop. This resolves stop timing. \n\nUnits: \"米\" supported, converts to meters. Quantity positive.\n\nNo compiler candidate. We just output.\n\nDouble-check \"action multiplicity\": Could \"停\" be part of walk action? No, stop is distinct skill. Action multiplicity counts every action. There are two.\n\nNo issue. Final.",
+                "summary": [
+                  {
+                    "text": "We need answer only JSON. Need process source. Need inspect entire original. Source Chinese: \"向前走20米，到这个距离就停。\" Translate: \"Walk forward 20 meters, stop when reaching this distance.\" Need determine plan? Actions: walk_forward 20 meters, stop. Order walk then stop? \"到这个距离就停\" means stop upon reaching this distance. Is that temporal relation? The instruction asks source only. We need evaluate seven dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed output certificate. Need decide status. We have explicit walk_forward 20 meters. Then stop? The source says \"walk forward 20 meters, stop at this distance.\" Does it specify stop as action? Yes \"就停\" = then stop / stop at that distance. Order: walk forward, then stop (after reaching distance). Is \"到这个距离\" a reference to 20 meters, resolved. Temporal relation: reaching distance triggers stop. The plan should be [[\"walk_forward\",20],[\"stop\"]]. Need ensure units: 20米 -> meters. Walk_forward positive meters. stop no scalar. Action count 2 within 1..32. turn none. stand none. Explicit distance unit supported.\n\nPotential issue: \"到这个距离就停\" could mean \"stop when you reach this distance\" and not necessarily separate action? But it's a stop command. The request says preserve action order, repetition etc. Stop is explicit. No ambiguity? Let's check dimensions.\n\naction multiplicity: actions: walk_forward and stop. Exactly one each? \"向前走20米\" one walking action. \"停\" one stopping action. U.\naction order: walk then stop due \"到...就\". U.\ncorrection/edit scope: no corrections. U.\nrepetition scope: no repetition. U.\nreference resolution: \"这个距离\" refers to 20米. U.\ntemporal relations: stop when reaching distance. Sequence walk completion then stop. U.\nexplicitly unresolved relations: none. U.\n\nStatus AUTHORIZED_UNIQUE? Plan complete. Issues empty. Need be careful: The stop is triggered by reaching distance. In linear plan, [walk_forward 20], [stop]. Good.\n\nBut let's scrutinize: The legal plan action \"stop(no scalar)\" cannot have duration. The source \"到这个距离就停\" has \"到这个距离\" maybe \"to this distance then stop\" meaning the stop occurs exactly at 20m. That is okay.\n\nNeed possibly include checks all U. status authorized. plan [[\"walk_forward\",20],[\"stop\"]]. issues [].\n\nNeed ensure no markdown, just JSON. The final must be exactly JSON object no commentary. Use required field names. \n\nLet's consider if \"向前走20米，到这个距离就停\" could be ambiguous because \"这个距离\" might refer to \"20米\" but maybe \"到这个距离就停\" means \"stop at this distance\" not a separate action? No, it's stop command. \n\nAre there temporal relations explicitly unresolved? It says \"到这个距离就停\" = when reaching this distance, stop. This resolves stop timing. \n\nUnits: \"米\" supported, converts to meters. Quantity positive.\n\nNo compiler candidate. We just output.\n\nDouble-check \"action multiplicity\": Could \"停\" be part of walk action? No, stop is distinct skill. Action multiplicity counts every action. There are two.\n\nNo issue. Final.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_4f97ad15-1040-4dd7-bb33-94901de6da6e",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 191,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 767,
+              "output_tokens_details": {
+                "reasoning_tokens": 722
+              },
+              "total_tokens": 1470
+            }
+          },
+          "request_sha256": "8cf61e61ddc5d6d5f1837741d21e195f76fc253cbfa323cce7eb31d8728e68e8",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 5.05912890000036,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_4f97ad15-1040-4dd7-bb33-94901de6da6e",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 191,
+            "output_tokens": 767,
+            "total_tokens": 1470
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 3.0042391999995743,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "mission-walk20-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 14,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+        "provider_status": "completed",
+        "raw_response_chars": 267,
+        "raw_response_sha256": "ca4040329d9be92685e624f4b81d11babaca190647111616e79fb2ce641cec07",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_b53d968a-a0df-4667-a753-df314fbab891",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "walk_forward",
+                  20.0
+                ],
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 5.068007000001671,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 5.05912890000036,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "ced74297254a98608427483df7c54861c552eb73b8ed68ceecec0d83325921b4",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "c1b34786a22349b961f25b3eb8c7f94791fb1e598d6081ff4e2fe2b875c504b9",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_4f97ad15-1040-4dd7-bb33-94901de6da6e",
+            "source_sha256": "53fde5c85198382544f0b027ac0eb2918f1741b14bb8e40eda7dfd29fafc16ac",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 191,
+              "output_tokens": 767,
+              "total_tokens": 1470
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 2,
+        "usage": {
+          "input_tokens": 209,
+          "output_tokens": 305,
+          "total_tokens": 2050
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "mission-walk20-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "distance_m": 20.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "向前走20米,到这个距离就停",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

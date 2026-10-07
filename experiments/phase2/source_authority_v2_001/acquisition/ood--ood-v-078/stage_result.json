@@ -1,0 +1,313 @@
+{
+  "added_wall_s": 6.0258992000017315,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.01986019999822,
+        "provider_document": {
+          "created_at": 1791364057,
+          "id": "resp_18003400-4213-4da8-b19e-8c7cc4d1da91",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_18003400-4213-4da8-b19e-8c7cc4d1da91",
+              "reasoning_content": "We need answer only JSON. Need inspect source. Need comply. Source Chinese: \"麻烦一次做完哈：站五秒；往前十二米；右转三十度；站一秒；再往前八米；左转九十度；最后停。\"\n\nNeed produce certificate. Need analyze seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nWe need determine plan if authorized unique. Source actions:\n- 站五秒 = stand 5 seconds\n- 往前十二米 = walk_forward 12 meters\n- 右转三十度 = turn right 30 degrees -> signed negative? Skill turn number signed degrees; left/counterclockwise positive, right/clockwise negative. So turn -30.\n- 站一秒 = stand 1 second\n- 再往前八米 = again forward 8 meters -> walk_forward 8\n- 左转九十度 = turn left 90 -> +90\n- 最后停 = finally stop.\n\nOrder clear. Actions count 7. Multiplicity? \"再\" means again but separate action, not repetition scope? It repeats forward action but explicitly as another action after stand. Is that considered repetition scope? We need check repetition scope. Source has \"再往前八米\" = \"then/again forward eight meters\". This is an action repetition? The dimension repetition scope likely asks if there is a repetition instruction whose scope unresolved. Here \"再\" can mean \"then\" or \"again\"; but in sequence, it's simply another forward action. Does it create ambiguous repetition scope? Need decide. They instruct \"Count every action, preserve order and repetition\". If source says \"再往前八米\" after previous forward, it could be interpreted as \"again walk forward 8m\" i.e. repeat walk forward but with new distance. It is an explicit action with quantity, so plan includes second walk_forward. The word \"再\" often means \"then/also/again\", not necessarily loop. Not a repetition of group. Repetition scope U (inapplicable). Action multiplicity U: exactly listed actions, no ambiguous how many? \"再往前\" might imply repeat previous action, but explicit distance 8, so one action. No unresolved scope. Order U: sequential semicolons, \"然后\" not but clear. Correction/edit U. Reference U: \"再往前\" refers to direction? Actually \"往前\" directly specifies direction forward; \"再\" could refer to previous forward, but no ambiguity in action? Need maybe reference resolution: \"再\" refers to previous forward action? But the action is self-contained \"往前八米\"; \"再\" is temporal adverb, not referential pronoun. \"最后\" refers final stop. U.\n\nTemporal relations: sequence explicit: \"一次做完\" once do all? \"站五秒；往前...；右转...；站一秒；再往前...；左转...；最后停.\" The order is explicit via semicolons and sequence. Need check temporal relations like after/before? The sequence itself linear. \"再\" could mean after previous? \"最后\" final. U. No explicit unresolved.\n\nIssues: none. Status AUTHORIZED_UNIQUE. Plan with numbers. Need ensure units: 五秒 seconds, 十二米 meters, 三十度 degrees, 一秒, 八米, 九十度, stop no scalar. Stand default? explicit durations. Turn within <=180. All positive? turn -30 and 90. legal. Number of actions 7 within 1..32.\n\nNeed output JSON exactly fields. checks array seven strings all U. plan list: [[\"stand\",5],[\"walk_forward\",12],[\"turn\",-30],[\"stand\",1],[\"walk_forward\",8],[\"turn\",90],[\"stop\"]]. issues [].\n\nNeed be cautious about \"右转三十度\": right/clockwise negative => -30. \"左转九十度\": left/counterclockwise positive => 90.\n\nNeed no commentary. Ensure valid JSON.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source. Need comply. Source Chinese: \"麻烦一次做完哈：站五秒；往前十二米；右转三十度；站一秒；再往前八米；左转九十度；最后停。\"\n\nNeed produce certificate. Need analyze seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nWe need determine plan if authorized unique. Source actions:\n- 站五秒 = stand 5 seconds\n- 往前十二米 = walk_forward 12 meters\n- 右转三十度 = turn right 30 degrees -> signed negative? Skill turn number signed degrees; left/counterclockwise positive, right/clockwise negative. So turn -30.\n- 站一秒 = stand 1 second\n- 再往前八米 = again forward 8 meters -> walk_forward 8\n- 左转九十度 = turn left 90 -> +90\n- 最后停 = finally stop.\n\nOrder clear. Actions count 7. Multiplicity? \"再\" means again but separate action, not repetition scope? It repeats forward action but explicitly as another action after stand. Is that considered repetition scope? We need check repetition scope. Source has \"再往前八米\" = \"then/again forward eight meters\". This is an action repetition? The dimension repetition scope likely asks if there is a repetition instruction whose scope unresolved. Here \"再\" can mean \"then\" or \"again\"; but in sequence, it's simply another forward action. Does it create ambiguous repetition scope? Need decide. They instruct \"Count every action, preserve order and repetition\". If source says \"再往前八米\" after previous forward, it could be interpreted as \"again walk forward 8m\" i.e. repeat walk forward but with new distance. It is an explicit action with quantity, so plan includes second walk_forward. The word \"再\" often means \"then/also/again\", not necessarily loop. Not a repetition of group. Repetition scope U (inapplicable). Action multiplicity U: exactly listed actions, no ambiguous how many? \"再往前\" might imply repeat previous action, but explicit distance 8, so one action. No unresolved scope. Order U: sequential semicolons, \"然后\" not but clear. Correction/edit U. Reference U: \"再往前\" refers to direction? Actually \"往前\" directly specifies direction forward; \"再\" could refer to previous forward, but no ambiguity in action? Need maybe reference resolution: \"再\" refers to previous forward action? But the action is self-contained \"往前八米\"; \"再\" is temporal adverb, not referential pronoun. \"最后\" refers final stop. U.\n\nTemporal relations: sequence explicit: \"一次做完\" once do all? \"站五秒；往前...；右转...；站一秒；再往前...；左转...；最后停.\" The order is explicit via semicolons and sequence. Need check temporal relations like after/before? The sequence itself linear. \"再\" could mean after previous? \"最后\" final. U. No explicit unresolved.\n\nIssues: none. Status AUTHORIZED_UNIQUE. Plan with numbers. Need ensure units: 五秒 seconds, 十二米 meters, 三十度 degrees, 一秒, 八米, 九十度, stop no scalar. Stand default? explicit durations. Turn within <=180. All positive? turn -30 and 90. legal. Number of actions 7 within 1..32.\n\nNeed output JSON exactly fields. checks array seven strings all U. plan list: [[\"stand\",5],[\"walk_forward\",12],[\"turn\",-30],[\"stand\",1],[\"walk_forward\",8],[\"turn\",90],[\"stop\"]]. issues [].\n\nNeed be cautious about \"右转三十度\": right/clockwise negative => -30. \"左转九十度\": left/counterclockwise positive => 90.\n\nNeed no commentary. Ensure valid JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",5],[\"walk_forward\",12],[\"turn\",-30],[\"stand\",1],[\"walk_forward\",8],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_18003400-4213-4da8-b19e-8c7cc4d1da91",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 215,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 908,
+            "output_tokens_details": {
+              "reasoning_tokens": 835
+            },
+            "total_tokens": 1635
+          }
+        },
+        "request_sha256": "f3420c9ef33828c5c8cd7278c612a277d4d7a454de4e5e57d8efa3f990dd63c1",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.018468199999916,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_18003400-4213-4da8-b19e-8c7cc4d1da91",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",5],[\"walk_forward\",12],[\"turn\",-30],[\"stand\",1],[\"walk_forward\",8],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 215,
+          "output_tokens": 908,
+          "total_tokens": 1635
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.950468799999726,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-walk-turn-seq",
+      "model": "deepseek-flash",
+      "normalized_length": 41,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 681,
+      "raw_response_sha256": "2bb72af146f709de8134da8dd51edd34f9c59e1dee6bc5d1ba2dc79d068a074b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_a534c959-2ac1-49db-b000-e66b7dfa006c",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "stand",
+                5.0
+              ],
+              [
+                "walk_forward",
+                12.0
+              ],
+              [
+                "turn",
+                -30.0
+              ],
+              [
+                "stand",
+                1.0
+              ],
+              [
+                "walk_forward",
+                8.0
+              ],
+              [
+                "turn",
+                90.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 6.024934499997471,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 6.018468199999916,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",5],[\"walk_forward\",12],[\"turn\",-30],[\"stand\",1],[\"walk_forward\",8],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "ee13b2ac5b4704084fff9aa01f343a17d9e6706a96cb692989ea0d3bfe07d160",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "64b455d280b20ba744d3437e1119225736a9d64e10820b9a2941a777ea2a9570",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_18003400-4213-4da8-b19e-8c7cc4d1da91",
+          "source_sha256": "19326fc91609fe39fa46febb63a3653b8d5ca30f268df03b8aa525fe5585471b",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 215,
+            "output_tokens": 908,
+            "total_tokens": 1635
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 7,
+      "usage": {
+        "input_tokens": 233,
+        "output_tokens": 426,
+        "total_tokens": 2195
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand-walk-turn-seq",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 12.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "duration_s": 1.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s5"
+          ],
+          "id": "s6",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s6"
+          ],
+          "id": "s7",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "麻烦一次做完哈,站五秒,往前十二米,右转三十度,站一秒再往前八米,左转九十度最后停",
+    "status": "SUCCESS"
+  }
+}

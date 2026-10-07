@@ -1,0 +1,271 @@
+{
+  "added_wall_s": 4.755007100000512,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 4.750466599998617,
+        "provider_document": {
+          "created_at": 1791364262,
+          "id": "resp_65d3bf95-69cd-4af6-afbf-4c5ec30648e6",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_65d3bf95-69cd-4af6-afbf-4c5ec30648e6",
+              "reasoning_content": "We need answer only JSON object. Need inspect source Chinese: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"\n\nNeed issue compact source-authority certificate. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need determine status and plan if authorized unique.\n\nWe need parse source. It contains actions:\n1 right turn 90 degrees\n2 then forward 6.0 meters\n3 then counterclockwise turn 90 degrees\n4 finally immediately stop\n\nNeed map to legal plan. Skills:\nturn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative)\nwalk_forward(positive meters; cm converts)\nstop(no scalar)\nstand(seconds; default 2.0 only when duration absent)\n\n\"向右转90度\" = turn right 90 degrees -> negative: [\"turn\", -90]? The plan uses [skill,number], except stop. Need number signed. Right/clockwise negative. So -90.\n\n\"然后前进6.0米\" -> walk_forward positive meters: [\"walk_forward\", 6.0] or 6? Source 6.0 meters. Plan number can be 6.0. Fine.\n\n\"接着逆时针转90度\" -> turn left/counterclockwise positive -> [\"turn\", 90].\n\n\"最后立即停止\" -> stop. \"立即\" means immediately, no scalar. [\"stop\"]. Temporal relation \"最后\" finally, \"接着\" then etc. \"立即\" maybe immediate no impact.\n\nNeed check dimensions:\naction multiplicity: There are four actions? Need count every action. \"向右转90度\" one turn. \"前进6.0米\" one walk_forward. \"逆时针转90度\" one turn. \"停止\" one stop. Multiplicity uniquely resolved U.\naction order: sequence \"然后\", \"接着\", \"最后\" explicit order. U.\ncorrection/edit scope: no corrections/edits. U.\nrepetition scope: no repetition. U.\nreference resolution: no pronouns/references except maybe \"then\" connectors, no unresolved. U.\ntemporal relations: \"然后\", \"接着\", \"最后\", \"立即\" specify order and immediacy. Need honor temporal relations. Are \"立即\" and \"最后\" compatible? It says finally immediately stop. \"最后\" final action, \"立即\" immediate after previous? Could be temporal relation. Legal plan sequential. Does \"立即\" affect duration? stop no scalar. likely U.\nexplicitly unresolved relations: none. U.\n\nThus status AUTHORIZED_UNIQUE, plan [[\"turn\",-90],[\"walk_forward\",6.0],[\"turn\",90],[\"stop\"]], checks all U, issues [].\n\nNeed ensure no need stand? \"立即停止\" immediately stop; no stand. Legal plan 4 actions within 1..32, turns absolute <=180. Good. Unit explicit 度, 米. 6.0 m. Turn 90. ok.\n\nPotential nuance: \"向右转90度\" in Chinese could mean turn right (clockwise) 90 -> negative. \"逆时针转90度\" left/counterclockwise positive. Yes.\n\nNeed output JSON exactly. No commentary. Need ensure valid JSON. If number 6.0 maybe JSON number can be 6.0. Use [\"walk_forward\",6.0]. Fine.\n\nNeed include exactly fields status, checks, plan, issues. No extra. Checks seven strings. status. plan array.\n\nDouble-check if any ambiguity about \"立即停止\" maybe stop immediately but no timing? Stop no scalar, \"立即\" is adverb, not action quantity. It's temporal relation. We can say U. If no scalar, stop skill. Fine.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON object. Need inspect source Chinese: \"向右转90度然后前进6.0米接着逆时针转90度最后立即停止\"\n\nNeed issue compact source-authority certificate. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need determine status and plan if authorized unique.\n\nWe need parse source. It contains actions:\n1 right turn 90 degrees\n2 then forward 6.0 meters\n3 then counterclockwise turn 90 degrees\n4 finally immediately stop\n\nNeed map to legal plan. Skills:\nturn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative)\nwalk_forward(positive meters; cm converts)\nstop(no scalar)\nstand(seconds; default 2.0 only when duration absent)\n\n\"向右转90度\" = turn right 90 degrees -> negative: [\"turn\", -90]? The plan uses [skill,number], except stop. Need number signed. Right/clockwise negative. So -90.\n\n\"然后前进6.0米\" -> walk_forward positive meters: [\"walk_forward\", 6.0] or 6? Source 6.0 meters. Plan number can be 6.0. Fine.\n\n\"接着逆时针转90度\" -> turn left/counterclockwise positive -> [\"turn\", 90].\n\n\"最后立即停止\" -> stop. \"立即\" means immediately, no scalar. [\"stop\"]. Temporal relation \"最后\" finally, \"接着\" then etc. \"立即\" maybe immediate no impact.\n\nNeed check dimensions:\naction multiplicity: There are four actions? Need count every action. \"向右转90度\" one turn. \"前进6.0米\" one walk_forward. \"逆时针转90度\" one turn. \"停止\" one stop. Multiplicity uniquely resolved U.\naction order: sequence \"然后\", \"接着\", \"最后\" explicit order. U.\ncorrection/edit scope: no corrections/edits. U.\nrepetition scope: no repetition. U.\nreference resolution: no pronouns/references except maybe \"then\" connectors, no unresolved. U.\ntemporal relations: \"然后\", \"接着\", \"最后\", \"立即\" specify order and immediacy. Need honor temporal relations. Are \"立即\" and \"最后\" compatible? It says finally immediately stop. \"最后\" final action, \"立即\" immediate after previous? Could be temporal relation. Legal plan sequential. Does \"立即\" affect duration? stop no scalar. likely U.\nexplicitly unresolved relations: none. U.\n\nThus status AUTHORIZED_UNIQUE, plan [[\"turn\",-90],[\"walk_forward\",6.0],[\"turn\",90],[\"stop\"]], checks all U, issues [].\n\nNeed ensure no need stand? \"立即停止\" immediately stop; no stand. Legal plan 4 actions within 1..32, turns absolute <=180. Good. Unit explicit 度, 米. 6.0 m. Turn 90. ok.\n\nPotential nuance: \"向右转90度\" in Chinese could mean turn right (clockwise) 90 -> negative. \"逆时针转90度\" left/counterclockwise positive. Yes.\n\nNeed output JSON exactly. No commentary. Need ensure valid JSON. If number 6.0 maybe JSON number can be 6.0. Use [\"walk_forward\",6.0]. Fine.\n\nNeed include exactly fields status, checks, plan, issues. No extra. Checks seven strings. status. plan array.\n\nDouble-check if any ambiguity about \"立即停止\" maybe stop immediately but no timing? Stop no scalar, \"立即\" is adverb, not action quantity. It's temporal relation. We can say U. If no scalar, stop skill. Fine.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-90],[\"walk_forward\",6.0],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_65d3bf95-69cd-4af6-afbf-4c5ec30648e6",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 200,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 849,
+            "output_tokens_details": {
+              "reasoning_tokens": 791
+            },
+            "total_tokens": 1561
+          }
+        },
+        "request_sha256": "bf430ed01d343462bf58df9bd171453712ffeeb0ac9a7a67b8ed0b240ea2c882",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 4.745990999999776,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_65d3bf95-69cd-4af6-afbf-4c5ec30648e6",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-90],[\"walk_forward\",6.0],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 200,
+          "output_tokens": 849,
+          "total_tokens": 1561
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.500938799999858,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "cmd-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 29,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"cmd-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "f90572840656e257b8852e96f09770969cfd5e3fb9c5b7ddfc8099ea14f401eb",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_5a498a04-e14c-4478-a738-a0e19f2af5b6",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "turn",
+                -90.0
+              ],
+              [
+                "walk_forward",
+                6.0
+              ],
+              [
+                "turn",
+                90.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 4.753019100000529,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 4.745990999999776,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-90],[\"walk_forward\",6.0],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "8d79084ce2fa0d58b3e0c4ecebbe4c329b98ace2e212f3c84753a09cc9de85be",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "820e2953fd59ac71a1a87e3064a92f8f9c282d815af883dd1b10cc5a8980553c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_65d3bf95-69cd-4af6-afbf-4c5ec30648e6",
+          "source_sha256": "750a7df07030363538e9093234dbd0ba165fc45339e2cccabcb92851a3055b50",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 200,
+            "output_tokens": 849,
+            "total_tokens": 1561
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 218,
+        "output_tokens": 335,
+        "total_tokens": 2089
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "cmd-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "向右转90度然后前进6.0米接着逆时针转90度最后立即停止",
+    "status": "SUCCESS"
+  }
+}

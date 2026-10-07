@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.137286700002733,
+  "provider_document": {
+    "created_at": 1791364272,
+    "id": "resp_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+        "reasoning_content": "We need answer JSON only. Need inspect source. Chinese: \"站立2秒然后向前走四米接着立即停止\" = Stand 2 seconds then walk forward 4 meters then immediately stop.\n\nNeed check seven dimensions exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed produce status etc.\n\nWe need parse actions: stand 2 seconds, walk_forward 4 meters, stop immediately. \"立即停止\" means immediately stop. Stop no scalar. Order: stand, walk_forward, stop. Multiplicity: each once? \"立即\" modifies stop temporal, not action multiplicity. Duration present for stand 2 seconds. Distance present 4 meters. Turn none. Units explicit? \"秒\" seconds, \"米\" meters. Positive meters. Action count 3 within 1..32. Stand duration 2 within (0,60]. Walk positive 4. Stop no scalar.\n\nTemporal relations: \"然后\" then, \"接着\" then, \"立即\" immediately before stop? Could indicate immediate stop after walking, no delay. Does \"立即停止\" maybe means stop immediately (as an action) with temporal relation to prior action immediate. Is that a temporal relation requiring representation? Plan supports stop after walk. It doesn't encode immediacy delay. Is \"立即\" explicit temporal relation that may be unresolved? Need decide if authorized. The toy included \"then stop\" no immediate. Here immediate could be adverbial. Does legal plan support \"immediately\"? No parameter for delay. But it may just mean stop now after walk, sequence is immediate. No issue.\n\nNeed check correction/edit scope: none. Repetition: none. Reference: none. Temporal relations: sequence \"然后\", \"接着\", \"立即\" all resolved to ordered actions. Explicitly unresolved: none.\n\nThus AUTHORIZED_UNIQUE with plan [[\"stand\",2],[\"walk_forward\",4],[\"stop\"]], checks all U issues [].\n\nNeed ensure no \"stand\" default? It has duration 2 seconds, so [stand,2]. Walk forward 4 meters => [walk_forward,4]. Stop [\"stop\"].\n\nReturn JSON only. Ensure exact fields status, checks, plan, issues. No commentary.\n\nNeed consider \"立即\" might be temporal relation \"immediate\" but plan doesn't encode exact delay. The instruction says temporal relations must be honored. Is \"immediately\" a temporal relation that cannot be represented? It says stop has no scalar; maybe \"immediate\" is a temporal modifier that could be unrepresentable? But legal plans only sequence, and default? Let's analyze.\n\nWe need be careful: The certificate checks seven dimensions. For temporal relations, if source says \"然后\" and \"接着\" (then, next) and \"立即\" (immediately) after walking. \"立即停止\" could be interpreted as stop immediately (not delayed). In plan, actions are sequential; there is no explicit delay between actions, so immediate is satisfied. The allowed actions don't include wait/delay, so default transition is immediate. So U.\n\nPotential ambiguity: \"向前走四米\" means walk forward four meters. \"向前\" direction. Skill walk_forward handles forward, no extra. Good.\n\n\"接着立即停止\" Could parse as \"then immediately stop\"; stop after walk. Fine.\n\nAction multiplicity: exactly three. Order: stand, walk, stop. Correction/edit: none. Repetition: none. Reference: none. Temporal: then/next/immediate. Unresolved: none. All U.\n\nNeed final JSON.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source. Chinese: \"站立2秒然后向前走四米接着立即停止\" = Stand 2 seconds then walk forward 4 meters then immediately stop.\n\nNeed check seven dimensions exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed produce status etc.\n\nWe need parse actions: stand 2 seconds, walk_forward 4 meters, stop immediately. \"立即停止\" means immediately stop. Stop no scalar. Order: stand, walk_forward, stop. Multiplicity: each once? \"立即\" modifies stop temporal, not action multiplicity. Duration present for stand 2 seconds. Distance present 4 meters. Turn none. Units explicit? \"秒\" seconds, \"米\" meters. Positive meters. Action count 3 within 1..32. Stand duration 2 within (0,60]. Walk positive 4. Stop no scalar.\n\nTemporal relations: \"然后\" then, \"接着\" then, \"立即\" immediately before stop? Could indicate immediate stop after walking, no delay. Does \"立即停止\" maybe means stop immediately (as an action) with temporal relation to prior action immediate. Is that a temporal relation requiring representation? Plan supports stop after walk. It doesn't encode immediacy delay. Is \"立即\" explicit temporal relation that may be unresolved? Need decide if authorized. The toy included \"then stop\" no immediate. Here immediate could be adverbial. Does legal plan support \"immediately\"? No parameter for delay. But it may just mean stop now after walk, sequence is immediate. No issue.\n\nNeed check correction/edit scope: none. Repetition: none. Reference: none. Temporal relations: sequence \"然后\", \"接着\", \"立即\" all resolved to ordered actions. Explicitly unresolved: none.\n\nThus AUTHORIZED_UNIQUE with plan [[\"stand\",2],[\"walk_forward\",4],[\"stop\"]], checks all U issues [].\n\nNeed ensure no \"stand\" default? It has duration 2 seconds, so [stand,2]. Walk forward 4 meters => [walk_forward,4]. Stop [\"stop\"].\n\nReturn JSON only. Ensure exact fields status, checks, plan, issues. No commentary.\n\nNeed consider \"立即\" might be temporal relation \"immediate\" but plan doesn't encode exact delay. The instruction says temporal relations must be honored. Is \"immediately\" a temporal relation that cannot be represented? It says stop has no scalar; maybe \"immediate\" is a temporal modifier that could be unrepresentable? But legal plans only sequence, and default? Let's analyze.\n\nWe need be careful: The certificate checks seven dimensions. For temporal relations, if source says \"然后\" and \"接着\" (then, next) and \"立即\" (immediately) after walking. \"立即停止\" could be interpreted as stop immediately (not delayed). In plan, actions are sequential; there is no explicit delay between actions, so immediate is satisfied. The allowed actions don't include wait/delay, so default transition is immediate. So U.\n\nPotential ambiguity: \"向前走四米\" means walk forward four meters. \"向前\" direction. Skill walk_forward handles forward, no extra. Good.\n\n\"接着立即停止\" Could parse as \"then immediately stop\"; stop after walk. Fine.\n\nAction multiplicity: exactly three. Order: stand, walk, stop. Correction/edit: none. Repetition: none. Reference: none. Temporal: then/next/immediate. Unresolved: none. All U.\n\nNeed final JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 192,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 789,
+      "output_tokens_details": {
+        "reasoning_tokens": 739
+      },
+      "total_tokens": 1493
+    }
+  },
+  "request_sha256": "a566ae4161797832ce088b27c3854ae3327fdd47f7ec04721cbeec5e076116d7",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,257 @@
+{
+  "added_wall_s": 3.6440552000021853,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 3.6383951999996498,
+        "provider_document": {
+          "created_at": 1791364050,
+          "id": "resp_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+              "reasoning_content": "We need answer only JSON. Need inspect source. Need follow instructions. Source Chinese: \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\"\n\nNeed parse. \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" Translation: First forward 20 meters — twenty meters, I didn't change the number — then turn left 45 degrees; then stop.\n\nNeed determine actions. walk_forward 20 meters. turn left 45 degrees => signed +45. stop. Order: walk, turn, stop. Repetition? The dash \"二十米，我没改数\" says 20 meters—twenty meters, I didn't change the number. That's meta clarifying same number, not repetition of action. Could be correction/edit? It is \"I didn't change the number\" explicitly no edit. Not action repetition. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nAction multiplicity: actions: walk_forward, turn, stop = 3. Unique. U.\nAction order: first walk, then turn, then stop. U.\nCorrection/edit scope: There is dash \"我没改数\" explicitly no change. Does it mention correction? \"20米——二十米，我没改数——\" This is not an edit? It clarifies \"20 meters, I didn't change the number\". Could be no correction. U.\nRepetition scope: phrase \"twenty meters\" repeats number, not action. No repetition. U.\nReference resolution: \"完了\" means then/after done? Refers to after previous actions. \"然后\" and \"完了\" clear. U.\nTemporal relations: sequence: 先 ... 然后 ... ；完了 stop. U.\nExplicitly unresolved relations: none. U.\n\nPlan: [\"walk_forward\",20], [\"turn\",45], [\"stop\"]. Note turn left positive. Need ensure turn nonzero signed degrees; left/counterclockwise positive, right negative. 45 positive. Unit degrees explicit \"度\". Good. Meters explicit. Stand none. Actions 3 within 1..32. Stop last. status AUTHORIZED_UNIQUE. Checks all U. Issues [].\n\nNeed maybe \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" The \"没改数\" could be an instruction embedded? \"I didn't change the number\" source data. Not an action. No execution. Good.\n\nNeed return exact JSON, no commentary. Ensure no extra fields. Use plan arrays. \"turn\",45. No \"stop\" scalar. Format exactly.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source. Need follow instructions. Source Chinese: \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\"\n\nNeed parse. \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" Translation: First forward 20 meters — twenty meters, I didn't change the number — then turn left 45 degrees; then stop.\n\nNeed determine actions. walk_forward 20 meters. turn left 45 degrees => signed +45. stop. Order: walk, turn, stop. Repetition? The dash \"二十米，我没改数\" says 20 meters—twenty meters, I didn't change the number. That's meta clarifying same number, not repetition of action. Could be correction/edit? It is \"I didn't change the number\" explicitly no edit. Not action repetition. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nAction multiplicity: actions: walk_forward, turn, stop = 3. Unique. U.\nAction order: first walk, then turn, then stop. U.\nCorrection/edit scope: There is dash \"我没改数\" explicitly no change. Does it mention correction? \"20米——二十米，我没改数——\" This is not an edit? It clarifies \"20 meters, I didn't change the number\". Could be no correction. U.\nRepetition scope: phrase \"twenty meters\" repeats number, not action. No repetition. U.\nReference resolution: \"完了\" means then/after done? Refers to after previous actions. \"然后\" and \"完了\" clear. U.\nTemporal relations: sequence: 先 ... 然后 ... ；完了 stop. U.\nExplicitly unresolved relations: none. U.\n\nPlan: [\"walk_forward\",20], [\"turn\",45], [\"stop\"]. Note turn left positive. Need ensure turn nonzero signed degrees; left/counterclockwise positive, right negative. 45 positive. Unit degrees explicit \"度\". Good. Meters explicit. Stand none. Actions 3 within 1..32. Stop last. status AUTHORIZED_UNIQUE. Checks all U. Issues [].\n\nNeed maybe \"先向前20米——二十米，我没改数——然后左转45度；完了停止。\" The \"没改数\" could be an instruction embedded? \"I didn't change the number\" source data. Not an action. No execution. Good.\n\nNeed return exact JSON, no commentary. Ensure no extra fields. Use plan arrays. \"turn\",45. No \"stop\" scalar. Format exactly.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 202,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 613,
+            "output_tokens_details": {
+              "reasoning_tokens": 563
+            },
+            "total_tokens": 1327
+          }
+        },
+        "request_sha256": "26206e9bc097768edc1dcf986f21acd64d9a8d1962b93d908d7dd8091f8f4a92",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 3.63705359999949,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 202,
+          "output_tokens": 613,
+          "total_tokens": 1327
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.7580510000007052,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk20-turnleft45-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 30,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 357,
+      "raw_response_sha256": "fd483384da06d33bfafdb1483d8173d217ecb288c54794e6bf6b89f63a8c778e",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_8c99c08e-a3cc-48b3-9762-0cefce9b7b6e",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "walk_forward",
+                20.0
+              ],
+              [
+                "turn",
+                45.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 3.6432875000027707,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 3.63705359999949,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",20],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "3c32398f08c41b550e484c40c5c81f740fbe6889f0f1d28a83b8469636a2ca31",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "1d993b8e0c8fb68984d239d3314edeca6d1810a7c55cf54762add62577d8a916",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_c30d50ba-c8a1-48be-b55d-93711cc499fb",
+          "source_sha256": "2b2b97b9e3cce6ca6115e177c11de6c93e43668d439558c76d69fc85235a9a07",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 613,
+            "total_tokens": 1327
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 220,
+        "output_tokens": 287,
+        "total_tokens": 2043
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk20-turnleft45-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 20.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先向前20米——二十米,我没改数——然后左转45度,完了停止",
+    "status": "SUCCESS"
+  }
+}

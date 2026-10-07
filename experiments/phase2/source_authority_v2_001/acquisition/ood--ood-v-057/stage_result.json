@@ -1,0 +1,296 @@
+{
+  "added_wall_s": 5.161293799999839,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 5.156979799998226,
+        "provider_document": {
+          "created_at": 1791364014,
+          "id": "resp_e26ac9cb-fc15-47c5-9158-64ad6771d526",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_e26ac9cb-fc15-47c5-9158-64ad6771d526",
+              "reasoning_content": "We need answer only JSON. Need inspect source. Need solve. Source: \"①停 ②站5秒 ③左转60° ④向前12米 ⑤右转90° ⑥停。序号不算动作。\"\n\nNeed determine plan from actions ignoring circled numbers. Sequence: stop, stand 5 seconds, turn left 60°, walk_forward 12 meters, turn right 90°, stop. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed parse. \"停\" stop. \"站5秒\" stand 5 seconds. \"左转60°\" turn left 60 degrees. \"向前12米\" walk_forward 12 meters. \"右转90°\" turn right 90° => signed -90. \"停\" stop. Circled numbers are labels not actions per source. \"序号不算动作\" explicitly says sequence numbers don't count as actions. So six actions: stop, stand 5, turn +60, walk 12, turn -90, stop.\n\nNeed check dimensions:\n1 action multiplicity: actions counted? There are six enumerated items. Any ambiguity? Circled numbers not actions; each action distinct. Stop at 1 and 6 separate? Yes multiplicity of stop two occurrences. Repetition? not repetition. Uniquely resolved. U.\n2 action order: order given ①②③④⑤⑥. U.\n3 correction/edit scope: any corrections/edits? \"序号不算动作\" is an instruction about not counting sequence numbers, not correction/edit? It modifies interpretation: circled numbers not actions. Is that a correction/edit scope? We need determine if correction/edit scope U? It says numbers not actions. It clarifies metadata not actions. No edit to action. U.\n4 repetition scope: no repeat. U.\n5 reference resolution: \"向前\" means forward? Need resolve relative to prior heading? The plan skill walk_forward positive meters. \"向前\" in Chinese can mean forward. Does it depend on current facing? For plan, walk_forward. Since previous action left turn 60, then walk_forward likely moving forward in current heading? The skill walk_forward maybe relative forward. Reference resolution U. \"序号不算动作\" resolves reference to circled numbers? U.\n6 temporal relations: \"then\"? Source omits explicit \"then\" but uses sequence numbers. Are sequence numbers ordering? The source has ①...⑥ and says 序号不算动作. They might indicate order? Need consider: circled numbers are used to enumerate actions, not actions. Does order derive from listing? The list itself is ordered; Chinese punctuation and numbering imply sequence? Need resolve temporal relations. The plan should preserve order as listed. Is order explicit? The source: \"①停 ②站5秒 ③左转60° ④向前12米 ⑤右转90° ⑥停。序号不算动作。\" It lists actions separated by circled numbers. The numbers indicate sequence. Even though not actions, they still order. So temporal relations U.\n7 explicitly unresolved relations: None? U. But need be cautious: \"向前12米\" may be ambiguous direction? In Chinese, \"向前\" means forward. It is a skill. Fine. \"左转60°\" left positive. \"右转90°\" right negative. \"站5秒\" stand seconds 5. \"停\" stop no scalar. All units explicit: 秒, °, 米. Within bounds: stand 5 in (0,60], turn 60 <=180, turn -90, walk 12 positive, actions count 6 within 1..32. Unique authorized.\n\nNeed output exact JSON object. Ensure plan array format: [[\"stop\"],[\"stand\",5],[\"turn\",60],[\"walk_forward\",12],[\"turn\",-90],[\"stop\"]]. Wait action order: ①停 stop first. ②站5秒 stand. ③左转60° turn 60. ④向前12米 walk_forward 12. ⑤右转90° turn -90. ⑥停 stop. Yes.\n\nChecks seven strings U. status AUTHORIZED_UNIQUE. issues [].\n\nNeed ensure no extra fields. Final only JSON no markdown. \nLet's craft final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source. Need solve. Source: \"①停 ②站5秒 ③左转60° ④向前12米 ⑤右转90° ⑥停。序号不算动作。\"\n\nNeed determine plan from actions ignoring circled numbers. Sequence: stop, stand 5 seconds, turn left 60°, walk_forward 12 meters, turn right 90°, stop. Need check seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed parse. \"停\" stop. \"站5秒\" stand 5 seconds. \"左转60°\" turn left 60 degrees. \"向前12米\" walk_forward 12 meters. \"右转90°\" turn right 90° => signed -90. \"停\" stop. Circled numbers are labels not actions per source. \"序号不算动作\" explicitly says sequence numbers don't count as actions. So six actions: stop, stand 5, turn +60, walk 12, turn -90, stop.\n\nNeed check dimensions:\n1 action multiplicity: actions counted? There are six enumerated items. Any ambiguity? Circled numbers not actions; each action distinct. Stop at 1 and 6 separate? Yes multiplicity of stop two occurrences. Repetition? not repetition. Uniquely resolved. U.\n2 action order: order given ①②③④⑤⑥. U.\n3 correction/edit scope: any corrections/edits? \"序号不算动作\" is an instruction about not counting sequence numbers, not correction/edit? It modifies interpretation: circled numbers not actions. Is that a correction/edit scope? We need determine if correction/edit scope U? It says numbers not actions. It clarifies metadata not actions. No edit to action. U.\n4 repetition scope: no repeat. U.\n5 reference resolution: \"向前\" means forward? Need resolve relative to prior heading? The plan skill walk_forward positive meters. \"向前\" in Chinese can mean forward. Does it depend on current facing? For plan, walk_forward. Since previous action left turn 60, then walk_forward likely moving forward in current heading? The skill walk_forward maybe relative forward. Reference resolution U. \"序号不算动作\" resolves reference to circled numbers? U.\n6 temporal relations: \"then\"? Source omits explicit \"then\" but uses sequence numbers. Are sequence numbers ordering? The source has ①...⑥ and says 序号不算动作. They might indicate order? Need consider: circled numbers are used to enumerate actions, not actions. Does order derive from listing? The list itself is ordered; Chinese punctuation and numbering imply sequence? Need resolve temporal relations. The plan should preserve order as listed. Is order explicit? The source: \"①停 ②站5秒 ③左转60° ④向前12米 ⑤右转90° ⑥停。序号不算动作。\" It lists actions separated by circled numbers. The numbers indicate sequence. Even though not actions, they still order. So temporal relations U.\n7 explicitly unresolved relations: None? U. But need be cautious: \"向前12米\" may be ambiguous direction? In Chinese, \"向前\" means forward. It is a skill. Fine. \"左转60°\" left positive. \"右转90°\" right negative. \"站5秒\" stand seconds 5. \"停\" stop no scalar. All units explicit: 秒, °, 米. Within bounds: stand 5 in (0,60], turn 60 <=180, turn -90, walk 12 positive, actions count 6 within 1..32. Unique authorized.\n\nNeed output exact JSON object. Ensure plan array format: [[\"stop\"],[\"stand\",5],[\"turn\",60],[\"walk_forward\",12],[\"turn\",-90],[\"stop\"]]. Wait action order: ①停 stop first. ②站5秒 stand. ③左转60° turn 60. ④向前12米 walk_forward 12. ⑤右转90° turn -90. ⑥停 stop. Yes.\n\nChecks seven strings U. status AUTHORIZED_UNIQUE. issues [].\n\nNeed ensure no extra fields. Final only JSON no markdown. \nLet's craft final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"],[\"stand\",5],[\"turn\",60],[\"walk_forward\",12],[\"turn\",-90],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_e26ac9cb-fc15-47c5-9158-64ad6771d526",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 213,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 957,
+            "output_tokens_details": {
+              "reasoning_tokens": 893
+            },
+            "total_tokens": 1682
+          }
+        },
+        "request_sha256": "40e5af074353b0f27b0d783e6a4939b35b165e2b52b640db5f58f9b9eed41346",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 5.155413299999054,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e26ac9cb-fc15-47c5-9158-64ad6771d526",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"],[\"stand\",5],[\"turn\",60],[\"walk_forward\",12],[\"turn\",-90],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 213,
+          "output_tokens": 957,
+          "total_tokens": 1682
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.8880253000006633,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stop-stand-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 33,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 588,
+      "raw_response_sha256": "71dca134ed535ef732b473425ce89f6bbae3e19a9975f112b6e96d0c0b238537",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_d0f261b4-c68d-4e2b-b981-5194794f4b37",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "stop"
+              ],
+              [
+                "stand",
+                5.0
+              ],
+              [
+                "turn",
+                60.0
+              ],
+              [
+                "walk_forward",
+                12.0
+              ],
+              [
+                "turn",
+                -90.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 5.159865899997385,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 5.155413299999054,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"],[\"stand\",5],[\"turn\",60],[\"walk_forward\",12],[\"turn\",-90],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "1493f7c9789e9be423ebc91a607b7c7512866c1b25339b43270719c6798ae518",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "3b19533307b82e24dd0ff8bd8fd7ed04c44685fd9c598f99b65166e789c32b22",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_e26ac9cb-fc15-47c5-9158-64ad6771d526",
+          "source_sha256": "1a87bdc0ae1550c6e05b47d16f0ef894c5f7cbb70458c78fb8efd76c4b0196b1",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 213,
+            "output_tokens": 957,
+            "total_tokens": 1682
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 6,
+      "usage": {
+        "input_tokens": 231,
+        "output_tokens": 386,
+        "total_tokens": 2153
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stop-stand-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {},
+          "skill": "stop"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "duration_s": 5.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 12.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s5"
+          ],
+          "id": "s6",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "1停2站5秒3左转60°4向前12米5右转90°6停,序号不算动作",
+    "status": "SUCCESS"
+  }
+}

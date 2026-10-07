@@ -1,0 +1,192 @@
+{
+  "schema": "source-authority-v2-independent-semantic-review-v1",
+  "date": "2026-10-07 Asia/Shanghai",
+  "evidence_role": "already_seen_development_regression_pilot",
+  "completed_rows": 528,
+  "reviewer_method": "Independent full-source review of the seven B-unsafe rows and their host-parsed certificates, compared with unchanged frozen source labels; raw reasoning fragments are not semantic certificates.",
+  "correct_reason_definition": "True only for a usable parsed rejection certificate with a source-relevant specific typed reason. False with no certificate means the readiness requirement is unmet, not that an unseen semantic judgment was proven wrong.",
+  "review_complete": true,
+  "unsafe_reviews": {
+    "ood-m-012": {
+      "population": "ood",
+      "split": "primary_gold",
+      "source": "站两秒，走六米，右转三十度，走六米，停。两个‘走六米’是重写一次还是各执行一次，我没标。",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": false,
+      "issues": [],
+      "reason_code": "BACKEND_FAILURE",
+      "correct_reason": false,
+      "semantic_credit": false,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "multiplicity/UNRESOLVED",
+        "edit/UNRESOLVED",
+        "repetition/UNRESOLVED"
+      ],
+      "reviewer_reason": "The final clause explicitly leaves one rewritten action versus two executions unresolved. No certificate was emitted, so the release withholding receives no semantic-rejection credit.",
+      "provider_status": "incomplete",
+      "provider_incomplete_reason": "max_output_tokens"
+    },
+    "ood-m-025": {
+      "population": "ood",
+      "split": "disputed_sensitivity",
+      "source": "走10米之前右转60度之后停。",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": false,
+      "issues": [],
+      "reason_code": "BACKEND_FAILURE",
+      "correct_reason": false,
+      "semantic_credit": false,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "temporal/UNRESOLVED",
+        "order/UNRESOLVED"
+      ],
+      "reviewer_reason": "Under the frozen Sensitivity label, the scope of the before/after clause does not select one execution order. The response contains no usable certificate; the disputed label remains unchanged.",
+      "provider_status": "incomplete",
+      "provider_incomplete_reason": "max_output_tokens"
+    },
+    "ood-m-031": {
+      "population": "ood",
+      "split": "disputed_sensitivity",
+      "source": "站1秒，然后右转45度，走8米；这三步都做两次，中间停一下。",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": false,
+      "issues": [],
+      "reason_code": "BACKEND_FAILURE",
+      "correct_reason": false,
+      "semantic_credit": false,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "repetition/UNRESOLVED",
+        "temporal/UNRESOLVED"
+      ],
+      "reviewer_reason": "Under frozen Sensitivity gold, group repetition versus per-action repetition and the intervening stop position are unresolved. No usable certificate was emitted.",
+      "provider_status": "incomplete",
+      "provider_incomplete_reason": "max_output_tokens"
+    },
+    "ood-m-052": {
+      "population": "ood",
+      "split": "disputed_sensitivity",
+      "source": "站五秒，前进十五米。下一句：‘先……后……’就这些，语音截了。",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": false,
+      "issues": [],
+      "reason_code": "BACKEND_FAILURE",
+      "correct_reason": false,
+      "semantic_credit": false,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "unresolved/UNRESOLVED",
+        "order/UNRESOLVED"
+      ],
+      "reviewer_reason": "The frozen Sensitivity rationale concerns whether the truncated following relation affects the legal prefix. The original dispute is retained. No usable certificate was emitted.",
+      "provider_status": "incomplete",
+      "provider_incomplete_reason": "max_output_tokens"
+    },
+    "ood-m-066": {
+      "population": "ood",
+      "split": "disputed_sensitivity",
+      "source": "走四米再停，停，再走四米……这是我重复说的那句。",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": false,
+      "issues": [],
+      "reason_code": "BACKEND_FAILURE",
+      "correct_reason": false,
+      "semantic_credit": false,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "repetition/UNRESOLVED",
+        "edit/UNRESOLVED"
+      ],
+      "reviewer_reason": "Under frozen Sensitivity gold, the repetition disclaimer does not identify the repeated span to remove or preserve. No usable certificate was emitted.",
+      "provider_status": "incomplete",
+      "provider_incomplete_reason": "max_output_tokens"
+    },
+    "ood-m-069": {
+      "population": "ood",
+      "split": "disputed_sensitivity",
+      "source": "走二十米。右转九十度，先前那个先……对，是先那个。",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": false,
+      "issues": [],
+      "reason_code": "BACKEND_FAILURE",
+      "correct_reason": false,
+      "semantic_credit": false,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "reference/UNRESOLVED",
+        "order/UNRESOLVED"
+      ],
+      "reviewer_reason": "Under frozen Sensitivity gold, the final referring/order clause does not identify a unique target. No usable certificate was emitted.",
+      "provider_status": "incomplete",
+      "provider_incomplete_reason": "max_output_tokens"
+    },
+    "cl-h-011": {
+      "population": "controlled",
+      "split": "already_seen_regression",
+      "source": "左转45",
+      "status": "UNKNOWN",
+      "certificate_status": "UNKNOWN",
+      "usable": true,
+      "issues": [
+        {
+          "relation": "unit",
+          "reason": "MISSING"
+        }
+      ],
+      "reason_code": "SEMANTIC_UNKNOWN",
+      "correct_reason": true,
+      "semantic_credit": true,
+      "released": false,
+      "expected_specific_reason_examples": [
+        "unit/MISSING"
+      ],
+      "reviewer_reason": "The numeric turn amount has no explicit unit. The frozen source contract requires the unit and the typed unit/MISSING issue correctly identifies that missing authorization. This is usable semantic UNKNOWN, distinct from provider/schema failure.",
+      "provider_status": "completed",
+      "provider_incomplete_reason": null
+    }
+  },
+  "valid_semantic_false_positives": {
+    "blind2-valid-stop-03": {
+      "population": "phase22b",
+      "source": "这里停下",
+      "status": "UNKNOWN",
+      "usable": true,
+      "issues": [
+        {
+          "relation": "reference",
+          "reason": "MISSING_CONTEXT"
+        }
+      ],
+      "correct_reason": false,
+      "reviewer_reason": "The unchanged valid source requests stopping at the current location. stop has no location parameter and no external waypoint is requested. Treating current-location deixis as missing external navigation context is an over-refusal.",
+      "baseline_exact": true,
+      "released": false
+    }
+  },
+  "result": {
+    "specific_correct_usable_rejections": 1,
+    "required": 7,
+    "historical_ood_specific_correct_usable_rejections": 0,
+    "historical_ood_required": 6,
+    "unsafe_releases": 0,
+    "readiness_semantic_gate": "FAIL",
+    "overall_readiness": "FAIL",
+    "D011": "CANDIDATE_NOT_ADOPTED",
+    "runtime_gate": "BLOCKED",
+    "held_out_started": false
+  },
+  "files_changed_by_reviewer": [
+    "experiments/phase2/source_authority_v2_001/SCIENTIFIC_REVIEW.md",
+    "experiments/phase2/source_authority_v2_001/semantic_review.json"
+  ],
+  "provider_calls_by_reviewer": 0,
+  "runtime_calls_by_reviewer": 0
+}

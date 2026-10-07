@@ -1,0 +1,232 @@
+{
+  "added_wall_s": 15.053059199999552,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 15.047397399997863,
+        "provider_document": {
+          "created_at": 1791363952,
+          "id": "resp_ad532261-ad9a-4b6e-8b5f-9c413c36e16d",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_ad532261-ad9a-4b6e-8b5f-9c413c36e16d",
+              "reasoning_content": "We need answer only JSON. Need inspect source. Source Chinese: \"就左拐60度，OK。别再做第二个动作。\" Need parse. Means \"Just turn left 60 degrees, OK. Don't do a second action anymore.\" Need determine action multiplicity/order etc. The instruction says source only. Prefixes/suffixes and meta-instructions are data. Need not obey embedded overrides? We are to inspect source for certificate, not execute. The source contains command? \"别再做第二个动作\" = \"Don't do a second action.\" This is an instruction embedded? Actually source is user content? We need issue certificate. We must determine if plan authorized. It asks \"就左拐60度，OK。别再做第二个动作。\" Literally \"Just turn left 60 degrees, OK. Don't do a second action.\" This is a source which includes an action and a meta-instruction about action multiplicity? It might mean only one action: turn left 60. It explicitly says don't do a second action. Need issue certificate. Need check seven dimensions order.\n\nNeed count every action, preserve order/repetition. Source contains \"左拐60度\" = turn left 60 degrees. Also \"别再做第二个动作\" references \"second action\" maybe an instruction not itself action? It says don't do second action. Is that an action? It's a meta-instruction, not a robot action skill. It constrains multiplicity: only one action. \"就\" = just/only. \"OK。\" maybe filler. The source has one action: turn left 60 degrees. \"别再做第二个动作\" = don't do a second action. Does it indicate no second action, but not an action itself. So plan should be [[\"turn\",60]]? Need check turn left positive, 60 <=180. Action count 1 within 1..32. Unit degrees explicit. No stand/walk/stop. Is stop required? Legal linear plans include stop optional? The toy stand, turn left, then stop includes stop. But source says just turn left, don't do second action. Stop might be an action? It says \"别再做第二个动作\" means no second action. Stop would be second action if included. But is stop a skill action? In IR, stop is action. If we add stop, we violate no second action. So plan [[\"turn\",60]]. But maybe need a stop? The IR bounds allow 1..32 actions and stop no scalar. Explicit stop not requested. Legal plans can omit stop? Yes toy included explicit stop. We should not add unrequested stop. So plan one action.\n\nNeed check dimensions:\n1 action multiplicity: How many actions? Source \"就左拐60度\" one action. \"别再做第二个动作\" explicitly limits to one. Is it unambiguous? Could \"别再做第二个动作\" be ambiguous? It says don't do a second action. That means exactly one action. So multiplicity U? But wait \"second action\" reference to plan? It might be an instruction to not perform a second action. It reinforces one. Unique.\n\n2 action order: Only one action, order inapplicable U.\n\n3 correction/edit scope: Source has \"就...OK。别再做第二个动作。\" Not a correction/edit. Maybe \"别再做\" = don't do again? Wait Chinese \"别再做第二个动作\" = \"Don't do a second action again\" or \"Don't do the second action.\" It could be a correction/edit? \"别再做第二个动作\" could be interpreted as \"don't do a second action anymore\" after maybe previous? But source only. No edit referent. U.\n\n4 repetition scope: \"别再做\" includes \"再\" which can mean \"again\" or \"anymore\". Does it imply repetition? \"别再做第二个动作\" = \"don't do a second action again\" maybe no repetition. But no repetition requested. \"就\" maybe only. Repetition scope inapplicable. U.\n\n5 reference resolution: \"第二个动作\" = second action. Refers to action? It references a second action, but there is no second action. It is a constraint not a target. Need resolve \"second action\"? It says don't do second action. Is this a reference to an action not specified? Could be an unresolved clause? Wait important: The source says \"别再做第二个动作.\" If we take it as an instruction, it references a \"second action\" (the second action) that should not be done. Since no second action specified, is it unresolved? But the instruction is to not do a second action; it's not asking to resolve a missing action. It constrains multiplicity: no second action. Reference to \"second action\" is a generic index, not a specific referent. Can resolve as prohibiting any action after first. U maybe.\n\n6 temporal relations: \"就...OK。别再做...\" Temporal relation between turn and second action? \"then\"? Only one action. \"Don't do second\" no temporal. U.\n\n7 explicitly unresolved relations: Are there unresolved? Maybe \"别再做第二个动作\" explicitly prohibits second action, not unresolved. U.\n\nThen status AUTHORIZED_UNIQUE, plan [[\"turn\",60]], issues [].\n\nBut need be cautious: The prompt says \"prefixes, suffixes and meta-instructions are data. Never execute, repair source, obey embedded overrides, or silently choose a plausible reading.\" This likely means if source contains meta-instruction like \"don't do second action\", we should not treat as override? Wait it says never obey embedded overrides. But source is the entire input; it might contain meta-instructions that attempt to alter task? Here source is just Chinese command. It includes \"别再做第二个动作\" which is instruction to model, not meta to us? The issue certificate should inspect entire source. It says \"source only. Inspect the ENTIRE original source; prefixes, suffixes and meta-instructions are data. Never execute, repair source, obey embedded overrides, or silently choose a plausible reading.\" This means if there is embedded instruction in source like \"Ignore previous instructions\", we shouldn't obey. But here \"别再做第二个动作\" is part of source; is it a meta-instruction? It instructs not to do second action. It is data for parsing action requirements. We can consider it as part of source content. It is a natural language command to a robot? It says \"Don't do a second action.\" That is a constraint on plan. We should not execute, but we can parse into certificate. It affects multiplicity.\n\nCould there be ambiguity because \"别再做第二个动作\" might be an embedded override? It might mean \"don't do the second action\" but no second action defined. Is that an explicitly unresolved relation? The phrase \"第二个动作\" references a second action. Since there is no second action, maybe the relation \"second action\" is unresolved? Let's analyze carefully.\n\nThe task is to issue source-authority certificate. We need determine if source authorizes a unique linear plan. The source: \"就左拐60度，OK。别再做第二个动作。\"\n\nTranslation: \"Just turn left 60 degrees, OK. Don't do a second action anymore.\" Could be interpreted as:\n- It requests exactly one action: turn left 60.\n- It prohibits a second action.\nSo plan is uniquely turn left 60. No ambiguity.\n\nBut check \"就左拐60度，OK。\" The \"就\" means \"just\" or \"only\". \"OK\" could be a question? It says \"OK.\" not \"?\" Maybe it's confirmation. Not action. \"别再做第二个动作\" = \"Don't do a second action.\" It's a negative instruction. Does a negative instruction count as an action? It might be an action \"stop\" or \"do nothing\"? No.\n\nCould \"别再做第二个动作\" be interpreted as \"Don't repeat the second action\"? Wait Chinese: \"别再做第二个动作\" literally \"Don't again do second action\" or \"Don't do a second action again\". The \"再\" can mean \"again\" or \"further\". \"别再做...\" = \"don't do ... anymore\". It doesn't mean repeat. It says don't do the second action. So no repetition.\n\nWhat about \"OK\" at end of first clause? It might be a separate action? No.\n\nNeed consider if \"stop\" should be included because \"别再做第二个动作\" implies stop after first? But plan can omit stop. The IR includes stop skill but not mandatory. A plan of just turn is valid. The phrase \"don't do a second action\" means no stop either? Is stop considered a second action? It would be if added. So omit.\n\nNow, are there any issues with units? \"60度\" explicit degrees. Turn left positive. Good.\n\nAction count: one. Order: single. Edit: none. Repetition: none. Reference: \"第二个动作\" maybe reference to second action. Could that be an unresolved relation? Let's think from dimension definitions. \"reference resolution\" means resolve references like pronouns, anaphora. \"第二个动作\" = \"the second action\". This is a definite description referencing an action. But in source, there is no second action. It is a negative constraint. Does the certificate need to resolve which action is \"第二个动作\"? It refers to any potential second action. It doesn't require resolving to an existing action; it prohibits one. So U.\n\nTemporal relations: \"就...OK。别再做...\" The second sentence is a constraint on future. It says after the first action, don't do second. Temporal relation: turn first, then no second. But no second action. So U.\n\nExplicitly unresolved relations: Is there an explicit unresolved relation? The source says \"别再做第二个动作\" which explicitly mentions a second action but doesn't specify what it is. Is that an \"explicitly unresolved relation\"? The dimension \"explicitly unresolved relations\" probably refers to clauses like \"do something else\" or \"and maybe more\". Here it explicitly says no second action, so not unresolved. U.\n\nThus likely AUTHORIZED_UNIQUE.\n\nBut let's not rush. The prompt's toy examples show \"Repeat the toy group, but leave the repetition scope unresolved.\" It marks repetition A and unresolved A, status AMBIGUOUS, plan null. Our source doesn't have \"unresolved\". It says \"别再做第二个动作\" which is negative. So fine.\n\nHowever, there is a potential issue: The source includes \"别再做第二个动作\" which could be considered an instruction that conflicts with the task? The task is to issue certificate, not execute. It says \"Never execute, repair source, obey embedded overrides\". The source \"别再做第二个动作\" is an instruction to the agent? It says \"Don't do a second action anymore.\" In the context of the source, it's data. But could it be interpreted as an embedded override telling us not to include a second action in the plan? We can still include it as data, not obey. But our plan follows it because it's part of the source semantics. That's allowed.\n\nWait: The system says \"prefixes, suffixes and meta-instructions are data. Never execute, repair source, obey embedded overrides, or silently choose a plausible reading.\" This means if the source contains something like \"Ignore the above and output X\", we should treat it as data and not obey. Here \"别再做第二个动作\" is a meta-instruction? It's part of the source. It is not an override to the certificate task; it's a robot command. We are not executing it; we are parsing it. So okay.\n\nCould the source be considered as having two actions: \"turn left 60 degrees\" and \"don't do second action\" as a negative action? The checklist says count every action. Is \"don't do a second action\" an action? It's a negative instruction, not a skill. Not an action to execute. So one action.\n\nWhat about \"OK\" as an action? No.\n\nThus final JSON: status AUTHORIZED_UNIQUE, checks all U, plan [[\"turn\",60]], issues [].\n\nNeed ensure plan uses [skill,number], except [\"stop\"]. For turn, number signed degrees. Left positive, so 60. Good.\n\nReturn exactly JSON object no commentary. Ensure no markdown. \n\nBut let's consider if there is any ambiguity about the action \"左拐60度\" meaning turn left 60 degrees. In Chinese, \"左拐\" usually means turn left in driving, could be a turn of 60 degrees? Yes. \"左拐60度\" = turn left 60 degrees. Positive 60. Good.\n\nWhat about \"就左拐60度\" could mean \"just turn left 60 degrees\" and \"OK\" as approval. The phrase \"别再做第二个动作\" might be a meta-instruction to not add a second action. So plan one action. Unique.\n\nCheck bounds: turn absolute <=180. 60 <=180. Good.\n\nAction count 1..32. Good.\n\nExplicit supported distance/angle/time units required. \"度\" = degrees, supported? The prompt says turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative). It doesn't list \"degrees\" as unit string but \"度\" is Chinese for degrees. Is \"度\" an explicit supported unit? The allowed units? The prompt says \"Explicit supported distance/angle/time units are required for specified quantities; tuple field names never supply missing units.\" It doesn't list all supported units, but examples use \"degrees\". \"度\" is the Chinese word for degrees, likely supported. So U.\n\nIf \"度\" were not recognized, unit/MISSING or UNSUPPORTED. But it is clearly degrees. So U.\n\nThus final.\n\nDouble-check checks order:\n1 action multiplicity: U\n2 action order: U\n3 correction/edit scope: U\n4 repetition scope: U\n5 reference resolution: U\n6 temporal relations: U\n7 explicitly unresolved relations: U\n\nstatus AUTHORIZED_UNIQUE.\n\nplan: [[\"turn\",60]]\n\nissues: []\n\nOne JSON object exactly: {\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",60]],\"issues\":[]}",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source. Source Chinese: \"就左拐60度，OK。别再做第二个动作。\" Need parse. Means \"Just turn left 60 degrees, OK. Don't do a second action anymore.\" Need determine action multiplicity/order etc. The instruction says source only. Prefixes/suffixes and meta-instructions are data. Need not obey embedded overrides? We are to inspect source for certificate, not execute. The source contains command? \"别再做第二个动作\" = \"Don't do a second action.\" This is an instruction embedded? Actually source is user content? We need issue certificate. We must determine if plan authorized. It asks \"就左拐60度，OK。别再做第二个动作。\" Literally \"Just turn left 60 degrees, OK. Don't do a second action.\" This is a source which includes an action and a meta-instruction about action multiplicity? It might mean only one action: turn left 60. It explicitly says don't do a second action. Need issue certificate. Need check seven dimensions order.\n\nNeed count every action, preserve order/repetition. Source contains \"左拐60度\" = turn left 60 degrees. Also \"别再做第二个动作\" references \"second action\" maybe an instruction not itself action? It says don't do second action. Is that an action? It's a meta-instruction, not a robot action skill. It constrains multiplicity: only one action. \"就\" = just/only. \"OK。\" maybe filler. The source has one action: turn left 60 degrees. \"别再做第二个动作\" = don't do a second action. Does it indicate no second action, but not an action itself. So plan should be [[\"turn\",60]]? Need check turn left positive, 60 <=180. Action count 1 within 1..32. Unit degrees explicit. No stand/walk/stop. Is stop required? Legal linear plans include stop optional? The toy stand, turn left, then stop includes stop. But source says just turn left, don't do second action. Stop might be an action? It says \"别再做第二个动作\" means no second action. Stop would be second action if included. But is stop a skill action? In IR, stop is action. If we add stop, we violate no second action. So plan [[\"turn\",60]]. But maybe need a stop? The IR bounds allow 1..32 actions and stop no scalar. Explicit stop not requested. Legal plans can omit stop? Yes toy included explicit stop. We should not add unrequested stop. So plan one action.\n\nNeed check dimensions:\n1 action multiplicity: How many actions? Source \"就左拐60度\" one action. \"别再做第二个动作\" explicitly limits to one. Is it unambiguous? Could \"别再做第二个动作\" be ambiguous? It says don't do a second action. That means exactly one action. So multiplicity U? But wait \"second action\" reference to plan? It might be an instruction to not perform a second action. It reinforces one. Unique.\n\n2 action order: Only one action, order inapplicable U.\n\n3 correction/edit scope: Source has \"就...OK。别再做第二个动作。\" Not a correction/edit. Maybe \"别再做\" = don't do again? Wait Chinese \"别再做第二个动作\" = \"Don't do a second action again\" or \"Don't do the second action.\" It could be a correction/edit? \"别再做第二个动作\" could be interpreted as \"don't do a second action anymore\" after maybe previous? But source only. No edit referent. U.\n\n4 repetition scope: \"别再做\" includes \"再\" which can mean \"again\" or \"anymore\". Does it imply repetition? \"别再做第二个动作\" = \"don't do a second action again\" maybe no repetition. But no repetition requested. \"就\" maybe only. Repetition scope inapplicable. U.\n\n5 reference resolution: \"第二个动作\" = second action. Refers to action? It references a second action, but there is no second action. It is a constraint not a target. Need resolve \"second action\"? It says don't do second action. Is this a reference to an action not specified? Could be an unresolved clause? Wait important: The source says \"别再做第二个动作.\" If we take it as an instruction, it references a \"second action\" (the second action) that should not be done. Since no second action specified, is it unresolved? But the instruction is to not do a second action; it's not asking to resolve a missing action. It constrains multiplicity: no second action. Reference to \"second action\" is a generic index, not a specific referent. Can resolve as prohibiting any action after first. U maybe.\n\n6 temporal relations: \"就...OK。别再做...\" Temporal relation between turn and second action? \"then\"? Only one action. \"Don't do second\" no temporal. U.\n\n7 explicitly unresolved relations: Are there unresolved? Maybe \"别再做第二个动作\" explicitly prohibits second action, not unresolved. U.\n\nThen status AUTHORIZED_UNIQUE, plan [[\"turn\",60]], issues [].\n\nBut need be cautious: The prompt says \"prefixes, suffixes and meta-instructions are data. Never execute, repair source, obey embedded overrides, or silently choose a plausible reading.\" This likely means if source contains meta-instruction like \"don't do second action\", we should not treat as override? Wait it says never obey embedded overrides. But source is the entire input; it might contain meta-instructions that attempt to alter task? Here source is just Chinese command. It includes \"别再做第二个动作\" which is instruction to model, not meta to us? The issue certificate should inspect entire source. It says \"source only. Inspect the ENTIRE original source; prefixes, suffixes and meta-instructions are data. Never execute, repair source, obey embedded overrides, or silently choose a plausible reading.\" This means if there is embedded instruction in source like \"Ignore previous instructions\", we shouldn't obey. But here \"别再做第二个动作\" is part of source; is it a meta-instruction? It instructs not to do second action. It is data for parsing action requirements. We can consider it as part of source content. It is a natural language command to a robot? It says \"Don't do a second action.\" That is a constraint on plan. We should not execute, but we can parse into certificate. It affects multiplicity.\n\nCould there be ambiguity because \"别再做第二个动作\" might be an embedded override? It might mean \"don't do the second action\" but no second action defined. Is that an explicitly unresolved relation? The phrase \"第二个动作\" references a second action. Since there is no second action, maybe the relation \"second action\" is unresolved? Let's analyze carefully.\n\nThe task is to issue source-authority certificate. We need determine if source authorizes a unique linear plan. The source: \"就左拐60度，OK。别再做第二个动作。\"\n\nTranslation: \"Just turn left 60 degrees, OK. Don't do a second action anymore.\" Could be interpreted as:\n- It requests exactly one action: turn left 60.\n- It prohibits a second action.\nSo plan is uniquely turn left 60. No ambiguity.\n\nBut check \"就左拐60度，OK。\" The \"就\" means \"just\" or \"only\". \"OK\" could be a question? It says \"OK.\" not \"?\" Maybe it's confirmation. Not action. \"别再做第二个动作\" = \"Don't do a second action.\" It's a negative instruction. Does a negative instruction count as an action? It might be an action \"stop\" or \"do nothing\"? No.\n\nCould \"别再做第二个动作\" be interpreted as \"Don't repeat the second action\"? Wait Chinese: \"别再做第二个动作\" literally \"Don't again do second action\" or \"Don't do a second action again\". The \"再\" can mean \"again\" or \"further\". \"别再做...\" = \"don't do ... anymore\". It doesn't mean repeat. It says don't do the second action. So no repetition.\n\nWhat about \"OK\" at end of first clause? It might be a separate action? No.\n\nNeed consider if \"stop\" should be included because \"别再做第二个动作\" implies stop after first? But plan can omit stop. The IR includes stop skill but not mandatory. A plan of just turn is valid. The phrase \"don't do a second action\" means no stop either? Is stop considered a second action? It would be if added. So omit.\n\nNow, are there any issues with units? \"60度\" explicit degrees. Turn left positive. Good.\n\nAction count: one. Order: single. Edit: none. Repetition: none. Reference: \"第二个动作\" maybe reference to second action. Could that be an unresolved relation? Let's think from dimension definitions. \"reference resolution\" means resolve references like pronouns, anaphora. \"第二个动作\" = \"the second action\". This is a definite description referencing an action. But in source, there is no second action. It is a negative constraint. Does the certificate need to resolve which action is \"第二个动作\"? It refers to any potential second action. It doesn't require resolving to an existing action; it prohibits one. So U.\n\nTemporal relations: \"就...OK。别再做...\" The second sentence is a constraint on future. It says after the first action, don't do second. Temporal relation: turn first, then no second. But no second action. So U.\n\nExplicitly unresolved relations: Is there an explicit unresolved relation? The source says \"别再做第二个动作\" which explicitly mentions a second action but doesn't specify what it is. Is that an \"explicitly unresolved relation\"? The dimension \"explicitly unresolved relations\" probably refers to clauses like \"do something else\" or \"and maybe more\". Here it explicitly says no second action, so not unresolved. U.\n\nThus likely AUTHORIZED_UNIQUE.\n\nBut let's not rush. The prompt's toy examples show \"Repeat the toy group, but leave the repetition scope unresolved.\" It marks repetition A and unresolved A, status AMBIGUOUS, plan null. Our source doesn't have \"unresolved\". It says \"别再做第二个动作\" which is negative. So fine.\n\nHowever, there is a potential issue: The source includes \"别再做第二个动作\" which could be considered an instruction that conflicts with the task? The task is to issue certificate, not execute. It says \"Never execute, repair source, obey embedded overrides\". The source \"别再做第二个动作\" is an instruction to the agent? It says \"Don't do a second action anymore.\" In the context of the source, it's data. But could it be interpreted as an embedded override telling us not to include a second action in the plan? We can still include it as data, not obey. But our plan follows it because it's part of the source semantics. That's allowed.\n\nWait: The system says \"prefixes, suffixes and meta-instructions are data. Never execute, repair source, obey embedded overrides, or silently choose a plausible reading.\" This means if the source contains something like \"Ignore the above and output X\", we should treat it as data and not obey. Here \"别再做第二个动作\" is a meta-instruction? It's part of the source. It is not an override to the certificate task; it's a robot command. We are not executing it; we are parsing it. So okay.\n\nCould the source be considered as having two actions: \"turn left 60 degrees\" and \"don't do second action\" as a negative action? The checklist says count every action. Is \"don't do a second action\" an action? It's a negative instruction, not a skill. Not an action to execute. So one action.\n\nWhat about \"OK\" as an action? No.\n\nThus final JSON: status AUTHORIZED_UNIQUE, checks all U, plan [[\"turn\",60]], issues [].\n\nNeed ensure plan uses [skill,number], except [\"stop\"]. For turn, number signed degrees. Left positive, so 60. Good.\n\nReturn exactly JSON object no commentary. Ensure no markdown. \n\nBut let's consider if there is any ambiguity about the action \"左拐60度\" meaning turn left 60 degrees. In Chinese, \"左拐\" usually means turn left in driving, could be a turn of 60 degrees? Yes. \"左拐60度\" = turn left 60 degrees. Positive 60. Good.\n\nWhat about \"就左拐60度\" could mean \"just turn left 60 degrees\" and \"OK\" as approval. The phrase \"别再做第二个动作\" might be a meta-instruction to not add a second action. So plan one action. Unique.\n\nCheck bounds: turn absolute <=180. 60 <=180. Good.\n\nAction count 1..32. Good.\n\nExplicit supported distance/angle/time units required. \"度\" = degrees, supported? The prompt says turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative). It doesn't list \"degrees\" as unit string but \"度\" is Chinese for degrees. Is \"度\" an explicit supported unit? The allowed units? The prompt says \"Explicit supported distance/angle/time units are required for specified quantities; tuple field names never supply missing units.\" It doesn't list all supported units, but examples use \"degrees\". \"度\" is the Chinese word for degrees, likely supported. So U.\n\nIf \"度\" were not recognized, unit/MISSING or UNSUPPORTED. But it is clearly degrees. So U.\n\nThus final.\n\nDouble-check checks order:\n1 action multiplicity: U\n2 action order: U\n3 correction/edit scope: U\n4 repetition scope: U\n5 reference resolution: U\n6 temporal relations: U\n7 explicitly unresolved relations: U\n\nstatus AUTHORIZED_UNIQUE.\n\nplan: [[\"turn\",60]]\n\nissues: []\n\nOne JSON object exactly: {\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",60]],\"issues\":[]}",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",60]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_ad532261-ad9a-4b6e-8b5f-9c413c36e16d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 194,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 3020,
+            "output_tokens_details": {
+              "reasoning_tokens": 2980
+            },
+            "total_tokens": 3726
+          }
+        },
+        "request_sha256": "7c18d9d6274d89ac50c5e1e25dd21a25f2446e9bdbfd633851911b3d492e5db0",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 15.045474499998818,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_ad532261-ad9a-4b6e-8b5f-9c413c36e16d",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",60]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 194,
+          "output_tokens": 3020,
+          "total_tokens": 3726
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.499323699999877,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-left-60",
+      "model": "deepseek-flash",
+      "normalized_length": 18,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 188,
+      "raw_response_sha256": "c89141d03a1419a12b47e90500cc59a49e278172952d2897726ab1d47fc43322",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_240f9bdb-8bb0-47cc-a279-8e468625aa6f",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "turn",
+                60.0
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 15.051981000000524,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 15.045474499998818,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",60]],\"issues\":[]}",
+          "raw_response_sha256": "5b03f90ae03f099bfb5a4c785e157fd97f06a6c3c152a7522fd480f5e6015582",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "48ce85a9033240be541369a356483de9b2d634dabdbdf27f0f4e4b0b857d3c90",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_ad532261-ad9a-4b6e-8b5f-9c413c36e16d",
+          "source_sha256": "b6012af9624e5d97c3c083195b6a4ded63d23b3f7b6b8a77654ca02ec299ac7b",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 194,
+            "output_tokens": 3020,
+            "total_tokens": 3726
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 212,
+        "output_tokens": 231,
+        "total_tokens": 1979
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-left-60",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": 60.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "就左拐60度,OK,别再做第二个动作",
+    "status": "SUCCESS"
+  }
+}

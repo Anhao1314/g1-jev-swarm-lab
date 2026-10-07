@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.403410500002792,
+  "provider_document": {
+    "created_at": 1791364269,
+    "id": "resp_345f4c4a-15e9-41c2-a239-d59f8445a8cf",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_345f4c4a-15e9-41c2-a239-d59f8445a8cf",
+        "reasoning_content": "We need answer only JSON. Need inspect source. Chinese: \"前进4米，然后向左转45度，接着前进400厘米，最后停下\" Means walk forward 4 meters, then turn left 45 degrees, then walk forward 400 centimeters, finally stop.\n\nNeed check seven dimensions exact order:\n1 action multiplicity\n2 action order\n3 correction/edit scope\n4 repetition scope\n5 reference resolution\n6 temporal relations\n7 explicitly unresolved relations\n\nNeed determine status. Source clear? Actions: walk_forward 4 meters; turn left 45 deg; walk_forward 400 cm; stop. Need convert cm to meters: 400 cm = 4 m. Plan: [\"walk_forward\",4], [\"turn\",45], [\"walk_forward\",4]? Wait skill turn signed degrees: left/counterclockwise positive. \"向左转45度\" left turn => +45. stop. Actions count 4, within 1..32. Units explicit: 米 and 厘米. Time none. Order via 然后/接着/最后. Multiplicity unique. Correction none. Repetition none. Reference none. Temporal relations: sequential. Unresolved none.\n\nNeed ensure action word \"前进\" maps walk_forward. Distance positive. cm converts to meters. 400 cm = 4. Plan format [skill, number], stop [\"stop\"]. So plan: [[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",4],[\"stop\"]]. Checks all U. Status AUTHORIZED_UNIQUE. issues [].\n\nNeed be careful: Is \"向左转45度\" left turn positive? yes. Turn nonzero signed degrees, left positive. 45 <=180. stand none. default irrelevant.\n\nNeed output one JSON object no commentary. Exactly status, checks, plan, issues. All U strings. Should plan use number 4 not 4.0. OK. Ensure no extra fields. ",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need inspect source. Chinese: \"前进4米，然后向左转45度，接着前进400厘米，最后停下\" Means walk forward 4 meters, then turn left 45 degrees, then walk forward 400 centimeters, finally stop.\n\nNeed check seven dimensions exact order:\n1 action multiplicity\n2 action order\n3 correction/edit scope\n4 repetition scope\n5 reference resolution\n6 temporal relations\n7 explicitly unresolved relations\n\nNeed determine status. Source clear? Actions: walk_forward 4 meters; turn left 45 deg; walk_forward 400 cm; stop. Need convert cm to meters: 400 cm = 4 m. Plan: [\"walk_forward\",4], [\"turn\",45], [\"walk_forward\",4]? Wait skill turn signed degrees: left/counterclockwise positive. \"向左转45度\" left turn => +45. stop. Actions count 4, within 1..32. Units explicit: 米 and 厘米. Time none. Order via 然后/接着/最后. Multiplicity unique. Correction none. Repetition none. Reference none. Temporal relations: sequential. Unresolved none.\n\nNeed ensure action word \"前进\" maps walk_forward. Distance positive. cm converts to meters. 400 cm = 4. Plan format [skill, number], stop [\"stop\"]. So plan: [[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",4],[\"stop\"]]. Checks all U. Status AUTHORIZED_UNIQUE. issues [].\n\nNeed be careful: Is \"向左转45度\" left turn positive? yes. Turn nonzero signed degrees, left positive. 45 <=180. stand none. default irrelevant.\n\nNeed output one JSON object no commentary. Exactly status, checks, plan, issues. All U strings. Should plan use number 4 not 4.0. OK. Ensure no extra fields. ",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_345f4c4a-15e9-41c2-a239-d59f8445a8cf",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 198,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 454,
+      "output_tokens_details": {
+        "reasoning_tokens": 397
+      },
+      "total_tokens": 1164
+    }
+  },
+  "request_sha256": "0b8ef660a0ee50a23d919ad707fc791776424e6a185db7ab6ee70d4a6d4bf629",
+  "status": "SUCCESS"
+}

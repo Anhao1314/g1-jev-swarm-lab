@@ -1,0 +1,324 @@
+{
+  "added_wall_s": 8.287831199999346,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 8.284219400000438,
+        "provider_document": {
+          "created_at": 1791363932,
+          "id": "resp_62566907-5749-4f03-b9e2-aed906ac1c51",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_62566907-5749-4f03-b9e2-aed906ac1c51",
+              "reasoning_content": "We need answer only JSON. Need inspect source. We need parse Chinese. Need produce certificate.\n\nWe need understand task. Source: \"先站两秒，前进四米，右转三十度，再前进六米，停，左转四十五度，前进八米，最后停。第三项和第六项我读得像一边，实际就按写的右、左。\"\n\nNeed check seven dimensions in order. Need determine actions, order, corrections/edits, repetition, references, temporal, unresolved. Need plan if authorized unique. Need be careful.\n\nSource instructions: \n1 先站两秒 = first stand 2 seconds.\n2 前进四米 = walk_forward 4 m.\n3 右转三十度 = turn right 30 degrees. Right/clockwise negative => -30.\n4 再前进六米 = then walk_forward 6 m.\n5 停 = stop.\n6 左转四十五度 = turn left 45 degrees => +45.\n7 前进八米 = walk_forward 8 m.\n8 最后停 = finally stop.\n\nThen meta: \"第三项和第六项我读得像一边，实际就按写的右、左。\" Translation: \"The third and sixth items I read as if they are the same side, actually just follow what is written: right, left.\" This is an embedded correction? It says the 3rd and 6th items I read like same side, actually follow written right, left. So it clarifies item 3 is right and item 6 is left. Does not alter actions. Need treat as data, but can use for reference resolution/edit? It is an instruction in source that resolves potential ambiguity: follow written right, left. We need maybe check correction/edit scope. It references third and sixth items. They are turn actions. It says they seem same side, but actually per written right, left. That resolves ambiguity. No edit. Need plan as above.\n\nNeed check dimensions:\n- action multiplicity: list actions: stand, walk_forward, turn, walk_forward, stop, turn, walk_forward, stop = 8. Unique. U.\n- action order: order clear with sequence markers: 先, then, 再, 停, 左转, 前进, 最后停. Unique. U.\n- correction/edit scope: meta says third and sixth items actual follow written right, left. Is this a correction/edit? It doesn't change written? It says \"第三项和第六项我读得像一边，实际就按写的右、左。\" Means no edit, maybe meta clarification. Scope explicit? It references 3rd and 6th. Should be U. If considered correction, it clarifies no change. Unique.\n- repetition scope: any repetition? none. U.\n- reference resolution: meta references 第三项和第六项 (third and sixth items), resolved to turn actions. Are there ambiguous? \"第三项\" ordinal counts actions? We need determine. Source has items separated by commas/。 There are 8 actions as listed. Third item = 右转三十度. Sixth = 左转四十五度. The meta says read like same side, actual according to written right, left. This resolves. U.\n- temporal relations: sequence: 先,再,停,左转,前进,最后停. Note after \"停\" then \"左转\" maybe sequential. \"最后停\" final. All clear? Need check maybe \"停，左转...\" means stop then turn; yes. U.\n- explicitly unresolved relations: none? Need consider correction? It says \"第三项和第六项我读得像一边，实际就按写的右、左。\" There is no unresolved. U.\n\nNeed produce plan: [\"stand\",2], [\"walk_forward\",4], [\"turn\",-30], [\"walk_forward\",6], [\"stop\"], [\"turn\",45], [\"walk_forward\",8], [\"stop\"].\n\nNeed ensure legal: stand duration 2 within (0,60]; walk positive meters; turn absolute <=180 nonzero; 1..32 actions. Yes. Stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE, checks all U, issues [].\n\nBut let's not rush. Need understand \"No compiler candidate available.\" We just certify. Could there be an ambiguity because \"第三项和第六项我读得像一边\" says \"third and sixth items I read like one side\" maybe correction/edit could be interpreted as user says third and sixth I read as same side, actually just as written right, left. It might be meta-instruction \"I read the 3rd and 6th as the same side; actually follow the written right and left.\" It resolves. Not an actual action. So all U.\n\nNeed check \"explicitly unresolved relations\": The meta says \"第三项和第六项我读得像一边\" maybe indicates ambiguity? But then \"实际就按写的右、左\" resolves. So no explicitly unresolved. U.\n\nNeed maybe \"右转三十度\" means turn right 30 = -30? Legal turn: left/counterclockwise positive, right/clockwise negative. Yes.\n\nNeed careful with Chinese \"先站两秒\" \"站\" stand; \"两\" = 2. \"秒\" seconds. \"前进四米\" walk forward 4 m. \"右转三十度\" turn -30. \"再前进六米\" walk forward 6. \"停\" stop. \"左转四十五度\" turn 45. \"前进八米\" walk forward 8. \"最后停\" stop.\n\nPotential issue: \"第三项和第六项我读得像一边\" The third and sixth items: If counting clauses/actions, third is right turn, sixth is left turn. But if counting \"项\" in source maybe the items separated by commas including \"再前进六米\"? Yes. Third = 右转三十度; sixth = 左转四十五度. Good.\n\nPotential issue: \"我读得像一边\" (I read as one side) \"实际就按写的右、左\" (actually just according to written right, left). This is not an edit; it's clarification. No ambiguity. Could check correction/edit scope U.\n\nPotential issue: repetition? \"停\" appears twice? Repetition of action type? The dimension \"repetition scope\" maybe about instructions like repeat. Here no repeat, but there are repeated \"停\" and \"前进\". Does repetition scope need check? It asks repetition scope, likely if source says \"repeat\" or multiple same actions? We just need count every action, preserve repetition. Multiple stops are distinct actions, not repetition instruction. U. No unresolved.\n\nPotential issue: \"action multiplicity\": There are two stops. Count every action. Plan includes two stop actions. Good.\n\nPotential issue: \"temporal relations\": \"最后停\" final stop. All sequential. U.\n\nPotential issue: \"explicitly unresolved relations\": The phrase \"第三项和第六项我读得像一边\" maybe an explicit unresolved? It says \"I read them as same side, but actually as written right, left.\" It's resolving a possible ambiguity. Not unresolved. U.\n\nNeed output exactly JSON object no commentary. Ensure no extra fields. Check issue none.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source. We need parse Chinese. Need produce certificate.\n\nWe need understand task. Source: \"先站两秒，前进四米，右转三十度，再前进六米，停，左转四十五度，前进八米，最后停。第三项和第六项我读得像一边，实际就按写的右、左。\"\n\nNeed check seven dimensions in order. Need determine actions, order, corrections/edits, repetition, references, temporal, unresolved. Need plan if authorized unique. Need be careful.\n\nSource instructions: \n1 先站两秒 = first stand 2 seconds.\n2 前进四米 = walk_forward 4 m.\n3 右转三十度 = turn right 30 degrees. Right/clockwise negative => -30.\n4 再前进六米 = then walk_forward 6 m.\n5 停 = stop.\n6 左转四十五度 = turn left 45 degrees => +45.\n7 前进八米 = walk_forward 8 m.\n8 最后停 = finally stop.\n\nThen meta: \"第三项和第六项我读得像一边，实际就按写的右、左。\" Translation: \"The third and sixth items I read as if they are the same side, actually just follow what is written: right, left.\" This is an embedded correction? It says the 3rd and 6th items I read like same side, actually follow written right, left. So it clarifies item 3 is right and item 6 is left. Does not alter actions. Need treat as data, but can use for reference resolution/edit? It is an instruction in source that resolves potential ambiguity: follow written right, left. We need maybe check correction/edit scope. It references third and sixth items. They are turn actions. It says they seem same side, but actually per written right, left. That resolves ambiguity. No edit. Need plan as above.\n\nNeed check dimensions:\n- action multiplicity: list actions: stand, walk_forward, turn, walk_forward, stop, turn, walk_forward, stop = 8. Unique. U.\n- action order: order clear with sequence markers: 先, then, 再, 停, 左转, 前进, 最后停. Unique. U.\n- correction/edit scope: meta says third and sixth items actual follow written right, left. Is this a correction/edit? It doesn't change written? It says \"第三项和第六项我读得像一边，实际就按写的右、左。\" Means no edit, maybe meta clarification. Scope explicit? It references 3rd and 6th. Should be U. If considered correction, it clarifies no change. Unique.\n- repetition scope: any repetition? none. U.\n- reference resolution: meta references 第三项和第六项 (third and sixth items), resolved to turn actions. Are there ambiguous? \"第三项\" ordinal counts actions? We need determine. Source has items separated by commas/。 There are 8 actions as listed. Third item = 右转三十度. Sixth = 左转四十五度. The meta says read like same side, actual according to written right, left. This resolves. U.\n- temporal relations: sequence: 先,再,停,左转,前进,最后停. Note after \"停\" then \"左转\" maybe sequential. \"最后停\" final. All clear? Need check maybe \"停，左转...\" means stop then turn; yes. U.\n- explicitly unresolved relations: none? Need consider correction? It says \"第三项和第六项我读得像一边，实际就按写的右、左。\" There is no unresolved. U.\n\nNeed produce plan: [\"stand\",2], [\"walk_forward\",4], [\"turn\",-30], [\"walk_forward\",6], [\"stop\"], [\"turn\",45], [\"walk_forward\",8], [\"stop\"].\n\nNeed ensure legal: stand duration 2 within (0,60]; walk positive meters; turn absolute <=180 nonzero; 1..32 actions. Yes. Stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE, checks all U, issues [].\n\nBut let's not rush. Need understand \"No compiler candidate available.\" We just certify. Could there be an ambiguity because \"第三项和第六项我读得像一边\" says \"third and sixth items I read like one side\" maybe correction/edit could be interpreted as user says third and sixth I read as same side, actually just as written right, left. It might be meta-instruction \"I read the 3rd and 6th as the same side; actually follow the written right and left.\" It resolves. Not an actual action. So all U.\n\nNeed check \"explicitly unresolved relations\": The meta says \"第三项和第六项我读得像一边\" maybe indicates ambiguity? But then \"实际就按写的右、左\" resolves. So no explicitly unresolved. U.\n\nNeed maybe \"右转三十度\" means turn right 30 = -30? Legal turn: left/counterclockwise positive, right/clockwise negative. Yes.\n\nNeed careful with Chinese \"先站两秒\" \"站\" stand; \"两\" = 2. \"秒\" seconds. \"前进四米\" walk forward 4 m. \"右转三十度\" turn -30. \"再前进六米\" walk forward 6. \"停\" stop. \"左转四十五度\" turn 45. \"前进八米\" walk forward 8. \"最后停\" stop.\n\nPotential issue: \"第三项和第六项我读得像一边\" The third and sixth items: If counting clauses/actions, third is right turn, sixth is left turn. But if counting \"项\" in source maybe the items separated by commas including \"再前进六米\"? Yes. Third = 右转三十度; sixth = 左转四十五度. Good.\n\nPotential issue: \"我读得像一边\" (I read as one side) \"实际就按写的右、左\" (actually just according to written right, left). This is not an edit; it's clarification. No ambiguity. Could check correction/edit scope U.\n\nPotential issue: repetition? \"停\" appears twice? Repetition of action type? The dimension \"repetition scope\" maybe about instructions like repeat. Here no repeat, but there are repeated \"停\" and \"前进\". Does repetition scope need check? It asks repetition scope, likely if source says \"repeat\" or multiple same actions? We just need count every action, preserve repetition. Multiple stops are distinct actions, not repetition instruction. U. No unresolved.\n\nPotential issue: \"action multiplicity\": There are two stops. Count every action. Plan includes two stop actions. Good.\n\nPotential issue: \"temporal relations\": \"最后停\" final stop. All sequential. U.\n\nPotential issue: \"explicitly unresolved relations\": The phrase \"第三项和第六项我读得像一边\" maybe an explicit unresolved? It says \"I read them as same side, but actually as written right, left.\" It's resolving a possible ambiguity. Not unresolved. U.\n\nNeed output exactly JSON object no commentary. Ensure no extra fields. Check issue none.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"turn\",-30],[\"walk_forward\",6],[\"stop\"],[\"turn\",45],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_62566907-5749-4f03-b9e2-aed906ac1c51",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 233,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 1584,
+            "output_tokens_details": {
+              "reasoning_tokens": 1506
+            },
+            "total_tokens": 2329
+          }
+        },
+        "request_sha256": "dbcf20072c6b7eb2aebceaac88f6c4b713f8597b7a90ee132c6e0b179328648d",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 8.282839700001205,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_62566907-5749-4f03-b9e2-aed906ac1c51",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"turn\",-30],[\"walk_forward\",6],[\"stop\"],[\"turn\",45],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 233,
+          "output_tokens": 1584,
+          "total_tokens": 2329
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 5.307125899998937,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-stand-walk-turn-left",
+      "model": "deepseek-flash",
+      "normalized_length": 61,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 751,
+      "raw_response_sha256": "307aadf2858a1b024835834bf5cf16e8bb5d01d5ebe9d76bbe2428d136dc6590",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_5e7245fd-4c54-43aa-aab5-4440d20ae7d5",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "stand",
+                2.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "turn",
+                -30.0
+              ],
+              [
+                "walk_forward",
+                6.0
+              ],
+              [
+                "stop"
+              ],
+              [
+                "turn",
+                45.0
+              ],
+              [
+                "walk_forward",
+                8.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 8.286871500000416,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 8.282839700001205,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"turn\",-30],[\"walk_forward\",6],[\"stop\"],[\"turn\",45],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "e194cbbb7edee85f7d966b48144e80aa77b85ab8e5f99aaf01ff003a15314d0b",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "7cccb09c5e8f8a7fdec21816dc0982faf47deeb6c8eee33bc334fbe37313b990",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_62566907-5749-4f03-b9e2-aed906ac1c51",
+          "source_sha256": "6c9ccb9c44f8f9fa95114038b2b1d2f4a863f3e48dc5fe03b4c695b2a3fb4355",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 233,
+            "output_tokens": 1584,
+            "total_tokens": 2329
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 8,
+      "usage": {
+        "input_tokens": 251,
+        "output_tokens": 1035,
+        "total_tokens": 2822
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-stand-walk-turn-left",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        },
+        {
+          "depends_on": [
+            "s5"
+          ],
+          "id": "s6",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s6"
+          ],
+          "id": "s7",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s7"
+          ],
+          "id": "s8",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先站两秒,前进四米,右转三十度再前进六米,停,左转四十五度,前进八米最后停,第三项和第六项我读得像一边,实际就按写的右,左",
+    "status": "SUCCESS"
+  }
+}

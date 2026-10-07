@@ -1,0 +1,335 @@
+{
+  "added_wall_s": 24.940801400000055,
+  "live_evidence": {
+    "events": [
+      {
+        "error_type": "LLMBackendError",
+        "http_status": 502,
+        "index": 1,
+        "latency_s": 21.051541999997426,
+        "request_sha256": "bb282b11e9bf0d4fa9290b206df0a31960b50c7ce9cfd512f36a09d48d2d0be1",
+        "status": "API_ERROR"
+      },
+      {
+        "index": 2,
+        "latency_s": 3.3813477999974566,
+        "provider_document": {
+          "created_at": 1791364247,
+          "id": "resp_a1785d99-1d95-4eaf-b601-8d0492384415",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_a1785d99-1d95-4eaf-b601-8d0492384415",
+              "reasoning_content": "We need answer JSON only. Need inspect source. Need follow instructions. Need determine plan. Source Chinese: \"先站立1秒，然后前进4米，再左转45度，然后前进4米，再右转45度，然后前进4米，再左转90度，最后停止。\"\n\nTranslate: First stand 1 second, then walk forward 4 meters, then turn left 45 degrees, then walk forward 4 meters, then turn right 45 degrees, then walk forward 4 meters, then turn left 90 degrees, finally stop.\n\nActions in order:\nstand 1 sec\nwalk_forward 4 m\nturn left 45 => +45\nwalk_forward 4\nturn right 45 => -45\nwalk_forward 4\nturn left 90 => +90\nstop\n\nCheck dimensions seven exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed map checks. Everything unique? Need evaluate action multiplicity: all actions specified once, no repetition. U.\naction order: explicit sequence, U.\ncorrection/edit scope: no corrections/edits. U.\nrepetition scope: no repetition. U.\nreference resolution: pronouns? None? \"最后\" final maybe temporal reference? \"先...然后...再...最后\" okay. U.\ntemporal relations: sequential order explicit. U.\nexplicitly unresolved relations: none. U.\nPlan valid: stand seconds; default only when duration absent. Stand 1 valid (0,60].\nwalk_forward positive meters; \"4米\" = 4. turn left 45 => sign +45. right 45 => -45. left 90 => +90. stop.\nTotal 8 actions? Let's count: stand, walk, turn, walk, turn, walk, turn, stop = 8. Within 1..32. Turn absolute <=180 yes.\nPlan arrays: [\"stand\",1], [\"walk_forward\",4], [\"turn\",45], [\"walk_forward\",4], [\"turn\",-45], [\"walk_forward\",4], [\"turn\",90], [\"stop\"].\nStatus AUTHORIZED_UNIQUE. checks seven U. issues empty. Need return exactly JSON object fields status, checks, plan, issues. No commentary. Ensure numbers maybe integer. JSON.\n\nNeed be careful about \"左转45度\" left positive. Yes.\n\nFinal only JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source. Need follow instructions. Need determine plan. Source Chinese: \"先站立1秒，然后前进4米，再左转45度，然后前进4米，再右转45度，然后前进4米，再左转90度，最后停止。\"\n\nTranslate: First stand 1 second, then walk forward 4 meters, then turn left 45 degrees, then walk forward 4 meters, then turn right 45 degrees, then walk forward 4 meters, then turn left 90 degrees, finally stop.\n\nActions in order:\nstand 1 sec\nwalk_forward 4 m\nturn left 45 => +45\nwalk_forward 4\nturn right 45 => -45\nwalk_forward 4\nturn left 90 => +90\nstop\n\nCheck dimensions seven exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed map checks. Everything unique? Need evaluate action multiplicity: all actions specified once, no repetition. U.\naction order: explicit sequence, U.\ncorrection/edit scope: no corrections/edits. U.\nrepetition scope: no repetition. U.\nreference resolution: pronouns? None? \"最后\" final maybe temporal reference? \"先...然后...再...最后\" okay. U.\ntemporal relations: sequential order explicit. U.\nexplicitly unresolved relations: none. U.\nPlan valid: stand seconds; default only when duration absent. Stand 1 valid (0,60].\nwalk_forward positive meters; \"4米\" = 4. turn left 45 => sign +45. right 45 => -45. left 90 => +90. stop.\nTotal 8 actions? Let's count: stand, walk, turn, walk, turn, walk, turn, stop = 8. Within 1..32. Turn absolute <=180 yes.\nPlan arrays: [\"stand\",1], [\"walk_forward\",4], [\"turn\",45], [\"walk_forward\",4], [\"turn\",-45], [\"walk_forward\",4], [\"turn\",90], [\"stop\"].\nStatus AUTHORIZED_UNIQUE. checks seven U. issues empty. Need return exactly JSON object fields status, checks, plan, issues. No commentary. Ensure numbers maybe integer. JSON.\n\nNeed be careful about \"左转45度\" left positive. Yes.\n\nFinal only JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",4],[\"turn\",-45],[\"walk_forward\",4],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_a1785d99-1d95-4eaf-b601-8d0492384415",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 222,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 585,
+            "output_tokens_details": {
+              "reasoning_tokens": 505
+            },
+            "total_tokens": 1319
+          }
+        },
+        "request_sha256": "bb282b11e9bf0d4fa9290b206df0a31960b50c7ce9cfd512f36a09d48d2d0be1",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 2,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 2,
+        "finish_reason": "completed",
+        "latency_s": 3.3797145999997156,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_a1785d99-1d95-4eaf-b601-8d0492384415",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",4],[\"turn\",-45],[\"walk_forward\",4],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 585,
+          "total_tokens": 1319
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.839972800000396,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "g1-stand-walk-turn-sequence",
+      "model": "deepseek-flash",
+      "normalized_length": 45,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"g1-stand-walk-turn-sequence\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":1.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s4\"]},{\"id\":\"s6\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s5\"]},{\"id\":\"s7\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":90.0},\"depends_on\":[\"s6\"]},{\"id\":\"s8\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s7\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "0b60995b999295cc3029976190692b4b8a72e479b6e7aab08840d48ac146a810",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_833efd3a-e0a4-434c-8b0c-dd9ed61e99f1",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 2,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "stand",
+                1.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "turn",
+                45.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "turn",
+                -45.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "turn",
+                90.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 24.939115799999854,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 3.3797145999997156,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",45],[\"walk_forward\",4],[\"turn\",-45],[\"walk_forward\",4],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "fd90094995af6db5493af850662c02ff4ecdf15bccff7d6016801e0561e34e24",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "e56faa6c54ae6114c296e7f25bcfb59c41502b509d5167167445573664ca12f3",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_a1785d99-1d95-4eaf-b601-8d0492384415",
+          "source_sha256": "63095c116297dd325e9e48706d17a4a2d3b3bc851419f8e069d6c455d14ea4d0",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 222,
+            "output_tokens": 585,
+            "total_tokens": 1319
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 8,
+      "usage": {
+        "input_tokens": 240,
+        "output_tokens": 509,
+        "total_tokens": 2285
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "g1-stand-walk-turn-sequence",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 1.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s5"
+          ],
+          "id": "s6",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s6"
+          ],
+          "id": "s7",
+          "parameters": {
+            "angle_deg": 90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s7"
+          ],
+          "id": "s8",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先站立1秒然后前进4米再左转45度然后前进4米再右转45度然后前进4米再左转90度最后停止",
+    "status": "SUCCESS"
+  }
+}

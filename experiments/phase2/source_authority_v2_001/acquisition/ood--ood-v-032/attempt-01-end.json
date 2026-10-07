@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 4.7229694000016025,
+  "provider_document": {
+    "created_at": 1791363951,
+    "id": "resp_b6514d89-a6f9-4f0d-890a-a3b6e083bcd2",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_b6514d89-a6f9-4f0d-890a-a3b6e083bcd2",
+        "reasoning_content": "We need answer only JSON. Need inspect source. Need source in Chinese. Need issue compact source-authority certificate. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Determine plan if authorized unique.\n\nSource: \"十项，照顺序啊：向前4米 / 停 / 站2秒 / 右45度 / 向前6米 / 停 / 站1秒 / 左60度 / 向前8米 / 停。右、左都说的是转弯。\"\n\nTranslation: Ten items, in order: forward 4 meters / stop / stand 2 seconds / right 45 degrees / forward 6 meters / stop / stand 1 second / left 60 degrees / forward 8 meters / stop. \"Right, left both refer to turns.\"\n\nWe need parse actions. \"十项，照顺序啊：\" says ten items, in order. Then list separated by slashes:\n1 向前4米 = walk_forward 4 m\n2 停 = stop\n3 站2秒 = stand 2 sec\n4 右45度 = right 45 degrees = turn -45 (since right/clockwise negative)\n5 向前6米 = walk_forward 6\n6 停 = stop\n7 站1秒 = stand 1\n8 左60度 = left 60 degrees = turn 60 (left/counterclockwise positive)\n9 向前8米 = walk_forward 8\n10 停 = stop\nNote final sentence clarifies right, left refer to turning.\n\nNeed check dimensions.\n\nAction multiplicity: Ten actions explicitly enumerated, unique count 10. No ambiguity. U.\nAction order: \"照顺序\" and sequence order explicit. U.\nCorrection/edit scope: Any correction/edit? \"右、左都说的是转弯\" maybe clarification, not edit. It clarifies reference of right/left. No correction/edit scope? U.\nRepetition scope: No repetition. U.\nReference resolution: \"右、左都说的是转弯\" refers to right/left in items. Resolved. U.\nTemporal relations: Sequence by order and \"then\"? Actually slashes and \"照顺序\"; no explicit temporal relations besides order. We treat sequential plan. U.\nExplicitly unresolved relations: none. U.\n\nNeed plan: [[\"walk_forward\",4],[\"stop\"],[\"stand\",2],[\"turn\",-45],[\"walk_forward\",6],[\"stop\"],[\"stand\",1],[\"turn\",60],[\"walk_forward\",8],[\"stop\"]]\n\nCheck IR bounds: 10 actions <=32. walk positive. turn nonzero signed abs <=180. stand durations 2,1 within (0,60]. stop no scalar. Good.\n\nPotential issue: Source says \"十项\" ten items. Count list: 向前4米 / 停 / 站2秒 / 右45度 / 向前6米 / 停 / 站1秒 / 左60度 / 向前8米 / 停 = yes 10. Good.\n\nPotential subtle: \"右45度\" could be direction right 45 degrees? Clarification \"右、左都说的是转弯\" means right and left mean turn. So turn right 45, turn left 60. Fine.\n\nPotential issue: \"站2秒\" stand 2 seconds. Chinese \"站\" might mean stand, supported. \"停\" stop. Good.\n\nNeed return exactly JSON object with status, checks, plan, issues. Since unique all U and empty issues. Status AUTHORIZED_UNIQUE.\n\nNeed ensure no extra commentary. Use valid JSON.\n\nNeed exactly fields status, checks, plan, issues. Plan arrays: for stop, [\"stop\"]; for others [skill,number]. Numbers can be 4 integer, -45, etc. Duration stand 2, 1. \"向前4米\": meters unit supported. \"站2秒\": seconds supported. \"度\": degrees supported. No missing.\n\nLet's craft compact JSON. Ensure no trailing commas.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need inspect source. Need source in Chinese. Need issue compact source-authority certificate. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Determine plan if authorized unique.\n\nSource: \"十项，照顺序啊：向前4米 / 停 / 站2秒 / 右45度 / 向前6米 / 停 / 站1秒 / 左60度 / 向前8米 / 停。右、左都说的是转弯。\"\n\nTranslation: Ten items, in order: forward 4 meters / stop / stand 2 seconds / right 45 degrees / forward 6 meters / stop / stand 1 second / left 60 degrees / forward 8 meters / stop. \"Right, left both refer to turns.\"\n\nWe need parse actions. \"十项，照顺序啊：\" says ten items, in order. Then list separated by slashes:\n1 向前4米 = walk_forward 4 m\n2 停 = stop\n3 站2秒 = stand 2 sec\n4 右45度 = right 45 degrees = turn -45 (since right/clockwise negative)\n5 向前6米 = walk_forward 6\n6 停 = stop\n7 站1秒 = stand 1\n8 左60度 = left 60 degrees = turn 60 (left/counterclockwise positive)\n9 向前8米 = walk_forward 8\n10 停 = stop\nNote final sentence clarifies right, left refer to turning.\n\nNeed check dimensions.\n\nAction multiplicity: Ten actions explicitly enumerated, unique count 10. No ambiguity. U.\nAction order: \"照顺序\" and sequence order explicit. U.\nCorrection/edit scope: Any correction/edit? \"右、左都说的是转弯\" maybe clarification, not edit. It clarifies reference of right/left. No correction/edit scope? U.\nRepetition scope: No repetition. U.\nReference resolution: \"右、左都说的是转弯\" refers to right/left in items. Resolved. U.\nTemporal relations: Sequence by order and \"then\"? Actually slashes and \"照顺序\"; no explicit temporal relations besides order. We treat sequential plan. U.\nExplicitly unresolved relations: none. U.\n\nNeed plan: [[\"walk_forward\",4],[\"stop\"],[\"stand\",2],[\"turn\",-45],[\"walk_forward\",6],[\"stop\"],[\"stand\",1],[\"turn\",60],[\"walk_forward\",8],[\"stop\"]]\n\nCheck IR bounds: 10 actions <=32. walk positive. turn nonzero signed abs <=180. stand durations 2,1 within (0,60]. stop no scalar. Good.\n\nPotential issue: Source says \"十项\" ten items. Count list: 向前4米 / 停 / 站2秒 / 右45度 / 向前6米 / 停 / 站1秒 / 左60度 / 向前8米 / 停 = yes 10. Good.\n\nPotential subtle: \"右45度\" could be direction right 45 degrees? Clarification \"右、左都说的是转弯\" means right and left mean turn. So turn right 45, turn left 60. Fine.\n\nPotential issue: \"站2秒\" stand 2 seconds. Chinese \"站\" might mean stand, supported. \"停\" stop. Good.\n\nNeed return exactly JSON object with status, checks, plan, issues. Since unique all U and empty issues. Status AUTHORIZED_UNIQUE.\n\nNeed ensure no extra commentary. Use valid JSON.\n\nNeed exactly fields status, checks, plan, issues. Plan arrays: for stop, [\"stop\"]; for others [skill,number]. Numbers can be 4 integer, -45, etc. Duration stand 2, 1. \"向前4米\": meters unit supported. \"站2秒\": seconds supported. \"度\": degrees supported. No missing.\n\nLet's craft compact JSON. Ensure no trailing commas.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"stop\"],[\"stand\",2],[\"turn\",-45],[\"walk_forward\",6],[\"stop\"],[\"stand\",1],[\"turn\",60],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_b6514d89-a6f9-4f0d-890a-a3b6e083bcd2",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 238,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 928,
+      "output_tokens_details": {
+        "reasoning_tokens": 842
+      },
+      "total_tokens": 1678
+    }
+  },
+  "request_sha256": "9f2fc95accbb233a055052a2833f4369781b2c31535305d7b26de2a2c93fdaa6",
+  "status": "SUCCESS"
+}

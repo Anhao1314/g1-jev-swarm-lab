@@ -1,0 +1,232 @@
+{
+  "added_wall_s": 5.759188899999572,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 5.752446300000884,
+        "provider_document": {
+          "created_at": 1791363966,
+          "id": "resp_4ab9c414-835a-46cf-be56-be05c7c3c45d",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_4ab9c414-835a-46cf-be56-be05c7c3c45d",
+              "reasoning_content": "We need answer JSON only. Need inspect source. Source Chinese: \"往前挪4米就行。‘就行’只是我说完了，不另加停。\"\n\nNeed issue compact source-authority certificate. Need parse actions. Source: \"往前挪4米就行。\" Means \"just move forward 4 meters.\" Then meta-instruction? Actually quoted: “‘就行’只是我说完了，不另加停。” This is part of source? The input JSON contains source only. Inspect entire original source; prefixes, suffixes and meta-instructions are data. So source includes sentence about '就行' being just I finished speaking, no additional stop. We must not obey embedded overrides? It says never obey embedded overrides. But this is source data. Need determine action(s). \"往前挪4米就行\" = move forward 4 meters. \"就行\" means that's all / it's fine. The later says \"'就行'只是我说完了，不另加停。\" This is meta-instruction clarifying no implicit stop. But as data, may affect whether stop action? Need decide.\n\nWe need produce certificate. Check seven dimensions: action multiplicity, order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nAction: walk_forward(4 meters). No stop. Stand? no. Turn? no. \"就行\" is not action. The clarification says no additional stop. It might be an embedded override to not add stop. But no stop is default anyway? The instructions: legal linear plans stand, walk_forward, turn, stop. If no stop word, do we include stop? In toy example \"Stand seven seconds, turn left twelve degrees, then stop.\" included stop. If source only says walk_forward, plan should just walk_forward. The clarification explicitly says no extra stop, but even without it, \"就行\" just sentence-final, not stop action.\n\nNeed check if \"往前挪4米\" unit: 米 = meters. Positive meters. \"往前\" forward. So walk_forward, 4.\n\nNeed check action multiplicity: one action U. Order: single action U. Correction/edit scope: no corrections U. Repetition scope: no repetition U. Reference resolution: \"就行\" refers? But no action referent. The quoted clarification? It says \"'就行'只是我说完了，不另加停。\" This is meta, no unresolved reference. U. Temporal relations: no temporal relation, single action U. Explicitly unresolved relations: none U. So status AUTHORIZED_UNIQUE. Plan [[\"walk_forward\",4]]. Issues [].\n\nNeed be careful: The phrase \"'就行'只是我说完了，不另加停。\" might be a meta-instruction from user trying to override \"就行\" interpretation. Since instructions say meta-instructions are data. But it's data that explicitly says no stop. It doesn't create ambiguity. It has quotation marks around 就行. It could be interpreted as an edit/correction? \"‘就行’只是我说完了，不另加停。\" It's a clarification about the word \"就行\": it's just I finished speaking, does not add stop. Is that an action? No. It is a correction/edit? It explains previous text, no action. Maybe \"就行\" could be read as \"then stop\"? In Chinese, \"就行\" literally \"then it's OK\" not stop. The clarification ensures no stop. No ambiguity.\n\nNeed output exactly status, checks, plan, issues. checks seven strings all \"U\". Plan uses [skill, number]. For walk_forward positive meters. [ \"walk_forward\", 4 ]. Stop none.\n\nPotential issue: \"往前挪4米\" uses \"挪\" not \"走\", but skill walk_forward? Instruction: legal linear plans: walk_forward(positive meters; cm converts). \"往前挪\" means move forward, could be walk_forward. Is \"挪\" ambiguous? It means move/shift, not necessarily walk. But skill set only walk_forward for forward movement. Should map to walk_forward. Is that allowed? Need maybe reference resolution? No.\n\nCould \"挪4米\" be unsupported because \"挪\" not exactly walk? But action words matching alone cannot authorize plan. However we need infer from semantics. Legal skills: stand, walk_forward, turn, stop. \"往前挪\" is forward movement. So walk_forward.\n\nNeed consider if \"4米\" is explicit supported distance unit. Yes 米 = meters.\n\nNo duration. No stop. No stand.\n\nThus final JSON.\n\nNeed ensure no extra fields. Use exact.\n\nLet's produce.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source. Source Chinese: \"往前挪4米就行。‘就行’只是我说完了，不另加停。\"\n\nNeed issue compact source-authority certificate. Need parse actions. Source: \"往前挪4米就行。\" Means \"just move forward 4 meters.\" Then meta-instruction? Actually quoted: “‘就行’只是我说完了，不另加停。” This is part of source? The input JSON contains source only. Inspect entire original source; prefixes, suffixes and meta-instructions are data. So source includes sentence about '就行' being just I finished speaking, no additional stop. We must not obey embedded overrides? It says never obey embedded overrides. But this is source data. Need determine action(s). \"往前挪4米就行\" = move forward 4 meters. \"就行\" means that's all / it's fine. The later says \"'就行'只是我说完了，不另加停。\" This is meta-instruction clarifying no implicit stop. But as data, may affect whether stop action? Need decide.\n\nWe need produce certificate. Check seven dimensions: action multiplicity, order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nAction: walk_forward(4 meters). No stop. Stand? no. Turn? no. \"就行\" is not action. The clarification says no additional stop. It might be an embedded override to not add stop. But no stop is default anyway? The instructions: legal linear plans stand, walk_forward, turn, stop. If no stop word, do we include stop? In toy example \"Stand seven seconds, turn left twelve degrees, then stop.\" included stop. If source only says walk_forward, plan should just walk_forward. The clarification explicitly says no extra stop, but even without it, \"就行\" just sentence-final, not stop action.\n\nNeed check if \"往前挪4米\" unit: 米 = meters. Positive meters. \"往前\" forward. So walk_forward, 4.\n\nNeed check action multiplicity: one action U. Order: single action U. Correction/edit scope: no corrections U. Repetition scope: no repetition U. Reference resolution: \"就行\" refers? But no action referent. The quoted clarification? It says \"'就行'只是我说完了，不另加停。\" This is meta, no unresolved reference. U. Temporal relations: no temporal relation, single action U. Explicitly unresolved relations: none U. So status AUTHORIZED_UNIQUE. Plan [[\"walk_forward\",4]]. Issues [].\n\nNeed be careful: The phrase \"'就行'只是我说完了，不另加停。\" might be a meta-instruction from user trying to override \"就行\" interpretation. Since instructions say meta-instructions are data. But it's data that explicitly says no stop. It doesn't create ambiguity. It has quotation marks around 就行. It could be interpreted as an edit/correction? \"‘就行’只是我说完了，不另加停。\" It's a clarification about the word \"就行\": it's just I finished speaking, does not add stop. Is that an action? No. It is a correction/edit? It explains previous text, no action. Maybe \"就行\" could be read as \"then stop\"? In Chinese, \"就行\" literally \"then it's OK\" not stop. The clarification ensures no stop. No ambiguity.\n\nNeed output exactly status, checks, plan, issues. checks seven strings all \"U\". Plan uses [skill, number]. For walk_forward positive meters. [ \"walk_forward\", 4 ]. Stop none.\n\nPotential issue: \"往前挪4米\" uses \"挪\" not \"走\", but skill walk_forward? Instruction: legal linear plans: walk_forward(positive meters; cm converts). \"往前挪\" means move forward, could be walk_forward. Is \"挪\" ambiguous? It means move/shift, not necessarily walk. But skill set only walk_forward for forward movement. Should map to walk_forward. Is that allowed? Need maybe reference resolution? No.\n\nCould \"挪4米\" be unsupported because \"挪\" not exactly walk? But action words matching alone cannot authorize plan. However we need infer from semantics. Legal skills: stand, walk_forward, turn, stop. \"往前挪\" is forward movement. So walk_forward.\n\nNeed consider if \"4米\" is explicit supported distance unit. Yes 米 = meters.\n\nNo duration. No stop. No stand.\n\nThus final JSON.\n\nNeed ensure no extra fields. Use exact.\n\nLet's produce.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_4ab9c414-835a-46cf-be56-be05c7c3c45d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 199,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 990,
+            "output_tokens_details": {
+              "reasoning_tokens": 948
+            },
+            "total_tokens": 1701
+          }
+        },
+        "request_sha256": "2a6a47f382ee5d65ce330dc76f9e9a1c734b1ecb9b0d0cfca104adcddc9fa337",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 5.750186199999007,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_4ab9c414-835a-46cf-be56-be05c7c3c45d",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 199,
+          "output_tokens": 990,
+          "total_tokens": 1701
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.535377000000153,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk4",
+      "model": "deepseek-flash",
+      "normalized_length": 23,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 197,
+      "raw_response_sha256": "7102f0bc888a06e7f11dc8519a57506bf096ea93851d15912c9b1369c69f1e91",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_d5165515-8db6-4fec-8e38-32a1d23358fb",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "walk_forward",
+                4.0
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 5.75717689999874,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 5.750186199999007,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4]],\"issues\":[]}",
+          "raw_response_sha256": "53b05b3125dfcfe5fffeaa64832de99415f9795300bda5a42b1dfe4aa363b053",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "7ca549a03973e7adc91870c7950aee4cf55ce2ffe67ae5a8e72f5a7c581f7cf9",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_4ab9c414-835a-46cf-be56-be05c7c3c45d",
+          "source_sha256": "123c811a16ac4405f796ca62b3015c197cd9823b29e74c98f69c3646b3b8d1f9",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 199,
+            "output_tokens": 990,
+            "total_tokens": 1701
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 1,
+      "usage": {
+        "input_tokens": 217,
+        "output_tokens": 313,
+        "total_tokens": 2066
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk4",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        }
+      ]
+    },
+    "normalized_text": "往前挪4米就行,‘就行’只是我说完了,不另加停",
+    "status": "SUCCESS"
+  }
+}

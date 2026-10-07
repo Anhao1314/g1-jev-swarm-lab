@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 4.214430500000162,
+  "provider_document": {
+    "created_at": 1791363960,
+    "id": "resp_a2cf7b10-4ac4-482f-a230-2da38a3fbc6e",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_a2cf7b10-4ac4-482f-a230-2da38a3fbc6e",
+        "reasoning_content": "We need answer JSON only. Need parse source. Need inspect entire original source. Chinese: \"往前走10米，再站5秒，最后停。站5秒是第二步，不是给走路计时。\"\n\nWe need determine certificate. Need follow seven dimensions.\n\nSource text: \"往前走10米，再站5秒，最后停。站5秒是第二步，不是给走路计时。\"\n\nTranslation: Walk forward 10 meters, then stand 5 seconds, finally stop. Standing 5 seconds is the second step, not timing the walk.\n\nThis seems explicit instructions. Actions: walk_forward(10 m), stand(5 sec), stop. Order: walk, stand, stop. Correction/edit scope? Second sentence clarifies \"站5秒是第二步，不是给走路计时\" = the \"stand 5 seconds\" is the second step, not to time the walking. This is a meta-instruction? Actually it's in source, data. It clarifies temporal relation / action order? It says standing 5 seconds is second step, not timing walking. No ambiguity. Need checks all U? Need evaluate dimensions in exact order.\n\nAction multiplicity: three actions: walk_forward once, stand once, stop once. U.\n\nAction order: walk, stand, stop. U.\n\nCorrection/edit scope: There is a correction: \"站5秒是第二步，不是给走路计时\" clarifies not timing walking. Does this edit refer to potential parse of \"走10米，再站5秒\"? It says stand 5 seconds is step 2, not timing walking. It excludes interpreting the 5 seconds as duration for walking? But original already \"再站5秒\". No edit to plan. U? Need check \"correction/edit scope\" dimension. It is explicit correction with clear referent: the 5 seconds applies to stand, not walk. U.\n\nRepetition scope: No repetition. U.\n\nReference resolution: \"站5秒\" refers to standing action. \"第二步\" refers to stand as second step. \"不是给走路计时\" reference to walking. Clear. U.\n\nTemporal relations: \"再\" then, \"最后\" finally. Also \"站5秒是第二步，不是给走路计时\" indicates stand is second, not duration of walk. Temporal order clear. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [\"walk_forward\",10], [\"stand\",5], [\"stop\"]. Need check stand duration default? Stand seconds specified 5. Within (0,60]. Turn none. walk_forward positive meters, 10. stop no scalar. 3 actions. Valid.\n\nNeed output status AUTHORIZED_UNIQUE, checks seven U, plan, issues []. Ensure JSON exactly fields.\n\nPotential concern: Source includes \"站5秒是第二步，不是给走路计时\" after stop? It's a clarification. Does \"最后停\" then clarification. It doesn't alter order? It says stand 5 sec is second step. The final stop remains third. So plan as above. Need no issue.\n\nNeed return one JSON object no commentary. Use exact format. Ensure no extra fields. Final only.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need parse source. Need inspect entire original source. Chinese: \"往前走10米，再站5秒，最后停。站5秒是第二步，不是给走路计时。\"\n\nWe need determine certificate. Need follow seven dimensions.\n\nSource text: \"往前走10米，再站5秒，最后停。站5秒是第二步，不是给走路计时。\"\n\nTranslation: Walk forward 10 meters, then stand 5 seconds, finally stop. Standing 5 seconds is the second step, not timing the walk.\n\nThis seems explicit instructions. Actions: walk_forward(10 m), stand(5 sec), stop. Order: walk, stand, stop. Correction/edit scope? Second sentence clarifies \"站5秒是第二步，不是给走路计时\" = the \"stand 5 seconds\" is the second step, not to time the walking. This is a meta-instruction? Actually it's in source, data. It clarifies temporal relation / action order? It says standing 5 seconds is second step, not timing walking. No ambiguity. Need checks all U? Need evaluate dimensions in exact order.\n\nAction multiplicity: three actions: walk_forward once, stand once, stop once. U.\n\nAction order: walk, stand, stop. U.\n\nCorrection/edit scope: There is a correction: \"站5秒是第二步，不是给走路计时\" clarifies not timing walking. Does this edit refer to potential parse of \"走10米，再站5秒\"? It says stand 5 seconds is step 2, not timing walking. It excludes interpreting the 5 seconds as duration for walking? But original already \"再站5秒\". No edit to plan. U? Need check \"correction/edit scope\" dimension. It is explicit correction with clear referent: the 5 seconds applies to stand, not walk. U.\n\nRepetition scope: No repetition. U.\n\nReference resolution: \"站5秒\" refers to standing action. \"第二步\" refers to stand as second step. \"不是给走路计时\" reference to walking. Clear. U.\n\nTemporal relations: \"再\" then, \"最后\" finally. Also \"站5秒是第二步，不是给走路计时\" indicates stand is second, not duration of walk. Temporal order clear. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [\"walk_forward\",10], [\"stand\",5], [\"stop\"]. Need check stand duration default? Stand seconds specified 5. Within (0,60]. Turn none. walk_forward positive meters, 10. stop no scalar. 3 actions. Valid.\n\nNeed output status AUTHORIZED_UNIQUE, checks seven U, plan, issues []. Ensure JSON exactly fields.\n\nPotential concern: Source includes \"站5秒是第二步，不是给走路计时\" after stop? It's a clarification. Does \"最后停\" then clarification. It doesn't alter order? It says stand 5 sec is second step. The final stop remains third. So plan as above. Need no issue.\n\nNeed return one JSON object no commentary. Use exact format. Ensure no extra fields. Final only.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",10],[\"stand\",5],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_a2cf7b10-4ac4-482f-a230-2da38a3fbc6e",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 204,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 692,
+      "output_tokens_details": {
+        "reasoning_tokens": 642
+      },
+      "total_tokens": 1408
+    }
+  },
+  "request_sha256": "32169da24325fb124854c4e7817919a7f14c2730eedef85556ca519f1040354d",
+  "status": "SUCCESS"
+}

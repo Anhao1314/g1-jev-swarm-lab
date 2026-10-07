@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 6.238505500001338,
+  "provider_document": {
+    "created_at": 1791363945,
+    "id": "resp_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+        "reasoning_content": "We need answer only JSON. Need inspect source. Need reason carefully. Need certify.\n\nSource: \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nChinese. Need parse actions. \"站2秒\" stand 2 seconds. \"前进8米\" walk_forward 8 meters. \"｜\" separator. \"右转30度\" turn right 30 degrees => signed -30. \"再前进10米\" then? \"再\" then/again forward 10m. \"｜\" separator. \"左转45度\" turn left 45 => +45. \"停止\" stop. \"，按这行从头往后。\" Means \"according to this line from beginning to end\" or \"in this line from start to back.\" This is meta-instruction about order, not action. Need determine if action order specified? Source lists actions separated by vertical bars, then says according to this line from beginning to end. So order is stand, walk 8, turn right, walk 10, turn left, stop. Need check dimensions.\n\nAction multiplicity: count actions exactly? There are stand, walk, turn, walk, turn, stop. Multiple walk and turn, but each occurrence distinct? Need \"Check dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\" Need decide U/A/? for each.\n\nNeed parse \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nPotential ambiguities: \"站2秒前进8米\" could be \"stand for 2 seconds and move forward 8 meters\" no separator between them? Actually Chinese phrase without comma between 站2秒 and 前进8米. Could be sequential stand 2s then forward 8m. Then vertical bars. \"右转30度再前进10米\" right turn 30 then forward 10. \"左转45度停止\" left turn 45 then stop? \"左转45度停止\" no \"再\" between turn and stop; could be \"turn left 45 degrees [and] stop\" or \"turn left 45 degrees stop\" likely sequential. \"按这行从头往后\" tells order from beginning to end. So order clear.\n\nNeed check if \"站2秒前进8米\" could be two actions or one? Stand 2 seconds, forward 8m. Multiplicity: six actions? Stand, walk, turn, walk, turn, stop. But perhaps \"站2秒前进8米\" no pause; still two actions. \"右转30度再前进10米\" clear. \"左转45度停止\" maybe stop after turn. Multiplicity unique.\n\nAction order: from beginning to end. U.\n\nCorrection/edit scope: no edits/corrections. U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: \"这行\" refers to current line? \"按这行从头往后\" refers to this line? It is a reference to the line/sequence. Resolvable as source line. U? Need maybe \"这行\" is deictic, but in source, it's self-reference. It instructs order. Is that reference resolution? It is a reference to the source line. Context sufficient: \"this line\" refers to the line being read. U likely.\n\nTemporal relations: \"2秒\" duration for stand. \"再\" means then. \"左转45度停止\" maybe immediate after. \"按这行从头往后\" order. Temporal relations clear sequential. Stand duration 2s. Walk distances. Turn angles. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]]. Need ensure turn sign: right negative, left positive. \"右转30度\" = -30; \"左转45度\" = 45. Max actions 6 <=32. Stand seconds within (0,60]. Turn absolute <=180. Walk positive. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE. Checks all U. Issues empty.\n\nBut need be careful about \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\" The vertical bar \"｜\" maybe separates groups, but within group \"站2秒前进8米\" might be ambiguous because no punctuation. However Chinese often concatenates actions. The instruction \"按这行从头往后\" resolves order. \"站2秒前进8米\" could mean \"stand for 2 seconds, move forward 8 meters\" yes.\n\nAny issue with \"站2秒\" stand duration: Stand skill arguments? Legal plan stand(seconds; default 2.0 only when duration absent). Here explicit 2 seconds. \"2秒\" supported unit seconds. yes.\n\n\"前进8米\" walk_forward positive meters; \"8米\" meters. \"前进10米\" yes.\n\n\"右转30度\" turn signed degrees. Unit \"度\" supported angle. yes.\n\n\"左转45度\" yes.\n\n\"停止\" stop no scalar. yes.\n\nNo quantity missing.\n\nNeed produce exactly JSON object no commentary. Ensure checks array seven strings. status etc. plan arrays.\n\nLet's final.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need inspect source. Need reason carefully. Need certify.\n\nSource: \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nChinese. Need parse actions. \"站2秒\" stand 2 seconds. \"前进8米\" walk_forward 8 meters. \"｜\" separator. \"右转30度\" turn right 30 degrees => signed -30. \"再前进10米\" then? \"再\" then/again forward 10m. \"｜\" separator. \"左转45度\" turn left 45 => +45. \"停止\" stop. \"，按这行从头往后。\" Means \"according to this line from beginning to end\" or \"in this line from start to back.\" This is meta-instruction about order, not action. Need determine if action order specified? Source lists actions separated by vertical bars, then says according to this line from beginning to end. So order is stand, walk 8, turn right, walk 10, turn left, stop. Need check dimensions.\n\nAction multiplicity: count actions exactly? There are stand, walk, turn, walk, turn, stop. Multiple walk and turn, but each occurrence distinct? Need \"Check dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\" Need decide U/A/? for each.\n\nNeed parse \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nPotential ambiguities: \"站2秒前进8米\" could be \"stand for 2 seconds and move forward 8 meters\" no separator between them? Actually Chinese phrase without comma between 站2秒 and 前进8米. Could be sequential stand 2s then forward 8m. Then vertical bars. \"右转30度再前进10米\" right turn 30 then forward 10. \"左转45度停止\" left turn 45 then stop? \"左转45度停止\" no \"再\" between turn and stop; could be \"turn left 45 degrees [and] stop\" or \"turn left 45 degrees stop\" likely sequential. \"按这行从头往后\" tells order from beginning to end. So order clear.\n\nNeed check if \"站2秒前进8米\" could be two actions or one? Stand 2 seconds, forward 8m. Multiplicity: six actions? Stand, walk, turn, walk, turn, stop. But perhaps \"站2秒前进8米\" no pause; still two actions. \"右转30度再前进10米\" clear. \"左转45度停止\" maybe stop after turn. Multiplicity unique.\n\nAction order: from beginning to end. U.\n\nCorrection/edit scope: no edits/corrections. U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: \"这行\" refers to current line? \"按这行从头往后\" refers to this line? It is a reference to the line/sequence. Resolvable as source line. U? Need maybe \"这行\" is deictic, but in source, it's self-reference. It instructs order. Is that reference resolution? It is a reference to the source line. Context sufficient: \"this line\" refers to the line being read. U likely.\n\nTemporal relations: \"2秒\" duration for stand. \"再\" means then. \"左转45度停止\" maybe immediate after. \"按这行从头往后\" order. Temporal relations clear sequential. Stand duration 2s. Walk distances. Turn angles. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]]. Need ensure turn sign: right negative, left positive. \"右转30度\" = -30; \"左转45度\" = 45. Max actions 6 <=32. Stand seconds within (0,60]. Turn absolute <=180. Walk positive. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE. Checks all U. Issues empty.\n\nBut need be careful about \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\" The vertical bar \"｜\" maybe separates groups, but within group \"站2秒前进8米\" might be ambiguous because no punctuation. However Chinese often concatenates actions. The instruction \"按这行从头往后\" resolves order. \"站2秒前进8米\" could mean \"stand for 2 seconds, move forward 8 meters\" yes.\n\nAny issue with \"站2秒\" stand duration: Stand skill arguments? Legal plan stand(seconds; default 2.0 only when duration absent). Here explicit 2 seconds. \"2秒\" supported unit seconds. yes.\n\n\"前进8米\" walk_forward positive meters; \"8米\" meters. \"前进10米\" yes.\n\n\"右转30度\" turn signed degrees. Unit \"度\" supported angle. yes.\n\n\"左转45度\" yes.\n\n\"停止\" stop no scalar. yes.\n\nNo quantity missing.\n\nNeed produce exactly JSON object no commentary. Ensure checks array seven strings. status etc. plan arrays.\n\nLet's final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 209,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 1197,
+      "output_tokens_details": {
+        "reasoning_tokens": 1129
+      },
+      "total_tokens": 1918
+    }
+  },
+  "request_sha256": "7952beffa68ba930f455d856726ecd2964b379307f68fa8db1355bd61f2ea538",
+  "status": "SUCCESS"
+}

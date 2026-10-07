@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.8013233999990916,
+  "provider_document": {
+    "created_at": 1791364119,
+    "id": "resp_5503e196-c05b-48db-a331-62377e16155c",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_5503e196-c05b-48db-a331-62377e16155c",
+        "reasoning_content": "We need answer JSON only. Need inspect source. Need follow instructions. Need determine checks seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nSource Chinese: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nTranslate: First walk forward 800 cm, then turn right 90°, then move forward 4 m, finally stop.\n\nNeed parse actions. Skills allowed: stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative), stop(no scalar). Need plan.\n\nActions:\n1. walk_forward 800 centimeters = 8 meters. \"向前走\" = walk forward. positive.\n2. turn right 90° = signed degrees. right/clockwise negative => -90. \"向右转\".\n3. \"向前移动4米\" = move forward 4 meters. Does \"移动\" map to walk_forward? Yes likely forward movement = walk_forward. positive 4.\n4. stop.\n\nOrder sequence: 先...再...然后...最后. Unique. Repetition none. Correction/edit none. References none. Temporal relations: sequential explicit, all ordered; unique. Explicit unresolved none.\n\nNeed ensure units explicit. cm and m explicit for distances, degrees for angle. Stop no scalar.\n\nAction multiplicity: count 4. Is there ambiguity? \"向前走800厘米，再向右转90°，然后向前移动4米，最后停住\" Could \"向前走\" and \"向前移动\" both walk_forward actions, distinct due ordering. No repetition. Unique. Checks all U. Status AUTHORIZED_UNIQUE. Plan [[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]].\n\nNeed maybe \"先向前走800厘米\" walk_forward positive 8. \"再向右转90°\" turn -90. \"然后向前移动4米\" walk_forward 4. \"最后停住\" stop.\n\nNeed output exactly JSON object no commentary. Ensure checks exactly seven strings. issues empty.\n\nNeed consider IR bounds: 1..32 actions; stand duration etc. Turn absolute <=180 yes. walk positive.\n\nNeed no extra fields. Good.\n\nFinal.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source. Need follow instructions. Need determine checks seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nSource Chinese: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nTranslate: First walk forward 800 cm, then turn right 90°, then move forward 4 m, finally stop.\n\nNeed parse actions. Skills allowed: stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative), stop(no scalar). Need plan.\n\nActions:\n1. walk_forward 800 centimeters = 8 meters. \"向前走\" = walk forward. positive.\n2. turn right 90° = signed degrees. right/clockwise negative => -90. \"向右转\".\n3. \"向前移动4米\" = move forward 4 meters. Does \"移动\" map to walk_forward? Yes likely forward movement = walk_forward. positive 4.\n4. stop.\n\nOrder sequence: 先...再...然后...最后. Unique. Repetition none. Correction/edit none. References none. Temporal relations: sequential explicit, all ordered; unique. Explicit unresolved none.\n\nNeed ensure units explicit. cm and m explicit for distances, degrees for angle. Stop no scalar.\n\nAction multiplicity: count 4. Is there ambiguity? \"向前走800厘米，再向右转90°，然后向前移动4米，最后停住\" Could \"向前走\" and \"向前移动\" both walk_forward actions, distinct due ordering. No repetition. Unique. Checks all U. Status AUTHORIZED_UNIQUE. Plan [[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]].\n\nNeed maybe \"先向前走800厘米\" walk_forward positive 8. \"再向右转90°\" turn -90. \"然后向前移动4米\" walk_forward 4. \"最后停住\" stop.\n\nNeed output exactly JSON object no commentary. Ensure checks exactly seven strings. issues empty.\n\nNeed consider IR bounds: 1..32 actions; stand duration etc. Turn absolute <=180 yes. walk positive.\n\nNeed no extra fields. Good.\n\nFinal.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_5503e196-c05b-48db-a331-62377e16155c",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 201,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 551,
+      "output_tokens_details": {
+        "reasoning_tokens": 493
+      },
+      "total_tokens": 1264
+    }
+  },
+  "request_sha256": "26bddb1167af6caf3b4388a6beaaa10daa8f80d0046381a7d2a0093ca17556ce",
+  "status": "SUCCESS"
+}

@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 5.194178500001726,
+  "provider_document": {
+    "created_at": 1791363950,
+    "id": "resp_86402fe6-81cc-4bae-ab59-831489814d7a",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_86402fe6-81cc-4bae-ab59-831489814d7a",
+        "reasoning_content": "We need answer only JSON object. Need inspect source. Need determine seven checks in order. Source Chinese: \"先站1秒，往前走4米；呃，左转30度；接着向前6米，再右转60度……然后前进8米，左转90度，好，最后停。\"\n\nNeed produce certificate. Need parse actions. Need obey exact order and repetition. Need determine ambiguity etc.\n\nWe have source only. Need check dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need decide U/A/?.\n\nSource actions:\n- 先站1秒 = stand 1 second.\n- 往前走4米 = walk_forward 4 meters.\n; 呃, 左转30度 = turn left 30 degrees. Here \"呃\" filler, no correction? Could be hesitation, not edit.\n- 接着向前6米 = then forward 6 meters.\n- 再右转60度 = then right turn 60 degrees. Ellipsis \"……\" maybe pause.\n- 然后前进8米 = then forward 8 meters.\n- 左转90度 = left turn 90 degrees.\n- 好, 最后停 = okay, finally stop.\n\nAll explicit quantities: stand 1 seconds (Chinese 秒? Actually \"站1秒\" yes seconds). Walk 4米, turn 30度, walk 6米, turn right 60度, walk 8米, turn left 90度, stop. Units supported. Turn left positive, right negative. Need convert? Plan: [\"stand\",1], [\"walk_forward\",4], [\"turn\",30], [\"walk_forward\",6], [\"turn\",-60], [\"walk_forward\",8], [\"turn\",90], [\"stop\"]. Count 8 <=32. Stand duration (0,60] yes 1. turn abs <=180 yes.\n\nChecks likely all U? Need consider \"呃\" maybe correction/edit scope? It's a filler, not correction. \"好\" no. Ellipsis no. No repetitions. References none. Temporal relations sequential with 先, 接着, 再, 然后, 最后. Explicit. Unresolved none. So AUTHORIZED_UNIQUE.\n\nNeed ensure \"站1秒\" stand seconds. \"秒\" explicit. \"米\" meters. \"度\" degrees. left/counterclockwise positive. right negative. Plan uses numbers. Should we include \"turn\" -60 for right. Yes.\n\nNeed return JSON only exactly status, checks, plan, issues. checks seven U strings. plan array.\n\nDouble-check action multiplicity: all actions counted? stand, walk, turn, walk, turn, walk, turn, stop = 8. No duplicated instruction except no repetition. U.\n\nAction order: explicit sequence. U.\n\nCorrection/edit scope: None. \"呃\" could be hesitation not correction. U.\n\nRepetition scope: None. U.\n\nReference resolution: none. U.\n\nTemporal relations: \"先...；...；接着...，再...……然后...，...，好，最后...\" sequential. U.\n\nExplicitly unresolved relations: none. U.\n\nThus final. Need no markdown. Ensure JSON valid.\n\nPotential issue: \"往前走4米；呃，左转30度\" could \"呃\" mean correction? No.\n\nPotential issue: \"站1秒\" Could Chinese \"秒\" supported time. Yes.\n\nPotential issue: \"左转30度\" \"左转\" positive. \"右转60度\" negative. \"左转90度\" positive. Good.\n\nPotential issue: plan entries [skill,number]. For turn -60 accepted? turn nonzero signed degrees. Yes.\n\nNo scalar for stop: [\"stop\"].\n\nNeed final exactly one JSON object.",
+        "summary": [
+          {
+            "text": "We need answer only JSON object. Need inspect source. Need determine seven checks in order. Source Chinese: \"先站1秒，往前走4米；呃，左转30度；接着向前6米，再右转60度……然后前进8米，左转90度，好，最后停。\"\n\nNeed produce certificate. Need parse actions. Need obey exact order and repetition. Need determine ambiguity etc.\n\nWe have source only. Need check dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need decide U/A/?.\n\nSource actions:\n- 先站1秒 = stand 1 second.\n- 往前走4米 = walk_forward 4 meters.\n; 呃, 左转30度 = turn left 30 degrees. Here \"呃\" filler, no correction? Could be hesitation, not edit.\n- 接着向前6米 = then forward 6 meters.\n- 再右转60度 = then right turn 60 degrees. Ellipsis \"……\" maybe pause.\n- 然后前进8米 = then forward 8 meters.\n- 左转90度 = left turn 90 degrees.\n- 好, 最后停 = okay, finally stop.\n\nAll explicit quantities: stand 1 seconds (Chinese 秒? Actually \"站1秒\" yes seconds). Walk 4米, turn 30度, walk 6米, turn right 60度, walk 8米, turn left 90度, stop. Units supported. Turn left positive, right negative. Need convert? Plan: [\"stand\",1], [\"walk_forward\",4], [\"turn\",30], [\"walk_forward\",6], [\"turn\",-60], [\"walk_forward\",8], [\"turn\",90], [\"stop\"]. Count 8 <=32. Stand duration (0,60] yes 1. turn abs <=180 yes.\n\nChecks likely all U? Need consider \"呃\" maybe correction/edit scope? It's a filler, not correction. \"好\" no. Ellipsis no. No repetitions. References none. Temporal relations sequential with 先, 接着, 再, 然后, 最后. Explicit. Unresolved none. So AUTHORIZED_UNIQUE.\n\nNeed ensure \"站1秒\" stand seconds. \"秒\" explicit. \"米\" meters. \"度\" degrees. left/counterclockwise positive. right negative. Plan uses numbers. Should we include \"turn\" -60 for right. Yes.\n\nNeed return JSON only exactly status, checks, plan, issues. checks seven U strings. plan array.\n\nDouble-check action multiplicity: all actions counted? stand, walk, turn, walk, turn, walk, turn, stop = 8. No duplicated instruction except no repetition. U.\n\nAction order: explicit sequence. U.\n\nCorrection/edit scope: None. \"呃\" could be hesitation not correction. U.\n\nRepetition scope: None. U.\n\nReference resolution: none. U.\n\nTemporal relations: \"先...；...；接着...，再...……然后...，...，好，最后...\" sequential. U.\n\nExplicitly unresolved relations: none. U.\n\nThus final. Need no markdown. Ensure JSON valid.\n\nPotential issue: \"往前走4米；呃，左转30度\" could \"呃\" mean correction? No.\n\nPotential issue: \"站1秒\" Could Chinese \"秒\" supported time. Yes.\n\nPotential issue: \"左转30度\" \"左转\" positive. \"右转60度\" negative. \"左转90度\" positive. Good.\n\nPotential issue: plan entries [skill,number]. For turn -60 accepted? turn nonzero signed degrees. Yes.\n\nNo scalar for stop: [\"stop\"].\n\nNeed final exactly one JSON object.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",4],[\"turn\",30],[\"walk_forward\",6],[\"turn\",-60],[\"walk_forward\",8],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_86402fe6-81cc-4bae-ab59-831489814d7a",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 223,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 865,
+      "output_tokens_details": {
+        "reasoning_tokens": 785
+      },
+      "total_tokens": 1600
+    }
+  },
+  "request_sha256": "781b6c833d5de822ffd469de14baefe2263822a2d459ba338c27653c4d8c61c6",
+  "status": "SUCCESS"
+}

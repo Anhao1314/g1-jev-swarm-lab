@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.856478199999401,
+  "provider_document": {
+    "created_at": 1791364053,
+    "id": "resp_3144b8e7-c93b-4ad8-8ce9-fffa06e339c2",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_3144b8e7-c93b-4ad8-8ce9-fffa06e339c2",
+        "reasoning_content": "We need answer only JSON per instructions. Need parse source Chinese. Need inspect entire. We need determine status, checks seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need plan if authorized unique. Need count every action, preserve order/repetition, resolve refs, temporal.\n\nSource: \"先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\"\n\nTranslation: First do A, then do B. A is stand two seconds then turn left 60 degrees; B is walk forward ten meters then stop.\n\nNeed produce plan. Need check ambiguity etc.\n\nActions: do A, do B, definitions: A = stand 2 sec then turn left 60; B = walk forward 10 m then stop. This is macro references. Need resolve reference to defined groups. Order: do A then B. A internal: stand then turn. B internal: walk then stop. Overall stand, turn, walk, stop. Stand duration 2 seconds (Chinese 两秒 = 2 seconds). Turn left sixty degrees -> left positive +60. Walk forward ten meters -> 10. Stop. All units explicit. Within bounds: stand (0,60], turn <=180, actions 4. Linear.\n\nNeed check dimensions. Action multiplicity: Are any actions repeated? \"先做甲，再做乙\" exactly once each. A contains two, B contains two. Multiplicity U. Action order U (clear 先...再, A internal 接着, B internal 接着). Correction/edit scope: no corrections/edits. Repetition scope: no repetition, maybe \"甲/乙\" refer to groups no repeat. U. Reference resolution: 甲 and 乙 are defined in same source; unique. U. Temporal relations: \"先...再\", \"接着\" sequence; U. Explicitly unresolved: none. U. Status AUTHORIZED_UNIQUE. Plan array [[\"stand\",2],[\"turn\",60],[\"walk_forward\",10],[\"stop\"]]. Need check skill names exactly allowed: stand, walk_forward, turn, stop. turn left positive. Input \"左转六十度\" -> turn 60. Stop no scalar as [\"stop\"] not [\"stop\",?]. The toy example has [\"stop\"].\n\nNeed ensure JSON exactly fields status, checks, plan, issues. issues empty. No commentary. Use no markdown. final.",
+        "summary": [
+          {
+            "text": "We need answer only JSON per instructions. Need parse source Chinese. Need inspect entire. We need determine status, checks seven dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need plan if authorized unique. Need count every action, preserve order/repetition, resolve refs, temporal.\n\nSource: \"先做甲，再做乙。甲是站两秒接着左转六十度；乙是前进十米接着停止。\"\n\nTranslation: First do A, then do B. A is stand two seconds then turn left 60 degrees; B is walk forward ten meters then stop.\n\nNeed produce plan. Need check ambiguity etc.\n\nActions: do A, do B, definitions: A = stand 2 sec then turn left 60; B = walk forward 10 m then stop. This is macro references. Need resolve reference to defined groups. Order: do A then B. A internal: stand then turn. B internal: walk then stop. Overall stand, turn, walk, stop. Stand duration 2 seconds (Chinese 两秒 = 2 seconds). Turn left sixty degrees -> left positive +60. Walk forward ten meters -> 10. Stop. All units explicit. Within bounds: stand (0,60], turn <=180, actions 4. Linear.\n\nNeed check dimensions. Action multiplicity: Are any actions repeated? \"先做甲，再做乙\" exactly once each. A contains two, B contains two. Multiplicity U. Action order U (clear 先...再, A internal 接着, B internal 接着). Correction/edit scope: no corrections/edits. Repetition scope: no repetition, maybe \"甲/乙\" refer to groups no repeat. U. Reference resolution: 甲 and 乙 are defined in same source; unique. U. Temporal relations: \"先...再\", \"接着\" sequence; U. Explicitly unresolved: none. U. Status AUTHORIZED_UNIQUE. Plan array [[\"stand\",2],[\"turn\",60],[\"walk_forward\",10],[\"stop\"]]. Need check skill names exactly allowed: stand, walk_forward, turn, stop. turn left positive. Input \"左转六十度\" -> turn 60. Stop no scalar as [\"stop\"] not [\"stop\",?]. The toy example has [\"stop\"].\n\nNeed ensure JSON exactly fields status, checks, plan, issues. issues empty. No commentary. Use no markdown. final.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"turn\",60],[\"walk_forward\",10],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_3144b8e7-c93b-4ad8-8ce9-fffa06e339c2",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 207,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 570,
+      "output_tokens_details": {
+        "reasoning_tokens": 515
+      },
+      "total_tokens": 1289
+    }
+  },
+  "request_sha256": "1f26fb290ef2ee31af99290202023809cf3b972eb85ab0fdce67d22faf9d1b92",
+  "status": "SUCCESS"
+}

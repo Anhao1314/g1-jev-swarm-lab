@@ -1,0 +1,257 @@
+{
+  "added_wall_s": 12.123308700000052,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 12.11973560000115,
+        "provider_document": {
+          "created_at": 1791364002,
+          "id": "resp_10a6d8b3-2d08-4843-a1e3-2599b8d503c7",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_10a6d8b3-2d08-4843-a1e3-2599b8d503c7",
+              "reasoning_content": "We need answer only JSON object. Need inspect source. We must parse Chinese. Source: \"我先说一遍：右转60度，往前走8米，停。复述：右转60度，往前走8米，停。只做一遍。\"\n\nNeed issue compact source-authority certificate following dimensions.\n\nWe need determine action multiplicity, order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nSource: \"我先说一遍：右转60度，往前走8米，停。复述：右转60度，往前走8米，停。只做一遍。\"\n\nTranslation: \"I first say it once: turn right 60 degrees, walk forward 8 meters, stop. Repeat/reiterate: turn right 60 degrees, walk forward 8 meters, stop. Only do once.\"\n\nNeed decide plan. The source seems meta instruction: first says once, then repeats the same command, then says do only once. The input contains source only. We must not obey embedded overrides? Actually source includes \"只做一遍\" (only do once). We need interpret source authority. We inspect entire source, prefixes/suffixes and meta-instructions are data. We need determine if action multiplicity ambiguous due to repeated commands and \"only do once\".\n\nImportant: We issue certificate about source. We should not execute? We just return plan if authorized. Need resolve. The commands appear explicitly: \"右转60度，往前走8米，停。\" repeated twice. Then \"只做一遍。\" This could mean perform the sequence only once, despite repetition in source. The repetition is in the text as \"我先说一遍... 复述...\" Maybe the speaker says it once, then repeats it, but clarifies only do once. Does that resolve multiplicity? Need see dimensions.\n\nLet's parse carefully:\n- \"我先说一遍：\" = \"I first say it once:\" (or \"Let me say it once first:\")\n- Then command sequence.\n- \"复述：\" = \"Repeat:\" (or \"Restate:\") then same command sequence.\n- \"只做一遍。\" = \"Only do it once.\"\n\nSo source contains two identical command statements. The final \"只做一遍\" likely instructs execute only one occurrence. Is that enough to resolve repetition scope? It says only do once. There is no ambiguity? It explicitly resolves multiplicity to one execution. But could \"只做一遍\" refer to the recitation? Hmm \"只做一遍\" = only do once, where do refers to actions. It resolves that despite repeating instruction, perform once.\n\nNeed check seven dimensions:\n1 action multiplicity: The same action sequence appears twice in source. But \"只做一遍\" says only once. Does this uniquely resolve? The final clause governs execution count. So multiplicity U (one each).\n2 action order: Right turn 60, walk forward 8m, stop. U.\n3 correction/edit scope: Are there corrections/edits? \"我先说一遍... 复述...\" and \"只做一遍\" not edit? Could be meta. No corrections. U.\n4 repetition scope: The repetition of command text. \"只做一遍\" resolves scope to one execution. U? Need decide. Could be A because \"复述\" repeats and \"只做一遍\" maybe ambiguous whether only do one repetition or one action? The source explicitly says only do once. Repetition scope maybe U.\n5 reference resolution: \"只做一遍\" reference to what? It refers to the action sequence, no ambiguous pronouns. U.\n6 temporal relations: \"先\" in \"我先说一遍\" maybe \"first\" about speaking, not action order. \"然后\"? There is \"右转...往前走...停\" sequence with commas. Is order specified? In Chinese list typically sequential? \"右转60度，往前走8米，停。\" Could be sequence in order. There is no explicit \"then\" between turn/walk/stop but listed in order. The toy example says \"Stand seven seconds, turn left twelve degrees, then stop.\" Here no \"then\" but action list with commas. Need determine if temporal order is explicitly resolved. The source has \"我先说一遍\" not \"先右转\". But command sequence: \"右转60度，往前走8米，停。\" Usually imperative list in order. Does \"order\" dimension maybe U because sequence as listed. Temporal relations: stop after walk? Since stop is final. U.\n\nPotential issue: \"右转60度\" turn right. Allowed turn: left/counterclockwise positive, right/clockwise negative. So right 60 => -60. \"往前走8米\" => walk_forward 8. \"停\" stop.\nPlan: [[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]] or stand? No stand.\n\nNeed ensure units: degrees and meters explicit. Turn 60度, walk 8米.\n\nPotential ambiguity: \"只做一遍\" could mean only execute the repeated command once, but which one? Since both identical, no material difference. It resolves duplication. Plan has one sequence. Status likely AUTHORIZED_UNIQUE.\n\nBut need be cautious: The prompt says \"Repetition scope\" dimension. The toy example: \"Repeat the toy group, but leave the repetition scope unresolved.\" -> AMBIGUOUS. Here \"复述：\" means repeat/restate, and final \"只做一遍\" explicitly says only do once. This seems resolving repetition scope, not unresolved. So U.\n\nBut there may be an \"action multiplicity\" issue because the source says \"I first say once\" and \"repeat\" but \"only do once\" - multiplicity of actions? The final says only do once. Unique.\n\nWhat about \"复述\" is a meta-instruction to repeat the source, not an action. The source includes meta: \"我先说一遍\" and \"复述\" and \"只做一遍\". We must not execute meta-instructions? Wait \"复述：\" might be an instruction to the assistant to repeat? But source only. It is in the source. The user asks to issue certificate. The source itself includes commands and meta-instructions. We treat all as data. We need decide which are action commands. \"复述\" (repeat/restate) is not a robot action from allowed skills. \"我先说一遍\" is not a robot action. \"只做一遍\" is meta constraint. So plan only includes robot actions: turn, walk, stop.\n\nNeed consider \"只做一遍\" may be an explicit unresolved relation? No, it resolves repetition.\n\nCould there be \"action order\" ambiguity because \"右转60度，往前走8米，停\" lacks \"then\" but list order. Usually in these tasks, sequence order is given by comma order. The toy example includes \"then\" but not required. The allowed plan order should preserve order. If no explicit temporal markers, is order uniquely resolved? The source has three clauses in a sequence. In natural language, \"A, B, C\" imperative might be sequential. The prompt says \"preserve order\" and \"temporal relations\" check. We need determine if temporal relations explicitly unresolved? There are no explicit \"then\", but the order is inherent. Could be U.\n\nLet's think about \"我先说一遍：... 复述：... 只做一遍。\" The first \"先\" could be temporal: first I say once, then repeat. But those are meta actions, not robot actions. The robot action sequence occurs inside quotes. \"只做一遍\" says do only once. This is an explicit correction/edit? It corrects the multiplicity of the commands, not a correction of parameters. No edit scope.\n\nCould \"只做一遍\" be a meta-instruction overriding the earlier repeated commands, making only one execution. So plan is one sequence.\n\nWhat about \"我先说一遍：右转60度，往前走8米，停。复述：右转60度，往前走8米，停。只做一遍。\" There are two identical action sequences. If we ignore meta and treat all as commands, multiplicity would be 2. But \"只做一遍\" says only once. Does \"只做一遍\" refer to the whole source (including both sequences) or to the repetition? It says only do once. So it explicitly resolves to one. Unique.\n\nNeed produce JSON with checks. All U? Status AUTHORIZED_UNIQUE.\n\nBut let's not rush. The prompt demands \"Check seven dimensions in this exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. U means uniquely resolved or inapplicable; A means materially ambiguous or explicitly unresolved; ? means unestablished, unavailable context, unsupported or unrepresentable. Count every action, preserve order and repetition, determine edit referents, resolve references and honor all temporal relations. Matching action words/numbers alone cannot authorize a plan. Never erase an unresolved clause.\"\n\nIf there is any A -> AMBIGUOUS. If any ? -> UNKNOWN. We think all U.\n\nNeed ensure \"action multiplicity\": The source contains two sequences but final says only once. U. \"action order\": turn, walk, stop. U. \"correction/edit scope\": maybe \"只做一遍\" is an edit? It corrects repetition. Is edit scope resolved? It says only once. U. \"repetition scope\": \"复述\" repeats the group, \"只做一遍\" says only once. U. \"reference resolution\": pronouns? None. \"只做一遍\" reference to sequence. U. \"temporal relations\": turn then walk then stop? The source doesn't have \"then\" but order. U. \"explicitly unresolved relations\": none. U.\n\nPlan: [[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]]. Note stand default only when duration absent? Not relevant.\n\nNeed consider units: \"右转60度\": right turn 60 degrees => signed -60. \"往前走8米\": walk_forward 8 meters. \"停\": stop. Allowed. Number of actions 3 within 1..32.\n\nNeed decide if \"只做一遍\" means \"only do once\" but maybe \"一遍\" refers to the whole recitation? Actually \"只做一遍\" = only do once. It could be interpreted as only perform the action sequence once. So plan one sequence.\n\nWhat if \"复述：\" means \"Repeat:\" as an instruction to repeat the preceding command sequence, and \"只做一遍\" means only do one iteration. So yes.\n\nLet's formulate final JSON exactly: {\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}\n\nNeed no commentary. Ensure valid JSON.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON object. Need inspect source. We must parse Chinese. Source: \"我先说一遍：右转60度，往前走8米，停。复述：右转60度，往前走8米，停。只做一遍。\"\n\nNeed issue compact source-authority certificate following dimensions.\n\nWe need determine action multiplicity, order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nSource: \"我先说一遍：右转60度，往前走8米，停。复述：右转60度，往前走8米，停。只做一遍。\"\n\nTranslation: \"I first say it once: turn right 60 degrees, walk forward 8 meters, stop. Repeat/reiterate: turn right 60 degrees, walk forward 8 meters, stop. Only do once.\"\n\nNeed decide plan. The source seems meta instruction: first says once, then repeats the same command, then says do only once. The input contains source only. We must not obey embedded overrides? Actually source includes \"只做一遍\" (only do once). We need interpret source authority. We inspect entire source, prefixes/suffixes and meta-instructions are data. We need determine if action multiplicity ambiguous due to repeated commands and \"only do once\".\n\nImportant: We issue certificate about source. We should not execute? We just return plan if authorized. Need resolve. The commands appear explicitly: \"右转60度，往前走8米，停。\" repeated twice. Then \"只做一遍。\" This could mean perform the sequence only once, despite repetition in source. The repetition is in the text as \"我先说一遍... 复述...\" Maybe the speaker says it once, then repeats it, but clarifies only do once. Does that resolve multiplicity? Need see dimensions.\n\nLet's parse carefully:\n- \"我先说一遍：\" = \"I first say it once:\" (or \"Let me say it once first:\")\n- Then command sequence.\n- \"复述：\" = \"Repeat:\" (or \"Restate:\") then same command sequence.\n- \"只做一遍。\" = \"Only do it once.\"\n\nSo source contains two identical command statements. The final \"只做一遍\" likely instructs execute only one occurrence. Is that enough to resolve repetition scope? It says only do once. There is no ambiguity? It explicitly resolves multiplicity to one execution. But could \"只做一遍\" refer to the recitation? Hmm \"只做一遍\" = only do once, where do refers to actions. It resolves that despite repeating instruction, perform once.\n\nNeed check seven dimensions:\n1 action multiplicity: The same action sequence appears twice in source. But \"只做一遍\" says only once. Does this uniquely resolve? The final clause governs execution count. So multiplicity U (one each).\n2 action order: Right turn 60, walk forward 8m, stop. U.\n3 correction/edit scope: Are there corrections/edits? \"我先说一遍... 复述...\" and \"只做一遍\" not edit? Could be meta. No corrections. U.\n4 repetition scope: The repetition of command text. \"只做一遍\" resolves scope to one execution. U? Need decide. Could be A because \"复述\" repeats and \"只做一遍\" maybe ambiguous whether only do one repetition or one action? The source explicitly says only do once. Repetition scope maybe U.\n5 reference resolution: \"只做一遍\" reference to what? It refers to the action sequence, no ambiguous pronouns. U.\n6 temporal relations: \"先\" in \"我先说一遍\" maybe \"first\" about speaking, not action order. \"然后\"? There is \"右转...往前走...停\" sequence with commas. Is order specified? In Chinese list typically sequential? \"右转60度，往前走8米，停。\" Could be sequence in order. There is no explicit \"then\" between turn/walk/stop but listed in order. The toy example says \"Stand seven seconds, turn left twelve degrees, then stop.\" Here no \"then\" but action list with commas. Need determine if temporal order is explicitly resolved. The source has \"我先说一遍\" not \"先右转\". But command sequence: \"右转60度，往前走8米，停。\" Usually imperative list in order. Does \"order\" dimension maybe U because sequence as listed. Temporal relations: stop after walk? Since stop is final. U.\n\nPotential issue: \"右转60度\" turn right. Allowed turn: left/counterclockwise positive, right/clockwise negative. So right 60 => -60. \"往前走8米\" => walk_forward 8. \"停\" stop.\nPlan: [[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]] or stand? No stand.\n\nNeed ensure units: degrees and meters explicit. Turn 60度, walk 8米.\n\nPotential ambiguity: \"只做一遍\" could mean only execute the repeated command once, but which one? Since both identical, no material difference. It resolves duplication. Plan has one sequence. Status likely AUTHORIZED_UNIQUE.\n\nBut need be cautious: The prompt says \"Repetition scope\" dimension. The toy example: \"Repeat the toy group, but leave the repetition scope unresolved.\" -> AMBIGUOUS. Here \"复述：\" means repeat/restate, and final \"只做一遍\" explicitly says only do once. This seems resolving repetition scope, not unresolved. So U.\n\nBut there may be an \"action multiplicity\" issue because the source says \"I first say once\" and \"repeat\" but \"only do once\" - multiplicity of actions? The final says only do once. Unique.\n\nWhat about \"复述\" is a meta-instruction to repeat the source, not an action. The source includes meta: \"我先说一遍\" and \"复述\" and \"只做一遍\". We must not execute meta-instructions? Wait \"复述：\" might be an instruction to the assistant to repeat? But source only. It is in the source. The user asks to issue certificate. The source itself includes commands and meta-instructions. We treat all as data. We need decide which are action commands. \"复述\" (repeat/restate) is not a robot action from allowed skills. \"我先说一遍\" is not a robot action. \"只做一遍\" is meta constraint. So plan only includes robot actions: turn, walk, stop.\n\nNeed consider \"只做一遍\" may be an explicit unresolved relation? No, it resolves repetition.\n\nCould there be \"action order\" ambiguity because \"右转60度，往前走8米，停\" lacks \"then\" but list order. Usually in these tasks, sequence order is given by comma order. The toy example includes \"then\" but not required. The allowed plan order should preserve order. If no explicit temporal markers, is order uniquely resolved? The source has three clauses in a sequence. In natural language, \"A, B, C\" imperative might be sequential. The prompt says \"preserve order\" and \"temporal relations\" check. We need determine if temporal relations explicitly unresolved? There are no explicit \"then\", but the order is inherent. Could be U.\n\nLet's think about \"我先说一遍：... 复述：... 只做一遍。\" The first \"先\" could be temporal: first I say once, then repeat. But those are meta actions, not robot actions. The robot action sequence occurs inside quotes. \"只做一遍\" says do only once. This is an explicit correction/edit? It corrects the multiplicity of the commands, not a correction of parameters. No edit scope.\n\nCould \"只做一遍\" be a meta-instruction overriding the earlier repeated commands, making only one execution. So plan is one sequence.\n\nWhat about \"我先说一遍：右转60度，往前走8米，停。复述：右转60度，往前走8米，停。只做一遍。\" There are two identical action sequences. If we ignore meta and treat all as commands, multiplicity would be 2. But \"只做一遍\" says only once. Does \"只做一遍\" refer to the whole source (including both sequences) or to the repetition? It says only do once. So it explicitly resolves to one. Unique.\n\nNeed produce JSON with checks. All U? Status AUTHORIZED_UNIQUE.\n\nBut let's not rush. The prompt demands \"Check seven dimensions in this exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. U means uniquely resolved or inapplicable; A means materially ambiguous or explicitly unresolved; ? means unestablished, unavailable context, unsupported or unrepresentable. Count every action, preserve order and repetition, determine edit referents, resolve references and honor all temporal relations. Matching action words/numbers alone cannot authorize a plan. Never erase an unresolved clause.\"\n\nIf there is any A -> AMBIGUOUS. If any ? -> UNKNOWN. We think all U.\n\nNeed ensure \"action multiplicity\": The source contains two sequences but final says only once. U. \"action order\": turn, walk, stop. U. \"correction/edit scope\": maybe \"只做一遍\" is an edit? It corrects repetition. Is edit scope resolved? It says only once. U. \"repetition scope\": \"复述\" repeats the group, \"只做一遍\" says only once. U. \"reference resolution\": pronouns? None. \"只做一遍\" reference to sequence. U. \"temporal relations\": turn then walk then stop? The source doesn't have \"then\" but order. U. \"explicitly unresolved relations\": none. U.\n\nPlan: [[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]]. Note stand default only when duration absent? Not relevant.\n\nNeed consider units: \"右转60度\": right turn 60 degrees => signed -60. \"往前走8米\": walk_forward 8 meters. \"停\": stop. Allowed. Number of actions 3 within 1..32.\n\nNeed decide if \"只做一遍\" means \"only do once\" but maybe \"一遍\" refers to the whole recitation? Actually \"只做一遍\" = only do once. It could be interpreted as only perform the action sequence once. So plan one sequence.\n\nWhat if \"复述：\" means \"Repeat:\" as an instruction to repeat the preceding command sequence, and \"只做一遍\" means only do one iteration. So yes.\n\nLet's formulate final JSON exactly: {\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}\n\nNeed no commentary. Ensure valid JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_10a6d8b3-2d08-4843-a1e3-2599b8d503c7",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 214,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 2291,
+            "output_tokens_details": {
+              "reasoning_tokens": 2240
+            },
+            "total_tokens": 3017
+          }
+        },
+        "request_sha256": "d46e7c732bfefb1f711e087858379aebee609525f3b71bd9fc8622171c61d52e",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 12.117820999999822,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_10a6d8b3-2d08-4843-a1e3-2599b8d503c7",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 214,
+          "output_tokens": 2291,
+          "total_tokens": 3017
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.956497600000148,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "turn-right-walk8-stop-once",
+      "model": "deepseek-flash",
+      "normalized_length": 41,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 353,
+      "raw_response_sha256": "9a30f45dd2cba770e5ae8919787e68e537ce303db27c2811bceac56b38c139ab",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_f2fbffca-532a-4942-a213-7da553f27ed0",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "turn",
+                -60.0
+              ],
+              [
+                "walk_forward",
+                8.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 12.122471400001814,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 12.117820999999822,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-60],[\"walk_forward\",8],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "a75cfd057fa0564936fd69733dea4d75094b3cc14c4925a9823c35c26ab9ee10",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "004889a0f948600fda8891c37bff7569fe3cfbd3273af71ee6fde34353f8019c",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_10a6d8b3-2d08-4843-a1e3-2599b8d503c7",
+          "source_sha256": "fb416ce29e1217dfe38b272960d5b2580aa8c52fc6a6f0ce9c5b5d87ea76ae1a",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 214,
+            "output_tokens": 2291,
+            "total_tokens": 3017
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 3,
+      "usage": {
+        "input_tokens": 232,
+        "output_tokens": 355,
+        "total_tokens": 2123
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "turn-right-walk8-stop-once",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -60.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "我先说一遍,右转60度,往前走8米,停,复述,右转60度,往前走8米,停,只做一遍",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.202920499999891,
+  "provider_document": {
+    "created_at": 1791364109,
+    "id": "resp_00163ed5-0341-4c24-9c33-7a638b10d7e0",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_00163ed5-0341-4c24-9c33-7a638b10d7e0",
+        "reasoning_content": "We need answer only JSON per spec. Need inspect source. Chinese: \"先向前移动400厘米，再向左转45°，然后停止\" = First move forward 400 centimeters, then turn left 45°, then stop.\n\nNeed check seven dimensions in order:\n1 action multiplicity: actions move_forward, turn, stop. Unique? yes.\n2 action order: first move, then turn, then stop. unique.\n3 correction/edit scope: none. U.\n4 repetition scope: none. U.\n5 reference resolution: none? left relative to current orientation? \"向左转\" standard. No ambiguous references. U.\n6 temporal relations: 先...再...然后 = sequence. unique.\n7 explicitly unresolved relations: none. U.\n\nPlan:\nwalk_forward positive meters; cm converts. 400 cm = 4 meters. Should plan number be meters likely [\"walk_forward\",4]. turn left 45°: left positive, signed degrees +45. stop.\n\nCheck bounds: stand none. Turn abs <=180 yes. 1..32 actions yes.\n\nNeed output exactly status, checks, plan, issues. JSON. Ensure no commentary. Use [\"walk_forward\",4], [\"turn\",45], [\"stop\"]. Is \"向左转45°\" could be left 45 positive. Good.\n\nNeed consider unit ° supported? Explicit supported distance/angle/time units required. Degree symbol is supported likely. Source has 厘米 and °. Fine.\n\nReturn.",
+        "summary": [
+          {
+            "text": "We need answer only JSON per spec. Need inspect source. Chinese: \"先向前移动400厘米，再向左转45°，然后停止\" = First move forward 400 centimeters, then turn left 45°, then stop.\n\nNeed check seven dimensions in order:\n1 action multiplicity: actions move_forward, turn, stop. Unique? yes.\n2 action order: first move, then turn, then stop. unique.\n3 correction/edit scope: none. U.\n4 repetition scope: none. U.\n5 reference resolution: none? left relative to current orientation? \"向左转\" standard. No ambiguous references. U.\n6 temporal relations: 先...再...然后 = sequence. unique.\n7 explicitly unresolved relations: none. U.\n\nPlan:\nwalk_forward positive meters; cm converts. 400 cm = 4 meters. Should plan number be meters likely [\"walk_forward\",4]. turn left 45°: left positive, signed degrees +45. stop.\n\nCheck bounds: stand none. Turn abs <=180 yes. 1..32 actions yes.\n\nNeed output exactly status, checks, plan, issues. JSON. Ensure no commentary. Use [\"walk_forward\",4], [\"turn\",45], [\"stop\"]. Is \"向左转45°\" could be left 45 positive. Good.\n\nNeed consider unit ° supported? Explicit supported distance/angle/time units required. Degree symbol is supported likely. Source has 厘米 and °. Fine.\n\nReturn.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_00163ed5-0341-4c24-9c33-7a638b10d7e0",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 194,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 348,
+      "output_tokens_details": {
+        "reasoning_tokens": 298
+      },
+      "total_tokens": 1054
+    }
+  },
+  "request_sha256": "6d1f11c9a850d738b7214f265f826326acf09aadb34144391d24375a0af2a902",
+  "status": "SUCCESS"
+}

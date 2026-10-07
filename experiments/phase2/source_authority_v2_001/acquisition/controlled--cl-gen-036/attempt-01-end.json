@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.556624400000146,
+  "provider_document": {
+    "created_at": 1791364272,
+    "id": "resp_bbfb9911-9e7d-4799-a3b7-2605e5551fee",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_bbfb9911-9e7d-4799-a3b7-2605e5551fee",
+        "reasoning_content": "We need answer one JSON object. Need inspect source. Need follow instructions. Need determine status and checks/plan/issues. Source Chinese: \"往前移动10m然后顺时针转90度接着往前移动6.0米最后停下\"\n\nTranslate: Move forward 10m, then turn clockwise 90 degrees, then move forward 6.0 meters, finally stop.\n\nNeed check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed produce plan using skills. stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative), stop(no scalar). Explicit supported distance/angle/time units required. Stand is (0,60], absolute turn <=180, 1..32 actions. Need parse.\n\nActions:\n1. 往前移动10m = walk_forward 10 (meters)\n2. 然后顺时针转90度 = turn? clockwise = negative: -90 degrees. \"顺时针\" clockwise. \"转90度\" angle 90 deg. supported? degrees explicit \"度\" yes.\n3. 接着往前移动6.0米 = walk_forward 6.0\n4. 最后停下 = stop.\n\nNo stand. Order clear. Multiplicity? Each action unique, repetition none. Correction/edit none. Reference none. Temporal relations: \"然后\", \"接着\", \"最后\" sequential. Explicit unresolved none.\n\nPotential issue: \"往前移动\" maybe walk_forward positive meters. \"10m\" unit explicit meters. \"6.0米\" explicit. Turn clockwise 90 deg. Absolute <=180. Nonzero. Plan length 4 within 1..32. Status AUTHORIZED_UNIQUE. Checks all U. Plan [[\"walk_forward\",10],[\"turn\",-90],[\"walk_forward\",6.0],[\"stop\"]]. Need JSON numbers. Is 6.0 acceptable. Use exactly fields status, checks, plan, issues. checks seven strings.\n\nNeed ensure no commentary. Final one JSON object.\n\nDouble-check: \"往前移动\" forward move. Could be walk_forward. \"顺时针转90度\" turn clockwise. Left/counter positive, right/counter negative. Clockwise negative. yes.\n\nNeed consider \"最后停下\" stop. good.\n\nNo issues.\n\nFinal.",
+        "summary": [
+          {
+            "text": "We need answer one JSON object. Need inspect source. Need follow instructions. Need determine status and checks/plan/issues. Source Chinese: \"往前移动10m然后顺时针转90度接着往前移动6.0米最后停下\"\n\nTranslate: Move forward 10m, then turn clockwise 90 degrees, then move forward 6.0 meters, finally stop.\n\nNeed check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed produce plan using skills. stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative), stop(no scalar). Explicit supported distance/angle/time units required. Stand is (0,60], absolute turn <=180, 1..32 actions. Need parse.\n\nActions:\n1. 往前移动10m = walk_forward 10 (meters)\n2. 然后顺时针转90度 = turn? clockwise = negative: -90 degrees. \"顺时针\" clockwise. \"转90度\" angle 90 deg. supported? degrees explicit \"度\" yes.\n3. 接着往前移动6.0米 = walk_forward 6.0\n4. 最后停下 = stop.\n\nNo stand. Order clear. Multiplicity? Each action unique, repetition none. Correction/edit none. Reference none. Temporal relations: \"然后\", \"接着\", \"最后\" sequential. Explicit unresolved none.\n\nPotential issue: \"往前移动\" maybe walk_forward positive meters. \"10m\" unit explicit meters. \"6.0米\" explicit. Turn clockwise 90 deg. Absolute <=180. Nonzero. Plan length 4 within 1..32. Status AUTHORIZED_UNIQUE. Checks all U. Plan [[\"walk_forward\",10],[\"turn\",-90],[\"walk_forward\",6.0],[\"stop\"]]. Need JSON numbers. Is 6.0 acceptable. Use exactly fields status, checks, plan, issues. checks seven strings.\n\nNeed ensure no commentary. Final one JSON object.\n\nDouble-check: \"往前移动\" forward move. Could be walk_forward. \"顺时针转90度\" turn clockwise. Left/counter positive, right/counter negative. Clockwise negative. yes.\n\nNeed consider \"最后停下\" stop. good.\n\nNo issues.\n\nFinal.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",10],[\"turn\",-90],[\"walk_forward\",6.0],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_bbfb9911-9e7d-4799-a3b7-2605e5551fee",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 199,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 559,
+      "output_tokens_details": {
+        "reasoning_tokens": 499
+      },
+      "total_tokens": 1270
+    }
+  },
+  "request_sha256": "f346ddb51165ecd7db5f0a9a8df1d7b6cec5de69d50eff6cc3a36ffb46e9c103",
+  "status": "SUCCESS"
+}

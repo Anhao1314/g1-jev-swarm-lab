@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.184633400000166,
+  "provider_document": {
+    "created_at": 1791364224,
+    "id": "resp_336aea12-5519-42c2-b216-d48e2a2cba27",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_336aea12-5519-42c2-b216-d48e2a2cba27",
+        "reasoning_content": "We need answer JSON only. Need inspect source Chinese. Need certify. Source: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\"\n\nWe need parse actions in order:\n1 前进 6米 -> walk_forward 6 meters. Positive.\n2 右转45度 -> right turn. Convention: left/counterclockwise positive, right/clockwise negative. So turn -45.\n3 前进6米 -> walk_forward 6.\n4 左转45度 -> turn +45.\n5 停止 -> stop.\n\nNeed check seven dimensions exact order:\naction multiplicity\naction order\ncorrection/edit scope\nrepetition scope\nreference resolution\ntemporal relations\nexplicitly unresolved relations\n\nNeed determine U/A/?.\n\nNo ambiguity? All unique. Need plan bounded: 5 actions within 1..32. Distances positive 6. Turns nonzero signed degrees abs <=180. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE if all U, complete ordered plan, empty issues.\n\nNeed ensure temporal words 然后, 接着, 再, 最后 establish order. U. No edits, repetitions, references. Explicit unresolved none.\n\nPlan format uses [skill, number], except [\"stop\"]. For walk_forward, number meters. For turn, signed degrees. stand? none.\n\nNeed output exactly status, checks, plan, issues.\n\nNeed be careful: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\" We should output [\"walk_forward\",6], [\"turn\",-45], [\"walk_forward\",6], [\"turn\",45], [\"stop\"].\n\nNeed checks all \"U\". Issues [].\n\nNeed no commentary. Ensure JSON valid.",
+        "summary": [
+          {
+            "text": "We need answer JSON only. Need inspect source Chinese. Need certify. Source: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\"\n\nWe need parse actions in order:\n1 前进 6米 -> walk_forward 6 meters. Positive.\n2 右转45度 -> right turn. Convention: left/counterclockwise positive, right/clockwise negative. So turn -45.\n3 前进6米 -> walk_forward 6.\n4 左转45度 -> turn +45.\n5 停止 -> stop.\n\nNeed check seven dimensions exact order:\naction multiplicity\naction order\ncorrection/edit scope\nrepetition scope\nreference resolution\ntemporal relations\nexplicitly unresolved relations\n\nNeed determine U/A/?.\n\nNo ambiguity? All unique. Need plan bounded: 5 actions within 1..32. Distances positive 6. Turns nonzero signed degrees abs <=180. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE if all U, complete ordered plan, empty issues.\n\nNeed ensure temporal words 然后, 接着, 再, 最后 establish order. U. No edits, repetitions, references. Explicit unresolved none.\n\nPlan format uses [skill, number], except [\"stop\"]. For walk_forward, number meters. For turn, signed degrees. stand? none.\n\nNeed output exactly status, checks, plan, issues.\n\nNeed be careful: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\" We should output [\"walk_forward\",6], [\"turn\",-45], [\"walk_forward\",6], [\"turn\",45], [\"stop\"].\n\nNeed checks all \"U\". Issues [].\n\nNeed no commentary. Ensure JSON valid.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",6],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_336aea12-5519-42c2-b216-d48e2a2cba27",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 205,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 430,
+      "output_tokens_details": {
+        "reasoning_tokens": 367
+      },
+      "total_tokens": 1147
+    }
+  },
+  "request_sha256": "ae8cc76cfbbef046f497900845f0609ceef0a8ae6cf680b5a46bee05c3e6986b",
+  "status": "SUCCESS"
+}

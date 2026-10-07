@@ -1,0 +1,293 @@
+{
+  "added_wall_s": 25.625728600000002,
+  "live_evidence": {
+    "events": [
+      {
+        "error_type": "LLMBackendError",
+        "http_status": 502,
+        "index": 1,
+        "latency_s": 21.06214650000038,
+        "request_sha256": "f76c0f3c4cf46da02ed64e46eba1f72cc5389d80dd7b919d78374a9ae592a4eb",
+        "status": "API_ERROR"
+      },
+      {
+        "index": 2,
+        "latency_s": 4.057044699999096,
+        "provider_document": {
+          "created_at": 1791364073,
+          "id": "resp_273958c5-32db-4c37-9e80-01c4afb8682f",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_273958c5-32db-4c37-9e80-01c4afb8682f",
+              "reasoning_content": "We need answer JSON only. Need inspect source. Chinese: \"先后就照这个：站1秒 → 前进6米 → 右转90度 → 前进4米 → 停止。\"\n\nNeed determine certificate. Source only. Need parse entire source. It says \"先后就照这个：\" Maybe \"First/later just follow this:\"? Then sequence with arrows: 站1秒 → 前进6米 → 右转90度 → 前进4米 → 停止。\n\nNeed check seven dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need decide U/A/?.\n\nNeed decode actions:\n- 站1秒: stand 1 second. Legal stand (0,60]. duration explicit 1秒.\n- 前进6米: walk_forward positive meters 6. Units explicit.\n- 右转90度: turn right 90 degrees. Convention: right/clockwise negative => -90. Nonzero signed degrees, absolute <=180.\n- 前进4米: walk_forward 4.\n- 停止: stop.\n\nOrder explicit by arrows and \"先后\" maybe sequence. No ambiguity? Multiplicity: each action once? The phrase \"先后就照这个：\" just says \"in order, just follow this:\" not repeat. Arrow sequence. Action multiplicity unique: each appears once. Order unique due arrows. Correction/edit scope: none. Repetition scope: none. Reference resolution: \"这个\" refers to following list? Reference okay? Need consider \"这个\" reference to the listed sequence. Is that reference resolved? It is deictic \"this\" followed by colon and list; likely refers to the following content. In source-only certificate, reference resolution? We can resolve to list. U. Temporal relations: \"先后\" means sequentially; arrows convey order. Also \"then\"? Not explicit but arrows. U. Explicitly unresolved: none. So authorized unique. Need plan: [[\"stand\",1],[\"walk_forward\",6],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]].\n\nNeed ensure stand duration default only when absent. Here 1 sec. Good. Turn right negative.\n\nBut need consider \"先后就照这个\" maybe \"First and last just according to this\" Could be \"sooner or later just follow this\"? \"先后\" can mean \"order\" or \"in sequence\" and \"就照这个\" = just do according to this. The colon introduces sequence. No ambiguity.\n\nNeed output exactly JSON object no commentary. checks all U. status AUTHORIZED_UNIQUE. plan as above. issues [].\n\nNeed be cautious about \"站1秒\" could be stand(1). yes.\n\nCheck legal linear plan constraints: 1..32 actions. 5 actions. walk_forward positive meters. turn signed degrees nonzero abs <=180. stop no scalar. Good.\n\nNeed ensure no issue with \"右转90度\": right/clockwise negative, so -90. \"度\" unit. Good.\n\nFinal JSON.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source. Chinese: \"先后就照这个：站1秒 → 前进6米 → 右转90度 → 前进4米 → 停止。\"\n\nNeed determine certificate. Source only. Need parse entire source. It says \"先后就照这个：\" Maybe \"First/later just follow this:\"? Then sequence with arrows: 站1秒 → 前进6米 → 右转90度 → 前进4米 → 停止。\n\nNeed check seven dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need decide U/A/?.\n\nNeed decode actions:\n- 站1秒: stand 1 second. Legal stand (0,60]. duration explicit 1秒.\n- 前进6米: walk_forward positive meters 6. Units explicit.\n- 右转90度: turn right 90 degrees. Convention: right/clockwise negative => -90. Nonzero signed degrees, absolute <=180.\n- 前进4米: walk_forward 4.\n- 停止: stop.\n\nOrder explicit by arrows and \"先后\" maybe sequence. No ambiguity? Multiplicity: each action once? The phrase \"先后就照这个：\" just says \"in order, just follow this:\" not repeat. Arrow sequence. Action multiplicity unique: each appears once. Order unique due arrows. Correction/edit scope: none. Repetition scope: none. Reference resolution: \"这个\" refers to following list? Reference okay? Need consider \"这个\" reference to the listed sequence. Is that reference resolved? It is deictic \"this\" followed by colon and list; likely refers to the following content. In source-only certificate, reference resolution? We can resolve to list. U. Temporal relations: \"先后\" means sequentially; arrows convey order. Also \"then\"? Not explicit but arrows. U. Explicitly unresolved: none. So authorized unique. Need plan: [[\"stand\",1],[\"walk_forward\",6],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]].\n\nNeed ensure stand duration default only when absent. Here 1 sec. Good. Turn right negative.\n\nBut need consider \"先后就照这个\" maybe \"First and last just according to this\" Could be \"sooner or later just follow this\"? \"先后\" can mean \"order\" or \"in sequence\" and \"就照这个\" = just do according to this. The colon introduces sequence. No ambiguity.\n\nNeed output exactly JSON object no commentary. checks all U. status AUTHORIZED_UNIQUE. plan as above. issues [].\n\nNeed be cautious about \"站1秒\" could be stand(1). yes.\n\nCheck legal linear plan constraints: 1..32 actions. 5 actions. walk_forward positive meters. turn signed degrees nonzero abs <=180. stop no scalar. Good.\n\nNeed ensure no issue with \"右转90度\": right/clockwise negative, so -90. \"度\" unit. Good.\n\nFinal JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",6],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_273958c5-32db-4c37-9e80-01c4afb8682f",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 209,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 689,
+            "output_tokens_details": {
+              "reasoning_tokens": 626
+            },
+            "total_tokens": 1410
+          }
+        },
+        "request_sha256": "f76c0f3c4cf46da02ed64e46eba1f72cc5389d80dd7b919d78374a9ae592a4eb",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 2,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 2,
+        "finish_reason": "completed",
+        "latency_s": 4.053756600002089,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_273958c5-32db-4c37-9e80-01c4afb8682f",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",6],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 209,
+          "output_tokens": 689,
+          "total_tokens": 1410
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.853978500001176,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "stand-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 29,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 519,
+      "raw_response_sha256": "848d0f57f0c81cf7b2c67c0133e963909b31cb2a84454e7523ee0bb671bd7c11",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_46ab98a3-97f7-418a-b6be-d91adf7b83a6",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 2,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "stand",
+                1.0
+              ],
+              [
+                "walk_forward",
+                6.0
+              ],
+              [
+                "turn",
+                -90.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 25.62484929999846,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 4.053756600002089,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",1],[\"walk_forward\",6],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "b85938f8d69f21769a170ddf78e5cd66fca269beffa6aba70824d2b81f674353",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "904f9fc573b3c55427564ed9772a1a194276bb40a21fd339a28dbaa964803e0e",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_273958c5-32db-4c37-9e80-01c4afb8682f",
+          "source_sha256": "baf59dba0f08659cccb6437c12150ea161e7da15aafeaa882783964c237dde23",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 209,
+            "output_tokens": 689,
+            "total_tokens": 1410
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 5,
+      "usage": {
+        "input_tokens": 227,
+        "output_tokens": 391,
+        "total_tokens": 2154
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "stand-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 1.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先后就照这个,站1秒,前进6米,右转90度,前进4米,停止",
+    "status": "SUCCESS"
+  }
+}

@@ -1,0 +1,274 @@
+{
+  "input_binding": {
+    "population": "controlled",
+    "sample_id": "cl-gen-035",
+    "source_sha256": "949d12f1f4d37af8e8258858c4f5b86716b0ad17ebbb9632346acfd5ed91eb0c",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/controlled--cl-gen-035.json",
+    "v1_sample_sha256": "26871b9a8dc2d95fd8ca2eb6a18bfb2e16020bbc3f0029c4f134067d9054d369"
+  },
+  "v2": {
+    "added_wall_s": 5.143526500000007,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 5.137286700002733,
+          "provider_document": {
+            "created_at": 1791364272,
+            "id": "resp_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+                "reasoning_content": "We need answer JSON only. Need inspect source. Chinese: \"站立2秒然后向前走四米接着立即停止\" = Stand 2 seconds then walk forward 4 meters then immediately stop.\n\nNeed check seven dimensions exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed produce status etc.\n\nWe need parse actions: stand 2 seconds, walk_forward 4 meters, stop immediately. \"立即停止\" means immediately stop. Stop no scalar. Order: stand, walk_forward, stop. Multiplicity: each once? \"立即\" modifies stop temporal, not action multiplicity. Duration present for stand 2 seconds. Distance present 4 meters. Turn none. Units explicit? \"秒\" seconds, \"米\" meters. Positive meters. Action count 3 within 1..32. Stand duration 2 within (0,60]. Walk positive 4. Stop no scalar.\n\nTemporal relations: \"然后\" then, \"接着\" then, \"立即\" immediately before stop? Could indicate immediate stop after walking, no delay. Does \"立即停止\" maybe means stop immediately (as an action) with temporal relation to prior action immediate. Is that a temporal relation requiring representation? Plan supports stop after walk. It doesn't encode immediacy delay. Is \"立即\" explicit temporal relation that may be unresolved? Need decide if authorized. The toy included \"then stop\" no immediate. Here immediate could be adverbial. Does legal plan support \"immediately\"? No parameter for delay. But it may just mean stop now after walk, sequence is immediate. No issue.\n\nNeed check correction/edit scope: none. Repetition: none. Reference: none. Temporal relations: sequence \"然后\", \"接着\", \"立即\" all resolved to ordered actions. Explicitly unresolved: none.\n\nThus AUTHORIZED_UNIQUE with plan [[\"stand\",2],[\"walk_forward\",4],[\"stop\"]], checks all U issues [].\n\nNeed ensure no \"stand\" default? It has duration 2 seconds, so [stand,2]. Walk forward 4 meters => [walk_forward,4]. Stop [\"stop\"].\n\nReturn JSON only. Ensure exact fields status, checks, plan, issues. No commentary.\n\nNeed consider \"立即\" might be temporal relation \"immediate\" but plan doesn't encode exact delay. The instruction says temporal relations must be honored. Is \"immediately\" a temporal relation that cannot be represented? It says stop has no scalar; maybe \"immediate\" is a temporal modifier that could be unrepresentable? But legal plans only sequence, and default? Let's analyze.\n\nWe need be careful: The certificate checks seven dimensions. For temporal relations, if source says \"然后\" and \"接着\" (then, next) and \"立即\" (immediately) after walking. \"立即停止\" could be interpreted as stop immediately (not delayed). In plan, actions are sequential; there is no explicit delay between actions, so immediate is satisfied. The allowed actions don't include wait/delay, so default transition is immediate. So U.\n\nPotential ambiguity: \"向前走四米\" means walk forward four meters. \"向前\" direction. Skill walk_forward handles forward, no extra. Good.\n\n\"接着立即停止\" Could parse as \"then immediately stop\"; stop after walk. Fine.\n\nAction multiplicity: exactly three. Order: stand, walk, stop. Correction/edit: none. Repetition: none. Reference: none. Temporal: then/next/immediate. Unresolved: none. All U.\n\nNeed final JSON.",
+                "summary": [
+                  {
+                    "text": "We need answer JSON only. Need inspect source. Chinese: \"站立2秒然后向前走四米接着立即停止\" = Stand 2 seconds then walk forward 4 meters then immediately stop.\n\nNeed check seven dimensions exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed produce status etc.\n\nWe need parse actions: stand 2 seconds, walk_forward 4 meters, stop immediately. \"立即停止\" means immediately stop. Stop no scalar. Order: stand, walk_forward, stop. Multiplicity: each once? \"立即\" modifies stop temporal, not action multiplicity. Duration present for stand 2 seconds. Distance present 4 meters. Turn none. Units explicit? \"秒\" seconds, \"米\" meters. Positive meters. Action count 3 within 1..32. Stand duration 2 within (0,60]. Walk positive 4. Stop no scalar.\n\nTemporal relations: \"然后\" then, \"接着\" then, \"立即\" immediately before stop? Could indicate immediate stop after walking, no delay. Does \"立即停止\" maybe means stop immediately (as an action) with temporal relation to prior action immediate. Is that a temporal relation requiring representation? Plan supports stop after walk. It doesn't encode immediacy delay. Is \"立即\" explicit temporal relation that may be unresolved? Need decide if authorized. The toy included \"then stop\" no immediate. Here immediate could be adverbial. Does legal plan support \"immediately\"? No parameter for delay. But it may just mean stop now after walk, sequence is immediate. No issue.\n\nNeed check correction/edit scope: none. Repetition: none. Reference: none. Temporal relations: sequence \"然后\", \"接着\", \"立即\" all resolved to ordered actions. Explicitly unresolved: none.\n\nThus AUTHORIZED_UNIQUE with plan [[\"stand\",2],[\"walk_forward\",4],[\"stop\"]], checks all U issues [].\n\nNeed ensure no \"stand\" default? It has duration 2 seconds, so [stand,2]. Walk forward 4 meters => [walk_forward,4]. Stop [\"stop\"].\n\nReturn JSON only. Ensure exact fields status, checks, plan, issues. No commentary.\n\nNeed consider \"立即\" might be temporal relation \"immediate\" but plan doesn't encode exact delay. The instruction says temporal relations must be honored. Is \"immediately\" a temporal relation that cannot be represented? It says stop has no scalar; maybe \"immediate\" is a temporal modifier that could be unrepresentable? But legal plans only sequence, and default? Let's analyze.\n\nWe need be careful: The certificate checks seven dimensions. For temporal relations, if source says \"然后\" and \"接着\" (then, next) and \"立即\" (immediately) after walking. \"立即停止\" could be interpreted as stop immediately (not delayed). In plan, actions are sequential; there is no explicit delay between actions, so immediate is satisfied. The allowed actions don't include wait/delay, so default transition is immediate. So U.\n\nPotential ambiguity: \"向前走四米\" means walk forward four meters. \"向前\" direction. Skill walk_forward handles forward, no extra. Good.\n\n\"接着立即停止\" Could parse as \"then immediately stop\"; stop after walk. Fine.\n\nAction multiplicity: exactly three. Order: stand, walk, stop. Correction/edit: none. Repetition: none. Reference: none. Temporal: then/next/immediate. Unresolved: none. All U.\n\nNeed final JSON.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 192,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 789,
+              "output_tokens_details": {
+                "reasoning_tokens": 739
+              },
+              "total_tokens": 1493
+            }
+          },
+          "request_sha256": "a566ae4161797832ce088b27c3854ae3327fdd47f7ec04721cbeec5e076116d7",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 5.134990700000344,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 192,
+            "output_tokens": 789,
+            "total_tokens": 1493
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 2.4375567999995837,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "mission-stand-walk-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 17,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stand-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stand\",\"parameters\":{\"duration_s\":2.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s2\"]}]},\"error_code\":null}",
+        "raw_response_sha256": "15e21cfcee856ae33541e3d87ef7ad6db9216b9bd846efe1e62d7a6c16ff3f18",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_e735c53b-53b3-41d6-ad62-cc6c6c80d6c3",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "stand",
+                  2.0
+                ],
+                [
+                  "walk_forward",
+                  4.0
+                ],
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 5.141688599996996,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 5.134990700000344,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "d6120493e3b9f79e20e7b3a30a3b69f44ede59127069e38004f9dfd70f2b68b4",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "c9f042f3cc75b097f2269349706beea1d8bc145c088c1aa1397e9d6eb52b9658",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_c322af2c-6f9a-4f46-901d-ce4e6b274d0e",
+            "source_sha256": "949d12f1f4d37af8e8258858c4f5b86716b0ad17ebbb9632346acfd5ed91eb0c",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 192,
+              "output_tokens": 789,
+              "total_tokens": 1493
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 3,
+        "usage": {
+          "input_tokens": 210,
+          "output_tokens": 308,
+          "total_tokens": 2054
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "mission-stand-walk-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "duration_s": 2.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "站立2秒然后向前走四米接着立即停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

@@ -1,0 +1,285 @@
+{
+  "added_wall_s": 3.1927571999985958,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 3.184633400000166,
+        "provider_document": {
+          "created_at": 1791364224,
+          "id": "resp_336aea12-5519-42c2-b216-d48e2a2cba27",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_336aea12-5519-42c2-b216-d48e2a2cba27",
+              "reasoning_content": "We need answer JSON only. Need inspect source Chinese. Need certify. Source: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\"\n\nWe need parse actions in order:\n1 前进 6米 -> walk_forward 6 meters. Positive.\n2 右转45度 -> right turn. Convention: left/counterclockwise positive, right/clockwise negative. So turn -45.\n3 前进6米 -> walk_forward 6.\n4 左转45度 -> turn +45.\n5 停止 -> stop.\n\nNeed check seven dimensions exact order:\naction multiplicity\naction order\ncorrection/edit scope\nrepetition scope\nreference resolution\ntemporal relations\nexplicitly unresolved relations\n\nNeed determine U/A/?.\n\nNo ambiguity? All unique. Need plan bounded: 5 actions within 1..32. Distances positive 6. Turns nonzero signed degrees abs <=180. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE if all U, complete ordered plan, empty issues.\n\nNeed ensure temporal words 然后, 接着, 再, 最后 establish order. U. No edits, repetitions, references. Explicit unresolved none.\n\nPlan format uses [skill, number], except [\"stop\"]. For walk_forward, number meters. For turn, signed degrees. stand? none.\n\nNeed output exactly status, checks, plan, issues.\n\nNeed be careful: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\" We should output [\"walk_forward\",6], [\"turn\",-45], [\"walk_forward\",6], [\"turn\",45], [\"stop\"].\n\nNeed checks all \"U\". Issues [].\n\nNeed no commentary. Ensure JSON valid.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source Chinese. Need certify. Source: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\"\n\nWe need parse actions in order:\n1 前进 6米 -> walk_forward 6 meters. Positive.\n2 右转45度 -> right turn. Convention: left/counterclockwise positive, right/clockwise negative. So turn -45.\n3 前进6米 -> walk_forward 6.\n4 左转45度 -> turn +45.\n5 停止 -> stop.\n\nNeed check seven dimensions exact order:\naction multiplicity\naction order\ncorrection/edit scope\nrepetition scope\nreference resolution\ntemporal relations\nexplicitly unresolved relations\n\nNeed determine U/A/?.\n\nNo ambiguity? All unique. Need plan bounded: 5 actions within 1..32. Distances positive 6. Turns nonzero signed degrees abs <=180. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE if all U, complete ordered plan, empty issues.\n\nNeed ensure temporal words 然后, 接着, 再, 最后 establish order. U. No edits, repetitions, references. Explicit unresolved none.\n\nPlan format uses [skill, number], except [\"stop\"]. For walk_forward, number meters. For turn, signed degrees. stand? none.\n\nNeed output exactly status, checks, plan, issues.\n\nNeed be careful: \"前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。\" We should output [\"walk_forward\",6], [\"turn\",-45], [\"walk_forward\",6], [\"turn\",45], [\"stop\"].\n\nNeed checks all \"U\". Issues [].\n\nNeed no commentary. Ensure JSON valid.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",6],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_336aea12-5519-42c2-b216-d48e2a2cba27",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 205,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 430,
+            "output_tokens_details": {
+              "reasoning_tokens": 367
+            },
+            "total_tokens": 1147
+          }
+        },
+        "request_sha256": "ae8cc76cfbbef046f497900845f0609ceef0a8ae6cf680b5a46bee05c3e6986b",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 3.1832155999982206,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_336aea12-5519-42c2-b216-d48e2a2cba27",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",6],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 205,
+          "output_tokens": 430,
+          "total_tokens": 1147
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.4996526000031736,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 27,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s3\"]},{\"id\":\"s5\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s4\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "e5beade3d2899d8c0bbed82807bc971680c9b6290aa138d2ff9553a6c94b844d",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_87735101-567f-42cc-85be-a06a676c81e3",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "walk_forward",
+                6.0
+              ],
+              [
+                "turn",
+                -45.0
+              ],
+              [
+                "walk_forward",
+                6.0
+              ],
+              [
+                "turn",
+                45.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 3.1916268999993918,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 3.1832155999982206,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",6],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "63ca908b1763ffd0fd521763b7eccb872e53aff19265466f79fbbe59fe22285c",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "58c3a161ec40be9f8b9d9383d405446ea1b37d0acdf59d7c7806d88fd546c697",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_336aea12-5519-42c2-b216-d48e2a2cba27",
+          "source_sha256": "30f2d15cd6c8e0d3d640ff10a676c3766fea1a85761b6577fa522b4a40c0df60",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 205,
+            "output_tokens": 430,
+            "total_tokens": 1147
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 5,
+      "usage": {
+        "input_tokens": 223,
+        "output_tokens": 336,
+        "total_tokens": 2095
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "前进6米然后右转45度接着前进6米再左转45度最后停止",
+    "status": "SUCCESS"
+  }
+}

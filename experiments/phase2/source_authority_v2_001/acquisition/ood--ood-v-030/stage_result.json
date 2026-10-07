@@ -1,0 +1,299 @@
+{
+  "added_wall_s": 6.242601800000557,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 6.238505500001338,
+        "provider_document": {
+          "created_at": 1791363945,
+          "id": "resp_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+              "reasoning_content": "We need answer only JSON. Need inspect source. Need reason carefully. Need certify.\n\nSource: \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nChinese. Need parse actions. \"站2秒\" stand 2 seconds. \"前进8米\" walk_forward 8 meters. \"｜\" separator. \"右转30度\" turn right 30 degrees => signed -30. \"再前进10米\" then? \"再\" then/again forward 10m. \"｜\" separator. \"左转45度\" turn left 45 => +45. \"停止\" stop. \"，按这行从头往后。\" Means \"according to this line from beginning to end\" or \"in this line from start to back.\" This is meta-instruction about order, not action. Need determine if action order specified? Source lists actions separated by vertical bars, then says according to this line from beginning to end. So order is stand, walk 8, turn right, walk 10, turn left, stop. Need check dimensions.\n\nAction multiplicity: count actions exactly? There are stand, walk, turn, walk, turn, stop. Multiple walk and turn, but each occurrence distinct? Need \"Check dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\" Need decide U/A/? for each.\n\nNeed parse \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nPotential ambiguities: \"站2秒前进8米\" could be \"stand for 2 seconds and move forward 8 meters\" no separator between them? Actually Chinese phrase without comma between 站2秒 and 前进8米. Could be sequential stand 2s then forward 8m. Then vertical bars. \"右转30度再前进10米\" right turn 30 then forward 10. \"左转45度停止\" left turn 45 then stop? \"左转45度停止\" no \"再\" between turn and stop; could be \"turn left 45 degrees [and] stop\" or \"turn left 45 degrees stop\" likely sequential. \"按这行从头往后\" tells order from beginning to end. So order clear.\n\nNeed check if \"站2秒前进8米\" could be two actions or one? Stand 2 seconds, forward 8m. Multiplicity: six actions? Stand, walk, turn, walk, turn, stop. But perhaps \"站2秒前进8米\" no pause; still two actions. \"右转30度再前进10米\" clear. \"左转45度停止\" maybe stop after turn. Multiplicity unique.\n\nAction order: from beginning to end. U.\n\nCorrection/edit scope: no edits/corrections. U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: \"这行\" refers to current line? \"按这行从头往后\" refers to this line? It is a reference to the line/sequence. Resolvable as source line. U? Need maybe \"这行\" is deictic, but in source, it's self-reference. It instructs order. Is that reference resolution? It is a reference to the source line. Context sufficient: \"this line\" refers to the line being read. U likely.\n\nTemporal relations: \"2秒\" duration for stand. \"再\" means then. \"左转45度停止\" maybe immediate after. \"按这行从头往后\" order. Temporal relations clear sequential. Stand duration 2s. Walk distances. Turn angles. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]]. Need ensure turn sign: right negative, left positive. \"右转30度\" = -30; \"左转45度\" = 45. Max actions 6 <=32. Stand seconds within (0,60]. Turn absolute <=180. Walk positive. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE. Checks all U. Issues empty.\n\nBut need be careful about \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\" The vertical bar \"｜\" maybe separates groups, but within group \"站2秒前进8米\" might be ambiguous because no punctuation. However Chinese often concatenates actions. The instruction \"按这行从头往后\" resolves order. \"站2秒前进8米\" could mean \"stand for 2 seconds, move forward 8 meters\" yes.\n\nAny issue with \"站2秒\" stand duration: Stand skill arguments? Legal plan stand(seconds; default 2.0 only when duration absent). Here explicit 2 seconds. \"2秒\" supported unit seconds. yes.\n\n\"前进8米\" walk_forward positive meters; \"8米\" meters. \"前进10米\" yes.\n\n\"右转30度\" turn signed degrees. Unit \"度\" supported angle. yes.\n\n\"左转45度\" yes.\n\n\"停止\" stop no scalar. yes.\n\nNo quantity missing.\n\nNeed produce exactly JSON object no commentary. Ensure checks array seven strings. status etc. plan arrays.\n\nLet's final.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source. Need reason carefully. Need certify.\n\nSource: \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nChinese. Need parse actions. \"站2秒\" stand 2 seconds. \"前进8米\" walk_forward 8 meters. \"｜\" separator. \"右转30度\" turn right 30 degrees => signed -30. \"再前进10米\" then? \"再\" then/again forward 10m. \"｜\" separator. \"左转45度\" turn left 45 => +45. \"停止\" stop. \"，按这行从头往后。\" Means \"according to this line from beginning to end\" or \"in this line from start to back.\" This is meta-instruction about order, not action. Need determine if action order specified? Source lists actions separated by vertical bars, then says according to this line from beginning to end. So order is stand, walk 8, turn right, walk 10, turn left, stop. Need check dimensions.\n\nAction multiplicity: count actions exactly? There are stand, walk, turn, walk, turn, stop. Multiple walk and turn, but each occurrence distinct? Need \"Check dimensions in exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\" Need decide U/A/? for each.\n\nNeed parse \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\"\n\nPotential ambiguities: \"站2秒前进8米\" could be \"stand for 2 seconds and move forward 8 meters\" no separator between them? Actually Chinese phrase without comma between 站2秒 and 前进8米. Could be sequential stand 2s then forward 8m. Then vertical bars. \"右转30度再前进10米\" right turn 30 then forward 10. \"左转45度停止\" left turn 45 then stop? \"左转45度停止\" no \"再\" between turn and stop; could be \"turn left 45 degrees [and] stop\" or \"turn left 45 degrees stop\" likely sequential. \"按这行从头往后\" tells order from beginning to end. So order clear.\n\nNeed check if \"站2秒前进8米\" could be two actions or one? Stand 2 seconds, forward 8m. Multiplicity: six actions? Stand, walk, turn, walk, turn, stop. But perhaps \"站2秒前进8米\" no pause; still two actions. \"右转30度再前进10米\" clear. \"左转45度停止\" maybe stop after turn. Multiplicity unique.\n\nAction order: from beginning to end. U.\n\nCorrection/edit scope: no edits/corrections. U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: \"这行\" refers to current line? \"按这行从头往后\" refers to this line? It is a reference to the line/sequence. Resolvable as source line. U? Need maybe \"这行\" is deictic, but in source, it's self-reference. It instructs order. Is that reference resolution? It is a reference to the source line. Context sufficient: \"this line\" refers to the line being read. U likely.\n\nTemporal relations: \"2秒\" duration for stand. \"再\" means then. \"左转45度停止\" maybe immediate after. \"按这行从头往后\" order. Temporal relations clear sequential. Stand duration 2s. Walk distances. Turn angles. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]]. Need ensure turn sign: right negative, left positive. \"右转30度\" = -30; \"左转45度\" = 45. Max actions 6 <=32. Stand seconds within (0,60]. Turn absolute <=180. Walk positive. stop no scalar.\n\nNeed status AUTHORIZED_UNIQUE. Checks all U. Issues empty.\n\nBut need be careful about \"站2秒前进8米｜右转30度再前进10米｜左转45度停止，按这行从头往后。\" The vertical bar \"｜\" maybe separates groups, but within group \"站2秒前进8米\" might be ambiguous because no punctuation. However Chinese often concatenates actions. The instruction \"按这行从头往后\" resolves order. \"站2秒前进8米\" could mean \"stand for 2 seconds, move forward 8 meters\" yes.\n\nAny issue with \"站2秒\" stand duration: Stand skill arguments? Legal plan stand(seconds; default 2.0 only when duration absent). Here explicit 2 seconds. \"2秒\" supported unit seconds. yes.\n\n\"前进8米\" walk_forward positive meters; \"8米\" meters. \"前进10米\" yes.\n\n\"右转30度\" turn signed degrees. Unit \"度\" supported angle. yes.\n\n\"左转45度\" yes.\n\n\"停止\" stop no scalar. yes.\n\nNo quantity missing.\n\nNeed produce exactly JSON object no commentary. Ensure checks array seven strings. status etc. plan arrays.\n\nLet's final.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 209,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 1197,
+            "output_tokens_details": {
+              "reasoning_tokens": 1129
+            },
+            "total_tokens": 1918
+          }
+        },
+        "request_sha256": "7952beffa68ba930f455d856726ecd2964b379307f68fa8db1355bd61f2ea538",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 6.23691719999988,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 209,
+          "output_tokens": 1197,
+          "total_tokens": 1918
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 4.471105300001,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "g1-stand-walk-turn-walk-turn-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 35,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 607,
+      "raw_response_sha256": "5c8d0333ab0660f38991501f1a6fadb51899c2de9f8c0aa1bb955ce37fef9ccb",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_943863d2-087d-451d-9c56-d2642f45d73f",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "stand",
+                2.0
+              ],
+              [
+                "walk_forward",
+                8.0
+              ],
+              [
+                "turn",
+                -30.0
+              ],
+              [
+                "walk_forward",
+                10.0
+              ],
+              [
+                "turn",
+                45.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 6.241397500001767,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 6.23691719999988,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",8],[\"turn\",-30],[\"walk_forward\",10],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "98798c1b2211e2038fa316d141c2c52fb1ac02bb875e9e0eed772586b4d37b38",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "40506b2340ded4ce88e59034062d9b4977e911fa2db123f3988400aeca3dbb67",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_f807d5d2-8e2b-4c10-a5e7-355acb501edb",
+          "source_sha256": "af15f43209aef77c6610e83c214278cafed3c8bc9661f37d9925eac9063f89b5",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 209,
+            "output_tokens": 1197,
+            "total_tokens": 1918
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 6,
+      "usage": {
+        "input_tokens": 227,
+        "output_tokens": 919,
+        "total_tokens": 2682
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "g1-stand-walk-turn-walk-turn-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "duration_s": 2.0
+          },
+          "skill": "stand"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {
+            "distance_m": 10.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s4"
+          ],
+          "id": "s5",
+          "parameters": {
+            "angle_deg": 45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s5"
+          ],
+          "id": "s6",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "站2秒前进8米|右转30度再前进10米|左转45度停止,按这行从头往后",
+    "status": "SUCCESS"
+  }
+}

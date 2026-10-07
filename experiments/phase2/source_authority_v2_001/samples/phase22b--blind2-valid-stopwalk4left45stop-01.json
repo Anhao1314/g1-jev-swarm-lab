@@ -1,0 +1,285 @@
+{
+  "input_binding": {
+    "population": "phase22b",
+    "sample_id": "blind2-valid-stopwalk4left45stop-01",
+    "source_sha256": "5e72ad60868290fca50cd838a819eba9cb4eb38d7a1d26ac858fb399c330a764",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/phase22b--blind2-valid-stopwalk4left45stop-01.json",
+    "v1_sample_sha256": "da89fe8ee40dd8178e0e01bbb5e48d8701132f86a47f44ca081176c0f9dd4fab"
+  },
+  "v2": {
+    "added_wall_s": 3.9842391000020143,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 3.9779143999985536,
+          "provider_document": {
+            "created_at": 1791364119,
+            "id": "resp_4e74a44e-b019-4fcf-866f-82b6827d66ec",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_4e74a44e-b019-4fcf-866f-82b6827d66ec",
+                "reasoning_content": "We need answer JSON only. Need inspect source Chinese: \"请先停下，然后往前走4米，再向左转45度，最后停止\" Translation: Please first stop, then walk forward 4 meters, then turn left 45 degrees, finally stop. Need issue compact source-authority certificate. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need plan allowed skills. Source actions: stop, walk_forward 4 meters, turn left +45 degrees, stop. But note multiple stops? Let's parse carefully.\n\n\"请先停下，然后往前走4米，再向左转45度，最后停止\" = Please first stop, then walk forward 4 meters, then turn left 45 degrees, finally stop. There are two stop actions: initial stop and final stop. Action multiplicity: 4 actions, includes repeated stop twice. Is that allowed? Plan can include stop no scalar. Repetition? There is explicit two stop actions, not repetition instruction. Multiplicity resolved? Yes, count all actions; stop twice is okay? Need decide if duplicate stop creates ambiguity? We count every action preserve order and repetition. \"先...然后...再...最后\" orders clearly. So plan [ [\"stop\"], [\"walk_forward\",4], [\"turn\",45], [\"stop\"] ]. Turn left positive 45. Stop no scalar. Need check dimensions.\n\nNeed ensure no issue. Source has \"请\" polite request, \"先\" first, \"然后\", \"再\", \"最后\" temporal order. Actions: stop, walk_forward 4 meters, turn left 45 degrees, stop. No corrections/edits. Repetition scope? There are two stop actions (same skill repeated), but explicit. Repetition scope dimension maybe about \"repeat\" instructions; not applicable. Reference resolution: none. Temporal relations: explicit sequence resolved. Explicitly unresolved: none. So status AUTHORIZED_UNIQUE, checks all U. Plan length 4 within 1..32. Stand? no. Walk 4m positive. Turn left 45 positive <=180. Stop no scalar. Good.\n\nNeed ensure \"停下\" and \"停止\" both mean stop. Yes.\n\nPotential ambiguity: \"先停下\" and \"最后停止\" could be redundant but source explicitly says stop at beginning and end, so preserve. Not ambiguous.\n\nNeed output exactly JSON with status, checks, plan, issues. No commentary. Use field names exactly. Need plan uses [skill,number], except [\"stop\"]. So [\"walk_forward\",4], [\"turn\",45], [\"stop\"]. Should we use English skill names? Yes.\n\nNeed check \"turn\" with left/counterclockwise positive: \"向左转\" left positive 45. Good.\n\nFinal JSON.",
+                "summary": [
+                  {
+                    "text": "We need answer JSON only. Need inspect source Chinese: \"请先停下，然后往前走4米，再向左转45度，最后停止\" Translation: Please first stop, then walk forward 4 meters, then turn left 45 degrees, finally stop. Need issue compact source-authority certificate. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Need plan allowed skills. Source actions: stop, walk_forward 4 meters, turn left +45 degrees, stop. But note multiple stops? Let's parse carefully.\n\n\"请先停下，然后往前走4米，再向左转45度，最后停止\" = Please first stop, then walk forward 4 meters, then turn left 45 degrees, finally stop. There are two stop actions: initial stop and final stop. Action multiplicity: 4 actions, includes repeated stop twice. Is that allowed? Plan can include stop no scalar. Repetition? There is explicit two stop actions, not repetition instruction. Multiplicity resolved? Yes, count all actions; stop twice is okay? Need decide if duplicate stop creates ambiguity? We count every action preserve order and repetition. \"先...然后...再...最后\" orders clearly. So plan [ [\"stop\"], [\"walk_forward\",4], [\"turn\",45], [\"stop\"] ]. Turn left positive 45. Stop no scalar. Need check dimensions.\n\nNeed ensure no issue. Source has \"请\" polite request, \"先\" first, \"然后\", \"再\", \"最后\" temporal order. Actions: stop, walk_forward 4 meters, turn left 45 degrees, stop. No corrections/edits. Repetition scope? There are two stop actions (same skill repeated), but explicit. Repetition scope dimension maybe about \"repeat\" instructions; not applicable. Reference resolution: none. Temporal relations: explicit sequence resolved. Explicitly unresolved: none. So status AUTHORIZED_UNIQUE, checks all U. Plan length 4 within 1..32. Stand? no. Walk 4m positive. Turn left 45 positive <=180. Stop no scalar. Good.\n\nNeed ensure \"停下\" and \"停止\" both mean stop. Yes.\n\nPotential ambiguity: \"先停下\" and \"最后停止\" could be redundant but source explicitly says stop at beginning and end, so preserve. Not ambiguous.\n\nNeed output exactly JSON with status, checks, plan, issues. No commentary. Use field names exactly. Need plan uses [skill,number], except [\"stop\"]. So [\"walk_forward\",4], [\"turn\",45], [\"stop\"]. Should we use English skill names? Yes.\n\nNeed check \"turn\" with left/counterclockwise positive: \"向左转\" left positive 45. Good.\n\nFinal JSON.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"],[\"walk_forward\",4],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_4e74a44e-b019-4fcf-866f-82b6827d66ec",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 198,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 631,
+              "output_tokens_details": {
+                "reasoning_tokens": 578
+              },
+              "total_tokens": 1341
+            }
+          },
+          "request_sha256": "b5607f829250ea657f7c726fafe5ce97d1f4f4785859e987140590e16877c0ab",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 3.9764830000021902,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_4e74a44e-b019-4fcf-866f-82b6827d66ec",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"],[\"walk_forward\",4],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 198,
+            "output_tokens": 631,
+            "total_tokens": 1341
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 3.300586800000019,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "stop-walk-turn-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 22,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"stop-walk-turn-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":45.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+        "raw_response_sha256": "3f4d1d157e8ec0be55cf35a7f680d2cfba8a1d2ea0947beddb6b72f01d8b18ee",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_ee89c278-e935-48e6-89d7-32dadd7fbba9",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "stop"
+                ],
+                [
+                  "walk_forward",
+                  4.0
+                ],
+                [
+                  "turn",
+                  45.0
+                ],
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 3.983401199999207,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 3.9764830000021902,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"],[\"walk_forward\",4],[\"turn\",45],[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "1b05cd263091f2b669f6557849488119933bef1d67c8f687b14bf409eb4e4a22",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "9e7983ec9e3d7f4b553f5e63de6df55a49cdfd7dcf059b13b123ab28bcbbe595",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_4e74a44e-b019-4fcf-866f-82b6827d66ec",
+            "source_sha256": "5e72ad60868290fca50cd838a819eba9cb4eb38d7a1d26ac858fb399c330a764",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 198,
+              "output_tokens": 631,
+              "total_tokens": 1341
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 4,
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 334,
+          "total_tokens": 2086
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "stop-walk-turn-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {},
+            "skill": "stop"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": 45.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "请先停下然后往前走4米再向左转45度最后停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

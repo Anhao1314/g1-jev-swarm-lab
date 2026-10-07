@@ -1,0 +1,271 @@
+{
+  "added_wall_s": 3.8089050999988103,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 3.8013233999990916,
+        "provider_document": {
+          "created_at": 1791364119,
+          "id": "resp_5503e196-c05b-48db-a331-62377e16155c",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_5503e196-c05b-48db-a331-62377e16155c",
+              "reasoning_content": "We need answer JSON only. Need inspect source. Need follow instructions. Need determine checks seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nSource Chinese: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nTranslate: First walk forward 800 cm, then turn right 90°, then move forward 4 m, finally stop.\n\nNeed parse actions. Skills allowed: stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative), stop(no scalar). Need plan.\n\nActions:\n1. walk_forward 800 centimeters = 8 meters. \"向前走\" = walk forward. positive.\n2. turn right 90° = signed degrees. right/clockwise negative => -90. \"向右转\".\n3. \"向前移动4米\" = move forward 4 meters. Does \"移动\" map to walk_forward? Yes likely forward movement = walk_forward. positive 4.\n4. stop.\n\nOrder sequence: 先...再...然后...最后. Unique. Repetition none. Correction/edit none. References none. Temporal relations: sequential explicit, all ordered; unique. Explicit unresolved none.\n\nNeed ensure units explicit. cm and m explicit for distances, degrees for angle. Stop no scalar.\n\nAction multiplicity: count 4. Is there ambiguity? \"向前走800厘米，再向右转90°，然后向前移动4米，最后停住\" Could \"向前走\" and \"向前移动\" both walk_forward actions, distinct due ordering. No repetition. Unique. Checks all U. Status AUTHORIZED_UNIQUE. Plan [[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]].\n\nNeed maybe \"先向前走800厘米\" walk_forward positive 8. \"再向右转90°\" turn -90. \"然后向前移动4米\" walk_forward 4. \"最后停住\" stop.\n\nNeed output exactly JSON object no commentary. Ensure checks exactly seven strings. issues empty.\n\nNeed consider IR bounds: 1..32 actions; stand duration etc. Turn absolute <=180 yes. walk positive.\n\nNeed no extra fields. Good.\n\nFinal.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source. Need follow instructions. Need determine checks seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nSource Chinese: \"先向前走800厘米，再向右转90°，然后向前移动4米，最后停住\"\n\nTranslate: First walk forward 800 cm, then turn right 90°, then move forward 4 m, finally stop.\n\nNeed parse actions. Skills allowed: stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative), stop(no scalar). Need plan.\n\nActions:\n1. walk_forward 800 centimeters = 8 meters. \"向前走\" = walk forward. positive.\n2. turn right 90° = signed degrees. right/clockwise negative => -90. \"向右转\".\n3. \"向前移动4米\" = move forward 4 meters. Does \"移动\" map to walk_forward? Yes likely forward movement = walk_forward. positive 4.\n4. stop.\n\nOrder sequence: 先...再...然后...最后. Unique. Repetition none. Correction/edit none. References none. Temporal relations: sequential explicit, all ordered; unique. Explicit unresolved none.\n\nNeed ensure units explicit. cm and m explicit for distances, degrees for angle. Stop no scalar.\n\nAction multiplicity: count 4. Is there ambiguity? \"向前走800厘米，再向右转90°，然后向前移动4米，最后停住\" Could \"向前走\" and \"向前移动\" both walk_forward actions, distinct due ordering. No repetition. Unique. Checks all U. Status AUTHORIZED_UNIQUE. Plan [[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]].\n\nNeed maybe \"先向前走800厘米\" walk_forward positive 8. \"再向右转90°\" turn -90. \"然后向前移动4米\" walk_forward 4. \"最后停住\" stop.\n\nNeed output exactly JSON object no commentary. Ensure checks exactly seven strings. issues empty.\n\nNeed consider IR bounds: 1..32 actions; stand duration etc. Turn absolute <=180 yes. walk positive.\n\nNeed no extra fields. Good.\n\nFinal.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_5503e196-c05b-48db-a331-62377e16155c",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 201,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 551,
+            "output_tokens_details": {
+              "reasoning_tokens": 493
+            },
+            "total_tokens": 1264
+          }
+        },
+        "request_sha256": "26bddb1167af6caf3b4388a6beaaa10daa8f80d0046381a7d2a0093ca17556ce",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 3.7998111999986577,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_5503e196-c05b-48db-a331-62377e16155c",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 201,
+          "output_tokens": 551,
+          "total_tokens": 1264
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.2863605999991705,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-walk-turn-walk-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 28,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-walk-turn-walk-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":8.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-90.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "1b0b6fc8c853f0a08cd2cf06c5e1e653b06aa96a81c48e1c648cb288d221ab7b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_b57abee8-32de-4e96-8880-9fc46fd1dad3",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "walk_forward",
+                8.0
+              ],
+              [
+                "turn",
+                -90.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 3.8079349999970873,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 3.7998111999986577,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "403dd98ba7d126bada5129d70438803653aee54d8aaf033873b20847ae9c63e6",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "07a04e854b95739a159db8812ce0aef46485f567804f8dff1ece0deb35cdbf11",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_5503e196-c05b-48db-a331-62377e16155c",
+          "source_sha256": "f407d5ee6b605aaa4a6ea5d7cc64238b00950db57012528c0971629c3127eaef",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 201,
+            "output_tokens": 551,
+            "total_tokens": 1264
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 219,
+        "output_tokens": 326,
+        "total_tokens": 2081
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-walk-turn-walk-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 8.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -90.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先向前走800厘米再向右转90°然后向前移动4米最后停住",
+    "status": "SUCCESS"
+  }
+}

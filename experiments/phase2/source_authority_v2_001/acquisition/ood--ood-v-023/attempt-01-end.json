@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 4.000294199999189,
+  "provider_document": {
+    "created_at": 1791363936,
+    "id": "resp_c0ea0f31-7c3c-4686-8878-0e32a2c81a33",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_c0ea0f31-7c3c-4686-8878-0e32a2c81a33",
+        "reasoning_content": "We need answer only JSON. Need analyze source. We have Chinese: \"往前走8米。呃，不是8，是10米，其他不用加。\" Means \"Walk forward 8 meters. Uh, not 8, it's 10 meters, don't add anything else.\" Need certificate.\n\nWe must inspect entire source. Need determine action multiplicity/order/correction/edit scope/repetition/reference/temporal/unresolved.\n\nSource only. Action: walk_forward. Quantity: 8 then corrected to 10. \"其他不用加\" = no other additions. Need resolve edit/correction scope: \"not 8, it's 10 meters\" corrects distance 8 to 10. Should final plan [[\"walk_forward\",10]]? Need check dimensions in exact order.\n\nLet's parse.\n\nFirst action multiplicity: \"往前走8米\" one walk forward. \"不是8，是10米\" correction of quantity, not new action? \"其他不用加\" no additions. So action multiplicity U? Need count every action, preserve order/repetition. Only one action, corrected quantity. U.\n\nAction order: only one action. U.\n\nCorrection/edit scope: Explicit correction \"不是8，是10米\" correcting prior 8 to 10. \"其他不用加\" means don't add other. Need determine edit referent is the quantity 8. U? It is uniquely resolved? likely U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: \"其他\" refers to other things? It means no additional actions. There is no ambiguity? Maybe \"不是8\" refers to previous 8. U.\n\nTemporal relations: \"往前走\" then correction meta; no temporal relation. U.\n\nExplicitly unresolved relations: Are there unresolved? No. But need consider \"呃，不是8，是10米，其他不用加\" maybe correction is clear. So all U. Plan [[\"walk_forward\",10]] authorized unique. Need ensure walk_forward positive meters; \"8米\" cm? meters. Correction to 10米. No stand. 1 action. stop? no stop. legal.\n\nNeed output exactly status, checks, plan, issues. issues empty. status AUTHORIZED_UNIQUE.\n\nNeed be cautious: \"不是8，是10米\" Could be ambiguous if \"不是8\" could mean not 8 meters? It says \"往前走8米。呃，不是8，是10米\" clear correction. \"其他不用加\" maybe instruction not to add any other action, but source contains it as meta. It is data. \"No other add\" doesn't create action. Fine.\n\nNeed check order? Correction after action but modifies. The final action order remains walk_forward. U.\n\nCould there be issue with \"其他不用加\" explicitly unresolved? No.\n\nLet's final JSON.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need analyze source. We have Chinese: \"往前走8米。呃，不是8，是10米，其他不用加。\" Means \"Walk forward 8 meters. Uh, not 8, it's 10 meters, don't add anything else.\" Need certificate.\n\nWe must inspect entire source. Need determine action multiplicity/order/correction/edit scope/repetition/reference/temporal/unresolved.\n\nSource only. Action: walk_forward. Quantity: 8 then corrected to 10. \"其他不用加\" = no other additions. Need resolve edit/correction scope: \"not 8, it's 10 meters\" corrects distance 8 to 10. Should final plan [[\"walk_forward\",10]]? Need check dimensions in exact order.\n\nLet's parse.\n\nFirst action multiplicity: \"往前走8米\" one walk forward. \"不是8，是10米\" correction of quantity, not new action? \"其他不用加\" no additions. So action multiplicity U? Need count every action, preserve order/repetition. Only one action, corrected quantity. U.\n\nAction order: only one action. U.\n\nCorrection/edit scope: Explicit correction \"不是8，是10米\" correcting prior 8 to 10. \"其他不用加\" means don't add other. Need determine edit referent is the quantity 8. U? It is uniquely resolved? likely U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: \"其他\" refers to other things? It means no additional actions. There is no ambiguity? Maybe \"不是8\" refers to previous 8. U.\n\nTemporal relations: \"往前走\" then correction meta; no temporal relation. U.\n\nExplicitly unresolved relations: Are there unresolved? No. But need consider \"呃，不是8，是10米，其他不用加\" maybe correction is clear. So all U. Plan [[\"walk_forward\",10]] authorized unique. Need ensure walk_forward positive meters; \"8米\" cm? meters. Correction to 10米. No stand. 1 action. stop? no stop. legal.\n\nNeed output exactly status, checks, plan, issues. issues empty. status AUTHORIZED_UNIQUE.\n\nNeed be cautious: \"不是8，是10米\" Could be ambiguous if \"不是8\" could mean not 8 meters? It says \"往前走8米。呃，不是8，是10米\" clear correction. \"其他不用加\" maybe instruction not to add any other action, but source contains it as meta. It is data. \"No other add\" doesn't create action. Fine.\n\nNeed check order? Correction after action but modifies. The final action order remains walk_forward. U.\n\nCould there be issue with \"其他不用加\" explicitly unresolved? No.\n\nLet's final JSON.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",10]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_c0ea0f31-7c3c-4686-8878-0e32a2c81a33",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 198,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 629,
+      "output_tokens_details": {
+        "reasoning_tokens": 587
+      },
+      "total_tokens": 1339
+    }
+  },
+  "request_sha256": "deadaa435fd7dc29a3ab4530288d38c58b1cc53a927a5265a75a2cf5c7fa4809",
+  "status": "SUCCESS"
+}

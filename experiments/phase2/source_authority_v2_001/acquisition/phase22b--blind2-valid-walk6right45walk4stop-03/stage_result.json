@@ -1,0 +1,271 @@
+{
+  "added_wall_s": 3.364332799999829,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 3.358267600000545,
+        "provider_document": {
+          "created_at": 1791364110,
+          "id": "resp_da32102c-474a-4b5d-b7bc-ca880f4102dd",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_da32102c-474a-4b5d-b7bc-ca880f4102dd",
+              "reasoning_content": "We need answer only JSON. Need inspect source Chinese. Need obey instructions. Need produce certificate. We need parse actions, order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Source: \"先向前移动600厘米，之后右转45度，再向前移动4米，最后停住\"\n\nTranslate: First move forward 600 centimeters, then turn right 45 degrees, then move forward 4 meters, finally stop.\n\nNeed determine legal plan. Skills: walk_forward positive meters; cm converts. turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative). stop no scalar. stand default.\n\nActions in order:\n1 walk_forward 600 cm = 6 meters.\n2 turn right 45 degrees = -45.\n3 walk_forward 4 meters.\n4 stop.\n\nNeed checks seven dimensions in exact order:\n1 action multiplicity: How many actions? 4 distinct, no repeated except two walking but separate occurrences not multiplicity? Multiplicity likely number of repeated action occurrences? U if clear. \n2 action order: explicit 先, 之后, 再, 最后: U.\n3 correction/edit scope: no corrections/edits: U.\n4 repetition scope: no repetition: U.\n5 reference resolution: no pronouns/refs? \"先...之后...再...\" temporal references not object refs. U.\n6 temporal relations: ordered and final: U.\n7 explicitly unresolved relations: none. U.\n\nPlan: [[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",4],[\"stop\"]]\n\nNeed status AUTHORIZED_UNIQUE. Need checks all U. issues [].\n\nNeed ensure no extra fields. Return JSON object exactly status, checks, plan, issues.\n\nBut let's scrutinize potential issue: \"先向前移动600厘米\" explicit distance unit cm, converts to meters. \"右转45度\" angle unit degrees. \"向前移动4米\" unit meters. All good. \"停住\" stop. Action count 4 within 1..32. Turn nonzero signed <=180. Walk positive. No stand.\n\nNeed maybe \"向前移动\" corresponds walk_forward. Good.\n\nNeed check if \"600厘米\" conversion: 600 cm = 6 m. In plan number must be positive meters. Yes.\n\nFinal only JSON.",
+              "summary": [
+                {
+                  "text": "We need answer only JSON. Need inspect source Chinese. Need obey instructions. Need produce certificate. We need parse actions, order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Source: \"先向前移动600厘米，之后右转45度，再向前移动4米，最后停住\"\n\nTranslate: First move forward 600 centimeters, then turn right 45 degrees, then move forward 4 meters, finally stop.\n\nNeed determine legal plan. Skills: walk_forward positive meters; cm converts. turn(nonzero signed degrees; left/counterclockwise positive, right/clockwise negative). stop no scalar. stand default.\n\nActions in order:\n1 walk_forward 600 cm = 6 meters.\n2 turn right 45 degrees = -45.\n3 walk_forward 4 meters.\n4 stop.\n\nNeed checks seven dimensions in exact order:\n1 action multiplicity: How many actions? 4 distinct, no repeated except two walking but separate occurrences not multiplicity? Multiplicity likely number of repeated action occurrences? U if clear. \n2 action order: explicit 先, 之后, 再, 最后: U.\n3 correction/edit scope: no corrections/edits: U.\n4 repetition scope: no repetition: U.\n5 reference resolution: no pronouns/refs? \"先...之后...再...\" temporal references not object refs. U.\n6 temporal relations: ordered and final: U.\n7 explicitly unresolved relations: none. U.\n\nPlan: [[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",4],[\"stop\"]]\n\nNeed status AUTHORIZED_UNIQUE. Need checks all U. issues [].\n\nNeed ensure no extra fields. Return JSON object exactly status, checks, plan, issues.\n\nBut let's scrutinize potential issue: \"先向前移动600厘米\" explicit distance unit cm, converts to meters. \"右转45度\" angle unit degrees. \"向前移动4米\" unit meters. All good. \"停住\" stop. Action count 4 within 1..32. Turn nonzero signed <=180. Walk positive. No stand.\n\nNeed maybe \"向前移动\" corresponds walk_forward. Good.\n\nNeed check if \"600厘米\" conversion: 600 cm = 6 m. In plan number must be positive meters. Yes.\n\nFinal only JSON.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_da32102c-474a-4b5d-b7bc-ca880f4102dd",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 202,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 539,
+            "output_tokens_details": {
+              "reasoning_tokens": 481
+            },
+            "total_tokens": 1253
+          }
+        },
+        "request_sha256": "e7f42af7c854b125d4914de62ca3936b2110bb9ceaa47bcb33bfabd906bcecae",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 3.3568569000017305,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_da32102c-474a-4b5d-b7bc-ca880f4102dd",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 202,
+          "output_tokens": 539,
+          "total_tokens": 1253
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.428791700000147,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "mission-600cm-turn-walk4-stop",
+      "model": "deepseek-flash",
+      "normalized_length": 28,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": null,
+      "provider_status": "completed",
+      "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-600cm-turn-walk4-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":6.0},\"depends_on\":[]},{\"id\":\"s2\",\"skill\":\"turn\",\"parameters\":{\"angle_deg\":-45.0},\"depends_on\":[\"s1\"]},{\"id\":\"s3\",\"skill\":\"walk_forward\",\"parameters\":{\"distance_m\":4.0},\"depends_on\":[\"s2\"]},{\"id\":\"s4\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[\"s3\"]}]},\"error_code\":null}",
+      "raw_response_sha256": "e9304aef1f36a793fa63b4d790121d70842f109547ba4fb07e62d6b58b41051b",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_d923d1e2-4fc2-4b55-9bb3-8f6430f56bef",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "walk_forward",
+                6.0
+              ],
+              [
+                "turn",
+                -45.0
+              ],
+              [
+                "walk_forward",
+                4.0
+              ],
+              [
+                "stop"
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 3.3633297000014863,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 3.3568569000017305,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",6],[\"turn\",-45],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+          "raw_response_sha256": "2930eb0e31e77253cb006a96f8960a390c1dc7487339e8e7ef77f480f6fa8859",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "7a1df3b1fa1e9de9aee809cad9d6f0d7c76867380684817f5ecd5251f4536f35",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_da32102c-474a-4b5d-b7bc-ca880f4102dd",
+          "source_sha256": "572d3b8b6cc9c6d4be5886abc27f4d535e884bb7e66555c4cb127dcadfc99b5b",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 539,
+            "total_tokens": 1253
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 4,
+      "usage": {
+        "input_tokens": 220,
+        "output_tokens": 330,
+        "total_tokens": 2086
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "mission-600cm-turn-walk4-stop",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "distance_m": 6.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s2"
+          ],
+          "id": "s3",
+          "parameters": {
+            "distance_m": 4.0
+          },
+          "skill": "walk_forward"
+        },
+        {
+          "depends_on": [
+            "s3"
+          ],
+          "id": "s4",
+          "parameters": {},
+          "skill": "stop"
+        }
+      ]
+    },
+    "normalized_text": "先向前移动600厘米之后右转45度再向前移动4米最后停住",
+    "status": "SUCCESS"
+  }
+}

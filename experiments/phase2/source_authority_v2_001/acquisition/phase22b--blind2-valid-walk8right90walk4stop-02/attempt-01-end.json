@@ -1,0 +1,52 @@
+{
+  "index": 1,
+  "latency_s": 3.8465892000021995,
+  "provider_document": {
+    "created_at": 1791364118,
+    "id": "resp_a8bdd05c-a87f-492e-8d24-95050f08c2c9",
+    "max_output_tokens": 4096,
+    "model": "deepseek-flash",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_resp_a8bdd05c-a87f-492e-8d24-95050f08c2c9",
+        "reasoning_content": "We need answer only JSON. Need inspect source. Need follow rules. Source Chinese: \"麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止\"\n\nNeed parse actions in order:\n- 麻烦 = please (meta)\n- 先向前移动8m = first move forward 8m => walk_forward 8\n- 接着顺时针转90度 = then clockwise turn 90 degrees. Signed: clockwise negative => turn -90\n- 然后前进4米 = then move forward 4 meters => walk_forward 4\n- 最后停止 = finally stop\n\nNeed check seven dimensions exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\nWe need determine U/A/? each.\n\nAction multiplicity: How many actions? 4 distinct: walk_forward, turn, walk_forward, stop. Multiplicity? No repetition ambiguity; unique. U.\n\nAction order: explicit 先...接着...然后...最后. Unique. U.\n\nCorrection/edit scope: no corrections/edits. U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: no pronouns? \"麻烦\" not action. Maybe \"向前\", \"顺时针\" resolved. U.\n\nTemporal relations: sequential explicit. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]]\nNeed ensure legal: walk_forward positive meters, 8 and 4. turn nonzero signed degrees <=180 abs 90. 4 actions within 1..32. Good.\n\nStatus AUTHORIZED_UNIQUE. issues empty. Need exactly keys status, checks, plan, issues. No commentary. Use JSON only.\n\nCheck if any issue with \"前进4米\" maybe after turn? no.\n\nNeed be cautious: \"顺时针转90度\": clockwise is negative per rules. \"left/counterclockwise positive, right/clockwise negative\". Yes turn -90.\n\nNeed ensure numbers: For stand, default seconds if duration absent. Not relevant. Units: m and 米 both meters. turn degrees. Good.\n\nReturn JSON object.",
+        "summary": [
+          {
+            "text": "We need answer only JSON. Need inspect source. Need follow rules. Source Chinese: \"麻烦先向前移动8m，接着顺时针转90度，然后前进4米，最后停止\"\n\nNeed parse actions in order:\n- 麻烦 = please (meta)\n- 先向前移动8m = first move forward 8m => walk_forward 8\n- 接着顺时针转90度 = then clockwise turn 90 degrees. Signed: clockwise negative => turn -90\n- 然后前进4米 = then move forward 4 meters => walk_forward 4\n- 最后停止 = finally stop\n\nNeed check seven dimensions exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\nWe need determine U/A/? each.\n\nAction multiplicity: How many actions? 4 distinct: walk_forward, turn, walk_forward, stop. Multiplicity? No repetition ambiguity; unique. U.\n\nAction order: explicit 先...接着...然后...最后. Unique. U.\n\nCorrection/edit scope: no corrections/edits. U.\n\nRepetition scope: no repetition. U.\n\nReference resolution: no pronouns? \"麻烦\" not action. Maybe \"向前\", \"顺时针\" resolved. U.\n\nTemporal relations: sequential explicit. U.\n\nExplicitly unresolved relations: none. U.\n\nPlan: [[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]]\nNeed ensure legal: walk_forward positive meters, 8 and 4. turn nonzero signed degrees <=180 abs 90. 4 actions within 1..32. Good.\n\nStatus AUTHORIZED_UNIQUE. issues empty. Need exactly keys status, checks, plan, issues. No commentary. Use JSON only.\n\nCheck if any issue with \"前进4米\" maybe after turn? no.\n\nNeed be cautious: \"顺时针转90度\": clockwise is negative per rules. \"left/counterclockwise positive, right/clockwise negative\". Yes turn -90.\n\nNeed ensure numbers: For stand, default seconds if duration absent. Not relevant. Units: m and 米 both meters. turn degrees. Good.\n\nReturn JSON object.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",8],[\"turn\",-90],[\"walk_forward\",4],[\"stop\"]],\"issues\":[]}",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_a8bdd05c-a87f-492e-8d24-95050f08c2c9",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "temperature": 0.0,
+    "usage": {
+      "input_tokens": 201,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens": 512,
+      "output_tokens_details": {
+        "reasoning_tokens": 454
+      },
+      "total_tokens": 1225
+    }
+  },
+  "request_sha256": "b469232e770fd11d0e81114b7bb024ca0aa7d504bd2613ed4592d89396658df1",
+  "status": "SUCCESS"
+}

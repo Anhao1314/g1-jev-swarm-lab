@@ -1,0 +1,246 @@
+{
+  "added_wall_s": 5.096518100002868,
+  "live_evidence": {
+    "events": [
+      {
+        "index": 1,
+        "latency_s": 5.0909421000033035,
+        "provider_document": {
+          "created_at": 1791363920,
+          "id": "resp_48b416ff-a132-4160-926a-9e504e008656",
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_resp_48b416ff-a132-4160-926a-9e504e008656",
+              "reasoning_content": "We need answer JSON only. Need inspect source Chinese: \"先右转45度，接着同一个方向再转30度。\" Means First turn right 45 degrees, then same direction turn 30 degrees again. Need certificate seven checks.\n\nWe need parse actions. Skills supported: stand, walk_forward, turn, stop. Actions: turn right 45 degrees; then \"同一个方向\" same direction again turn 30 degrees. Need resolve reference \"same direction\" = right/clockwise. Action order: two turns. Repetition? \"再转30度\" could be another turn action, not necessarily repetition? It's repeated turn but with different angle; not a repetition construct? Need check dimensions.\n\nNeed be careful with \"先...接着...再...\" temporal order clear: first turn right 45, then turn right 30. Reference resolution: \"同一个方向\" refers to previous direction right/clockwise. Unique? likely yes. Correction/edit scope: none. Repetition scope: The word \"再\" means again, but here it's just second turn action, not \"repeat group\" ambiguous. However action multiplicity: two turn actions. Is \"再转30度\" same direction? This is explicit. Need count every action: turn right 45, turn right 30. Order clear. Is turn right = signed degrees negative. Plan: [[\"turn\",-45],[\"turn\",-30]].\n\nNeed check seven:\n1 action multiplicity: U? There are exactly two turn actions. \"再\" could imply an additional turn, clear.\n2 action order: U, 先...接着...\n3 correction/edit scope: U (no edits)\n4 repetition scope: Need decide. \"再\" indicates repetition/additional action, but no ambiguous scope? It refers to same action turn again with new angle. Repetition scope maybe U? Since \"再转30度\" is just a separate action, not repeating a group. If considered repetition, scope is single turn action? It is explicit \"same direction\" and \"again\" but not \"repeat the previous group\"; It means turn 30 more degrees in same direction. Could this be interpreted as a single action of total 75 degrees? Hmm \"先右转45度，接着同一个方向再转30度\" means first turn right 45 degrees, then turn 30 degrees in same direction. That's two actions. Not one turn 75. The skill turn takes signed degrees, can perform separate turns. Need preserve repetition/order. OK.\n\n5 reference resolution: \"同一个方向\" resolves to right/clockwise from previous action. U.\n6 temporal relations: \"先...接着...再...\" clear sequence. U.\n7 explicitly unresolved relations: none.\n\nStatus AUTHORIZED_UNIQUE. Plan [[\"turn\",-45],[\"turn\",-30]]. Need issues empty.\n\nCheck units: degrees explicit. Turn nonzero signed. Absolute turn <=180: 45,30. Count actions 2 <=32. Good.\n\nPotential subtlety: \"同一个方向\" same direction means right? In Chinese, \"右转45度\" = turn right. \"同一个方向再转30度\" = continue turning right. Yes.\n\nNeed output exactly JSON. Ensure no extra.\n\nBut let's ensure all checks U. The final plan must use [skill,number] except stop. Turn numbers signed degrees. Use -45, -30.\n\nNeed no commentary.",
+              "summary": [
+                {
+                  "text": "We need answer JSON only. Need inspect source Chinese: \"先右转45度，接着同一个方向再转30度。\" Means First turn right 45 degrees, then same direction turn 30 degrees again. Need certificate seven checks.\n\nWe need parse actions. Skills supported: stand, walk_forward, turn, stop. Actions: turn right 45 degrees; then \"同一个方向\" same direction again turn 30 degrees. Need resolve reference \"same direction\" = right/clockwise. Action order: two turns. Repetition? \"再转30度\" could be another turn action, not necessarily repetition? It's repeated turn but with different angle; not a repetition construct? Need check dimensions.\n\nNeed be careful with \"先...接着...再...\" temporal order clear: first turn right 45, then turn right 30. Reference resolution: \"同一个方向\" refers to previous direction right/clockwise. Unique? likely yes. Correction/edit scope: none. Repetition scope: The word \"再\" means again, but here it's just second turn action, not \"repeat group\" ambiguous. However action multiplicity: two turn actions. Is \"再转30度\" same direction? This is explicit. Need count every action: turn right 45, turn right 30. Order clear. Is turn right = signed degrees negative. Plan: [[\"turn\",-45],[\"turn\",-30]].\n\nNeed check seven:\n1 action multiplicity: U? There are exactly two turn actions. \"再\" could imply an additional turn, clear.\n2 action order: U, 先...接着...\n3 correction/edit scope: U (no edits)\n4 repetition scope: Need decide. \"再\" indicates repetition/additional action, but no ambiguous scope? It refers to same action turn again with new angle. Repetition scope maybe U? Since \"再转30度\" is just a separate action, not repeating a group. If considered repetition, scope is single turn action? It is explicit \"same direction\" and \"again\" but not \"repeat the previous group\"; It means turn 30 more degrees in same direction. Could this be interpreted as a single action of total 75 degrees? Hmm \"先右转45度，接着同一个方向再转30度\" means first turn right 45 degrees, then turn 30 degrees in same direction. That's two actions. Not one turn 75. The skill turn takes signed degrees, can perform separate turns. Need preserve repetition/order. OK.\n\n5 reference resolution: \"同一个方向\" resolves to right/clockwise from previous action. U.\n6 temporal relations: \"先...接着...再...\" clear sequence. U.\n7 explicitly unresolved relations: none.\n\nStatus AUTHORIZED_UNIQUE. Plan [[\"turn\",-45],[\"turn\",-30]]. Need issues empty.\n\nCheck units: degrees explicit. Turn nonzero signed. Absolute turn <=180: 45,30. Count actions 2 <=32. Good.\n\nPotential subtlety: \"同一个方向\" same direction means right? In Chinese, \"右转45度\" = turn right. \"同一个方向再转30度\" = continue turning right. Yes.\n\nNeed output exactly JSON. Ensure no extra.\n\nBut let's ensure all checks U. The final plan must use [skill,number] except stop. Turn numbers signed degrees. Use -45, -30.\n\nNeed no commentary.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-45],[\"turn\",-30]],\"issues\":[]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_48b416ff-a132-4160-926a-9e504e008656",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "temperature": 0.0,
+          "usage": {
+            "input_tokens": 195,
+            "input_tokens_details": {
+              "cached_tokens": 512
+            },
+            "output_tokens": 743,
+            "output_tokens_details": {
+              "reasoning_tokens": 696
+            },
+            "total_tokens": 1450
+          }
+        },
+        "request_sha256": "b6391d0177bbd8e1c39c3225db2555b56653af1b8845489adc8caaa5bff7b23b",
+        "status": "SUCCESS"
+      }
+    ],
+    "provider_attempts": 1,
+    "provider_calls": 1,
+    "responses": [
+      {
+        "attempts": 1,
+        "finish_reason": "completed",
+        "latency_s": 5.089538699998229,
+        "model": "deepseek-flash",
+        "provider_status": "completed",
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_48b416ff-a132-4160-926a-9e504e008656",
+        "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-45],[\"turn\",-30]],\"issues\":[]}",
+        "usage": {
+          "input_tokens": 195,
+          "output_tokens": 743,
+          "total_tokens": 1450
+        }
+      }
+    ]
+  },
+  "recovered": false,
+  "result": {
+    "diagnostics": {
+      "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+      "attempts": 1,
+      "baseline_status": "SUCCESS",
+      "compiler": "llm_mission_compiler",
+      "compiler_version": "2.2.0",
+      "contract_violation_count": 0,
+      "contract_violations": [],
+      "failure_type": null,
+      "guard_reason_code": null,
+      "guard_status": "PASS",
+      "lark_calls": 0,
+      "latency_s": 2.247094799999104,
+      "llm_invocations": 1,
+      "max_input_chars": 512,
+      "max_output_chars": 16384,
+      "mission_id": "g1-turn-right-45-30",
+      "model": "deepseek-flash",
+      "normalized_length": 18,
+      "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+      "provider_status": "completed",
+      "raw_response_chars": 276,
+      "raw_response_sha256": "e1bb4be54569460a7a5ebfd8cb86109683af20727f5d6de0384c15400caacf3e",
+      "release_guard": {
+        "message": "",
+        "reason_code": null,
+        "status": "PASS"
+      },
+      "release_validation": {
+        "issues": [],
+        "valid": true
+      },
+      "released_executable": true,
+      "request_parameters": {
+        "max_network_retries": 2,
+        "max_output_tokens": 4096,
+        "model": "deepseek-flash",
+        "retry_backoff_s": 0.5,
+        "stream": false,
+        "temperature": 0.0
+      },
+      "response_id": "resp_5c74e783-7dac-4a0b-acb0-6da50a0beaa9",
+      "route": "GUARDED_DIRECT_LLM",
+      "source_authorization": {
+        "diagnostics": {
+          "attempts": 1,
+          "authorized_plan_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "automatic_repair": false,
+          "candidate_blind": true,
+          "candidate_validation": {
+            "issues": [],
+            "valid": true
+          },
+          "certificate": {
+            "checks": [
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U",
+              "U"
+            ],
+            "issues": [],
+            "plan": [
+              [
+                "turn",
+                -45.0
+              ],
+              [
+                "turn",
+                -30.0
+              ]
+            ],
+            "status": "AUTHORIZED_UNIQUE"
+          },
+          "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+          "certificate_status": "AUTHORIZED_UNIQUE",
+          "certificate_usable": true,
+          "certificate_version": "v2",
+          "configured_model": "deepseek-flash",
+          "finish_reason": "completed",
+          "latency_s": 5.095784100001765,
+          "model": "deepseek-flash",
+          "plan_matches_candidate": true,
+          "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+          "provider_calls": 1,
+          "provider_latency_s": 5.089538699998229,
+          "provider_status": "completed",
+          "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"turn\",-45],[\"turn\",-30]],\"issues\":[]}",
+          "raw_response_sha256": "8e23bf70a808b7aaf5f8c77fd52c1a995f016b4598b0af0c4c545a1a27e486f3",
+          "request_input_fields": [
+            "source"
+          ],
+          "request_input_sha256": "038784a06568c8f1865e0ea96273611ed3b8004613d2ae2fc2d91d98a182c428",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_48b416ff-a132-4160-926a-9e504e008656",
+          "source_sha256": "ad1c6f530df8950ee1c71c63178bded72fa20dfe13c913f334e7b7de181960be",
+          "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+          "usage": {
+            "input_tokens": 195,
+            "output_tokens": 743,
+            "total_tokens": 1450
+          }
+        },
+        "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+        "status": "AUTHORIZED_UNIQUE"
+      },
+      "step_count": 2,
+      "usage": {
+        "input_tokens": 213,
+        "output_tokens": 238,
+        "total_tokens": 1987
+      },
+      "validation": {
+        "issues": [],
+        "valid": true
+      }
+    },
+    "error_code": null,
+    "error_message": null,
+    "mission": {
+      "mission_id": "g1-turn-right-45-30",
+      "schema_version": "2.0.0",
+      "steps": [
+        {
+          "id": "s1",
+          "parameters": {
+            "angle_deg": -45.0
+          },
+          "skill": "turn"
+        },
+        {
+          "depends_on": [
+            "s1"
+          ],
+          "id": "s2",
+          "parameters": {
+            "angle_deg": -30.0
+          },
+          "skill": "turn"
+        }
+      ]
+    },
+    "normalized_text": "先右转45度接着同一个方向再转30度",
+    "status": "SUCCESS"
+  }
+}

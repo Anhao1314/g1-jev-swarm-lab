@@ -1,0 +1,344 @@
+{
+  "input_binding": {
+    "population": "ood",
+    "sample_id": "ood-v-080",
+    "source_sha256": "5ca2317387cd05c1f5c7e488d54f5ad0717c329058f03ce244bc333bec2cfe18",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/ood--ood-v-080.json",
+    "v1_sample_sha256": "3b85637d4e61f913673af09241e5f1d4e9f24672fb4508bcb96120aa5a60b993"
+  },
+  "v2": {
+    "added_wall_s": 7.150455199996941,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 7.145879899999272,
+          "provider_document": {
+            "created_at": 1791364063,
+            "id": "resp_994ff7c1-2dd8-4d67-97c0-d6466acde313",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_994ff7c1-2dd8-4d67-97c0-d6466acde313",
+                "reasoning_content": "We need answer only JSON. Need inspect source. Need solve. Source Chinese: \"我一条条念，你一条条做：站二秒／前进四米／右转三十度／前进八米／站五秒／左转六十度／前进十米／停止。\"\n\nNeed issue compact source-authority certificate. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Determine U/A/? etc. Need plan if authorized unique.\n\nWe need parse actions:\n- \"站二秒\" stand 2 seconds\n- \"前进四米\" walk_forward 4 meters\n- \"右转三十度\" turn right 30 degrees. Convention: left/counterclockwise positive, right/clockwise negative. So turn -30.\n- \"前进八米\" walk_forward 8 m\n- \"站五秒\" stand 5 seconds\n- \"左转六十度\" turn left 60 degrees -> +60\n- \"前进十米\" walk_forward 10 m\n- \"停止\" stop.\n\nOrder explicit by slashes maybe sequential. \"我一条条念，你一条条做\" means I read them one by one, you do them one by one. So ordered.\n\nNeed check seven:\n1 action multiplicity: How many actions? Eight distinct items? Need preserve repetition? Stand occurs twice, forward thrice. Multiplicity unique? The source lists each action occurrence. U.\n2 action order: sequential one by one, order as listed. U.\n3 correction/edit scope: no corrections/edits. U.\n4 repetition scope: no repetition instruction except \"一条条\" not repetition. U.\n5 reference resolution: no pronouns? \"你\" addressee not action reference. U.\n6 temporal relations: \"站二秒\" duration, \"站五秒\" duration. Sequential \"一条条做\" implies order not overlapping? There is no \"then\" but one by one. Need temporal relations among actions? They are sequential by \"一条条\". Are durations/timing specified? stand durations. Turn degrees. Walk distances. Are temporal relations uniquely resolved? Need maybe sequential due to list \"一条条做\". U? Could be \"one by one\" means do each item sequentially, no gaps. The temporal relation between actions is sequence. U.\n7 explicitly unresolved relations: none. U.\n\nPlan allowed:\nstand(seconds; default 2.0 only when duration absent). Here stand 2 sec and 5 sec.\nwalk_forward(positive meters; cm converts). 4,8,10.\nturn(nonzero signed degrees; left positive, right negative): right 30 -> -30, left 60 -> +60. Absolute <=180. Good.\nstop.\n\nNeed plan format [skill,number], except [\"stop\"]. For stand: [\"stand\",2], walk [\"walk_forward\",4], turn [\"turn\",-30], etc.\n\nNeed ensure units explicit: 米, 度, 秒. Chinese numerals: 二=2, 四=4, 三十=30, 八=8, 五=5, 六十=60, 十=10. Good.\n\nPotential issue: \"站二秒\" stand 2 seconds. \"站五秒\" stand 5. OK.\n\nNeed output exactly status, checks, plan, issues. No commentary.\n\nStatus AUTHORIZED_UNIQUE if all U, complete plan empty issues. Yes.\n\nNeed consider \"我一条条念，你一条条做：\" meta-instruction? It is source includes instruction \"I read one by one, you do one by one\". It might specify order/multiplicity. Not an action? It is an instruction about execution; could be action? We are to inspect entire original source; prefixes/meta-instructions are data. Does \"我一条条念，你一条条做：\" count as an action? It says I will read one by one, you do one by one. It's meta instruction, not a robot skill. The actions are after colon. Should not include. Could it affect action multiplicity/order? It clarifies sequential. Fine.\n\nNeed maybe \"一条条念\" means source says \"I read one by one\" but \"你一条条做\" means \"you do one by one.\" This is an instruction to perform actions in order. Not an executable robot action.\n\nNeed no extra fields. Use JSON object with exactly status, checks, plan, issues. Checks list seven strings. Issues [].\n\nLet's ensure all dimensions:\n- action multiplicity: U because eight actions with repeated stand/forward occurrences. But if \"站二秒／前进四米／右转三十度／前进八米／站五秒／左转六十度／前进十米／停止\" no ambiguous.\n- action order: U.\n- correction/edit scope: U.\n- repetition scope: U. Wait repetition scope dimension: There is repeated action words (stand, walk_forward) twice/thrice. Is repetition scope unresolved? It's not a repetition instruction, just multiple occurrences. We count each occurrence. U.\n- reference resolution: U. There is no anaphora. \"你\" not reference to action. \"一条条\" refers to items. U.\n- temporal relations: U. \"一条条做\" sequentially. Stand durations. Are there explicit temporal relations between actions? \"一条条\" one by one implies sequential, but not necessarily \"then\"? In Chinese, slash-separated list with \"一条条做\" = do them one by one in order. Unique sequential. U.\n- explicitly unresolved relations: U.\n\nPotential nuance: \"站二秒\" could be \"stand for two seconds\" but if followed by \"前进四米\", sequential. No overlap.\n\nNeed produce final JSON. Ensure no markdown.\n\nLet's double-check plan bounds: 1..32 actions, 8 actions. Turn absolute <=180: -30, 60. Stand duration (0,60]: 2,5. walk positive. stop no scalar. Good.\n\nNeed maybe \"turn right thirty degrees\" yields -30. \"left sixty\" +60. Yes.\n\nReturn.",
+                "summary": [
+                  {
+                    "text": "We need answer only JSON. Need inspect source. Need solve. Source Chinese: \"我一条条念，你一条条做：站二秒／前进四米／右转三十度／前进八米／站五秒／左转六十度／前进十米／停止。\"\n\nNeed issue compact source-authority certificate. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. Determine U/A/? etc. Need plan if authorized unique.\n\nWe need parse actions:\n- \"站二秒\" stand 2 seconds\n- \"前进四米\" walk_forward 4 meters\n- \"右转三十度\" turn right 30 degrees. Convention: left/counterclockwise positive, right/clockwise negative. So turn -30.\n- \"前进八米\" walk_forward 8 m\n- \"站五秒\" stand 5 seconds\n- \"左转六十度\" turn left 60 degrees -> +60\n- \"前进十米\" walk_forward 10 m\n- \"停止\" stop.\n\nOrder explicit by slashes maybe sequential. \"我一条条念，你一条条做\" means I read them one by one, you do them one by one. So ordered.\n\nNeed check seven:\n1 action multiplicity: How many actions? Eight distinct items? Need preserve repetition? Stand occurs twice, forward thrice. Multiplicity unique? The source lists each action occurrence. U.\n2 action order: sequential one by one, order as listed. U.\n3 correction/edit scope: no corrections/edits. U.\n4 repetition scope: no repetition instruction except \"一条条\" not repetition. U.\n5 reference resolution: no pronouns? \"你\" addressee not action reference. U.\n6 temporal relations: \"站二秒\" duration, \"站五秒\" duration. Sequential \"一条条做\" implies order not overlapping? There is no \"then\" but one by one. Need temporal relations among actions? They are sequential by \"一条条\". Are durations/timing specified? stand durations. Turn degrees. Walk distances. Are temporal relations uniquely resolved? Need maybe sequential due to list \"一条条做\". U? Could be \"one by one\" means do each item sequentially, no gaps. The temporal relation between actions is sequence. U.\n7 explicitly unresolved relations: none. U.\n\nPlan allowed:\nstand(seconds; default 2.0 only when duration absent). Here stand 2 sec and 5 sec.\nwalk_forward(positive meters; cm converts). 4,8,10.\nturn(nonzero signed degrees; left positive, right negative): right 30 -> -30, left 60 -> +60. Absolute <=180. Good.\nstop.\n\nNeed plan format [skill,number], except [\"stop\"]. For stand: [\"stand\",2], walk [\"walk_forward\",4], turn [\"turn\",-30], etc.\n\nNeed ensure units explicit: 米, 度, 秒. Chinese numerals: 二=2, 四=4, 三十=30, 八=8, 五=5, 六十=60, 十=10. Good.\n\nPotential issue: \"站二秒\" stand 2 seconds. \"站五秒\" stand 5. OK.\n\nNeed output exactly status, checks, plan, issues. No commentary.\n\nStatus AUTHORIZED_UNIQUE if all U, complete plan empty issues. Yes.\n\nNeed consider \"我一条条念，你一条条做：\" meta-instruction? It is source includes instruction \"I read one by one, you do one by one\". It might specify order/multiplicity. Not an action? It is an instruction about execution; could be action? We are to inspect entire original source; prefixes/meta-instructions are data. Does \"我一条条念，你一条条做：\" count as an action? It says I will read one by one, you do one by one. It's meta instruction, not a robot skill. The actions are after colon. Should not include. Could it affect action multiplicity/order? It clarifies sequential. Fine.\n\nNeed maybe \"一条条念\" means source says \"I read one by one\" but \"你一条条做\" means \"you do one by one.\" This is an instruction to perform actions in order. Not an executable robot action.\n\nNeed no extra fields. Use JSON object with exactly status, checks, plan, issues. Checks list seven strings. Issues [].\n\nLet's ensure all dimensions:\n- action multiplicity: U because eight actions with repeated stand/forward occurrences. But if \"站二秒／前进四米／右转三十度／前进八米／站五秒／左转六十度／前进十米／停止\" no ambiguous.\n- action order: U.\n- correction/edit scope: U.\n- repetition scope: U. Wait repetition scope dimension: There is repeated action words (stand, walk_forward) twice/thrice. Is repetition scope unresolved? It's not a repetition instruction, just multiple occurrences. We count each occurrence. U.\n- reference resolution: U. There is no anaphora. \"你\" not reference to action. \"一条条\" refers to items. U.\n- temporal relations: U. \"一条条做\" sequentially. Stand durations. Are there explicit temporal relations between actions? \"一条条\" one by one implies sequential, but not necessarily \"then\"? In Chinese, slash-separated list with \"一条条做\" = do them one by one in order. Unique sequential. U.\n- explicitly unresolved relations: U.\n\nPotential nuance: \"站二秒\" could be \"stand for two seconds\" but if followed by \"前进四米\", sequential. No overlap.\n\nNeed produce final JSON. Ensure no markdown.\n\nLet's double-check plan bounds: 1..32 actions, 8 actions. Turn absolute <=180: -30, 60. Stand duration (0,60]: 2,5. walk positive. stop no scalar. Good.\n\nNeed maybe \"turn right thirty degrees\" yields -30. \"left sixty\" +60. Yes.\n\nReturn.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"turn\",-30],[\"walk_forward\",8],[\"stand\",5],[\"turn\",60],[\"walk_forward\",10],[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_994ff7c1-2dd8-4d67-97c0-d6466acde313",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 223,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 1351,
+              "output_tokens_details": {
+                "reasoning_tokens": 1271
+              },
+              "total_tokens": 2086
+            }
+          },
+          "request_sha256": "eda34f75720403b08e3adb3737814de24bac8a7433122427b3f011b94b66a88d",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 7.144432200002484,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_994ff7c1-2dd8-4d67-97c0-d6466acde313",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"turn\",-30],[\"walk_forward\",8],[\"stand\",5],[\"turn\",60],[\"walk_forward\",10],[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 223,
+            "output_tokens": 1351,
+            "total_tokens": 2086
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 5.740612700001293,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "seq-stand-walk-turn-walk-stand-turn-walk-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 49,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+        "provider_status": "completed",
+        "raw_response_chars": 786,
+        "raw_response_sha256": "4090f23def87cf9ceab4e662d2967dfa36325b4377e3accda7e62079b9f47e6a",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_9e6f2ac2-9bf1-4297-892d-ac2f79eece41",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "stand",
+                  2.0
+                ],
+                [
+                  "walk_forward",
+                  4.0
+                ],
+                [
+                  "turn",
+                  -30.0
+                ],
+                [
+                  "walk_forward",
+                  8.0
+                ],
+                [
+                  "stand",
+                  5.0
+                ],
+                [
+                  "turn",
+                  60.0
+                ],
+                [
+                  "walk_forward",
+                  10.0
+                ],
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 7.149433900001895,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 7.144432200002484,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stand\",2],[\"walk_forward\",4],[\"turn\",-30],[\"walk_forward\",8],[\"stand\",5],[\"turn\",60],[\"walk_forward\",10],[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "89f85531dc6b859c0a7df9ffd5e62307ca286a8b38d3908f109732d009ea15f0",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "45a33a24842204a31814278d230a9cf110b3e80679d7a49b0908d8f4113db6f3",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_994ff7c1-2dd8-4d67-97c0-d6466acde313",
+            "source_sha256": "5ca2317387cd05c1f5c7e488d54f5ad0717c329058f03ce244bc333bec2cfe18",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 223,
+              "output_tokens": 1351,
+              "total_tokens": 2086
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 8,
+        "usage": {
+          "input_tokens": 241,
+          "output_tokens": 1089,
+          "total_tokens": 2866
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "seq-stand-walk-turn-walk-stand-turn-walk-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "duration_s": 2.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": -30.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {
+              "distance_m": 8.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s4"
+            ],
+            "id": "s5",
+            "parameters": {
+              "duration_s": 5.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s5"
+            ],
+            "id": "s6",
+            "parameters": {
+              "angle_deg": 60.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s6"
+            ],
+            "id": "s7",
+            "parameters": {
+              "distance_m": 10.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s7"
+            ],
+            "id": "s8",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "我一条条念,你一条条做,站二秒/前进四米/右转三十度/前进八米/站五秒/左转六十度/前进十米/停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

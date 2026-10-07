@@ -1,0 +1,288 @@
+{
+  "input_binding": {
+    "population": "ood",
+    "sample_id": "ood-v-070",
+    "source_sha256": "f3647fe42e9c907f9d1b0f0db89a39c4c609e1052fd165adf598d639fcba4933",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/ood--ood-v-070.json",
+    "v1_sample_sha256": "a898edf9057730e256625da76df67ac7528f9e09e94b7c01e98dce2bd56a13d9"
+  },
+  "v2": {
+    "added_wall_s": 7.996305399999983,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 7.991878899996664,
+          "provider_document": {
+            "created_at": 1791364040,
+            "id": "resp_739cf13b-cd6f-4980-b33c-6f1f6efb1ab0",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_739cf13b-cd6f-4980-b33c-6f1f6efb1ab0",
+                "reasoning_content": "We need answer only JSON. Need parse source Chinese. Need inspect entire source. Source: \"前进：一〇米；站立：二秒；左转：九〇度；停止。\"\n\nNeed determine plan? Need follow rules. Need source authority certificate. Need check seven dimensions exact order. Need handle Chinese numerals and units. Actions:\n前进：一〇米 => walk_forward. \"一〇\" Chinese numeral? This is 10? Need interpret. Chinese digits 一=1, 〇=0. \"一〇米\" likely 10 meters, maybe spelled with digits one-zero. Yes. walk_forward(10).\n站立：二秒 => stand(2 seconds) because explicit duration. Note stand seconds; default 2.0 only when duration absent. Here 二秒 = 2 seconds. stand(2).\n左转：九〇度 => turn left 90 degrees. \"九〇\" = 90. left positive +90.\n停止 => stop.\n\nOrder as listed with semicolons: walk_forward, stand, turn, stop. Need ensure action multiplicity: four actions all unique? \"stop\" no scalar. Action order explicit via sequence and punctuation? Chinese semicolon maybe list. Need temporal relations? There is no \"then\" or sequence words? Source just separates by semicolons. Could be ordered commands? Need assess order dimension. In toy, comma then. Here semicolons between actions. Are semicolons enough to establish order? Need \"preserve order\" from source. It lists actions in order separated by semicolons. In IR plans, sequence order is order. If source lists instructions sequentially, likely ordered. Need check action order U.\n\nNeed correction/edit scope: none U.\nRepetition: none U.\nReference: none U.\nTemporal relations: no explicit temporal relations beyond sequence? Semicolons just list. If order explicit by listing, temporal maybe U. Need consider \"then\" absent but sequence list likely order. The prompt says \"Count every action, preserve order and repetition\"; source order is by sentence/list order. So U.\n\nExplicitly unresolved relations: none U.\n\nNeed unit/quantity issues. Units: 米 meters, 秒 seconds, 度 degrees. Supported. Quantities: positive? walk_forward positive meters. 10 positive. turn nonzero signed degrees; left/counterclockwise positive, right negative. left 90 positive within abs <=180. stand duration (0,60]; 2 ok. Number of actions 4 <=32. All good.\n\nNeed ensure Chinese numeral \"一〇\" not invalid? It may be ambiguous because \"一〇\" means 10 in Chinese? Usually \"十\" is 10, \"一十\" sometimes, \"一〇\" as digits one-zero? In Chinese, \"一〇\" is used for digit sequence like \"10\" in dates? It is recognizable as 10? Need source-authority. Need not silently choose plausible? Hmm. Could be \"一〇米\" includes Chinese numerals 一 and 〇. Is that a valid quantity? \"一〇\" literally 1 and 0, but as a number in Chinese it's nonstandard; standard 10 is 十. However in Chinese, \"〇\" is a digit zero, and \"一〇\" can represent \"10\" in numeral strings, e.g., year 二〇二四. But for quantity meters, \"一〇米\" is unusual but unambiguous? It might mean 10 meters. The instruction says never silently choose plausible reading. Need identify if ambiguous? Let's examine. Source uses Chinese numerals with colon. \"九〇度\" similarly nonstandard for 90 (usually 九十). But \"九〇\" as digits 9 0 = 90. It is common in Chinese to write numbers digit by digit with 〇 for zero, but \"九〇\" may be 90 in a code/year? For measurements, usually \"九十度\" not \"九〇度\". Could be intentionally testing Chinese numerals. Need decide if \"一〇\" and \"九〇\" are unambiguous enough as numeric values? They are strings of Chinese digits: 一〇 = 10, 九〇 = 90. The source likely expects parse as 10 and 90. If ambiguous, would status AMBIGUOUS with quantity? But rules for quantity issue: missing required quantity ambiguous; vague. Not for nonstandard numeral. Unknown/unit? Not.\n\nNeed maybe \"前进：一〇米\" = \"Forward: one zero meters\"? There is no separator between digits but Chinese numeral concatenation normally additive/multiplicative? \"一〇\" if concatenated as digits is 10; if read as \"one zero\" not a quantity? Hmm.\n\nNeed consider \"站立：二秒\" stand duration 2 sec. Stand allowed (0,60], 2 ok.\n\nNeed output plan arrays. For walk_forward number in meters. [\"walk_forward\",10]. For turn left 90: [\"turn\",90] (positive). For stop [\"stop\"].\n\nCheck dimension strings all U. Status AUTHORIZED_UNIQUE. Issues [].\n\nNeed ensure exact JSON object no commentary. Let's formulate.\n\nBut need be cautious about \"then\" absent. Source uses semicolons, not \"then\". It is a sequence of commands. In natural language commands separated by semicolons, order likely order. The dimension \"action order\" could be U as listed. If there is no explicit temporal sequencing? But \"preserve order\" means if multiple actions, plan order as source order. Semicolons indicate list order. The toy source used commas and then. Here all separated by semicolons. I think U.\n\nNeed maybe \"前进\" maps to walk_forward; \"站立\" maps to stand; \"左转\" maps to turn with positive; \"停止\" maps to stop. Good.\n\nNeed no extra fields. checks array seven U strings. plan array four pairs. issues [].\n\nLet's answer. ",
+                "summary": [
+                  {
+                    "text": "We need answer only JSON. Need parse source Chinese. Need inspect entire source. Source: \"前进：一〇米；站立：二秒；左转：九〇度；停止。\"\n\nNeed determine plan? Need follow rules. Need source authority certificate. Need check seven dimensions exact order. Need handle Chinese numerals and units. Actions:\n前进：一〇米 => walk_forward. \"一〇\" Chinese numeral? This is 10? Need interpret. Chinese digits 一=1, 〇=0. \"一〇米\" likely 10 meters, maybe spelled with digits one-zero. Yes. walk_forward(10).\n站立：二秒 => stand(2 seconds) because explicit duration. Note stand seconds; default 2.0 only when duration absent. Here 二秒 = 2 seconds. stand(2).\n左转：九〇度 => turn left 90 degrees. \"九〇\" = 90. left positive +90.\n停止 => stop.\n\nOrder as listed with semicolons: walk_forward, stand, turn, stop. Need ensure action multiplicity: four actions all unique? \"stop\" no scalar. Action order explicit via sequence and punctuation? Chinese semicolon maybe list. Need temporal relations? There is no \"then\" or sequence words? Source just separates by semicolons. Could be ordered commands? Need assess order dimension. In toy, comma then. Here semicolons between actions. Are semicolons enough to establish order? Need \"preserve order\" from source. It lists actions in order separated by semicolons. In IR plans, sequence order is order. If source lists instructions sequentially, likely ordered. Need check action order U.\n\nNeed correction/edit scope: none U.\nRepetition: none U.\nReference: none U.\nTemporal relations: no explicit temporal relations beyond sequence? Semicolons just list. If order explicit by listing, temporal maybe U. Need consider \"then\" absent but sequence list likely order. The prompt says \"Count every action, preserve order and repetition\"; source order is by sentence/list order. So U.\n\nExplicitly unresolved relations: none U.\n\nNeed unit/quantity issues. Units: 米 meters, 秒 seconds, 度 degrees. Supported. Quantities: positive? walk_forward positive meters. 10 positive. turn nonzero signed degrees; left/counterclockwise positive, right negative. left 90 positive within abs <=180. stand duration (0,60]; 2 ok. Number of actions 4 <=32. All good.\n\nNeed ensure Chinese numeral \"一〇\" not invalid? It may be ambiguous because \"一〇\" means 10 in Chinese? Usually \"十\" is 10, \"一十\" sometimes, \"一〇\" as digits one-zero? In Chinese, \"一〇\" is used for digit sequence like \"10\" in dates? It is recognizable as 10? Need source-authority. Need not silently choose plausible? Hmm. Could be \"一〇米\" includes Chinese numerals 一 and 〇. Is that a valid quantity? \"一〇\" literally 1 and 0, but as a number in Chinese it's nonstandard; standard 10 is 十. However in Chinese, \"〇\" is a digit zero, and \"一〇\" can represent \"10\" in numeral strings, e.g., year 二〇二四. But for quantity meters, \"一〇米\" is unusual but unambiguous? It might mean 10 meters. The instruction says never silently choose plausible reading. Need identify if ambiguous? Let's examine. Source uses Chinese numerals with colon. \"九〇度\" similarly nonstandard for 90 (usually 九十). But \"九〇\" as digits 9 0 = 90. It is common in Chinese to write numbers digit by digit with 〇 for zero, but \"九〇\" may be 90 in a code/year? For measurements, usually \"九十度\" not \"九〇度\". Could be intentionally testing Chinese numerals. Need decide if \"一〇\" and \"九〇\" are unambiguous enough as numeric values? They are strings of Chinese digits: 一〇 = 10, 九〇 = 90. The source likely expects parse as 10 and 90. If ambiguous, would status AMBIGUOUS with quantity? But rules for quantity issue: missing required quantity ambiguous; vague. Not for nonstandard numeral. Unknown/unit? Not.\n\nNeed maybe \"前进：一〇米\" = \"Forward: one zero meters\"? There is no separator between digits but Chinese numeral concatenation normally additive/multiplicative? \"一〇\" if concatenated as digits is 10; if read as \"one zero\" not a quantity? Hmm.\n\nNeed consider \"站立：二秒\" stand duration 2 sec. Stand allowed (0,60], 2 ok.\n\nNeed output plan arrays. For walk_forward number in meters. [\"walk_forward\",10]. For turn left 90: [\"turn\",90] (positive). For stop [\"stop\"].\n\nCheck dimension strings all U. Status AUTHORIZED_UNIQUE. Issues [].\n\nNeed ensure exact JSON object no commentary. Let's formulate.\n\nBut need be cautious about \"then\" absent. Source uses semicolons, not \"then\". It is a sequence of commands. In natural language commands separated by semicolons, order likely order. The dimension \"action order\" could be U as listed. If there is no explicit temporal sequencing? But \"preserve order\" means if multiple actions, plan order as source order. Semicolons indicate list order. The toy source used commas and then. Here all separated by semicolons. I think U.\n\nNeed maybe \"前进\" maps to walk_forward; \"站立\" maps to stand; \"左转\" maps to turn with positive; \"停止\" maps to stop. Good.\n\nNeed no extra fields. checks array seven U strings. plan array four pairs. issues [].\n\nLet's answer. ",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",10],[\"stand\",2],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_739cf13b-cd6f-4980-b33c-6f1f6efb1ab0",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 201,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 1295,
+              "output_tokens_details": {
+                "reasoning_tokens": 1240
+              },
+              "total_tokens": 2008
+            }
+          },
+          "request_sha256": "2cafc18cc8ab6a32b0c772a0af329132471e393a4b59b6568f264edbc4164526",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 7.9904732999966654,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_739cf13b-cd6f-4980-b33c-6f1f6efb1ab0",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",10],[\"stand\",2],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 201,
+            "output_tokens": 1295,
+            "total_tokens": 2008
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 2.9843801999995776,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "cmd-walk-stand-turn-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 22,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+        "provider_status": "completed",
+        "raw_response_chars": 431,
+        "raw_response_sha256": "a4489fcaaa827645f440306147b48fc9ea5c951115408cb3925d62ca23b9933a",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_5b30135f-1fe0-4fe7-9e67-b7dd6d046f3f",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "walk_forward",
+                  10.0
+                ],
+                [
+                  "stand",
+                  2.0
+                ],
+                [
+                  "turn",
+                  90.0
+                ],
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 7.99549350000234,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 7.9904732999966654,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",10],[\"stand\",2],[\"turn\",90],[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "e631978924714e9edecc066ef6296cf7ec8df028c06b1398d3b09009ca8ef1f2",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "b8120ebb620d29731b3a2f2a00866c241d5c3ae303e72319b5485e16215fb198",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_739cf13b-cd6f-4980-b33c-6f1f6efb1ab0",
+            "source_sha256": "f3647fe42e9c907f9d1b0f0db89a39c4c609e1052fd165adf598d639fcba4933",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 201,
+              "output_tokens": 1295,
+              "total_tokens": 2008
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 4,
+        "usage": {
+          "input_tokens": 219,
+          "output_tokens": 440,
+          "total_tokens": 2195
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "cmd-walk-stand-turn-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "distance_m": 10.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "duration_s": 2.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": 90.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "前进,一〇米,站立,二秒,左转,九〇度,停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

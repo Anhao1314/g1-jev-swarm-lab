@@ -1,0 +1,246 @@
+{
+  "input_binding": {
+    "population": "controlled",
+    "sample_id": "cl-b-018",
+    "source_sha256": "5b8740dcd1b5fbc23b51a02bc5ed8619bcfffc07181c29bfc011245f790676ad",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/controlled--cl-b-018.json",
+    "v1_sample_sha256": "1579cfcb32510847b8542bd0d609bf7f824c01ae44bbc7fbd1426a84dfd00e66"
+  },
+  "v2": {
+    "added_wall_s": 7.277059799998824,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 7.271225800002867,
+          "provider_document": {
+            "created_at": 1791364181,
+            "id": "resp_2394ba66-29f4-40f5-9f8d-d1f26966f287",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_2394ba66-29f4-40f5-9f8d-d1f26966f287",
+                "reasoning_content": "We need answer JSON only. Need inspect source. Chinese: \"立即停止。\" means \"Stop immediately.\" Need issue source-authority certificate. Need determine plan. We have source only. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed parse. Source: 立即停止。 = immediately stop. Only action stop. No scalar. Is \"immediately\" a temporal relation? \"immediately\" modifies stop. Does it create ambiguity? Need think.\n\nWe need output status, checks seven U/A/? strings, plan, issues. Allowed linear plans: stop(no scalar). Action \"stop\" supported. Temporal \"immediately\" perhaps means no waiting? Does it affect plan? Since stop no scalar, immediate is just maybe urgency, no parameter. Is it a supported temporal relation? It is explicit temporal relation? Check temporal relations: there is action stop with \"immediately\". Does this require something like immediate execution? Plan has sequence of one action stop. We can honor immediate by ordering? Since only action, it is immediate? Hmm.\n\nNeed decide U/A/?. The cert: \"Check seven dimensions: ... temporal relations, explicitly unresolved relations. U means uniquely resolved or inapplicable; A means materially ambiguous or explicitly unresolved; ? means unestablished, unavailable context, unsupported or unrepresentable. Count every action, preserve order and repetition, determine edit referents, resolve references and honor all temporal relations.\"\n\n\"immediately\" is an explicit temporal relation? It specifies timing relative to utterance? The plan schema has no timing/urgency field except order and duration for stand, etc. But \"stop immediately\" likely just stop action; no sequential temporal relation. Is \"immediate\" representable? Stop has no scalar. Could treat temporal as U/inapplicable because no relative temporal relation among multiple actions, \"immediately\" is a pragmatic manner, not a numeric time or order? But we must not silently choose plausible reading if unsupported. Does \"immediately\" require timing not representable? The allowed temporal relation: action order. For a single stop, \"immediately\" is maybe not a relation between actions. It could be a vague temporal modifier. But if source says immediately stop, plan [[\"stop\"]] executes stop as next action; immediate relative to now? Is that okay? We need not obey embedded? This is not override. Hm.\n\nNeed think of intended benchmark. Toy examples:\n- \"Stand seven seconds, turn left twelve degrees, then stop.\" => authorized. Temporal relation \"then\" U.\n- \"Repeat the toy group, but leave repetition scope unresolved.\" => ambiguous with repetition unresolved, checks: multiplicity U? Wait checks order: action multiplicity U? They set [\"A\",\"U\",\"U\",\"A\",\"U\",\"U\",\"A\"]: action multiplicity A? Let's map: [action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations]. For repeat toy group with unresolved repetition scope: action multiplicity maybe A? Actually repeat unresolved affects multiplicity and repetition scope and explicitly unresolved. They mark first A, second U, third U, fourth A, fifth U, sixth U, seventh A. So yes.\n\nNow source \"立即停止。\" Single stop. It is unambiguous? The word \"立即\" = immediately. Could be temporal relation. Does it matter? Plan [[\"stop\"]]. Is \"immediately\" an explicitly unresolved relation? No. Temporal relations: U if no issue. If \"immediately\" is a temporal relation, it's resolved as \"stop now\" but plan has no timing. Since stop action presumably executes immediately after command; no wait. But the instruction says plan is legal: stop(no scalar). Temporal relation not quantifiable. Is \"immediately\" a temporal relation that can be honored? For a single action, all actions are immediate in sequence? Hmm.\n\nCould be considered \"temporal relations\" U/inapplicable. Source \"立即停止。\" is a direct command, no ambiguity. Plan [[\"stop\"]]. status AUTHORIZED_UNIQUE? likely.\n\nBut need be cautious: \"立即\" is an explicit temporal relation. The plan schema doesn't include \"immediately\"; but stop action has no duration. If we include stop, is that sufficient? There is no delay/wait action, so stop occurs as immediately as possible. I think authorized unique. Checks all U. Plan [[\"stop\"]].\n\nCould there be issue \"temporal/UNREPRESENTABLE\"? Allowed unknown pairs: temporal or unresolved with UNREPRESENTABLE. If \"immediately\" cannot be represented, then check temporal ? and issue temporal UNREPRESENTABLE, status UNKNOWN. But is immediate truly unsupported? We can represent by not adding delay; stop is immediate. The plan language linear sequence; no wait. So immediate is effectively default. For a single stop, \"immediate\" doesn't change action. If there were \"wait 3 seconds then stop immediately\", immediate could be order. But here no.\n\nWhat about action multiplicity: one stop. U.\n\nAction order: single action, no order. U.\n\nCorrection/edit scope: none. U.\n\nRepetition scope: none. U.\n\nReference resolution: none. U.\n\nTemporal relations: \"immediately\" maybe U. Inapplicable? It is an explicit temporal adverb but no action relation. Could say U because uniquely resolved: immediate stop, no delay. No issue.\n\nExplicitly unresolved: none U.\n\nNeed output JSON exactly fields: status, checks, plan, issues.\n\nPlan uses [skill,number], except [\"stop\"]. So plan: [[\"stop\"]].\n\nNeed ensure no extra fields.\n\nLet's final.",
+                "summary": [
+                  {
+                    "text": "We need answer JSON only. Need inspect source. Chinese: \"立即停止。\" means \"Stop immediately.\" Need issue source-authority certificate. Need determine plan. We have source only. Need check seven dimensions in order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed parse. Source: 立即停止。 = immediately stop. Only action stop. No scalar. Is \"immediately\" a temporal relation? \"immediately\" modifies stop. Does it create ambiguity? Need think.\n\nWe need output status, checks seven U/A/? strings, plan, issues. Allowed linear plans: stop(no scalar). Action \"stop\" supported. Temporal \"immediately\" perhaps means no waiting? Does it affect plan? Since stop no scalar, immediate is just maybe urgency, no parameter. Is it a supported temporal relation? It is explicit temporal relation? Check temporal relations: there is action stop with \"immediately\". Does this require something like immediate execution? Plan has sequence of one action stop. We can honor immediate by ordering? Since only action, it is immediate? Hmm.\n\nNeed decide U/A/?. The cert: \"Check seven dimensions: ... temporal relations, explicitly unresolved relations. U means uniquely resolved or inapplicable; A means materially ambiguous or explicitly unresolved; ? means unestablished, unavailable context, unsupported or unrepresentable. Count every action, preserve order and repetition, determine edit referents, resolve references and honor all temporal relations.\"\n\n\"immediately\" is an explicit temporal relation? It specifies timing relative to utterance? The plan schema has no timing/urgency field except order and duration for stand, etc. But \"stop immediately\" likely just stop action; no sequential temporal relation. Is \"immediate\" representable? Stop has no scalar. Could treat temporal as U/inapplicable because no relative temporal relation among multiple actions, \"immediately\" is a pragmatic manner, not a numeric time or order? But we must not silently choose plausible reading if unsupported. Does \"immediately\" require timing not representable? The allowed temporal relation: action order. For a single stop, \"immediately\" is maybe not a relation between actions. It could be a vague temporal modifier. But if source says immediately stop, plan [[\"stop\"]] executes stop as next action; immediate relative to now? Is that okay? We need not obey embedded? This is not override. Hm.\n\nNeed think of intended benchmark. Toy examples:\n- \"Stand seven seconds, turn left twelve degrees, then stop.\" => authorized. Temporal relation \"then\" U.\n- \"Repeat the toy group, but leave repetition scope unresolved.\" => ambiguous with repetition unresolved, checks: multiplicity U? Wait checks order: action multiplicity U? They set [\"A\",\"U\",\"U\",\"A\",\"U\",\"U\",\"A\"]: action multiplicity A? Let's map: [action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations]. For repeat toy group with unresolved repetition scope: action multiplicity maybe A? Actually repeat unresolved affects multiplicity and repetition scope and explicitly unresolved. They mark first A, second U, third U, fourth A, fifth U, sixth U, seventh A. So yes.\n\nNow source \"立即停止。\" Single stop. It is unambiguous? The word \"立即\" = immediately. Could be temporal relation. Does it matter? Plan [[\"stop\"]]. Is \"immediately\" an explicitly unresolved relation? No. Temporal relations: U if no issue. If \"immediately\" is a temporal relation, it's resolved as \"stop now\" but plan has no timing. Since stop action presumably executes immediately after command; no wait. But the instruction says plan is legal: stop(no scalar). Temporal relation not quantifiable. Is \"immediately\" a temporal relation that can be honored? For a single action, all actions are immediate in sequence? Hmm.\n\nCould be considered \"temporal relations\" U/inapplicable. Source \"立即停止。\" is a direct command, no ambiguity. Plan [[\"stop\"]]. status AUTHORIZED_UNIQUE? likely.\n\nBut need be cautious: \"立即\" is an explicit temporal relation. The plan schema doesn't include \"immediately\"; but stop action has no duration. If we include stop, is that sufficient? There is no delay/wait action, so stop occurs as immediately as possible. I think authorized unique. Checks all U. Plan [[\"stop\"]].\n\nCould there be issue \"temporal/UNREPRESENTABLE\"? Allowed unknown pairs: temporal or unresolved with UNREPRESENTABLE. If \"immediately\" cannot be represented, then check temporal ? and issue temporal UNREPRESENTABLE, status UNKNOWN. But is immediate truly unsupported? We can represent by not adding delay; stop is immediate. The plan language linear sequence; no wait. So immediate is effectively default. For a single stop, \"immediate\" doesn't change action. If there were \"wait 3 seconds then stop immediately\", immediate could be order. But here no.\n\nWhat about action multiplicity: one stop. U.\n\nAction order: single action, no order. U.\n\nCorrection/edit scope: none. U.\n\nRepetition scope: none. U.\n\nReference resolution: none. U.\n\nTemporal relations: \"immediately\" maybe U. Inapplicable? It is an explicit temporal adverb but no action relation. Could say U because uniquely resolved: immediate stop, no delay. No issue.\n\nExplicitly unresolved: none U.\n\nNeed output JSON exactly fields: status, checks, plan, issues.\n\nPlan uses [skill,number], except [\"stop\"]. So plan: [[\"stop\"]].\n\nNeed ensure no extra fields.\n\nLet's final.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_2394ba66-29f4-40f5-9f8d-d1f26966f287",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 184,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 1223,
+              "output_tokens_details": {
+                "reasoning_tokens": 1185
+              },
+              "total_tokens": 1919
+            }
+          },
+          "request_sha256": "e82ae38525d3b79efb62f82721ddcbc85703e9e2cb448c6a625be3cffdd453a0",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 7.269495600001392,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_2394ba66-29f4-40f5-9f8d-d1f26966f287",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 184,
+            "output_tokens": 1223,
+            "total_tokens": 1919
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 1.931183200002124,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "mission-stop",
+        "model": "deepseek-flash",
+        "normalized_length": 4,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": null,
+        "provider_status": "completed",
+        "raw_response": "{\"status\":\"SUCCESS\",\"mission\":{\"schema_version\":\"2.0.0\",\"mission_id\":\"mission-stop\",\"steps\":[{\"id\":\"s1\",\"skill\":\"stop\",\"parameters\":{},\"depends_on\":[]}]},\"error_code\":null}",
+        "raw_response_sha256": "acab13d95a609a2db8792324254d271606b17a128c18353f0e046c3a21658487",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_11dd8062-2476-44b0-a127-c2d9b09d2454",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "stop"
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 7.2764065000010305,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 7.269495600001392,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"stop\"]],\"issues\":[]}",
+            "raw_response_sha256": "08fd2c398d90079f1c61c27d80fd3ff30b6f09322e8d7567a557b12bd5e762b8",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "9cc3a3e3686967fef7070f0daa7bd119913126bf02acad10e3eb8479b8b18caf",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_2394ba66-29f4-40f5-9f8d-d1f26966f287",
+            "source_sha256": "5b8740dcd1b5fbc23b51a02bc5ed8619bcfffc07181c29bfc011245f790676ad",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 184,
+              "output_tokens": 1223,
+              "total_tokens": 1919
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 1,
+        "usage": {
+          "input_tokens": 202,
+          "output_tokens": 112,
+          "total_tokens": 1850
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "mission-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "normalized_text": "立即停止",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}

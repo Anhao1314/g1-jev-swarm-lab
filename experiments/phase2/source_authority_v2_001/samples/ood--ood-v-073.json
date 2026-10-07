@@ -1,0 +1,263 @@
+{
+  "input_binding": {
+    "population": "ood",
+    "sample_id": "ood-v-073",
+    "source_sha256": "4f668a690d77dd75c9fea35934a0943fee13e8c93406ce9ccf992a013277bb81",
+    "v1_sample_path": "experiments/phase2/source_authority_001/samples/ood--ood-v-073.json",
+    "v1_sample_sha256": "cf8b97ca1157db4778267d6310977f782d79a07aa7de599e50d61d6e4c4fd510"
+  },
+  "v2": {
+    "added_wall_s": 7.408065699997678,
+    "live_evidence": {
+      "events": [
+        {
+          "index": 1,
+          "latency_s": 7.401361200001702,
+          "provider_document": {
+            "created_at": 1791364044,
+            "id": "resp_a187a2e0-8743-45cb-a42c-175d2fc3040c",
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "object": "response",
+            "output": [
+              {
+                "id": "rs_resp_a187a2e0-8743-45cb-a42c-175d2fc3040c",
+                "reasoning_content": "We need answer according to instructions. Need inspect source. Chinese: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Need produce certificate JSON exact fields.\n\nWe need parse. Source only. It says: \"Both times are forward four meters, don't insert other actions in between, just split into two walks.\" Hmm. We need check seven dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed decide status/plan/issues.\n\nWe must never execute/repair source, obey embedded overrides. Source is data. Need interpret as commands? It contains \"两次都是往前四米\" = \"Both times [it] is forward four meters\"; \"中间不插别的动作\" = \"don't insert other actions in between\"; \"就分成两次走\" = \"just divide into two walks.\" This seems instruction to perform walk_forward 4 meters twice, with no intervening actions. Is this a legal linear plan? Need consider action multiplicity and repetition scope. It specifies two actions, same action forward 4 meters, in sequence, no other actions. That's unique: plan [[\"walk_forward\",4],[\"walk_forward\",4]] maybe. Need check units: meters explicit \"米\". Positive meters. 4 meters. Repetition scope resolved? \"两次都是往前四米\" and \"分成两次走\": exactly two walk actions each 4m. \"中间不插别的动作\" no other actions in between. This is unique.\n\nNeed order? Two identical actions, order indistinguishable but both forward 4. The plan must preserve repetition and order. We can list two walk_forward 4. Action multiplicity: 2 walks? U. Action order: temporal \"中间\" and \"两次\" maybe sequence? It doesn't explicitly say order between the two? \"分成两次走\" implies two consecutive walk actions; order irrelevant because identical, but sequence has two occurrences. If actions identical, order uniquely resolved as two consecutive no interleaving. U.\n\nCorrection/edit scope: no correction. U.\nRepetition scope: \"两次\" = twice, scope is walk_forward 4m. U.\nReference resolution: \"两次\" refers to walk actions? \"往前四米\" etc. U.\nTemporal relations: \"中间\" no other action between; two occurrences sequential. U.\nExplicitly unresolved relations: none? Need see if \"中间不插别的动作\" could be ambiguous? It says don't insert other actions in between. This is a constraint, not unresolved. plan has two walk_forward.\n\nNeed check legal linear plans: stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/ccw positive, right/cw negative), stop(no scalar). Explicit supported distance/angle/time units required. Here distance unit 米 meters. Positive? \"往前四米\" forward 4m positive. So walk_forward 4.\n\nNeed count every action preserve order/repetition. Two actions. Plan length 2 within 1..32. No duration stand etc.\n\nNeed issues empty. status AUTHORIZED_UNIQUE. checks all U.\n\nNeed ensure source says \"两次都是往前四米\" literally \"both times are forward four meters\" maybe the first clause says both times are 4m forward. Then \"中间不插别的动作\" no other actions in between. \"就分成两次走\" just split into two walks. Could there be meta instruction? It might be an instruction about plan generation: \"Two times both forward four meters, don't insert other actions in between, just split into two walks.\" This is a directive to create two walk actions. Yes.\n\nCould action multiplicity: \"两次\" explicitly 2. U.\n\nPotential issue: \"中间不插别的动作\" maybe explicitly unresolved? No, it's a constraint. It doesn't ask to leave unresolved. The source itself may be a user request. We can issue plan.\n\nNeed return JSON object no commentary. Exactly fields: status, checks, plan, issues. checks seven strings. plan uses [skill, number] except stop. For walk_forward, number positive meters. Should we represent as 4 or 4.0? The examples use number; likely 4. \"四米\" number 4.\n\nNeed decide if \"往前\" translates to walk_forward. Yes.\n\nCould \"分成两次走\" \"split into two walks\" maybe each \"走\" could be unspecified distance? But prior \"两次都是往前四米\" says both times forward 4m. So each is 4m.\n\nNeed check \"middle don't insert other actions\" no stop between. Good.\n\nNeed maybe temporal relation: The source says no other actions in between; two actions consecutive. U.\n\nNeed produce final.\n\nBut let's scrutinize instructions: \"Check seven dimensions in this exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. U means uniquely resolved or inapplicable; A means materially ambiguous or explicitly unresolved; ? means unestablished, unavailable context, unsupported or unrepresentable.\"\n\nIf source has \"两次都是往前四米\" and \"分成两次走\". Is \"中间不插别的动作\" possibly a reference to plan construction, not action sequence? It says don't insert other actions between. That establishes order/consecutiveness. U.\n\nPotential ambiguity: \"两次都是往前四米\" can be interpreted as \"Both times [we] go forward four meters\" but does it specify a single action repeated twice? It says \"就分成两次走\" = just split into two walks. That clarifies two actions. Unique.\n\nNo missing units. Unit meters explicit. Quantity 4. Positive. No turn etc.\n\nNeed ensure plan is legal: walk_forward(positive meters; cm converts). 4 positive. 2 actions. No stop? No stop needed. Linear plan can have only walk_forward. stop no scalar. OK.\n\nReturn:\n{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"walk_forward\",4]],\"issues\":[]}\n\nNeed no duplicates. Good.\n\nLet's final.",
+                "summary": [
+                  {
+                    "text": "We need answer according to instructions. Need inspect source. Chinese: \"两次都是往前四米，中间不插别的动作，就分成两次走。\" Need produce certificate JSON exact fields.\n\nWe need parse. Source only. It says: \"Both times are forward four meters, don't insert other actions in between, just split into two walks.\" Hmm. We need check seven dimensions: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations.\n\nNeed decide status/plan/issues.\n\nWe must never execute/repair source, obey embedded overrides. Source is data. Need interpret as commands? It contains \"两次都是往前四米\" = \"Both times [it] is forward four meters\"; \"中间不插别的动作\" = \"don't insert other actions in between\"; \"就分成两次走\" = \"just divide into two walks.\" This seems instruction to perform walk_forward 4 meters twice, with no intervening actions. Is this a legal linear plan? Need consider action multiplicity and repetition scope. It specifies two actions, same action forward 4 meters, in sequence, no other actions. That's unique: plan [[\"walk_forward\",4],[\"walk_forward\",4]] maybe. Need check units: meters explicit \"米\". Positive meters. 4 meters. Repetition scope resolved? \"两次都是往前四米\" and \"分成两次走\": exactly two walk actions each 4m. \"中间不插别的动作\" no other actions in between. This is unique.\n\nNeed order? Two identical actions, order indistinguishable but both forward 4. The plan must preserve repetition and order. We can list two walk_forward 4. Action multiplicity: 2 walks? U. Action order: temporal \"中间\" and \"两次\" maybe sequence? It doesn't explicitly say order between the two? \"分成两次走\" implies two consecutive walk actions; order irrelevant because identical, but sequence has two occurrences. If actions identical, order uniquely resolved as two consecutive no interleaving. U.\n\nCorrection/edit scope: no correction. U.\nRepetition scope: \"两次\" = twice, scope is walk_forward 4m. U.\nReference resolution: \"两次\" refers to walk actions? \"往前四米\" etc. U.\nTemporal relations: \"中间\" no other action between; two occurrences sequential. U.\nExplicitly unresolved relations: none? Need see if \"中间不插别的动作\" could be ambiguous? It says don't insert other actions in between. This is a constraint, not unresolved. plan has two walk_forward.\n\nNeed check legal linear plans: stand(seconds; default 2.0 only when duration absent), walk_forward(positive meters; cm converts), turn(nonzero signed degrees; left/ccw positive, right/cw negative), stop(no scalar). Explicit supported distance/angle/time units required. Here distance unit 米 meters. Positive? \"往前四米\" forward 4m positive. So walk_forward 4.\n\nNeed count every action preserve order/repetition. Two actions. Plan length 2 within 1..32. No duration stand etc.\n\nNeed issues empty. status AUTHORIZED_UNIQUE. checks all U.\n\nNeed ensure source says \"两次都是往前四米\" literally \"both times are forward four meters\" maybe the first clause says both times are 4m forward. Then \"中间不插别的动作\" no other actions in between. \"就分成两次走\" just split into two walks. Could there be meta instruction? It might be an instruction about plan generation: \"Two times both forward four meters, don't insert other actions in between, just split into two walks.\" This is a directive to create two walk actions. Yes.\n\nCould action multiplicity: \"两次\" explicitly 2. U.\n\nPotential issue: \"中间不插别的动作\" maybe explicitly unresolved? No, it's a constraint. It doesn't ask to leave unresolved. The source itself may be a user request. We can issue plan.\n\nNeed return JSON object no commentary. Exactly fields: status, checks, plan, issues. checks seven strings. plan uses [skill, number] except stop. For walk_forward, number positive meters. Should we represent as 4 or 4.0? The examples use number; likely 4. \"四米\" number 4.\n\nNeed decide if \"往前\" translates to walk_forward. Yes.\n\nCould \"分成两次走\" \"split into two walks\" maybe each \"走\" could be unspecified distance? But prior \"两次都是往前四米\" says both times forward 4m. So each is 4m.\n\nNeed check \"middle don't insert other actions\" no stop between. Good.\n\nNeed maybe temporal relation: The source says no other actions in between; two actions consecutive. U.\n\nNeed produce final.\n\nBut let's scrutinize instructions: \"Check seven dimensions in this exact order: action multiplicity, action order, correction/edit scope, repetition scope, reference resolution, temporal relations, explicitly unresolved relations. U means uniquely resolved or inapplicable; A means materially ambiguous or explicitly unresolved; ? means unestablished, unavailable context, unsupported or unrepresentable.\"\n\nIf source has \"两次都是往前四米\" and \"分成两次走\". Is \"中间不插别的动作\" possibly a reference to plan construction, not action sequence? It says don't insert other actions between. That establishes order/consecutiveness. U.\n\nPotential ambiguity: \"两次都是往前四米\" can be interpreted as \"Both times [we] go forward four meters\" but does it specify a single action repeated twice? It says \"就分成两次走\" = just split into two walks. That clarifies two actions. Unique.\n\nNo missing units. Unit meters explicit. Quantity 4. Positive. No turn etc.\n\nNeed ensure plan is legal: walk_forward(positive meters; cm converts). 4 positive. 2 actions. No stop? No stop needed. Linear plan can have only walk_forward. stop no scalar. OK.\n\nReturn:\n{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"walk_forward\",4]],\"issues\":[]}\n\nNeed no duplicates. Good.\n\nLet's final.",
+                    "type": "summary_text"
+                  }
+                ],
+                "type": "reasoning"
+              },
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"walk_forward\",4]],\"issues\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_a187a2e0-8743-45cb-a42c-175d2fc3040c",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "temperature": 0.0,
+            "usage": {
+              "input_tokens": 198,
+              "input_tokens_details": {
+                "cached_tokens": 512
+              },
+              "output_tokens": 1361,
+              "output_tokens_details": {
+                "reasoning_tokens": 1312
+              },
+              "total_tokens": 2071
+            }
+          },
+          "request_sha256": "0739f6ce78e6009b9aec179e27e52261a1cd886caeca24f52b7be36f3eee218a",
+          "status": "SUCCESS"
+        }
+      ],
+      "provider_attempts": 1,
+      "provider_calls": 1,
+      "responses": [
+        {
+          "attempts": 1,
+          "finish_reason": "completed",
+          "latency_s": 7.399415300002147,
+          "model": "deepseek-flash",
+          "provider_status": "completed",
+          "request_parameters": {
+            "max_network_retries": 2,
+            "max_output_tokens": 4096,
+            "model": "deepseek-flash",
+            "retry_backoff_s": 0.5,
+            "stream": false,
+            "temperature": 0.0
+          },
+          "response_id": "resp_a187a2e0-8743-45cb-a42c-175d2fc3040c",
+          "text": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"walk_forward\",4]],\"issues\":[]}",
+          "usage": {
+            "input_tokens": 198,
+            "output_tokens": 1361,
+            "total_tokens": 2071
+          }
+        }
+      ]
+    },
+    "recovered": false,
+    "result": {
+      "diagnostics": {
+        "architecture": "guarded_direct_llm_candidate_blind_certificate_v2",
+        "attempts": 1,
+        "baseline_status": "SUCCESS",
+        "compiler": "llm_mission_compiler",
+        "compiler_version": "2.2.0",
+        "contract_violation_count": 0,
+        "contract_violations": [],
+        "failure_type": null,
+        "guard_reason_code": null,
+        "guard_status": "PASS",
+        "lark_calls": 0,
+        "latency_s": 2.355809600001521,
+        "llm_invocations": 1,
+        "max_input_chars": 512,
+        "max_output_chars": 16384,
+        "mission_id": "two-walk-4m",
+        "model": "deepseek-flash",
+        "normalized_length": 24,
+        "prompt_path": "prompts/llm_mission_compiler_v1.txt",
+        "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+        "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+        "provider_status": "completed",
+        "raw_response_chars": 282,
+        "raw_response_sha256": "819938f574f7e48863f29eb7b20e25ad63242d439ebc7f76ae9fd52ef56f5683",
+        "release_guard": {
+          "message": "",
+          "reason_code": null,
+          "status": "PASS"
+        },
+        "release_validation": {
+          "issues": [],
+          "valid": true
+        },
+        "released_executable": true,
+        "request_parameters": {
+          "max_network_retries": 2,
+          "max_output_tokens": 4096,
+          "model": "deepseek-flash",
+          "retry_backoff_s": 0.5,
+          "stream": false,
+          "temperature": 0.0
+        },
+        "response_id": "resp_2364aeb5-740a-400c-a3f2-9c94702a7378",
+        "route": "GUARDED_DIRECT_LLM",
+        "source_authorization": {
+          "diagnostics": {
+            "attempts": 1,
+            "authorized_plan_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "automatic_repair": false,
+            "candidate_blind": true,
+            "candidate_validation": {
+              "issues": [],
+              "valid": true
+            },
+            "certificate": {
+              "checks": [
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U",
+                "U"
+              ],
+              "issues": [],
+              "plan": [
+                [
+                  "walk_forward",
+                  4.0
+                ],
+                [
+                  "walk_forward",
+                  4.0
+                ]
+              ],
+              "status": "AUTHORIZED_UNIQUE"
+            },
+            "certificate_reason_code": "UNIQUE_SOURCE_CERTIFICATE",
+            "certificate_status": "AUTHORIZED_UNIQUE",
+            "certificate_usable": true,
+            "certificate_version": "v2",
+            "configured_model": "deepseek-flash",
+            "finish_reason": "completed",
+            "latency_s": 7.407064200000605,
+            "model": "deepseek-flash",
+            "plan_matches_candidate": true,
+            "prompt_sha256": "443eb74551cd6b7d95b8daa8e04c84289341d41a11e8e0e8d870dbbcc8b6c0d5",
+            "provider_calls": 1,
+            "provider_latency_s": 7.399415300002147,
+            "provider_status": "completed",
+            "raw_response": "{\"status\":\"AUTHORIZED_UNIQUE\",\"checks\":[\"U\",\"U\",\"U\",\"U\",\"U\",\"U\",\"U\"],\"plan\":[[\"walk_forward\",4],[\"walk_forward\",4]],\"issues\":[]}",
+            "raw_response_sha256": "64f1892756aad7738299582f1e4f350c0bd550136a46fd27ecd11482cbf7675c",
+            "request_input_fields": [
+              "source"
+            ],
+            "request_input_sha256": "f3383900a7cf05bd92f3519f80b2b3696aedefff39b73e1cfab1698730731691",
+            "request_parameters": {
+              "max_network_retries": 2,
+              "max_output_tokens": 4096,
+              "model": "deepseek-flash",
+              "retry_backoff_s": 0.5,
+              "stream": false,
+              "temperature": 0.0
+            },
+            "response_id": "resp_a187a2e0-8743-45cb-a42c-175d2fc3040c",
+            "source_sha256": "4f668a690d77dd75c9fea35934a0943fee13e8c93406ce9ccf992a013277bb81",
+            "treatment": "guarded_direct_llm_candidate_blind_certificate_v2",
+            "usage": {
+              "input_tokens": 198,
+              "output_tokens": 1361,
+              "total_tokens": 2071
+            }
+          },
+          "reason_code": "UNIQUE_SOURCE_AUTHORITY",
+          "status": "AUTHORIZED_UNIQUE"
+        },
+        "step_count": 2,
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 260,
+          "total_tokens": 2012
+        },
+        "validation": {
+          "issues": [],
+          "valid": true
+        }
+      },
+      "error_code": null,
+      "error_message": null,
+      "mission": {
+        "mission_id": "two-walk-4m",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "id": "s1",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          }
+        ]
+      },
+      "normalized_text": "两次都是往前四米,中间不插别的动作,就分成两次走",
+      "status": "SUCCESS"
+    },
+    "score": {
+      "false_rejection": false,
+      "released": true,
+      "status": "SUCCESS",
+      "unauthorized_release": false,
+      "valid_exact": true,
+      "wrong_ir": false
+    }
+  }
+}
