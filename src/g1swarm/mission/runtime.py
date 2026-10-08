@@ -48,6 +48,7 @@ class MissionFailureType(str, Enum):
 class MissionSessionProtocol(Protocol):
     def state(self): ...
     def run_node(self, node, execution_mode: str) -> NodeExecution: ...
+    def run_failure_halt(self, contract: Mapping[str, Any]) -> dict[str, Any]: ...
     def close(self) -> None: ...
 
 
@@ -75,9 +76,10 @@ class MissionResult:
     grounding: dict[str, Any] = field(default_factory=dict)
     validation: dict[str, Any] = field(default_factory=dict)
     map_hashes: dict[str, str] = field(default_factory=dict)
+    physical_halt: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "mission_id": self.mission_id,
             "mission_schema_version": self.mission_schema_version,
             "horizon": self.horizon,
@@ -101,6 +103,9 @@ class MissionResult:
             "validation": dict(self.validation),
             "map_hashes": dict(self.map_hashes),
         }
+        if self.physical_halt is not None:
+            payload["physical_halt"] = dict(self.physical_halt)
+        return payload
 
 
 class MissionExecutor:
@@ -115,6 +120,7 @@ class MissionExecutor:
         seed: int = 0,
         provenance: Mapping[str, Any] | None = None,
         walk_strict_gate: bool = False,
+        physical_halt_contract: Mapping[str, Any] | None = None,
     ) -> None:
         self.validator = validator
         self.grounder = grounder
@@ -124,6 +130,11 @@ class MissionExecutor:
         self.seed = int(seed)
         self.provenance = dict(provenance or {})
         self.walk_strict_gate = bool(walk_strict_gate)
+        if physical_halt_contract is not None and not self.walk_strict_gate:
+            raise ValueError("Physical halt requires the strict walk feedback gate")
+        self.physical_halt_contract = (
+            dict(physical_halt_contract) if physical_halt_contract is not None else None
+        )
         self.last_graph: TaskGraph | None = None
 
     # ------------------------------------------------------------------
@@ -219,6 +230,7 @@ class MissionExecutor:
         failure_type: MissionFailureType | None = None
         failure_reason: str | None = None
         failed_node: str | None = None
+        physical_halt: dict[str, Any] | None = None
         session = None
         try:
             session = self.session_factory(self.seed)
@@ -338,6 +350,37 @@ class MissionExecutor:
                         "blocked": blocked,
                     },
                 )
+                if (
+                    self.physical_halt_contract is not None
+                    and gate_decision is not None
+                    and gate_decision["action"] == "STOP_DEPENDENTS"
+                ):
+                    log("physical_halt_requested", {
+                        "trigger_node_id": node.node_id,
+                        "trigger_action": gate_decision["action"],
+                        "blocked_task_nodes": blocked,
+                        "pre_halt_state": session.state().to_dict(),
+                        "provenance": dict(self.provenance),
+                    })
+                    try:
+                        physical_halt = session.run_failure_halt(self.physical_halt_contract)
+                    except Exception as exc:
+                        physical_halt = {
+                            "request": "EXPLICIT_INDEPENDENT_PHYSICAL_HALT",
+                            "status": "HALT_FAILED",
+                            "failure_stage": "runtime_halt_dispatch",
+                            "failure_type": type(exc).__name__,
+                            "failure_reason": str(exc),
+                        }
+                    physical_halt["trigger_node_id"] = node.node_id
+                    physical_halt["trigger_action"] = gate_decision["action"]
+                    physical_halt["blocked_task_nodes"] = blocked
+                    physical_halt["provenance"] = dict(self.provenance)
+                    log(
+                        "physical_halt_succeeded" if physical_halt["status"] == "HALT_SUCCEEDED"
+                        else "physical_halt_failed",
+                        physical_halt,
+                    )
                 break
         except Exception as exc:  # pragma: no cover - defensive
             failure_type = MissionFailureType.INTERNAL_ERROR
@@ -388,6 +431,7 @@ class MissionExecutor:
             grounding=grounding_payload,
             map_hashes=dict(plan.map_hashes),
             validation=validation_payload,
+            physical_halt=physical_halt,
         )
         log("mission_success" if mission_success else "mission_failure", result.to_dict())
         self._write_evidence(

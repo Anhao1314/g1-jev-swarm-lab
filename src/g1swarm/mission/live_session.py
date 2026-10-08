@@ -11,6 +11,8 @@ node's own start frame.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
+import time
 from typing import Any, Callable, Mapping
 
 import numpy as np
@@ -82,6 +84,44 @@ class NodeMonitor:
         return getattr(self._simulation, name)
 
 
+class HaltMonitor:
+    """Read-only per-step record for an independently requested StopSkill."""
+
+    def __init__(self, simulation) -> None:
+        self._simulation = simulation
+        self.rows = [self._row(simulation.get_robot_state())]
+        self.path_length_m = 0.0
+
+    @staticmethod
+    def _row(state) -> dict[str, Any]:
+        w, x, y, z = (float(value) for value in state.base_orientation)
+        roll = math.degrees(math.atan2(2 * (w*x + y*z), 1 - 2 * (x*x + y*y)))
+        pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (w*y - z*x)))))
+        tilt = math.degrees(math.acos(max(-1.0, min(1.0, 1 - 2 * (x*x + y*y)))))
+        return {
+            "time_s": state.simulation_time,
+            "position_m": list(state.base_position),
+            "speed_mps": state.speed(),
+            "base_height_m": state.base_position[2],
+            "roll_deg": roll,
+            "pitch_deg": pitch,
+            "tilt_deg": tilt,
+            "standing": state.standing,
+            "fallen": state.fallen,
+            "finite": state.is_finite(),
+        }
+
+    def step(self, control=None):
+        state = self._simulation.step(control)
+        row = self._row(state)
+        self.path_length_m += math.dist(self.rows[-1]["position_m"][:2], row["position_m"][:2])
+        self.rows.append(row)
+        return state
+
+    def __getattr__(self, name: str):
+        return getattr(self._simulation, name)
+
+
 @dataclass
 class NodeExecution:
     skill: str
@@ -134,6 +174,75 @@ class LiveMissionSession:
     # ------------------------------------------------------------------
     def state(self):
         return self.current_state
+
+    def run_failure_halt(self, contract: Mapping[str, Any]) -> dict[str, Any]:
+        """Execute StopSkill outside the Task Graph; never turn it into a mission node."""
+        before = self.current_state
+        monitor = HaltMonitor(self.simulation)
+        view = self.simulation_wrapper(monitor) if self.simulation_wrapper else monitor
+        context = SkillContext(
+            simulation=view,
+            controller=self.controller,
+            robot_config=self.robot_config,
+            max_steps=int(round(1200.0 / self.simulation.timestep)),
+            seed=self.seed,
+        )
+        started = time.perf_counter()
+        try:
+            result = self.router.execute(
+                SkillRequest("stop", dict(contract["stop_skill_parameters"])), context
+            )
+            after = self.simulation.get_robot_state()
+            self.current_state = after
+            self.total_steps += len(monitor.rows) - 1
+            limits = contract["acceptance"]
+            duration = after.simulation_time - before.simulation_time
+            displacement = math.dist(before.base_position[:2], after.base_position[:2])
+            checks = {
+                "skill_success": result.status.value == limits["stop_skill_status"],
+                "duration": duration <= float(limits["max_duration_s"]) + 1e-9,
+                "final_speed": after.speed() <= float(limits["max_final_instantaneous_speed_mps"]),
+                "window_mean_speed": float(result.metrics.get("final_window_mean_speed_mps", math.inf)) <= float(limits["max_final_window_mean_speed_mps"]),
+                "displacement": displacement <= float(limits["max_post_block_planar_displacement_m"]),
+                "finite_throughout": all(row["finite"] for row in monitor.rows),
+                "standing_throughout": all(row["standing"] for row in monitor.rows),
+                "no_fall_throughout": not any(row["fallen"] for row in monitor.rows),
+            }
+            return {
+                "request": "EXPLICIT_INDEPENDENT_PHYSICAL_HALT",
+                "status": "HALT_SUCCEEDED" if all(checks.values()) else "HALT_FAILED",
+                "skill_status": result.status.value,
+                "skill_reason": result.reason,
+                "skill_metrics": dict(result.metrics),
+                "checks": checks,
+                "pre_halt_state": before.to_dict(),
+                "final_state": after.to_dict(),
+                "simulated_halt_duration_s": duration,
+                "wall_halt_duration_s": time.perf_counter() - started,
+                "post_block_planar_displacement_m": displacement,
+                "path_length_m": monitor.path_length_m,
+                "trace": monitor.rows,
+            }
+        except Exception as exc:
+            try:
+                after = self.simulation.get_robot_state()
+                last_state = after.to_dict()
+                self.current_state = after
+            except Exception:
+                last_state = None
+            self.total_steps += len(monitor.rows) - 1
+            return {
+                "request": "EXPLICIT_INDEPENDENT_PHYSICAL_HALT",
+                "status": "HALT_FAILED",
+                "failure_stage": "stop_skill_or_observer",
+                "failure_type": type(exc).__name__,
+                "failure_reason": str(exc),
+                "pre_halt_state": before.to_dict(),
+                "last_observed_state": last_state,
+                "wall_halt_duration_s": time.perf_counter() - started,
+                "path_length_m": monitor.path_length_m,
+                "trace": monitor.rows,
+            }
 
     def _skill_parameters(self, node) -> dict[str, Any]:
         spec = self.protocol["skill_parameters"]

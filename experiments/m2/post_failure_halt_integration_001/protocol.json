@@ -1,0 +1,30 @@
+{
+  "experiment_id": "post_failure_halt_integration_001",
+  "status": "PREDECLARED_BEFORE_PHYSICS",
+  "research_ops_route": "mechanism_experiment",
+  "seed": 0,
+  "source_protocol": "configs/experiments/oracle_mission_runtime_001.yaml",
+  "mission_source": "experiments/m2/closed_loop_mission_001/protocol.json",
+  "halt_contract_source": "experiments/m2/post_failure_halt_001/protocol.json",
+  "failure_case": "failure_mission",
+  "safe_control": "success_mission",
+  "maximum_physics_runs": 2,
+  "execution_order": ["failure_opt_in", "safe_opt_in"],
+  "stop_rule": "Run each of the two frozen missions once through the integrated strict feedback and opt-in physical halt. Retain all outcomes; no substitute, retry, parameter change, or extra case.",
+  "comparison": {
+    "historical_static": "experiments/m2/closed_loop_mission_001/artifacts/failure_mission--static_dispatch",
+    "historical_feedback": "experiments/m2/closed_loop_mission_001/artifacts/failure_mission--strict_feedback",
+    "historical_safe": "experiments/m2/closed_loop_mission_001/artifacts/success_mission--strict_feedback",
+    "separate_halt_feasibility": "experiments/m2/post_failure_halt_001/artifacts/failure_feasibility"
+  },
+  "acceptance": {
+    "failure_pre_halt_walk_matches_m2": true,
+    "failure_graph_blocks_s2_s3": true,
+    "halt_requested_only_after_strict_walk_failure": true,
+    "halt_is_not_task_node": true,
+    "halt_uses_frozen_m2_1_contract": true,
+    "safe_control_has_three_original_nodes_and_no_halt": true,
+    "safe_control_matches_m2": true
+  },
+  "interpretation": "The original M2.1 StopSkill acceptance remains authoritative. Integrated halt failure is retained as HALT_FAILED; mission failure is not overwritten by halt success. This is a bounded MuJoCo failure-handling slice, not a hardware emergency-stop claim."
+}
