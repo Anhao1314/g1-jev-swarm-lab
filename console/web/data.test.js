@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, visibleNodeOutcome, trajectoryBounds, plotTransform, nearestSample, statusKind, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
 
 test("shows an actual retained sample instead of interpolating an observation", () => {
@@ -111,4 +112,27 @@ test("physical halt status and request remain distinct from task block", () => {
     ["STOP_DEPENDENTS", "PHYSICAL_HALT_REQUESTED", "HALT_SUCCEEDED"]);
   assert.equal(statusKind("HALT_SUCCEEDED"), "pass");
   assert.equal(statusKind("HALT_FAILED"), "fail");
+});
+
+test("lifecycle authorization is revealed at its recorded time and keeps mission identities distinct", () => {
+  const run = {runtime_kind: "closed_loop_mission", runtime_decisions: [
+    {time_s: 12, mission_id: "original", decision: "STOP_DEPENDENTS"},
+    {time_s: 14, mission_id: "original", decision: "HALT_SUCCEEDED"},
+    {time_s: 14, mission_id: "new", decision: "new_mission_authorized"},
+    {time_s: 26, mission_id: "new", decision: "new_mission_completed"}]};
+  assert.equal(runtimeDecisionsAt(run, 13.9).length, 1);
+  assert.deepEqual(runtimeDecisionsAt(run, 14).map(item => item.mission_id), ["original", "original", "new"]);
+  assert.equal(runtimeDecisionsAt(run, 25.99).some(item => item.decision === "new_mission_completed"), false);
+});
+
+test("range seek preserves the appended non-grid final state and reveals completion", () => {
+  const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  const seek = html.match(/<input\b[^>]*id="seek"[^>]*>/)?.[0];
+  assert.ok(seek?.includes('step="any"'), "range input must not round final physics time to a centisecond");
+  const finalTime = 26.255999999996327;
+  const frame = frameForSimulationTime([26.20, 26.25, finalTime], 20, finalTime);
+  assert.equal(frame.time_s, finalTime);
+  const run = {runtime_kind: "closed_loop_mission", runtime_decisions: [{time_s: finalTime, decision: "new_mission_completed"}]};
+  assert.equal(runtimeDecisionsAt(run, 26.25).length, 0);
+  assert.equal(runtimeDecisionsAt(run, frame.time_s)[0].decision, "new_mission_completed");
 });

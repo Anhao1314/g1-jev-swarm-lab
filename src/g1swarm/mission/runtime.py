@@ -144,6 +144,7 @@ class MissionExecutor:
         *,
         phase: str = "final",
         write_evidence: bool = True,
+        existing_session: MissionSessionProtocol | None = None,
     ) -> MissionResult:
         started_at = utc_timestamp()
         started = time.perf_counter()
@@ -233,7 +234,9 @@ class MissionExecutor:
         physical_halt: dict[str, Any] | None = None
         session = None
         try:
-            session = self.session_factory(self.seed)
+            # Explicit lifecycle opt-in: the caller owns and eventually closes
+            # this live session. Ordinary mission dispatch keeps its lifecycle.
+            session = existing_session if existing_session is not None else self.session_factory(self.seed)
             previous_node = None
             while True:
                 graph.refresh_ready()
@@ -386,7 +389,7 @@ class MissionExecutor:
             failure_type = MissionFailureType.INTERNAL_ERROR
             failure_reason = f"{type(exc).__name__}: {exc}"
         finally:
-            if session is not None:
+            if session is not None and existing_session is None:
                 session.close()
 
         mission_success = graph.all_succeeded()

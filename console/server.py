@@ -177,6 +177,12 @@ class ConsoleData:
             ("independent_audit", "Independent source arithmetic audit"),
             ("runtime_ledger", "Original runtime decision ledger"),
             ("halt", "Independent physical halt result"),
+            ("assessment", "Task-scoped post-halt state assessment"),
+            ("authorization", "TEST_ONLY mission requests and refusal evidence"),
+            ("lifecycle", "Original lifecycle decisions"),
+            ("continuity", "Same-session and original evidence continuity"),
+            ("new_result", "Separate new mission result"),
+            ("new_ledger", "Separate new mission runtime ledger"),
         ):
             relative = self._source_path(provenance, name)
             if relative is None:

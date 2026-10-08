@@ -223,6 +223,7 @@ function drawPlayhead() {
     if (completed) {
       status.append(statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
       if (run.summary?.halt_status) status.append(statusPill("Halt", run.summary.halt_status));
+      if (run.summary?.original_mission_status) status.append(statusPill("Original", run.summary.original_mission_status), statusPill("New mission", run.summary.new_mission_status), statusPill("Lifecycle", run.summary.lifecycle_status));
     }
     else status.append(element("span", "small muted", "Outcome at completion"));
   }
@@ -280,7 +281,7 @@ function drawNodeOutcomes() {
   const group = element("div");
   const focused = recordedSample(currentRun());
   const currentNode = state.walkFocus ? currentRun().nodes[1] : nodeAt(currentRun(), state.time, focused);
-  const indexLabel = currentNode ? `${currentNode.index + 1} / ${currentRun().nodes.length}` : "Unavailable";
+  const indexLabel = currentNode ? currentNode.mission_role ? `${currentNode.mission_role} · ${currentNode.mission_id}` : `${currentNode.index + 1} / ${currentRun().nodes.length}` : "Unavailable";
   group.append(element("div", "node-name", state.compare ? "Each arm at its captured frame" : `${skillLabel(currentNode?.skill)} · ${indexLabel}`));
   const row = element("div", "node-outcome");
   runs.forEach(run => {
@@ -312,6 +313,11 @@ function evaluationSummary(value) {
   if (finite(value.lateral_drift_m) && finite(limits.lateral_drift_max_m)) parts.push(`drift ${formatNumber(value.lateral_drift_m, 3)} / ${formatNumber(limits.lateral_drift_max_m, 3)} m`);
   if (finite(value.heading_error_deg) && finite(limits.heading_error_max_deg)) parts.push(`heading ${formatNumber(value.heading_error_deg, 2)} / ${formatNumber(limits.heading_error_max_deg, 2)}°`);
   if (value.violations?.length) parts.push(value.violations.join(", "));
+  if (typeof value.eligible === "boolean") parts.push(value.eligible ? "Task-scoped state eligible" : "State ineligible");
+  if (value.scope) parts.push(value.scope);
+  if (value.reason) parts.push(value.reason);
+  if (value.reasons?.length) parts.push(value.reasons.join(", "));
+  if (value.status) parts.push(value.status);
   return parts.join(" · ");
 }
 function drawRuntimeDecisions() {
@@ -325,7 +331,8 @@ function drawRuntimeDecisions() {
     for (const item of runtimeDecisionsAt(run, time)) {
       const row = element("button", "runtime-decision");
       row.type = "button";
-      row.append(element("strong", "", `${run.label} · ${formatTime(item.time_s)} · node ${Number(item.node_index) + 1}`),
+      const identity = item.mission_id ? `${item.lifecycle_stage} · ${item.mission_id}` : `node ${Number(item.node_index) + 1}`;
+      row.append(element("strong", "", `${run.label} · ${formatTime(item.time_s)} · ${identity}`),
         element("span", "", `${evaluationSummary(item.evaluation)} · Decide: ${decisionText(item.decision)}`),
         element("span", "small muted", `Act: ${decisionText(item.action)} · Continue/Stop: ${decisionText(item.continuation)}`));
       row.addEventListener("click", () => openInspector(run, {...item, label: `Runtime decision · ${decisionText(item.decision)}`, metric: "runtime_decision", source_locator: item.source_locator}));
