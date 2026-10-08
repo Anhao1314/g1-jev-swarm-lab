@@ -364,9 +364,96 @@ def _withheld_result_semantics(authority: AuthorizationResult, decision):
     return CompilerStatus.AMBIGUOUS, LanguageErrorCode.AUTHORITY_UNRESOLVED, "AUTHORITY_UNRESOLVED"
 
 
+_NO_PRINCIPAL_CONFIRMATION = object()
+
+
+def _baseline_release_outcome(result):
+    code = result.error_code
+    return ("AUTHORITY_UNRESOLVED" if code is LanguageErrorCode.AUTHORITY_UNRESOLVED
+            else "AUTHORITY_DENIED" if code is LanguageErrorCode.AUTHORITY_DENIED
+            else "BACKEND_FAILURE" if code in {LanguageErrorCode.LLM_API_ERROR, LanguageErrorCode.LLM_TIMEOUT, LanguageErrorCode.LLM_CONFIGURATION_ERROR}
+            else "SEMANTIC_AMBIGUITY" if result.status is CompilerStatus.AMBIGUOUS
+            else "SOURCE_UNSUPPORTED" if result.status is CompilerStatus.UNSUPPORTED
+            else "MODEL_OUTPUT_MALFORMED" if code is LanguageErrorCode.LLM_OUTPUT_INVALID else "SOURCE_MALFORMED")
+
+
+def _apply_principal_gate(source, baseline_result, *, request_context, principal_authority,
+                          principal_confirmation, allow_test_principal):
+    """Explicit offline principal channel; never invokes a source/model authorizer."""
+    from dataclasses import asdict
+    from ..authority_mechanism_001.contract import Decision
+    from ..authority_release_001.gate import claim_request
+    from ..human_principal_001.contract import ASSURANCE, TestPrincipalAuthority, full_plan_json
+
+    diagnostics = dict(baseline_result.diagnostics)
+    diagnostics.update(architecture="explicit_principal_offline_v1", baseline_status=baseline_result.status.value,
+        release_contract="human_principal_offline_v1", production_authority_established=False,
+        principal_identity_assurance=ASSURANCE, runtime_authorized=False)
+    if "source_authorization" in diagnostics:
+        diagnostics["prior_source_authorization_claim"] = diagnostics["source_authorization"]
+    diagnostics["source_authorization"] = AuthorizationResult(AuthorizationStatus.UNKNOWN,
+        "NEW_PRINCIPAL_INSTRUCTION_NOT_SOURCE_UNIQUENESS", {"provider_calls": 0,
+        "original_source_uniqueness_established": False}).to_dict()
+
+    def finish(decision, evidence=None, *, malformed_code=None):
+        diagnostics["independent_release"] = asdict(decision)
+        diagnostics["human_principal"] = evidence or {}
+        diagnostics["released_executable"] = bool(decision.allow)
+        if decision.allow:
+            diagnostics.update(release_outcome="EXPLICIT_TEST_PRINCIPAL_RELEASE", clarification_required=False)
+            return CompilerResult(CompilerStatus.SUCCESS, baseline_result.mission,
+                                  baseline_result.normalized_text, diagnostics=diagnostics)
+        if malformed_code is not None:
+            status, code, outcome = CompilerStatus.MALFORMED, malformed_code, "SOURCE_MALFORMED" if malformed_code is LanguageErrorCode.LANGUAGE_PARSE_ERROR else "MODEL_OUTPUT_MALFORMED"
+        else:
+            rejected = AuthorizationResult(AuthorizationStatus.UNKNOWN, decision.reason, {})
+            status, code, outcome = _withheld_result_semantics(rejected, decision)
+        diagnostics.update(release_outcome=outcome, clarification_required=outcome == "AUTHORITY_UNRESOLVED")
+        return CompilerResult(status, None, baseline_result.normalized_text, code,
+                              f"principal release withheld: {decision.reason}", diagnostics)
+
+    guard = StructuralGuard().check(source)
+    diagnostics["release_guard"] = guard.to_dict()
+    if not guard.passed:
+        return finish(Decision(False, "GUARD_REJECT"), malformed_code=LanguageErrorCode.LANGUAGE_PARSE_ERROR)
+    if not baseline_result.success:
+        if baseline_result.status is not CompilerStatus.SUCCESS:
+            outcome = _baseline_release_outcome(baseline_result)
+            diagnostics.update(released_executable=False, release_outcome=outcome,
+                clarification_required=outcome == "AUTHORITY_UNRESOLVED",
+                independent_release=asdict(Decision(False, "NO_LEGAL_CANDIDATE")))
+            return CompilerResult(baseline_result.status, None, baseline_result.normalized_text,
+                baseline_result.error_code, baseline_result.error_message, diagnostics)
+        return finish(Decision(False, "NO_LEGAL_CANDIDATE"), malformed_code=LanguageErrorCode.LLM_OUTPUT_INVALID)
+    try:
+        candidate = _candidate(baseline_result.mission)
+        before = full_plan_json(candidate)
+        detached = Mission.from_dict(candidate.to_dict())
+        diagnostics["release_validation"] = MissionValidator().validate(detached).to_dict()
+    except Exception:
+        return finish(Decision(False, "INVALID_CANDIDATE_IR"), malformed_code=LanguageErrorCode.LLM_OUTPUT_INVALID)
+    if allow_test_principal is not True:
+        return finish(Decision(False, "TEST_PRINCIPAL_CAPABILITY_DISABLED"))
+    if type(principal_authority) is not TestPrincipalAuthority:
+        return finish(Decision(False, "UNTRUSTED_PRINCIPAL_SERVICE"))
+    context, failure = claim_request(source, request_context)
+    if failure is not None:
+        return finish(failure)
+    diagnostics["request_context_id"] = context.context_id
+    try:
+        decision, evidence = principal_authority.verify_and_consume(source, detached, context, principal_confirmation)
+        if full_plan_json(baseline_result.mission) != before or full_plan_json(detached) != before:
+            return finish(Decision(False, "CANDIDATE_MUTATED"), evidence)
+    except Exception:
+        return finish(Decision(False, "PRINCIPAL_SERVICE_FAILURE"))
+    return finish(decision, evidence)
+
+
 def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceAuthorizer,
                *, request_context=None, authority_service=None, authority_receipt=None,
-               derive_bounded_authority: bool = True) -> CompilerResult:
+               derive_bounded_authority: bool = True, principal_authority=None,
+               principal_confirmation=_NO_PRINCIPAL_CONFIRMATION,
+               allow_test_principal: bool = False) -> CompilerResult:
     """Release unchanged B only after independent source/plan/context authority.
 
     The original B result remains intact for replay/comparison. Rejected gated
@@ -375,7 +462,15 @@ def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceA
     and receipts are never obtained from model text or model diagnostics. The
     default host service derives only existing bounded authority; open language
     remains unresolved. Explicit invalid receipts never fall back to derivation.
+    Principal confirmation is a separate explicit TEST_ONLY channel. Default
+    callers cannot enable production authority by submitting fixture receipts.
     """
+    if (principal_authority is not None or principal_confirmation is not _NO_PRINCIPAL_CONFIRMATION
+            or allow_test_principal is not False):
+        return _apply_principal_gate(source, baseline_result, request_context=request_context,
+            principal_authority=principal_authority,
+            principal_confirmation=None if principal_confirmation is _NO_PRINCIPAL_CONFIRMATION else principal_confirmation,
+            allow_test_principal=allow_test_principal)
     # Lazy import keeps certificate/prototype imports acyclic. There is no
     # legacy/research bypass on this public Mission-returning boundary.
     from dataclasses import asdict
@@ -433,13 +528,7 @@ def apply_gate(source: str, baseline_result: CompilerResult, authorizer: SourceA
         diagnostics.update(release_outcome="AUTHORIZED_RELEASE", clarification_required=False)
         return CompilerResult(CompilerStatus.SUCCESS, baseline_result.mission, baseline_result.normalized_text, diagnostics=diagnostics)
     if baseline_result.status is not CompilerStatus.SUCCESS and guard.passed:
-        code = baseline_result.error_code
-        outcome = ("AUTHORITY_UNRESOLVED" if code is LanguageErrorCode.AUTHORITY_UNRESOLVED
-                   else "AUTHORITY_DENIED" if code is LanguageErrorCode.AUTHORITY_DENIED
-                   else "BACKEND_FAILURE" if code in {LanguageErrorCode.LLM_API_ERROR, LanguageErrorCode.LLM_TIMEOUT, LanguageErrorCode.LLM_CONFIGURATION_ERROR}
-                   else "SEMANTIC_AMBIGUITY" if baseline_result.status is CompilerStatus.AMBIGUOUS
-                   else "SOURCE_UNSUPPORTED" if baseline_result.status is CompilerStatus.UNSUPPORTED
-                   else "MODEL_OUTPUT_MALFORMED" if code is LanguageErrorCode.LLM_OUTPUT_INVALID else "SOURCE_MALFORMED")
+        outcome = _baseline_release_outcome(baseline_result)
         diagnostics.update(release_outcome=outcome, clarification_required=outcome == "AUTHORITY_UNRESOLVED")
         return CompilerResult(baseline_result.status, None, baseline_result.normalized_text,
                               baseline_result.error_code, baseline_result.error_message, diagnostics)

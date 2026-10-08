@@ -41,6 +41,15 @@ def begin_release_request(source: str) -> ReleaseRequestContext:
     return context
 
 
+def is_current_request(source: str, context: Any) -> bool:
+    """Read-only presentation precondition; never establishes principal identity."""
+    if type(context) is not ReleaseRequestContext:
+        return False
+    with _lock:
+        return (_active.get(context.context_id) is context
+                and context.source_sha256 == source_digest(source))
+
+
 def claim_request(source: str, context: Any) -> tuple[ReleaseRequestContext | None, Decision | None]:
     if context is None:
         context = begin_release_request(source)
@@ -78,6 +87,11 @@ def independent_decision(*, source, candidate, proposal: AuthorizationResult, au
     service = default_service() if service is None else service
     if type(service) is not AuthorityService:
         return Decision(False, "UNTRUSTED_AUTHORITY_SERVICE")
+    if isinstance(receipt, dict) and receipt.get("origin") == "EXPLICIT_PRINCIPAL_PLAN_AUTHORIZATION":
+        # The old MAC prototype has no identity, presentation or expiry proof.
+        # Keep its low-level offline contract intact, but do not grant public
+        # human authority through it. Use the explicit principal channel.
+        return Decision(False, "PRINCIPAL_CONFIRMATION_CHANNEL_REQUIRED")
     if receipt is None and derive_bounded_authority is True:
         receipt = service.derive_bounded_receipt(source, context.context_id)
     else:
