@@ -1,0 +1,94 @@
+...........................................................FFF.          [100%]
+================================== FAILURES ===================================
+____________ test_live_retained_console_inventory_without_physics _____________
+
+    def test_live_retained_console_inventory_without_physics():
+>       result=ops.check_console()
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_research_ops.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\research_ops.py:105: in check_console
+    data = module.ConsoleData(root / CONSOLE, root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+console\server.py:85: in __init__
+    self._verify_inventory(self.repo_root, manifest.get("sources", {}))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <ops_console_transport.ConsoleData object at 0x000001AC37257010>
+root = WindowsPath('D:/work/g1-m23-trusted-handoff')
+inventory = {'configs/robot/g1_locomotion_12dof.yaml': {'sha256': '419036675b57be102ef4ba34839aa3a8675d3ffcff3a8f66d92be2f52d9d897...ed-16m.jsonl.gz': {'sha256': '91e59548aad8972344df02b96028b7076f153c7998a7293bfe9d765134e1d69d', 'bytes': 119377}, ...}
+
+    def _verify_inventory(self, root: Path, inventory: dict[str, Any]) -> None:
+        if not isinstance(inventory, dict):
+            raise IntegrityError("Malformed integrity inventory")
+        for relative, record in inventory.items():
+            expected = record if isinstance(record, str) else record.get("sha256")
+            size = None if isinstance(record, str) else record.get("bytes")
+            if not isinstance(expected, str) or not SHA256.fullmatch(expected):
+                raise IntegrityError(f"Invalid digest for {relative}")
+            path = confined_path(root, relative)
+            if not path.is_file() or file_hash(path) != expected:
+>               raise IntegrityError(f"Artifact hash mismatch: {relative}")
+E               ops_console_transport.IntegrityError: Artifact hash mismatch: third_party/unitree_rl_gym/deploy/pre_train/g1/motion.pt
+
+console\server.py:125: IntegrityError
+____________ test_tampered_export_is_detected_before_browser_reuse ____________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-177/test_tampered_export_is_detect0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AC37538B90>
+
+    def test_tampered_export_is_detected_before_browser_reuse(tmp_path, monkeypatch):
+        # Real inventory validated independently; inject one byte identity failure.
+        original=ops.sha
+        def changed(path):
+            return '0'*64 if Path(path).as_posix().endswith('evidence/completion.json') else original(path)
+        monkeypatch.setattr(ops,'sha',changed)
+>       with pytest.raises(ValueError,match='Scientific export mismatch'): ops.check_console()
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Scientific export mismatch'
+E         Actual message: 'Artifact hash mismatch: third_party/unitree_rl_gym/deploy/pre_train/g1/motion.pt'
+
+tests\test_research_ops.py:107: AssertionError
+__________________ test_browser_code_drift_requires_fresh_qa __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AC375FE390>
+
+    def test_browser_code_drift_requires_fresh_qa(monkeypatch):
+        original=ops.sha
+        monkeypatch.setattr(ops,'sha',lambda path: '0'*64 if Path(path).as_posix().endswith('console/web/app.js') else original(path))
+>       result=ops.check_console()
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_research_ops.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\research_ops.py:105: in check_console
+    data = module.ConsoleData(root / CONSOLE, root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+console\server.py:85: in __init__
+    self._verify_inventory(self.repo_root, manifest.get("sources", {}))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <ops_console_transport.ConsoleData object at 0x000001AC375FD610>
+root = WindowsPath('D:/work/g1-m23-trusted-handoff')
+inventory = {'configs/robot/g1_locomotion_12dof.yaml': {'sha256': '419036675b57be102ef4ba34839aa3a8675d3ffcff3a8f66d92be2f52d9d897...ed-16m.jsonl.gz': {'sha256': '91e59548aad8972344df02b96028b7076f153c7998a7293bfe9d765134e1d69d', 'bytes': 119377}, ...}
+
+    def _verify_inventory(self, root: Path, inventory: dict[str, Any]) -> None:
+        if not isinstance(inventory, dict):
+            raise IntegrityError("Malformed integrity inventory")
+        for relative, record in inventory.items():
+            expected = record if isinstance(record, str) else record.get("sha256")
+            size = None if isinstance(record, str) else record.get("bytes")
+            if not isinstance(expected, str) or not SHA256.fullmatch(expected):
+                raise IntegrityError(f"Invalid digest for {relative}")
+            path = confined_path(root, relative)
+            if not path.is_file() or file_hash(path) != expected:
+>               raise IntegrityError(f"Artifact hash mismatch: {relative}")
+E               ops_console_transport.IntegrityError: Artifact hash mismatch: third_party/unitree_rl_gym/deploy/pre_train/g1/motion.pt
+
+console\server.py:125: IntegrityError
+=========================== short test summary info ===========================
+FAILED tests/test_research_ops.py::test_live_retained_console_inventory_without_physics
+FAILED tests/test_research_ops.py::test_tampered_export_is_detected_before_browser_reuse
+FAILED tests/test_research_ops.py::test_browser_code_drift_requires_fresh_qa
+3 failed, 60 passed, 2 deselected in 2.29s
