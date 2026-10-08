@@ -1,0 +1,91 @@
+schema_version: 2.0.0
+pilot_only: true
+controls:
+- control_id: lh-control-malformed-repeated-connector
+  kind: long_malformed
+  text: 先保持站立2秒，然后然后再向前走4米，然后再向左转45度，然后再向前走6米，然后再向右转45度，然后再向前走4米，然后再向左转90度，最后停下来。
+  expected_compiler_status: MALFORMED
+  expected_runtime: NOT_RUN
+  expected_note: repeated connector inside a long valid mission
+- control_id: lh-control-malformed-dangling-connector
+  kind: long_malformed
+  text: 先保持站立2秒，然后再向前走4米，然后再向左转45度，然后再向前走6米，然后再向右转45度，然后再向前走4米，然后再向左转90度，最后停下来然后。
+  expected_compiler_status: MALFORMED
+  expected_runtime: NOT_RUN
+  expected_note: dangling trailing connector
+- control_id: lh-control-malformed-empty-clause
+  kind: long_malformed
+  text: 先保持站立2秒，，然后再向前走4米，然后再向左转45度，然后再向前走6米，然后再向右转45度，然后再向前走4米，然后再向左转90度，最后停下来。
+  expected_compiler_status: MALFORMED
+  expected_runtime: NOT_RUN
+  expected_note: empty clause between separators
+- control_id: lh-control-ambiguous-missing-parameter
+  kind: long_ambiguous
+  text: 先保持站立2秒，然后向前走，再向右转45度，然后向前走4米，再向左转30度，最后停下来。
+  expected_compiler_status: AMBIGUOUS
+  expected_runtime: NOT_RUN
+  expected_note: one step is missing its distance parameter
+- control_id: lh-control-unsupported-embedded
+  kind: unsupported_embedded
+  text: 先保持站立2秒，然后抓杯子，再向前走4米，然后再向左转45度，然后再向前走6米，然后再向右转45度，然后再向前走4米，然后再向左转90度，最后停下来。
+  expected_compiler_status: UNSUPPORTED
+  expected_runtime: NOT_RUN
+  expected_note: unsupported capability embedded inside a long mission
+- control_id: lh-control-capability-unknown-embedded
+  kind: capability_unknown_embedded
+  text: 先保持站立2秒，然后再向前走4米，然后再向左转45度，然后再向前走25米，然后再向右转45度，然后再向前走4米，然后再向左转90度，最后停下来。
+  expected_compiler_status: SUCCESS
+  expected_grounding: CAPABILITY_UNKNOWN
+  intended_mission:
+    schema_version: 2.0.0
+    mission_id: lh-control-capability-unknown-embedded
+    steps:
+    - id: s1
+      skill: stand
+      parameters:
+        duration_s: 2.0
+      depends_on: []
+    - id: s2
+      skill: walk_forward
+      parameters:
+        distance_m: 4.0
+      depends_on:
+      - s1
+    - id: s3
+      skill: turn
+      parameters:
+        angle_deg: 45.0
+      depends_on:
+      - s2
+    - id: s4
+      skill: walk_forward
+      parameters:
+        distance_m: 25.0
+      depends_on:
+      - s3
+    - id: s5
+      skill: turn
+      parameters:
+        angle_deg: -45.0
+      depends_on:
+      - s4
+    - id: s6
+      skill: walk_forward
+      parameters:
+        distance_m: 4.0
+      depends_on:
+      - s5
+    - id: s7
+      skill: turn
+      parameters:
+        angle_deg: 90.0
+      depends_on:
+      - s6
+    - id: s8
+      skill: stop
+      parameters: {}
+      depends_on:
+      - s7
+  expected_runtime: REJECTED_ZERO_STEP
+  expected_note: walk 25 m has no recorded evidence; compiler may succeed, grounder
+    must reject before execution

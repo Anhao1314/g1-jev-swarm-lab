@@ -1,0 +1,18 @@
+{
+  "schema": "phase3b1a_temporal_observability_v1",
+  "status": "FROZEN_BEFORE_TEMPORAL_EXTRACTION",
+  "source_cohort": "experiments/phase3b/jev_risk_shadow_001/benchmark.json",
+  "source_predictions": "experiments/phase3b/jev_risk_shadow_001/result.json",
+  "source_treatment": "Phase3A transition_learning_001 frozen_baseline",
+  "membership": "all 24 frozen walk-node source cells; 18 unique Phase3B.1 visible units for attribution",
+  "snapshots_elapsed_s": [0.0, 1.0, 2.0],
+  "snapshot_rule": "exact recorded elapsed_s per walk node; require snapshot before node endpoint; retain missingness",
+  "recorded_dynamic_fields": ["height_m", "tilt_deg", "nominal_command", "deterministic_command", "applied_command", "reset_count"],
+  "candidate_geometric_fields": ["base_xy", "heading", "route_frame_planar_velocity", "yaw_rate", "local_lateral_error", "reference_correction_error"],
+  "geometric_field_policy": "mark unavailable unless directly recorded at the fixed snapshot; never interpolate from endpoint or replay physics",
+  "trend": "predeclared 2s minus node-entry height and absolute tilt; no fitted threshold",
+  "descriptive_baseline": "always-risk binary comparator and fixed-feature PASS/FAIL overlap at each snapshot; no threshold optimization or generalization claim",
+  "analysis_units": "report both source cells and unique visible units; mission-case clusters retained",
+  "stop_rule": "stop after source/trace integrity and fixed-snapshot observability audit; if required geometric fields are absent, do not infer early geometry separation or call Jev",
+  "prohibited": ["Jev API", "new physics", "robot actuation", "PPO", "Phase3B.1 modification", "threshold or membership tuning"]
+}

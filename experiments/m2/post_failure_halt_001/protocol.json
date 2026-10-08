@@ -1,0 +1,45 @@
+{
+  "experiment_id": "post_failure_halt_001",
+  "status": "PREDECLARED_BEFORE_PHYSICS",
+  "research_ops_route": "mechanism_experiment",
+  "seed": 0,
+  "source_protocol": "configs/experiments/oracle_mission_runtime_001.yaml",
+  "mission_source": "experiments/m2/closed_loop_mission_001/protocol.json",
+  "failure_case": "failure_mission",
+  "safe_control": "success_mission",
+  "maximum_physics_runs": 2,
+  "execution_order": ["failure_feasibility", "safe_control"],
+  "stop_rule": "One failure-state feasibility and one unchanged safe mission control. Retain all outcomes and no rerun, parameter search, or alternate failure case. If feasibility fails, do not integrate Runtime halt.",
+  "halt_authorization": "Study-only explicit opt-in, independent of all Mission IR nodes and Task Graph dispatch",
+  "trigger": {
+    "mission_state": "FAILED",
+    "failure_type": "TASK_ENVELOPE_VIOLATION",
+    "failed_node": "s1",
+    "decision_action": "STOP_DEPENDENTS",
+    "blocked_task_nodes": ["s2", "s3"]
+  },
+  "stop_skill_parameters": {
+    "max_duration_s": 4.0,
+    "window_s": 1.0,
+    "speed_threshold_mps": 0.1
+  },
+  "acceptance": {
+    "stop_skill_status": "SUCCESS",
+    "max_duration_s": 4.0,
+    "max_final_instantaneous_speed_mps": 0.1,
+    "max_final_window_mean_speed_mps": 0.1,
+    "max_post_block_planar_displacement_m": 0.5,
+    "finite_all_steps": true,
+    "standing_all_steps": true,
+    "no_fall_all_steps": true,
+    "standing_basis": "Existing RobotState standing/fallen computation: base height >=0.55m and tilt <=30deg; no new evaluator or controller threshold."
+  },
+  "metrics": [
+    "pre_halt_speed_mps", "speed_time_series_mps", "simulated_halt_duration_s",
+    "wall_halt_duration_s", "post_block_planar_displacement_m", "path_length_m",
+    "base_height_time_series_m", "roll_pitch_tilt_time_series_deg",
+    "final_window_mean_speed_mps", "final_instantaneous_speed_mps",
+    "fallen_nonfinite_not_standing_flags", "stop_status_and_reason"
+  ],
+  "interpretation": "Passing the bounded MuJoCo feasibility gate is not an emergency-stop or real-hardware safety claim. Failure, fall, precondition rejection, timeout, or excessive displacement must be retained as HALT_FAILED."
+}

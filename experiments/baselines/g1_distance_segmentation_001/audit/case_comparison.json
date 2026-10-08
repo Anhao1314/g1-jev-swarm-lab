@@ -1,0 +1,165 @@
+{
+  "cases": {
+    "case1_direct_long_4m": {
+      "actual": {
+        "absolute_distance_error_m": 6.476481383899113e-05,
+        "completion_sim_time_s": 8.705999999999577,
+        "forward_displacement_m": 4.000064764813839,
+        "heading_error_deg": -6.719698642668926,
+        "lateral_drift_m": -0.28142439922706486
+      },
+      "agreement": {
+        "task_success_matches": false,
+        "violations_match": false
+      },
+      "canonical_keys_missing_in_raw_metrics": [
+        "lateral_drift_m",
+        "heading_error_deg",
+        "forward_displacement_m"
+      ],
+      "kind": "segmentation_mission",
+      "nominal_limits": {
+        "distance_error_max_m": 0.4,
+        "heading_error_max_deg": 15.0,
+        "lateral_drift_max_m": 0.35,
+        "timeout_max_s": 24.0
+      },
+      "recomputed": {
+        "nominal_satisfied": true,
+        "nominal_violations": [],
+        "strict_satisfied": false,
+        "strict_violations": [
+          "EXCESSIVE_DRIFT"
+        ],
+        "task_success": true
+      },
+      "recorded": {
+        "failure_type": "EXCESSIVE_DRIFT",
+        "nominal_envelope_heading_error_deg": Infinity,
+        "nominal_envelope_lateral_drift_m": Infinity,
+        "nominal_envelope_satisfied": false,
+        "task_success": false,
+        "task_violations": [
+          "EXCESSIVE_DRIFT",
+          "HEADING_ERROR"
+        ]
+      },
+      "run_dir": "direct_long-4m-final-seed000",
+      "strict_limits": {
+        "distance_error_max_m": 0.2,
+        "heading_error_max_deg": 8.0,
+        "lateral_drift_max_m": 0.2,
+        "timeout_max_s": 20.0
+      },
+      "target_m": 4.0
+    },
+    "case2_boundary_4.53125m": {
+      "actual": {
+        "absolute_distance_error_m": 0.0004807350828155421,
+        "completion_sim_time_s": 9.831999999999953,
+        "forward_displacement_m": 4.5317307350828155,
+        "heading_error_deg": -7.526886798558622,
+        "lateral_drift_m": -0.3291337234994262
+      },
+      "agreement": {
+        "task_success_matches": true,
+        "violations_match": true
+      },
+      "canonical_keys_missing_in_raw_metrics": [],
+      "kind": "distance_boundary",
+      "nominal_limits": {
+        "distance_error_max_m": 0.453125,
+        "heading_error_max_deg": 15.0,
+        "lateral_drift_max_m": 0.35,
+        "timeout_max_s": 27.1875
+      },
+      "recomputed": {
+        "nominal_satisfied": true,
+        "nominal_violations": [],
+        "strict_satisfied": false,
+        "strict_violations": [
+          "EXCESSIVE_DRIFT"
+        ],
+        "task_success": true
+      },
+      "recorded": {
+        "failure_type": "SUCCESS",
+        "nominal_envelope_heading_error_deg": 7.526886798558622,
+        "nominal_envelope_lateral_drift_m": 0.3291337234994262,
+        "nominal_envelope_satisfied": true,
+        "task_success": true,
+        "task_violations": []
+      },
+      "run_dir": "A_distance-final-4.53125-seed000",
+      "strict_limits": {
+        "distance_error_max_m": 0.2265625,
+        "heading_error_max_deg": 8.0,
+        "lateral_drift_max_m": 0.2,
+        "timeout_max_s": 22.65625
+      },
+      "target_m": 4.53125
+    },
+    "case3_boundary_4.625m": {
+      "actual": {
+        "absolute_distance_error_m": 0.00018449392126829167,
+        "completion_sim_time_s": 10.022000000000016,
+        "forward_displacement_m": 4.625184493921268,
+        "heading_error_deg": -8.362693608488241,
+        "lateral_drift_m": -0.3553614983749386
+      },
+      "agreement": {
+        "task_success_matches": true,
+        "violations_match": true
+      },
+      "canonical_keys_missing_in_raw_metrics": [],
+      "kind": "distance_boundary",
+      "nominal_limits": {
+        "distance_error_max_m": 0.4625,
+        "heading_error_max_deg": 15.0,
+        "lateral_drift_max_m": 0.35,
+        "timeout_max_s": 27.75
+      },
+      "recomputed": {
+        "nominal_satisfied": false,
+        "nominal_violations": [
+          "EXCESSIVE_DRIFT"
+        ],
+        "strict_satisfied": false,
+        "strict_violations": [
+          "EXCESSIVE_DRIFT",
+          "HEADING_ERROR"
+        ],
+        "task_success": false
+      },
+      "recorded": {
+        "failure_type": "EXCESSIVE_DRIFT",
+        "nominal_envelope_heading_error_deg": 8.362693608488241,
+        "nominal_envelope_lateral_drift_m": 0.3553614983749386,
+        "nominal_envelope_satisfied": false,
+        "task_success": false,
+        "task_violations": [
+          "EXCESSIVE_DRIFT"
+        ]
+      },
+      "run_dir": "A_distance-final-4.625-seed000",
+      "strict_limits": {
+        "distance_error_max_m": 0.23125,
+        "heading_error_max_deg": 8.0,
+        "lateral_drift_max_m": 0.2,
+        "timeout_max_s": 23.125
+      },
+      "target_m": 4.625
+    }
+  },
+  "root_cause": {
+    "affected_path": "src/g1swarm/segmentation/runner.py (run_mission metrics dict)",
+    "missing_keys_case1": [
+      "lateral_drift_m",
+      "heading_error_deg",
+      "forward_displacement_m"
+    ],
+    "mission_recorded_infinity": Infinity,
+    "summary": "The segmentation-mission metrics used final_* key names while the shared walk-envelope evaluator reads canonical lateral_drift_m / heading_error_deg keys; the missing keys defaulted to +infinity and produced spurious EXCESSIVE_DRIFT and HEADING_ERROR violations.",
+    "unaffected_path": "src/g1swarm/boundary/runner.py (distance boundary runs already use canonical keys)"
+  }
+}

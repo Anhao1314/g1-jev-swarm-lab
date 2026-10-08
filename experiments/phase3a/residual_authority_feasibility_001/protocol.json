@@ -1,0 +1,168 @@
+{
+  "authority": {
+    "decision_period_s": 0.1,
+    "mask": "original learned-path eligible pairs/index>0/window, inherited unchanged",
+    "normalized_action_box": [
+      -1,
+      1
+    ],
+    "physical_bounds": [
+      0.1,
+      0.06,
+      0.12
+    ],
+    "physics_timestep_s": 0.002,
+    "policy_period_s": 0.02,
+    "probe_subset": "nonzero only first original Walk (node1 stand->walk); every other callback returns0",
+    "scope_limit": "Later residual actions cannot repair the first Walk strict failure; finite first-window profiles do not cover all continuous admissible action sequences",
+    "total_yaw_limit_radps": 0.6,
+    "units": [
+      "m/s",
+      "m/s",
+      "rad/s"
+    ],
+    "velocity_basis": "body command inputs to frozen locomotion controller",
+    "window_s": 2.0
+  },
+  "base_commit": "f5137c8069e28b203dbce8529a4992f0d8c073ae",
+  "budget": {
+    "alpha_scan": false,
+    "checkpoint_writes": 0,
+    "confirmation_runs": 1,
+    "initial_control_runs": 2,
+    "maximum_complete_case_executions": 9,
+    "optional_primary_probes": 6,
+    "provider_calls": 0,
+    "training_steps": 0
+  },
+  "case_sha256": "6850ebbcc9ab86a161fbdc8b26ba6c20e0b1f88114fde7e01e55942a5799ee98",
+  "class": "Experimental",
+  "contract_id": "SC-3A.4c-001",
+  "contract_sha256": "19a5b637502036714bebaf381776799d8022fc6843ab8d0dfd1371d8fcc222fc",
+  "controls": [
+    "same-reference residual-off current replay checked exactly against retained Phase3A.4b",
+    "learned-injection-path zero callback checked for exact commands/physics/metrics"
+  ],
+  "evidence": [
+    "immutable manifest",
+    "all raw result rows including failures",
+    "10Hz command/decision/state traces",
+    "full-step command/torque/physics hashes",
+    "20Hz state archives and exact final pose (acquisition samples, no media)",
+    "callback proposed action/reward ledger",
+    "paired/off/zero and repeat integrity",
+    "summary and failure attribution"
+  ],
+  "experiment_id": "residual_authority_feasibility_001",
+  "frozen": true,
+  "global_claim": {
+    "additional_requirements": [
+      "final absolute commanded-axis lateral not worse",
+      "final absolute wrapped commanded-heading error not worse"
+    ],
+    "metric": "final commanded-world Euclidean endpoint error strictly lower than its alpha0.5 residual-off baseline",
+    "not_claimed": "all-prefix or all-component Pareto improvement; no new historical global success threshold",
+    "required_disclosure": [
+      "full final XY vector including any X regression",
+      "per-node world vector/norm/head, including prefix tradeoff",
+      "Turn/Stand/Stop translation contributions"
+    ]
+  },
+  "local_claim": "STRICT endpoint eligibility on all original nodes; nominal independent secondary report; not continuous/environmental corridor safety",
+  "origin": "actual node start; frozen selector unchanged",
+  "phase": "3A.4d",
+  "physical_claim": "original complete physical success, finite/valid execution and all original nodes SUCCESS; report status/fall/tilt/height separately",
+  "preserved": [
+    "policy/PD/gains/clamps/reference selector/evaluator",
+    "original observation and dense_reward callback path; reward ignored, never tuned",
+    "node boundaries/targets/skill lifecycle and all envelopes",
+    "Console and all historical evidence"
+  ],
+  "probes_in_order": [
+    {
+      "action": [
+        0,
+        -1,
+        0
+      ],
+      "end_s": 2.0,
+      "id": "lateral_inward",
+      "onset_s": 0.0
+    },
+    {
+      "action": [
+        0,
+        0,
+        -1
+      ],
+      "end_s": 2.0,
+      "id": "yaw_inward",
+      "onset_s": 0.0
+    },
+    {
+      "action": [
+        0,
+        -1,
+        -1
+      ],
+      "end_s": 2.0,
+      "id": "combined_inward",
+      "onset_s": 0.0
+    },
+    {
+      "action": [
+        1,
+        -1,
+        -1
+      ],
+      "end_s": 2.0,
+      "id": "corner_forward_inward",
+      "onset_s": 0.0
+    },
+    {
+      "action": [
+        0,
+        -1,
+        -1
+      ],
+      "end_s": 2.0,
+      "id": "late_combined_inward",
+      "onset_s": 1.0
+    },
+    {
+      "action_first": [
+        0,
+        -1,
+        -1
+      ],
+      "action_second": [
+        0,
+        -1,
+        1
+      ],
+      "end_s": 2.0,
+      "id": "yaw_return_lateral_inward",
+      "onset_s": 0.0,
+      "switch_s": 1.0
+    }
+  ],
+  "process_limits": {
+    "failure": "retain completed/partial evidence and stop; never retry unfavorable outcomes",
+    "inactivity_diagnostic_after_s": 60,
+    "maximum_campaign_wall_s": 300,
+    "progress": "one run completion plus ledger/trace growth"
+  },
+  "question": "Can the current bounded 2s residual authority construct a strict-eligible physically complete 16m behavior with same-reference world-accuracy gain?",
+  "reference_alpha": 0.5,
+  "reference_choice": "fixed retained challenge, not alpha optimization",
+  "roundoff_audit_tolerance": 1e-10,
+  "roundoff_role": "arithmetic verification only, not a task threshold; paired gains within this resolution cannot establish FEASIBLE",
+  "schedule_and_stop": "Off then zero; integrity must pass before probes. Execute predeclared profiles in order until a qualifying joint witness; repeat first witness and stop if exact. If none qualify, repeat combined_inward for deterministic negative verification and stop. No resampling or profile tuning.",
+  "source_manifest_sha256": "c29f2a011fbea76cab2d4b3e8e7e91aa32b753c7b43107022b306859e01acb8e",
+  "stopping_boundary": "No PPO/Phase3A.5, reward tuning, best alpha, authority/window extension or Console expansion",
+  "verdict_rules": {
+    "FEASIBLE": "At least one deterministic profile and its exact confirmation satisfy all frozen strict, complete physical and declared paired-global conditions.",
+    "INCONCLUSIVE": "No repeated joint witness and no full-space certificate; retain probed failures and measured window/authority effects without training expansion.",
+    "NOT_FEASIBLE": "Only with a validated reachability/invariant bound covering the entire admissible continuous authority or mutually incompatible required hard goals; saturation/failed probes/command integrals are not such proof."
+  }
+}

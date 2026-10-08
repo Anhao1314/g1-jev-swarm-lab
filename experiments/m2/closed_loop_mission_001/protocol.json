@@ -1,0 +1,29 @@
+{
+  "experiment_id": "closed_loop_mission_001",
+  "status": "PREDECLARED_BEFORE_PHYSICS",
+  "research_ops_route": "mechanism_experiment",
+  "seed": 0,
+  "source_protocol": "configs/experiments/oracle_mission_runtime_001.yaml",
+  "source_corpus": "configs/missions/oracle_phase2_001.yaml",
+  "comparison": ["static_dispatch", "strict_feedback"],
+  "maximum_physics_runs": 4,
+  "stop_rule": "Run each frozen mission once under each mode. Retain all results; do not replace a case if the predicted failure does not occur.",
+  "success_mission": {
+    "schema_version": "2.0.0", "mission_id": "m2-safe-walk4-turn45-stop", "steps": [
+      {"id": "s1", "skill": "walk_forward", "parameters": {"distance_m": 4.0}},
+      {"id": "s2", "skill": "turn", "parameters": {"angle_deg": 45.0}, "depends_on": ["s1"]},
+      {"id": "s3", "skill": "stop", "parameters": {}, "depends_on": ["s2"]}
+    ]
+  },
+  "failure_mission": {
+    "schema_version": "2.0.0", "mission_id": "m2-open-loop-walk6-turn45-stop", "steps": [
+      {"id": "s1", "skill": "walk_forward", "parameters": {"distance_m": 6.0}, "execution_mode_override": "open_loop"},
+      {"id": "s2", "skill": "turn", "parameters": {"angle_deg": 45.0}, "depends_on": ["s1"]},
+      {"id": "s3", "skill": "stop", "parameters": {}, "depends_on": ["s2"]}
+    ]
+  },
+  "selection_basis": {
+    "safe": "Phase 2 oracle h3-walk4-turn45-stop completed all three nodes successfully in frozen benchmark.",
+    "failure": "Phase 1.3 boundary_comparison.json records open_loop first failure at 6 m and last reliable at 4 m. Explicit experimental override is grounded; a new mission realization may differ and will be retained even if it passes."
+  }
+}

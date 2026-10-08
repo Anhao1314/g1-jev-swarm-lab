@@ -1,0 +1,233 @@
+{
+  "protocol": {
+    "Jev_or_MultiSwarm": false,
+    "alphas": [
+      0.0,
+      0.5
+    ],
+    "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+    "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04",
+    "baseline_protocol": "configs/experiments/g1_closed_loop_correction_001.yaml",
+    "case_manifest_sha256": "641dcdf36447976cfb29e64dd24bbe911beaca8284ef7299f82f9cb7ce38a909",
+    "checkpoint_interval": 2048,
+    "checkpoint_selection": "fixed final checkpoint per seed; no evaluation-based selection",
+    "evaluation_schedule": {
+      "final_checkpoint_lock": "All4 final file/tensor hashes locked before the first fresh physics call, including residual-off fresh baselines",
+      "heldout_cases_in_tests_preflight_smoke_reload_or_training": false,
+      "independent_smoke": {
+        "alphas": 2,
+        "decisions_per_alpha": 512,
+        "scored_in_primary": false
+      },
+      "post_lock_evaluation": {
+        "fresh_residual_off": 32,
+        "learned_fresh_and_regression": 168,
+        "records": 200
+      },
+      "primary_totals": {
+        "all_records": 252,
+        "fresh_heldout": 96,
+        "seen_regression": 156
+      },
+      "seen_baseline_first": {
+        "alphas": 2,
+        "cases_per_alpha": 26,
+        "records": 52
+      },
+      "separate_repeatability": {
+        "arms": 6,
+        "case_ids": [
+          "heldout-wt-01",
+          "heldout-tw-01",
+          "heldout-ws-01",
+          "heldout-sw-01",
+          "sequence-mixed-12m",
+          "sequence-mixed-16m"
+        ],
+        "independent_samples": false,
+        "records": 36
+      },
+      "train_before_fresh": {
+        "actors": 4,
+        "decisions_per_actor": 8192
+      },
+      "zero_and_smoke_episodes_in_primary": false
+    },
+    "experiment_id": "frame_residual_learning_001",
+    "factor": "Walking correction reference alpha only; all inherited training settings retained",
+    "frame_recipe": "theta_ref=wrap(theta_actual+alpha*wrap(theta_commanded-theta_actual));wrap=atan2(sin,cos);exact old endpoint recipes at0/1 preservefloatidentity; midpoint finalangle normalized",
+    "frame_scope": "Selected blended frame rotates both heading/lateral error axes;gains remain1.5/1.0;origin and local measurement frame stayactualnode-start",
+    "frozen": true,
+    "heading_history_manifest_sha256": "d22139534411139d51e0411babfe16eef43c395612890696c7e6f5b061510f0f",
+    "heading_protocol_sha256": "f07a434f79cf2df9fca8ff0bf3c33775845eec0a95ab01b00c4188609077dabc",
+    "history_manifest_sha256": "b124a1f66eed10b59ad8ed3e4e1ff7de34e382bc67e28a1a136c654dd34ddfc4",
+    "inherited_case_manifest_sha256": "c84cf2484d9cd6138d19828e09ad9fb7cb57467330c96e08ad8cbed853b0f55e",
+    "language_Runtime_gate": "BLOCKED_UNCHANGED",
+    "no_alpha_scan": true,
+    "no_evaluation_checkpoint_selection": true,
+    "no_post_evaluation_reward_observation_or_budget_change": true,
+    "no_seed_scan": true,
+    "no_semantic_or_outcome_retry": true,
+    "observation": "61 features: current/prior skill, nominal command, body velocity, angular velocity, gravity, height, local task errors/remaining goal, elapsed/window flag, phase, previous action, ideal-path error, joint position/velocity",
+    "paired_initialization": {
+      "checkpoint_zip_bytes_need_not_be_identical": true,
+      "episode_counts_not_forced_equal": "Fixed decision budget is retained; all actual case exposures and interrupted tails are recorded",
+      "same_seed_actor_tensor_hash_equal_across_frames": true,
+      "same_seed_case_rng_procedure": true
+    },
+    "phase": "Independent same-frame residual PPO comparison",
+    "pilot_protocol_sha256": "d27a92c59f6496a796208dd4b5d8b91ea2a2b98f793a3fc28bba9e3a229663df",
+    "ppo": {
+      "batch_size": 64,
+      "clip_range": 0.2,
+      "device": "cpu",
+      "ent_coef": 0.0,
+      "gae_lambda": 0.95,
+      "gamma": 0.99,
+      "learning_rate": 0.0003,
+      "n_epochs": 5,
+      "n_steps": 512,
+      "policy_kwargs": {
+        "net_arch": [
+          64,
+          64
+        ]
+      }
+    },
+    "prospective_analysis": {
+      "directions": "Higher task/physical/strict success; lower absolute local/global lateral and heading, endpoint error, Turn translation norm, completion duration, tilt/falls; larger minimum height",
+      "fresh_denominators": "16 fresh cases per arm, four per family; report old26 only as seen regression",
+      "frozen_task_scores": "Original nominal/physical success and original strict diagnostics remain separate; no new historical success gate",
+      "negative_findings": "Keep failures, geometry tradeoffs, strict losses, reward/objective mismatch and unchanged/no-gain results",
+      "optimization_return": "Training return is not held-out learning gain; differing episode composition remains visible",
+      "pareto": "Describe same-frame metric tradeoffs and seed11/29 directions separately; no aggregate weighted score or new historical PASS threshold",
+      "recovery_null": "Missing/null recovery remains unavailable evidence, never zero or success",
+      "strict_scope": "Midpoint prior qualification was nominal only; its retained16m first8m strict failure is a mandatory regression diagnostic, not erased or added retroactively to the old gate",
+      "target_skill_metrics": "For fresh pairs, use the second skill for family precision/time/stability; retain unchanged-prefix and whole-case evidence"
+    },
+    "repeat_case_ids": [
+      "heldout-wt-01",
+      "heldout-tw-01",
+      "heldout-ws-01",
+      "heldout-sw-01",
+      "sequence-mixed-12m",
+      "sequence-mixed-16m"
+    ],
+    "residual": {
+      "action": [
+        "delta_vx_mps",
+        "delta_vy_mps",
+        "delta_yaw_rate_radps"
+      ],
+      "bounds": [
+        0.1,
+        0.06,
+        0.12
+      ],
+      "decision_period_s": 0.1,
+      "eligible_pairs": [
+        [
+          "walk_forward",
+          "turn"
+        ],
+        [
+          "turn",
+          "walk_forward"
+        ],
+        [
+          "walk_forward",
+          "stop"
+        ],
+        [
+          "stand",
+          "walk_forward"
+        ]
+      ],
+      "level": "transition-conditioned command residual added to frozen deterministic controller",
+      "outside_window_or_primitive": "exact zero residual",
+      "policy_memory_resets": "original skill behavior unchanged",
+      "window_s": 2.0,
+      "yaw_total_limit_radps": 0.6
+    },
+    "reward": {
+      "dense": "per0.1s: -4*local_heading_rad^2 -4*local_lateral_m^2 for walk; -2*remaining_turn_rad^2 for turn; -2*speed^2 for stop; all -0.1*tilt_rad^2 -0.05*action_energy -0.02*action_change_energy",
+      "historical_envelopes": "unchanged; reward is new training surrogate, not a replacement task gate",
+      "terminal": "+15 task success else -15; additional -50 physical failure; -10*sum(abs(local_heading_rad)+abs(walk_lateral_m))"
+    },
+    "same_frame_comparison": "Each learned seed versus residual-off at its own alpha; never credit a cross-frame difference as PPO learning gain",
+    "scope_exclusions": [
+      "language compiler",
+      "Phase2.3 Final Runtime",
+      "Jev",
+      "Multi-Swarm",
+      "joint policy retraining"
+    ],
+    "seeds": [
+      11,
+      29
+    ],
+    "smoke_per_alpha": true,
+    "smoke_seed": 7,
+    "smoke_timesteps": 512,
+    "source_anchor": "1726d74111abe8084a0f509edafb8c16b1b3ad01",
+    "torch_threads": 1,
+    "train_timesteps": 8192,
+    "training_order": [
+      {
+        "alpha": 0.0,
+        "seed": 11
+      },
+      {
+        "alpha": 0.0,
+        "seed": 29
+      },
+      {
+        "alpha": 0.5,
+        "seed": 11
+      },
+      {
+        "alpha": 0.5,
+        "seed": 29
+      }
+    ],
+    "transition_recovery_diagnostic": {
+      "body_velocity_error_max_mps": 0.15,
+      "role": "new diagnostic only, never a task-success envelope; null means no sustained tracking recovery observed within window",
+      "standing": "original RobotState.standing",
+      "sustained_s": 0.2,
+      "window_s": 2.0,
+      "yaw_rate_error_max_radps": 0.15
+    }
+  },
+  "provenance": {
+    "Jev_or_MultiSwarm": false,
+    "Language_Runtime": false,
+    "alpha": 0.5,
+    "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+    "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04",
+    "campaign": "fixed_budget_PPO",
+    "case_manifest_sha256": "641dcdf36447976cfb29e64dd24bbe911beaca8284ef7299f82f9cb7ce38a909",
+    "code_commit": "a4926973e01b65f98fc7c598d48ac982b47d6516",
+    "device": "cpu",
+    "history_manifest_sha256": "b124a1f66eed10b59ad8ed3e4e1ff7de34e382bc67e28a1a136c654dd34ddfc4",
+    "package_versions": {
+      "gymnasium": "1.4.0",
+      "mujoco": "3.15.0",
+      "numpy": "2.4.6",
+      "stable-baselines3": "2.9.0",
+      "torch": "2.14.1+cu130"
+    },
+    "pilot_protocol_sha256": "d27a92c59f6496a796208dd4b5d8b91ea2a2b98f793a3fc28bba9e3a229663df",
+    "protocol_sha256": "df0529a7f9f542463eadf99a1b01c36346344bec184009b13b44eef688781afb",
+    "seed": 11,
+    "source_hashes": {
+      "scripts/run_phase3a_frame_learning.py": "37fb0a6108bfd1061470cc2e35317cb7b74e1e2e9b903daee7721ab1e0d4c06c",
+      "src/g1swarm/frame_learning/__init__.py": "85010add214325cf86855bdbb57bffd072ef51ae7c32c865272c14a853782342",
+      "src/g1swarm/frame_learning/analysis.py": "029e75b5b4ffa16320ac49f50baa6c53e1d2aa4aeb2f0096b4c15e6c1956714a",
+      "src/g1swarm/frame_learning/campaign.py": "3738489bf9d8daf9412926504519e88eb6ac03bb88deca0c716deda58a1673af",
+      "src/g1swarm/frame_learning/cases.py": "55edc4c3822e5244ee4c68bf1dbe0cff6edcc674be31a5a515afdb02e391fd50",
+      "src/g1swarm/frame_learning/env.py": "edb6e6bec510e8ba76761147c73024bee088fde36991cad86ff5696d3bcf5ab3"
+    },
+    "torch_threads": 1
+  }
+}

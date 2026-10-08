@@ -1,0 +1,48 @@
+{
+  "schema": "phase3b1b_early_risk_instrumentation_v1",
+  "status": "PREDECLARED_NO_PHYSICS_YET",
+  "question": "Do fixed 1s and 2s read-only execution snapshots visibly separate later strict PASS/FAIL in a small frozen-baseline cohort?",
+  "source_commit": "9fb987ace048b80560dac8656d69d6a85b773376",
+  "historical_cohort": "experiments/phase3b/jev_risk_shadow_001/benchmark.json",
+  "historical_results": "experiments/phase3b/jev_risk_shadow_001/result.json",
+  "case_manifest": "experiments/phase3a/transition_learning_001/case_manifest.json",
+  "treatment": "frozen_baseline",
+  "runner_simulation_seed": 0,
+  "selected_case_order": [
+    "eval-ws-01",
+    "eval-tw-01",
+    "eval-tw-02",
+    "eval-sw-02",
+    "eval-sw-03",
+    "primitive-walk-4",
+    "sequence-mixed-12m"
+  ],
+  "selected_nodes": [
+    {"cell_id": "eval-ws-01:node-0", "prior_class": "true_safe"},
+    {"cell_id": "eval-tw-01:node-1", "prior_class": "true_safe"},
+    {"cell_id": "eval-tw-02:node-1", "prior_class": "false_safe"},
+    {"cell_id": "eval-sw-02:node-1", "prior_class": "true_safe"},
+    {"cell_id": "eval-sw-03:node-1", "prior_class": "false_safe"},
+    {"cell_id": "primitive-walk-4:node-0", "prior_class": "false_safe"},
+    {"cell_id": "sequence-mixed-12m:node-1", "prior_class": "false_safe"},
+    {"cell_id": "sequence-mixed-12m:node-3", "prior_class": "true_positive"}
+  ],
+  "snapshot_elapsed_s": [0.0, 1.0, 2.0],
+  "snapshot_rule": "exact controller trace tick before endpoint; no interpolation, no endpoint substitution",
+  "features": [
+    "world_xy", "world_heading_deg", "route_frame_xy", "route_heading_error_deg",
+    "route_frame_vx_vy", "yaw_rate_radps", "local_lateral_m", "local_heading_error_deg",
+    "reference_lateral_m", "reference_heading_error_deg", "nominal_command", "applied_command",
+    "actual_correction_delta"
+  ],
+  "feature_derivation": "read existing RobotState and immutable node/local/reference frames; baseline correction delta is applied minus nominal and expected zero",
+  "trend": "fixed 0-to-1s and 0-to-2s differences and per-second slopes for selected errors; no fitted window",
+  "execution_matrix": ["observer_off", "observer_on"],
+  "max_executions": 14,
+  "run_order": "for each case in selected_case_order: observer_off then observer_on",
+  "integrity_gate": "before analysis require exact full-step applied-command stream, existing 0.1s trace rows, simulation step counts, node outcomes and final states to match off/on; require selected strict labels to match historical; stop at first failure",
+  "analysis": "eight selected cells only; report 0/1/2s class ranges and paired case comparisons, velocity versus fixed short trend, early versus later node patterns, and fixed strict-limit descriptive rule at each time; no threshold fitting or generalization claim",
+  "fixed_rule": "risk flag if abs(local lateral_m)>frozen strict lateral_drift_max_m OR abs(local heading_error_deg)>frozen strict heading_error_max_deg at that snapshot",
+  "stop_rule": "stop after 14 frozen executions or immediately on equivalence/integrity failure; retain all partial evidence and do not add cases",
+  "prohibited": ["Jev API", "policy/controller/reference/evaluator/timestep changes", "robot actuation outside frozen replay", "PPO", "reward tuning", "recovery tuning", "new controller mode", "online shadow", "Multi-Swarm", "Language Runtime"]
+}

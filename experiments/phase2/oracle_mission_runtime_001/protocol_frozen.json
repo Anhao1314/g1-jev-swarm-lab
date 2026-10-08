@@ -1,0 +1,135 @@
+{
+  "_protocol_sha256": "c551833bb56fff2edc61d0651233ec950b2f573da00789629f72003dd484865e",
+  "benchmark": {
+    "automatic_segmentation": false,
+    "determinism": "The simulator and controller are deterministic, so success is reported per distinct mission template (multiple templates per horizon) instead of repeated identical runs. Boundary/critical conditions are repeated for a determinism check in the pilot only.\n",
+    "metrics": [
+      "mission_horizon",
+      "validation_success",
+      "grounding_success",
+      "mission_success",
+      "completed_nodes",
+      "failed_node",
+      "failure_type",
+      "total_simulation_time_s",
+      "total_wall_time_s",
+      "skill_invocations",
+      "physical_success",
+      "task_success",
+      "cumulative_path_length_m",
+      "transition_count",
+      "controller_memory_resets"
+    ],
+    "min_missions_per_horizon": 5,
+    "no_recovery": true,
+    "no_replanning": true,
+    "success_rule": "Mission SUCCESS requires every required node to succeed. Any node failure fails the mission and blocks its descendants. Validation or capability rejection produces REJECTED (distinct from FAILED) and must execute zero simulation steps.\n"
+  },
+  "experiment_id": "oracle_mission_runtime_001",
+  "failure_taxonomy": [
+    "VALIDATION_FAILURE",
+    "UNSUPPORTED_SKILL",
+    "CAPABILITY_REJECTED",
+    "CAPABILITY_UNKNOWN",
+    "PRECONDITION_FAILURE",
+    "SKILL_FAILURE",
+    "TRANSITION_FAILURE",
+    "MISSION_TIMEOUT",
+    "INVALID_STATE",
+    "INTERNAL_ERROR"
+  ],
+  "frozen": true,
+  "grounding": {
+    "correction_gains": {
+      "heading_lateral": {
+        "k_heading": 1.5,
+        "k_lateral": 1.0
+      },
+      "heading_only": {
+        "k_heading": 1.5
+      }
+    },
+    "correction_limits": {
+      "deadband_radps": 0.01,
+      "max_yaw_rate_radps": 0.6,
+      "oscillation_threshold_radps": 0.05
+    },
+    "evidence": {
+      "boundary_comparison": "experiments/baselines/g1_closed_loop_correction_001/boundary_comparison.json",
+      "capability_map": "experiments/baselines/g1_closed_loop_correction_001/capability_map_v1_3.json",
+      "risk_map": "experiments/baselines/g1_closed_loop_correction_001/risk_map_v1_3.json"
+    },
+    "historical": {
+      "stand": {
+        "default_duration_s": 2.0,
+        "evidence_ref": "experiments/baselines/g1_skill_characterization_001/summary.json",
+        "max_duration_s": 20.0,
+        "source_phase": "phase1.1"
+      },
+      "stop": {
+        "evidence_ref": "experiments/baselines/g1_skill_characterization_001/summary.json",
+        "source_phase": "phase1.1"
+      },
+      "turn": {
+        "evidence_ref": "experiments/baselines/g1_skill_characterization_001/summary.json",
+        "max_abs_angle_deg": 90.0,
+        "source_phase": "phase1.1"
+      }
+    },
+    "mode_preference": [
+      "heading_lateral",
+      "heading_only",
+      "open_loop"
+    ],
+    "rule": "Deterministic selection. Consider only execution modes with recorded evidence at the requested distance. Discard HIGH and UNKNOWN. Prefer LOW over MEDIUM. Within the same risk level, use the frozen preference order heading_lateral > heading_only > open_loop (chosen from Phase 1.3 evidence: heading_lateral reached the lowest drift with zero saturation and zero oscillation). A distance with no recorded evidence is CAPABILITY_UNKNOWN - no interpolation and no extrapolation. A distance whose only evidence is HIGH is CAPABILITY_REJECTED. Automatic segmentation into shorter walks is never an allowed strategy (Phase 1.2b negative result). The Phase 1.3 path-correction modes are walk-specific: turn, stand and stop use open_loop, because wrapping an in-place skill in the walking frame correction changes its intended behaviour (pilot regression).\n"
+  },
+  "horizons": {
+    "H1": 1,
+    "H3": 3,
+    "H5": 5,
+    "H8": 8
+  },
+  "mission_corpus": "configs/missions/oracle_phase2_001.yaml",
+  "mission_schema_version": "2.0.0",
+  "notes": "Phase 2.0 is the oracle baseline: mission intent is given as structured IR, so language understanding contributes zero error. Open-loop execution modes are never the default for long walks; they remain available only through an explicit, logged experimental override.\n",
+  "protocol_path": "configs/experiments/oracle_mission_runtime_001.yaml",
+  "protocol_version": "1.0.0",
+  "provenance": {
+    "baseline_commit": "bea645f13b6af9ee27f902c310148d72fa69a204",
+    "baseline_phase": "phase1.3",
+    "controller_commit": "276801e46c5d433564f24658bac64f254b7d2d4b",
+    "controller_source": "https://github.com/unitreerobotics/unitree_rl_gym/deploy/deploy_mujoco/deploy_mujoco.py",
+    "model_commit": "276801e46c5d433564f24658bac64f254b7d2d4b",
+    "model_source": "https://github.com/unitreerobotics/unitree_rl_gym",
+    "policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d"
+  },
+  "robot_config": "configs/robot/g1_locomotion_12dof.yaml",
+  "skill_parameters": {
+    "stand": {
+      "default_duration_s": 2.0
+    },
+    "stop": {
+      "max_duration_s": 4.0,
+      "speed_threshold_mps": 0.1,
+      "window_s": 1.0
+    },
+    "turn": {
+      "max_duration_s": 10.0,
+      "settle_s": 0.5,
+      "tolerance_deg": 15.0,
+      "yaw_rate_radps": 0.5
+    },
+    "walk_forward": {
+      "speed_mps": 0.5,
+      "timeout_min_s": 15.0,
+      "timeout_s_per_m": 6.0,
+      "tolerance_m": 0.2
+    }
+  },
+  "supported_skills": [
+    "stand",
+    "walk_forward",
+    "turn",
+    "stop"
+  ]
+}

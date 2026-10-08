@@ -1,0 +1,35 @@
+// Phase 2.1 controlled Chinese command grammar.
+// The grammar models command structure; normalization only handles
+// punctuation/whitespace, and lexical helpers convert numbers/units.
+start: mission
+
+mission: START? command (CONNECTOR command)*
+
+?command: stand_command
+        | stop_command
+        | walk_command
+        | turn_left_command
+        | turn_right_command
+
+stand_command: STAND (NUMBER SECOND_UNIT)?
+stop_command: STOP
+walk_command: WALK NUMBER DISTANCE_UNIT
+turn_left_command: TURN_LEFT NUMBER ANGLE_UNIT
+turn_right_command: TURN_RIGHT NUMBER ANGLE_UNIT
+
+START: "先"
+CONNECTOR: "然后" | "再" | "接着" | "之后" | "最后" | ","
+
+STAND: "站立" | "站好" | "保持站立"
+STOP: "停止" | "停下" | "立即停止"
+WALK: "前进" | "往前走" | "向前走" | "向前移动" | "往前移动"
+TURN_LEFT: "左转" | "向左转" | "逆时针转" | "逆时针旋转"
+TURN_RIGHT: "右转" | "向右转" | "顺时针转" | "顺时针旋转"
+
+DISTANCE_UNIT: "米" | "m" | "M" | "厘米" | "cm" | "CM"
+ANGLE_UNIT: "度" | "°"
+SECOND_UNIT: "秒" | "s" | "S"
+
+NUMBER: /[0-9]+(?:\.[0-9]+)?|[零〇一二两三四五六七八九十百千]+/
+
+%ignore /[ \t\r\n]+/

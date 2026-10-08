@@ -1,0 +1,31 @@
+# Phase 3B.1b — Early risk instrumentation acquisition
+
+## Scientific verdict
+
+`INCONCLUSIVE`. The fixed early snapshots contain interpretable *partial* risk signals, particularly lateral-error growth in two transition/sequence failures. They do not establish a cohort-wide, reliable separation of future strict PASS/FAIL. This study therefore does not authorize a redesigned Jev shadow protocol. Phase 3B.1's `JEV_RISK_ROLE_NOT_SUPPORTED` and Phase 3B.1a's `STATE_INFORMATION_INSUFFICIENT` remain historical findings, unchanged.
+
+## Frozen acquisition and observer integrity
+
+Before the first physics execution, commit `0400c3f` froze seven Phase 3B.1 cases and eight selected walk nodes: three true-safe controls, four prior Jev false-safe nodes, and one later-sequence true-positive node. Each case had one observer-off and one observer-on frozen-baseline replay with seed 0; the only new behavior was read-only state capture at node elapsed 0, 1 and 2 seconds. No policy, controller, reference, evaluator, timestep, correction, threshold, skill, or reward was changed. The source manifest pins the case/benchmark/result files, simulator/skill/controller sources, model XML, and pretrained policy hash.
+
+The first pair stopped because the initial equivalence comparator included `skill_metrics.elapsed_wall_time_s`, a host timing field. Its raw off/on files and `PARTIAL_STOPPED` receipt were retained. Those files differed only in that nested field and top-level `wall_time_s`: all 2,354 applied commands, 48 original trace rows, scientific node fields, step counts, strict outcome and final state matched exactly. Amendment `de91387` excludes only those two host timings, pins the original partial-file hashes, and resumes the six remaining predeclared cases without rerunning the first. The completed acquisition contains exactly 14 executions. Independent review found exact off/on equality of full command hashes/counts, original trace rows and scientific records for all seven pairs; all eight selected strict labels matched historical evidence, and all 24 selected snapshots preceded endpoint (shortest selected node duration 3.422s). Internal RNG/policy state was not directly sampled, so the equivalence conclusion is behavioral, supported by unchanged commands and states rather than a formal internal-state identity proof.
+
+The captured fields include world and route-frame position, world/route heading, route-frame planar velocity, yaw rate, local lateral/heading errors, planned-route lateral/heading errors, and actual nominal/applied commands. In this frozen baseline, applied correction delta is zero. “Reference error” here means error relative to the *planned route*; it is diagnostic and is not an active correction command. Short trends are fixed 0→1s and 0→2s differences, not fitted windows.
+
+## Observability result
+
+At 2s, local lateral error was about -0.051m in safe `eval-sw-02` versus -0.176m in false-safe `eval-sw-03`; its 0→1s lateral change was about -0.016m versus -0.122m. The other transition pair showed a smaller difference: safe `eval-tw-01` about -0.074m versus false-safe `eval-tw-02` about -0.102m at 2s. The early sequence false-safe was about -0.175m at 2s. These are descriptive contrasts in chosen cases, not a fitted threshold or a causal mechanism estimate.
+
+The later-sequence true-positive had a large *planned-route* error already at node entry (about -0.708m lateral and -9.60° heading), increasing to about -0.921m and -14.93° by 2s; its local 2s errors were only about -0.075m and -5.33°. This is accumulated route error rather than a new local limit breach. By contrast, the safe first walk `eval-ws-01` and failing `primitive-walk-4` had identical recorded local/reference errors, planar velocities and yaw rates through 2s. Their planned target distances differ (1.5m versus 4m), so this is an alias of the *early dynamic fields*, not of the complete decision state. The longer route context can matter even when early motion is identical.
+
+Single-point route-frame lateral velocity at 2s overlapped across safe and false-safe cases (approximately -0.11 to -0.14m/s versus -0.11 to -0.16m/s). The short lateral-error trend is more explanatory for the `eval-sw` pair, but not uniformly: the `eval-tw` pair is closer, and the first-walk safe/fail pair is dynamically identical. Thus this sample suggests different early and accumulated-error patterns without establishing two general failure mechanisms.
+
+The protocol-fixed deterministic rule flags risk only when the current *local* lateral or heading error already exceeds its frozen strict limit. At 0s, 1s and 2s it flags none of the eight nodes: **TP 0, false-safe 5, true-safe 3, false-alarm 0** at each time. No cutoff was moved after seeing this result. The raw per-cell snapshots, endpoint violations, fixed-rule outputs, and source-file hashes are retained in `analysis.json`; full paired run files remain in ignored local `artifacts/`.
+
+This is a tiny, selected, previously seen mechanism cohort with correlated sequence nodes and approximate rather than causal matched controls. It supports an observability finding about these cases and checkpoints only. There were zero Jev calls, zero new controller modes, no PPO or reward tuning, and no Online Shadow, Multi-Swarm, or Language Runtime integration.
+
+The stopping reason is the frozen 14-run matrix and the absence of a clear cohort-wide early risk discriminator. Additional thresholds, timepoints, severity levels, cases, or Jev prompts were not searched.
+
+## Research Ops and closeout
+
+Research Ops v0.1 loaded the project context and routed this as a mechanism experiment. Its command telemetry records 26.784s of experiment commands across two events, including the retained timing-comparator stop; the continuation completed the frozen matrix. Focused tests passed (11 tests; measured command 0.515s), and deterministic evidence analysis passed (measured command 0.276s). The independent acquisition and scientific audits found no blocking issue. Context, reasoning, and implementation intervals were not instrumented, so their durations and token counts are unavailable rather than estimated. No new physics was run during analysis or closeout.

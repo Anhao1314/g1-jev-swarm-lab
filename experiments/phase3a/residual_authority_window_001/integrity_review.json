@@ -1,0 +1,133 @@
+{
+  "verdict": "PASS",
+  "scope": "Offline integrity and retained arithmetic audit; no new physics or full regression",
+  "failures": [],
+  "prephysics_commit": "cfd97dafbfe02776254e7669b3e0cff2387f5448",
+  "source_pins_verified": 270,
+  "exported_files_verified": 32,
+  "acquisition_input_files_verified": 9,
+  "encoded_decoded_raw_hashes_verified": true,
+  "acquisition_files_unchanged_since_prephysics_commit": true,
+  "exact_declared_runs_only": true,
+  "runs": [
+    {
+      "run_id": "01--combined2--control",
+      "window_s": 2.0,
+      "physics_steps": 26937,
+      "numeric_checks": 15264,
+      "predicate_checks": 5431,
+      "independent_audit_recomputed_exact": true
+    },
+    {
+      "run_id": "02--zero14--control",
+      "window_s": 14.0,
+      "physics_steps": 26903,
+      "numeric_checks": 15284,
+      "predicate_checks": 5442,
+      "independent_audit_recomputed_exact": true
+    },
+    {
+      "run_id": "03--combined14--primary",
+      "window_s": 14.0,
+      "physics_steps": 26916,
+      "numeric_checks": 15284,
+      "predicate_checks": 5442,
+      "independent_audit_recomputed_exact": true
+    },
+    {
+      "run_id": "04--combined14--repeat",
+      "window_s": 14.0,
+      "physics_steps": 26916,
+      "numeric_checks": 15284,
+      "predicate_checks": 5442,
+      "independent_audit_recomputed_exact": true
+    }
+  ],
+  "counts": {
+    "physics_steps": 107672,
+    "full_step_authority_checks": 107672,
+    "numeric_checks": 61116,
+    "predicate_checks": 21757,
+    "trace_rows": 2163,
+    "decision_rows": 1763,
+    "optimizer_updates": 0,
+    "checkpoint_writes": 0
+  },
+  "control_repeat_gates": {
+    "historical_combined2_gate.json": true,
+    "zero14_gate.json": true,
+    "repeat_gate.json": true
+  },
+  "no_new_physics_in_this_review": true,
+  "observer_and_optimizer_boundaries": {
+    "acquisition_optimizer_updates": 0,
+    "acquisition_checkpoint_writes": 0,
+    "controller_restored": true,
+    "Phase3A5_started": false
+  },
+  "nonblocking_analysis_source_issue": {
+    "original": "analyze.py",
+    "original_sha256": "f80a9c99c1889d7279484f86a5e1c0d01eddc7be258d36cfdbf7b27558c54920",
+    "original_preserved": true,
+    "error": {
+      "type": "SyntaxError",
+      "line": 86,
+      "message": "closing parenthesis '}' does not match opening parenthesis '['"
+    },
+    "repair": "analyze_results.py",
+    "repair_sha256": "263c9ae202a60bb0d8597af32b56d55e2f147626a64656f967890e2e95c7b4fd",
+    "change": "One missing closing bracket in final print statement; corrected after acquisition in separate file. Acquisition never imported/executed the analyzer. Frozen original preserved.",
+    "corrected_ast_parses": true
+  },
+  "limitations": [
+    "Integrity/within-case reproducibility is not independent-seed generalization.",
+    "Retained 10 Hz arithmetic plus full-step command checks does not certify continuous geometric corridor safety."
+  ],
+  "measured_review_seconds": 0.7013810000062222,
+  "runtime_tensor_audit": {
+    "initial_final_equality_required": false,
+    "reason": "state_dict includes mutable runtime buffers; archived FINAL_AUDIT explicitly requires replay parity, not before/after equality. Frozen policy file hash is covered by source manifest.",
+    "runtime_state_evolves_in_all_runs": true,
+    "replay_parity": [
+      {
+        "current": "experiments/phase3a/residual_authority_window_001/evidence/runs/01--combined2--control/audit.json",
+        "reference": "experiments/phase3a/residual_authority_feasibility_001/evidence/runs/05--combined_inward--primary/audit.json",
+        "checks": {
+          "initial_tensors_sha256": true,
+          "final_tensors_sha256": true,
+          "rng_after_sha256": true
+        }
+      },
+      {
+        "current": "experiments/phase3a/residual_authority_window_001/evidence/runs/02--zero14--control/audit.json",
+        "reference": "experiments/phase3a/residual_authority_feasibility_001/evidence/runs/01--off--primary/audit.json",
+        "checks": {
+          "initial_tensors_sha256": true,
+          "final_tensors_sha256": true,
+          "rng_after_sha256": true
+        }
+      },
+      {
+        "current": "experiments/phase3a/residual_authority_window_001/evidence/runs/04--combined14--repeat/audit.json",
+        "reference": "experiments/phase3a/residual_authority_window_001/evidence/runs/03--combined14--primary/audit.json",
+        "checks": {
+          "initial_tensors_sha256": true,
+          "final_tensors_sha256": true,
+          "rng_after_sha256": true
+        }
+      }
+    ],
+    "prior_evidence": "experiments/phase3a/residual_authority_feasibility_001/REPORT.md:214",
+    "prior_final_audit_sha256": "18967d0ef2f6c9034d303d97249c2e568dacdd4ebc56dcced589e1be6212adcd",
+    "reviewer_assumption_correction": {
+      "initial_result": "FAIL on invalid before/after tensor-equality assumption",
+      "discarded_checks": [
+        "unchanged policy 01--combined2--control",
+        "unchanged policy 02--zero14--control",
+        "unchanged policy 03--combined14--primary",
+        "unchanged policy 04--combined14--repeat"
+      ],
+      "resolution": "Replace invalid equality assumption with independently verified historical/repeat initial/final/RNG parity; no acquisition change or rerun."
+    }
+  }
+}

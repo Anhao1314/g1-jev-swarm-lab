@@ -1,0 +1,56 @@
+# Frozen protocol for Baseline-001. Do not tune after the official runs.
+experiment_id: g1_baseline_001
+task: Stand -> WalkForward 2.0m -> Stop -> Evaluate
+frozen: true
+robot_config: configs/robot/g1_locomotion_12dof.yaml
+model_source:
+  repository: https://github.com/unitreerobotics/unitree_rl_gym
+  commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  xml: resources/robots/g1_description/scene.xml
+controller_source:
+  repository: https://github.com/unitreerobotics/unitree_rl_gym
+  commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  file: deploy/deploy_mujoco/deploy_mujoco.py
+  policy: deploy/pre_train/g1/motion.pt
+  policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  model_xml_sha256: 08d6297979ea3f62768212b6f115f342a9c4dcdde1968d33330c292a0238921f
+seeds: [0, 1, 2, 3, 4]
+distance:
+  target_m: 2.0
+  tolerance_m: 0.2
+  success_window_m: [1.8, 2.2]
+skills:
+  stand:
+    duration_s: 2.0
+    controller: official_pretrained_policy
+  walk_forward:
+    speed_mps: 0.5
+    stop_at_m: 2.0
+    max_duration_s: 15.0
+  stop:
+    criterion: trailing_window_mean_speed
+    window_s: 1.0
+    threshold_mps: 0.10
+    max_duration_s: 4.0
+metrics:
+  - initial_position
+  - final_position
+  - forward_displacement_m
+  - lateral_drift_m
+  - heading_error_deg
+  - elapsed_sim_time_s
+  - elapsed_wall_time_s
+  - fall_detected
+  - completion_status
+success_rule: all_three_skills_succeed AND displacement_in_window AND NOT fall_detected
+calibration_history:
+  - step: pilot
+    criterion: instantaneous_speed_lt_0.05_for_0.5s
+    outcome: TIMEOUT (final 0.0655 m/s)
+  - step: pilot
+    criterion: instantaneous_speed_lt_0.10_for_0.5s
+    outcome: TIMEOUT (balancing oscillation 0.004-0.143 m/s)
+  - step: frozen
+    criterion: trailing_1.0s_mean_speed_lt_0.10
+    outcome: 5/5 SUCCESS
+  distance_tolerance_changed: false
