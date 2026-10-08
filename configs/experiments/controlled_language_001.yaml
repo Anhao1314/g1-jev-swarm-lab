@@ -1,0 +1,157 @@
+# Phase 2.1 controlled-language protocol.
+#
+# Freeze rule: run scripts/run_language_benchmark.py --pilot first; only then
+# set frozen: true. After frozen: true the grammar, normalization, units,
+# number conversion, compiler interface, error taxonomy, corpus and scoring
+# rules must not change for the final campaign.
+experiment_id: controlled_language_001
+phase: "2.1"
+status: frozen
+frozen: true
+baseline:
+  phase2_branch: phase2.0/mission-runtime
+  phase2_head: 7658b0c
+  phase1_3_head: bea645f13b6af9ee27f902c310148d72fa69a204
+
+freeze:
+  frozen_at_utc: "2026-10-06T13:36:17Z"
+  pilot_protocol_note: "pilot uses this frozen protocol; its summary records the runtime protocol hash"
+  pilot_evidence: artifacts/controlled_language_001/pilot/compiler_summary.json
+  pilot_result: "8/8 expected statuses; all four hard gates zero; valid exact IR match 1.0"
+
+parser:
+  package: lark
+  version: 1.3.1
+  source: https://pypi.org/project/lark/1.3.1/
+  requires_python: ">=3.8"
+  validated_python: "3.11.9"
+  parser_mode: lalr
+  lexer: contextual
+  propagate_positions: true
+  dependency_change: "lark==1.3.1 pinned in pyproject.toml; no other dependency touched"
+
+compiler:
+  package: g1swarm.language
+  compiler_version: "2.1.0"
+  interface: "LanguageCompiler.compile(text: str) -> CompilerResult"
+  max_input_chars: 512
+  statuses: [SUCCESS, AMBIGUOUS, UNSUPPORTED, MALFORMED]
+  output_contract: "Mission IR 2.0 or a typed language error; never an execution mode, risk label or controller command"
+
+grammar:
+  path: src/g1swarm/language/grammar.lark
+  sha256: b1155a025e086adb5b7efc991af098987d5da831a1ca3c04e090f762c4760e8f
+  supported_skills: [stand, walk_forward, turn, stop]
+  connectors: [然后, 再, 接着, 之后, 最后]
+  punctuation_normalized: ["，", "。", "；", ";", "、", "→", "：", ":"]
+  unsupported_by_design: [navigation, manipulation, perception, search, recovery, replanning, LLM input]
+
+normalization:
+  unicode_form: NFKC
+  whitespace: removed
+  invariants:
+    - numbers are never rewritten by normalization
+    - left/right and clockwise/counter-clockwise words are never swapped
+    - missing parameters are never inserted
+  connectors_only: true
+
+numbers:
+  arabic: "non-negative integer or decimal, [0-9]+(\\.[0-9]+)?"
+  chinese: "deterministic converter for 0-9999 with 十/百/千; malformed combinations fail closed"
+  rejected_examples: ["四四", "2.5.5", "NaN", "Infinity", "1e999"]
+  third_party_nlp: none
+
+units:
+  distance: {m: 1.0, M: 1.0, 米: 1.0, cm: 0.01, CM: 0.01, 厘米: 0.01}
+  angle: {度: 1.0, "°": 1.0}
+  duration: [秒, s, S]
+  normalization_target: {distance: m, angle: deg, duration: s}
+  excluded_units: [英尺, ft, inch, 英寸, rad, 弧度, km, 公里, mm, 毫米]
+
+error_taxonomy:
+  - LANGUAGE_PARSE_ERROR
+  - AMBIGUOUS_COMMAND
+  - MISSING_PARAMETER
+  - INVALID_UNIT
+  - UNSUPPORTED_LANGUAGE_CAPABILITY
+  - MALFORMED_NUMBER
+  - CONTRADICTORY_COMMAND
+  - EMPTY_LANGUAGE_INPUT
+  - INPUT_TOO_LONG
+
+language_corpus: configs/language/controlled_language_001.yaml
+language_corpus_sha256: dd9bf2b9abb450f3bc524e6489965ab83574d77f117e7980a61adab699bc10cb
+corpus_source: configs/language/sources/hand_authored_001.yaml
+corpus_source_sha256: 1b2c8999e19c9d3f0047e63e431c90cb111613249ac2305d3dfe6bc15b146b26
+
+corpus:
+  total: 189
+  generated: 38
+  hand_authored: 140
+  composition: 11
+  seed: 20261006
+  by_category:
+    atomic_valid: 38
+    paraphrase: 40
+    unit_variant: 24
+    sequence_variant: 18
+    composition: 11
+    ambiguous: 18
+    unsupported: 16
+    malformed: 18
+    capability_unknown: 6
+    runtime_rejected: 0
+  runtime_rejected_note: "no frozen HIGH-only walk case exists in the Phase 1.3 evidence; capability-unknown cases cover the zero-step rejection path"
+
+scoring:
+  exact_match: "canonical Mission IR equality; mission_id and JSON formatting are excluded"
+  comparison_fields: [schema_version, step_count, step_order, skill, parameters, normalized values, signs, depends_on]
+  hard_gates:
+    hallucinated_skill_count: 0
+    invalid_language_reaching_robot: 0
+    ambiguous_language_reaching_robot: 0
+    unsupported_language_reaching_robot: 0
+  primary_metrics:
+    - valid_sample_exact_ir_match
+    - schema_valid_rate
+    - paraphrase_consistency_rate
+    - atomic_accuracy
+    - composition_accuracy
+    - number_normalization_accuracy
+    - unit_normalization_accuracy
+    - ambiguity_detection_recall
+    - ambiguity_false_positive_rate
+    - unsupported_detection_recall
+    - malformed_rejection_rate
+    - false_rejection_rate
+  capability_rule: "language-valid but capability-unknown input must compile to Mission IR and be rejected later by the frozen Phase 2.0 grounder with zero simulation steps"
+
+pilot_sample_ids:
+  - cl-a-009   # 前进4米 (atomic valid)
+  - cl-b-031   # walk4 -> left45 -> stop (sequence)
+  - cl-a-011   # 向前走四米 (Chinese number)
+  - cl-a-012   # 向前移动4m (unit)
+  - cl-f-001   # vague quantity -> AMBIGUOUS_COMMAND
+  - cl-f-018   # 右转 -> MISSING_PARAMETER
+  - cl-g-006   # 拿一个杯子 -> UNSUPPORTED
+  - cl-i-003   # 前进25米 -> capability unknown end-to-end
+
+e2e_sample_ids:
+  - cl-a-009   # H1 walk4
+  - cl-a-011   # H1 Chinese-number walk4
+  - cl-a-014   # H1 walk8 closed-loop grounding
+  - cl-a-017   # H1 left turn
+  - cl-a-022   # H1 right turn
+  - cl-b-001   # H1 paraphrase of walk4
+  - cl-e-001   # walk8 -> right45 -> walk6 -> stop
+  - cl-e-007   # H5 left/right turn composition
+  - cl-e-009   # H5 stand-walk-turn-walk-stop
+  - cl-e-010   # H8 full skill-mix composition
+  - cl-i-003   # capability-unknown 25 m, must reject with zero steps
+
+runtime_protocol: configs/experiments/oracle_mission_runtime_001.yaml
+
+viewer:
+  script: scripts/view_mission.py
+  sanity_mission: "walk4 -> turn+45 -> walk4 -> stop"
+  required: false

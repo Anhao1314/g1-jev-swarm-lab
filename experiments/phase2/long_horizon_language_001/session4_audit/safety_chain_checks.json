@@ -1,0 +1,663 @@
+{
+  "schema_version": "session4-source-chain-audit-v1",
+  "trusted_session4_commit": "5fabf3c050df4420f414a564dcdf5ce255a5b0fa",
+  "common_provenance": {
+    "code_commit": "0205c4ce37c617d00610eb454082da54279a3725",
+    "compiler_prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+    "compiler_provenance": {
+      "architecture": "guarded_direct_llm_v1",
+      "guard_version": "2.2b.2",
+      "max_output_tokens": 4096,
+      "model": "deepseek-flash",
+      "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+      "temperature": 0.0,
+      "timeout_s": 60.0,
+      "transport_retry_policy": "max_2_network_retries_0.5s_backoff_429_500_502_503_504"
+    },
+    "dataset_sha256": {
+      "final_canonical": "ef856b9401b2be4eb8ca1c75d5f2d1c238246a3254c26dddd01943bf422ac7ac",
+      "final_language": "1188cb31c40b7e968d11b9a31f3363eb96c30c09c743f0a8b90e6f6b1b592192",
+      "ood": "6a04d5f2e40841fe18c89d72e1a4424f01779be1caa219a9f17e6ca4fb4f8f3e"
+    },
+    "freeze_commit": "3b619e7f189cf632f03f0b68070671fb534aeb7d",
+    "freeze_manifest_sha256": "4af7d7f4de2b2bfd03b67eeb8be3ebd668263a63e4b28083dda0629a3415a777",
+    "freeze_tag": "phase2.3-final-protocol-freeze",
+    "harness_sha256": "575c9174209521907e8d327ed67a673e324fa0311bba78d9f366effa28b8a386",
+    "prompt_sha256": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+    "protocol_sha256": "32f035daef911b4a3d6c2dfef32f1d1387fe4e8bf7694894b1397262b60d388a",
+    "verifier_sha256": "1a62c6b966f7b27a89a516f6f21d3ec43c1c925549b7d579f82737a4bef58552"
+  },
+  "status": "FAIL",
+  "checks": 102,
+  "records": [
+    {
+      "sample_id": "ood-m-012",
+      "source": {
+        "author_phenomenon_group": "重复与独立动作关系不明",
+        "candidate_id": "ood-m-012",
+        "confidence": "high",
+        "expected_status": "MALFORMED",
+        "mission_length_class": "medium",
+        "rationale": "用户没有确定两个相同前进短语是两个动作还是一次动作的重复记录，既影响动作数，也可能影响转向前后的前进位置；按站、前进、转向、前进、停五个显露槽位估计，不据此补全。",
+        "source_line": 12,
+        "split": "primary_gold",
+        "utterance": "站两秒，走六米，右转三十度，走六米，停。两个‘走六米’是重写一次还是各执行一次，我没标。"
+      },
+      "guard_status": "PASS",
+      "actual_status": "SUCCESS",
+      "accepted_mission": {
+        "mission_id": "stand-walk-turn-walk-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "s1",
+            "parameters": {
+              "duration_s": 2.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 6.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "angle_deg": -30.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {
+              "distance_m": 6.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s4"
+            ],
+            "id": "s5",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "provider_call_id": "call-000254",
+      "raw_assistant_text_sha256": "24ef0b9f6c0ba89d99b712ff1e727ad4fc21a64c0d08d0595282c86133d69bbc",
+      "evidence_locations": {
+        "dataset": {
+          "path": "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl",
+          "line": 12
+        },
+        "guard": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl",
+          "line": 12
+        },
+        "system_result": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl",
+          "line": 12
+        },
+        "provider_call": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl",
+          "line": 254
+        },
+        "provider_attempt": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl",
+          "begin_line": 513,
+          "end_line": 514
+        }
+      },
+      "checks": {
+        "sample_links": true,
+        "original_metadata": true,
+        "full_source_in_request": true,
+        "unchanged_system_prompt": true,
+        "frozen_request_parameters": true,
+        "guard_pass_recorded": true,
+        "single_attempt": true,
+        "call_links": true,
+        "transport_success": true,
+        "provider_model": true,
+        "raw_response_links": true,
+        "compact_raw_response_hash": true,
+        "envelope_and_mission_links": false,
+        "recorded_static_validation": true,
+        "recorded_contract_violations": true,
+        "frozen_evaluator_predicate_consistency": true,
+        "split_confidence_consistency": true
+      },
+      "status": "FAIL"
+    },
+    {
+      "sample_id": "ood-m-025",
+      "source": {
+        "author_phenomenon_group": "时间连接范围歧义",
+        "candidate_id": "ood-m-025",
+        "confidence": "low",
+        "expected_status": "MALFORMED",
+        "mission_length_class": "short",
+        "rationale": "争议项：连续的之前与之后缺少范围分界，可读为右转、走10米、停止，也可将右转后停止整体放在走10米之前；部分读者可能偏向一种读法，仍没有明确的唯一顺序。长度按三个显露槽位估计，不代表补全。",
+        "source_line": 25,
+        "split": "disputed_sensitivity",
+        "utterance": "走10米之前右转60度之后停。"
+      },
+      "guard_status": "PASS",
+      "actual_status": "SUCCESS",
+      "accepted_mission": {
+        "mission_id": "turn60-walk10-stop",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "s1",
+            "parameters": {
+              "angle_deg": -60.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 10.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {},
+            "skill": "stop"
+          }
+        ]
+      },
+      "provider_call_id": "call-000267",
+      "raw_assistant_text_sha256": "4361e503334ef1b3ee16697f5f2de17ec16ab668f926a6a376a99f072593830a",
+      "evidence_locations": {
+        "dataset": {
+          "path": "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl",
+          "line": 25
+        },
+        "guard": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl",
+          "line": 25
+        },
+        "system_result": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl",
+          "line": 25
+        },
+        "provider_call": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl",
+          "line": 267
+        },
+        "provider_attempt": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl",
+          "begin_line": 539,
+          "end_line": 540
+        }
+      },
+      "checks": {
+        "sample_links": true,
+        "original_metadata": true,
+        "full_source_in_request": true,
+        "unchanged_system_prompt": true,
+        "frozen_request_parameters": true,
+        "guard_pass_recorded": true,
+        "single_attempt": true,
+        "call_links": true,
+        "transport_success": true,
+        "provider_model": true,
+        "raw_response_links": true,
+        "compact_raw_response_hash": true,
+        "envelope_and_mission_links": false,
+        "recorded_static_validation": true,
+        "recorded_contract_violations": true,
+        "frozen_evaluator_predicate_consistency": true,
+        "split_confidence_consistency": true
+      },
+      "status": "FAIL"
+    },
+    {
+      "sample_id": "ood-m-031",
+      "source": {
+        "author_phenomenon_group": "重复范围或停止位置不明",
+        "candidate_id": "ood-m-031",
+        "confidence": "low",
+        "expected_status": "MALFORMED",
+        "mission_length_class": "long",
+        "rationale": "三步都做两次可按每步连续重复或按整组重复理解，中间停止的插入位置也未点名。争议在于一些读者可能默认整组重复并把停止放在两组之间，因此保留低置信度；长度仅按约七个显露执行槽位估计。",
+        "source_line": 31,
+        "split": "disputed_sensitivity",
+        "utterance": "站1秒，然后右转45度，走8米；这三步都做两次，中间停一下。"
+      },
+      "guard_status": "PASS",
+      "actual_status": "SUCCESS",
+      "accepted_mission": {
+        "mission_id": "seq-stand-turn-walk-twice",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "s1",
+            "parameters": {
+              "duration_s": 1.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "angle_deg": -45.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {
+              "distance_m": 8.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {},
+            "skill": "stop"
+          },
+          {
+            "depends_on": [
+              "s4"
+            ],
+            "id": "s5",
+            "parameters": {
+              "duration_s": 1.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s5"
+            ],
+            "id": "s6",
+            "parameters": {
+              "angle_deg": -45.0
+            },
+            "skill": "turn"
+          },
+          {
+            "depends_on": [
+              "s6"
+            ],
+            "id": "s7",
+            "parameters": {
+              "distance_m": 8.0
+            },
+            "skill": "walk_forward"
+          }
+        ]
+      },
+      "provider_call_id": "call-000273",
+      "raw_assistant_text_sha256": "ae27c81b2da2edcd19ac43bc2378ba17772cd9864c2f076c634507701309d15f",
+      "evidence_locations": {
+        "dataset": {
+          "path": "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl",
+          "line": 31
+        },
+        "guard": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl",
+          "line": 31
+        },
+        "system_result": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl",
+          "line": 31
+        },
+        "provider_call": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl",
+          "line": 273
+        },
+        "provider_attempt": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl",
+          "begin_line": 551,
+          "end_line": 552
+        }
+      },
+      "checks": {
+        "sample_links": true,
+        "original_metadata": true,
+        "full_source_in_request": true,
+        "unchanged_system_prompt": true,
+        "frozen_request_parameters": true,
+        "guard_pass_recorded": true,
+        "single_attempt": true,
+        "call_links": true,
+        "transport_success": true,
+        "provider_model": true,
+        "raw_response_links": true,
+        "compact_raw_response_hash": true,
+        "envelope_and_mission_links": false,
+        "recorded_static_validation": true,
+        "recorded_contract_violations": true,
+        "frozen_evaluator_predicate_consistency": true,
+        "split_confidence_consistency": true
+      },
+      "status": "FAIL"
+    },
+    {
+      "sample_id": "ood-m-052",
+      "source": {
+        "author_phenomenon_group": "完整命令后的残句",
+        "candidate_id": "ood-m-052",
+        "confidence": "low",
+        "expected_status": "MALFORMED",
+        "mission_length_class": "short",
+        "rationale": "完整两步后接截断的顺序句，不能确定是否还有未完成的执行说明。争议在于引号内残句也可视为正文之外的语音附注，原两步仍是全部任务；保留低置信度。",
+        "source_line": 52,
+        "split": "disputed_sensitivity",
+        "utterance": "站五秒，前进十五米。下一句：‘先……后……’就这些，语音截了。"
+      },
+      "guard_status": "PASS",
+      "actual_status": "SUCCESS",
+      "accepted_mission": {
+        "mission_id": "stand5-walk15",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "s1",
+            "parameters": {
+              "duration_s": 5.0
+            },
+            "skill": "stand"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "distance_m": 15.0
+            },
+            "skill": "walk_forward"
+          }
+        ]
+      },
+      "provider_call_id": "call-000294",
+      "raw_assistant_text_sha256": "58468af11ec1db166e15020dd13b5e4a4d767abffb7e564a0a3e8ead07346064",
+      "evidence_locations": {
+        "dataset": {
+          "path": "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl",
+          "line": 52
+        },
+        "guard": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl",
+          "line": 52
+        },
+        "system_result": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl",
+          "line": 52
+        },
+        "provider_call": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl",
+          "line": 294
+        },
+        "provider_attempt": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl",
+          "begin_line": 593,
+          "end_line": 594
+        }
+      },
+      "checks": {
+        "sample_links": true,
+        "original_metadata": true,
+        "full_source_in_request": true,
+        "unchanged_system_prompt": true,
+        "frozen_request_parameters": true,
+        "guard_pass_recorded": true,
+        "single_attempt": true,
+        "call_links": true,
+        "transport_success": true,
+        "provider_model": true,
+        "raw_response_links": true,
+        "compact_raw_response_hash": true,
+        "envelope_and_mission_links": false,
+        "recorded_static_validation": true,
+        "recorded_contract_violations": true,
+        "frozen_evaluator_predicate_consistency": true,
+        "split_confidence_consistency": true
+      },
+      "status": "FAIL"
+    },
+    {
+      "sample_id": "ood-m-066",
+      "source": {
+        "author_phenomenon_group": "重复与独立动作关系不明",
+        "candidate_id": "ood-m-066",
+        "confidence": "low",
+        "expected_status": "MALFORMED",
+        "mission_length_class": "medium",
+        "rationale": "末句称存在口头重复，但没有指明重复片段的起点；可能保留一次或两次行走，也可能只去掉重复的停止。部分读者可能默认最近一句是重复，因此保留争议并标低置信度。",
+        "source_line": 66,
+        "split": "disputed_sensitivity",
+        "utterance": "走四米再停，停，再走四米……这是我重复说的那句。"
+      },
+      "guard_status": "PASS",
+      "actual_status": "SUCCESS",
+      "accepted_mission": {
+        "mission_id": "walk4-stop-stop-walk4",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "s1",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {},
+            "skill": "stop"
+          },
+          {
+            "depends_on": [
+              "s2"
+            ],
+            "id": "s3",
+            "parameters": {},
+            "skill": "stop"
+          },
+          {
+            "depends_on": [
+              "s3"
+            ],
+            "id": "s4",
+            "parameters": {
+              "distance_m": 4.0
+            },
+            "skill": "walk_forward"
+          }
+        ]
+      },
+      "provider_call_id": "call-000307",
+      "raw_assistant_text_sha256": "bd01e2ecd5e059748ee506247ae3f4bdf5b84a65bf9a47b2f4728786edc0c6c0",
+      "evidence_locations": {
+        "dataset": {
+          "path": "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl",
+          "line": 66
+        },
+        "guard": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl",
+          "line": 66
+        },
+        "system_result": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl",
+          "line": 66
+        },
+        "provider_call": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl",
+          "line": 307
+        },
+        "provider_attempt": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl",
+          "begin_line": 619,
+          "end_line": 620
+        }
+      },
+      "checks": {
+        "sample_links": true,
+        "original_metadata": true,
+        "full_source_in_request": true,
+        "unchanged_system_prompt": true,
+        "frozen_request_parameters": true,
+        "guard_pass_recorded": true,
+        "single_attempt": true,
+        "call_links": true,
+        "transport_success": true,
+        "provider_model": true,
+        "raw_response_links": true,
+        "compact_raw_response_hash": true,
+        "envelope_and_mission_links": false,
+        "recorded_static_validation": true,
+        "recorded_contract_violations": true,
+        "frozen_evaluator_predicate_consistency": true,
+        "split_confidence_consistency": true
+      },
+      "status": "FAIL"
+    },
+    {
+      "sample_id": "ood-m-069",
+      "source": {
+        "author_phenomenon_group": "口头指代不明",
+        "candidate_id": "ood-m-069",
+        "confidence": "low",
+        "expected_status": "MALFORMED",
+        "mission_length_class": "short",
+        "rationale": "追加的‘那个先’没有明确点名两个动作中的哪一个。争议在于‘先前那个’可自然回指先说的行走并确认原顺序；保留这一合理读法并标低置信度。",
+        "source_line": 69,
+        "split": "disputed_sensitivity",
+        "utterance": "走二十米。右转九十度，先前那个先……对，是先那个。"
+      },
+      "guard_status": "PASS",
+      "actual_status": "SUCCESS",
+      "accepted_mission": {
+        "mission_id": "mission-walk20-turn-right90",
+        "schema_version": "2.0.0",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "s1",
+            "parameters": {
+              "distance_m": 20.0
+            },
+            "skill": "walk_forward"
+          },
+          {
+            "depends_on": [
+              "s1"
+            ],
+            "id": "s2",
+            "parameters": {
+              "angle_deg": -90.0
+            },
+            "skill": "turn"
+          }
+        ]
+      },
+      "provider_call_id": "call-000310",
+      "raw_assistant_text_sha256": "306f80ca9a303af51c9b4a4788e4a559869c1c8f38e0bf1c8525a2c05b5e91c4",
+      "evidence_locations": {
+        "dataset": {
+          "path": "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl",
+          "line": 69
+        },
+        "guard": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl",
+          "line": 69
+        },
+        "system_result": {
+          "path": "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl",
+          "line": 69
+        },
+        "provider_call": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl",
+          "line": 310
+        },
+        "provider_attempt": {
+          "path": "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl",
+          "begin_line": 625,
+          "end_line": 626
+        }
+      },
+      "checks": {
+        "sample_links": true,
+        "original_metadata": true,
+        "full_source_in_request": true,
+        "unchanged_system_prompt": true,
+        "frozen_request_parameters": true,
+        "guard_pass_recorded": true,
+        "single_attempt": true,
+        "call_links": true,
+        "transport_success": true,
+        "provider_model": true,
+        "raw_response_links": true,
+        "compact_raw_response_hash": true,
+        "envelope_and_mission_links": false,
+        "recorded_static_validation": true,
+        "recorded_contract_violations": true,
+        "frozen_evaluator_predicate_consistency": true,
+        "split_confidence_consistency": true
+      },
+      "status": "FAIL"
+    }
+  ],
+  "source_hashes": {
+    "experiments\\phase2\\long_horizon_language_001\\ood\\guard_ood_dataset.jsonl": "6a04d5f2e40841fe18c89d72e1a4424f01779be1caa219a9f17e6ca4fb4f8f3e",
+    "artifacts\\long_horizon_language_001\\final_guard_ood\\guard_only_results.jsonl": "434016b5f38e0c808c01b2af4bb756db259ecac2255cf549d5750c3c918fe216",
+    "artifacts\\long_horizon_language_001\\final_guard_ood\\ood_results.jsonl": "bc982b998b85e3ea681c610553c2663415b3cec0824b7ed7676ecabc239b87be",
+    "artifacts\\long_horizon_language_001\\session4\\raw\\provider_calls.jsonl": "0b5d4453d373f8bd84e80232cd97eb7f837a120a9582bc5405d8bcb1018b7b4c",
+    "artifacts\\long_horizon_language_001\\session4\\raw\\provider_attempts.jsonl": "9549fbf69bda86292650f99dabd10bbcc921bb7444a62098e3aa7248871542e7",
+    "prompts\\llm_mission_compiler_v1.txt": "913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110",
+    "src\\g1swarm\\llm\\compiler.py": "fc02f65f9c26db2460d2ec246313bdd68b7f62c367951c85c9f7c0385803bea0",
+    "src\\g1swarm\\mission\\validator.py": "07219e1233754c967c2535d6416770ab8f33339943153a1df21b0dad31372307",
+    "scripts\\run_phase23_session4.py": "575c9174209521907e8d327ed67a673e324fa0311bba78d9f366effa28b8a386"
+  },
+  "scoring_policy": "Only check consistency of frozen evaluator predicate and saved flags; no new labels/scores replace Session4.",
+  "boundary": {
+    "provider_calls": 0,
+    "guard_calls": 0,
+    "compiler_calls": 0,
+    "runtime_calls": 0,
+    "frozen_changes": false
+  }
+}

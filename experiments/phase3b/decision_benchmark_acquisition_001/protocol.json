@@ -1,0 +1,36 @@
+{
+  "experiment_id": "decision_benchmark_acquisition_001",
+  "phase": "3B.0a",
+  "status": "FROZEN_BEFORE_PHYSICS",
+  "class": "mechanism_experiment",
+  "purpose": "Acquire a small complete same-state four-mode outcome matrix for the existing fixed14s Oracle; no recovery optimization or Jev call",
+  "cases_file": "cases.json",
+  "case_order": ["sequence-mixed-16m", "phase3b0a-stand5-16m", "phase3b0a-push-y60-16m"],
+  "mode_order": ["CONTINUE", "LATERAL_RECOVERY", "YAW_RECOVERY", "COMBINED_RECOVERY"],
+  "actions": {
+    "CONTINUE": [0.0, 0.0, 0.0],
+    "LATERAL_RECOVERY": [0.0, -1.0, 0.0],
+    "YAW_RECOVERY": [0.0, 0.0, -1.0],
+    "COMBINED_RECOVERY": [0.0, -1.0, -1.0]
+  },
+  "fixed": {
+    "reference_alpha": 0.5,
+    "origin": "actual-start",
+    "authority_window_s": 14.0,
+    "seed": 0,
+    "torch_threads": 1,
+    "first_walk": "Stand->Walk8m at node index 1",
+    "other_nodes": "Original 2s authority mask and frozen controller; no action outside node 1"
+  },
+  "run_matrix": "Exactly four ordered primary arms per declared state, nominal execution-equivalence control first; conditional exact four-arm repeat only for the first state with a unique admissible recovery under the frozen Oracle",
+  "maximum_complete_case_executions": 16,
+  "maximum_campaign_wall_s": 180,
+  "historical_equivalence": "New nominal four-arm scientific records, full-step physics streams and first-Walk predecision state must match retained fixed14s evidence before any novel state is run. On mismatch stop and retain all observations.",
+  "state_construction": "Only case ID and Stand duration differ for Stand5; only case ID and declared +Y push during Stand differ for Push60. Push must end before Walk entry. No perturbation or state injection after decision.",
+  "state_binding": "For each arm compare exact predecessor Stand scientific output, full qpos/qvel/ctrl at predecision, planned origin/heading, selected reference and policy tensor hash. A state is not labelable unless all four complete, same-state outcomes are retained.",
+  "outcome_contract": "Unchanged experiments/phase3b/decision_oracle_001/contract.json and oracle.py. Nominal, physical, all-node strict, own-reference final world endpoint norm and absolute commanded-axis lateral/heading determine eligibility. No least-bad choice.",
+  "observability_diagnostic": "Compare only nine frozen allowlisted predecision observables, excluding context and case ID; record raw differences versus nominal and between novel states. A route XY difference >=0.01m or route/reference heading difference >=1deg is a descriptive diagnostic, not a success threshold and never changes membership.",
+  "stop_rule": "Stop before novel states on nominal equivalence failure. Execute full ordered four-arm matrix for each physically reached novel predecision state; retain every negative or censored cell. No infrastructure retry. If predecessor Stand fails before decision, record construction failure and do not fabricate a label. After all primaries, repeat exactly the first unique admissible recovery state across all four modes once; otherwise no repeat. Never add states or change action/window/amplitude.",
+  "readiness": "At least one exact confirmed unique admissible recovery plus CONTINUE and ABSTAIN types and observable distinction is required for GO_FOR_JEV_OFFLINE_SHADOW. Otherwise RECOVERY_VOCABULARY_NOT_READY; no Jev invocation.",
+  "forbidden": ["Jev API", "PPO", "reward tuning", "new recovery profiles", "window or amplitude scan", "Language Runtime", "Multi-Swarm", "source verdict edits"]
+}

@@ -1,0 +1,35 @@
+{
+  "affected": [
+    "experiments/baselines/g1_distance_segmentation_001/summary.json",
+    "experiments/baselines/g1_distance_segmentation_001/segmentation_comparison.json",
+    "experiments/baselines/g1_distance_segmentation_001/risk_map_v1_2b.json",
+    "experiments/baselines/g1_distance_segmentation_001/execution_strategy_map.json",
+    "experiments/baselines/g1_distance_segmentation_001/report.md",
+    "12 segmentation mission evidence bundles (must be re-run with the fixed evaluator)"
+  ],
+  "audit_verdict": "FAIL",
+  "cases": {
+    "case1_direct_long_4m": {
+      "task_success_matches": false,
+      "violations_match": false
+    },
+    "case2_boundary_4.53125m": {
+      "task_success_matches": true,
+      "violations_match": true
+    },
+    "case3_boundary_4.625m": {
+      "task_success_matches": true,
+      "violations_match": true
+    }
+  },
+  "reasons": [
+    "Segmentation missions and distance-boundary runs did not feed the same metric keys to the shared evaluator (canonical keys missing for every segmentation mission).",
+    "The published Phase 1.2b statement that all 12 segmentation missions failed the nominal envelope is not supported by the raw evidence: with the canonical values the 4 m direct_long run satisfies the nominal envelope.",
+    "The refined distance boundary (4.53125 m reliable / 4.625 m failure) is unaffected: those runs carry canonical keys and their recorded evaluations agree with the independent recomputation."
+  ],
+  "unaffected": [
+    "Refined distance boundary 4.53125-4.625 m (canonical-key runs, recomputation agrees)",
+    "Phase 1.2 / 1.1 / 1 frozen artifacts",
+    "Boundary evidence bundles"
+  ]
+}

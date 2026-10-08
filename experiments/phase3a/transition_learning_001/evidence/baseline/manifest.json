@@ -1,0 +1,146 @@
+{
+  "campaign": "frozen_baseline_replay",
+  "output_dir": "D:\\work\\g1-jev-swarm-lab\\artifacts\\transition_learning_001\\baseline",
+  "protocol": {
+    "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+    "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04",
+    "baseline_protocol": "configs/experiments/g1_closed_loop_correction_001.yaml",
+    "case_manifest_sha256": "c84cf2484d9cd6138d19828e09ad9fb7cb57467330c96e08ad8cbed853b0f55e",
+    "checkpoint_interval": 2048,
+    "checkpoint_selection": "fixed final checkpoint per seed; no evaluation-based selection",
+    "evaluation": "all declared held-out transitions, primitive regressions and two longer sequences; no tuning after observation",
+    "experiment_id": "transition_learning_001",
+    "frozen": true,
+    "metric_scope": "frozen local node envelopes plus separately reported ideal commanded path errors, physical stability, transition duration and reset counts",
+    "negative_result_policy": "retain failures, checkpoints, rewards, PPO diagnostics and every evaluation record; never alter old threshold or baseline",
+    "observation": "61 features: current/prior skill, nominal command, body velocity, angular velocity, gravity, height, local task errors/remaining goal, elapsed/window flag, phase, previous action, ideal-path error, joint position/velocity",
+    "phase": "3A pilot",
+    "ppo": {
+      "batch_size": 64,
+      "clip_range": 0.2,
+      "device": "cpu",
+      "ent_coef": 0.0,
+      "gae_lambda": 0.95,
+      "gamma": 0.99,
+      "learning_rate": 0.0003,
+      "n_epochs": 5,
+      "n_steps": 512,
+      "policy_kwargs": {
+        "net_arch": [
+          64,
+          64
+        ]
+      }
+    },
+    "residual": {
+      "action": [
+        "delta_vx_mps",
+        "delta_vy_mps",
+        "delta_yaw_rate_radps"
+      ],
+      "bounds": [
+        0.1,
+        0.06,
+        0.12
+      ],
+      "decision_period_s": 0.1,
+      "eligible_pairs": [
+        [
+          "walk_forward",
+          "turn"
+        ],
+        [
+          "turn",
+          "walk_forward"
+        ],
+        [
+          "walk_forward",
+          "stop"
+        ],
+        [
+          "stand",
+          "walk_forward"
+        ]
+      ],
+      "level": "transition-conditioned command residual added to frozen deterministic controller",
+      "outside_window_or_primitive": "exact zero residual",
+      "policy_memory_resets": "original skill behavior unchanged",
+      "window_s": 2.0,
+      "yaw_total_limit_radps": 0.6
+    },
+    "reward": {
+      "dense": "per0.1s: -4*local_heading_rad^2 -4*local_lateral_m^2 for walk; -2*remaining_turn_rad^2 for turn; -2*speed^2 for stop; all -0.1*tilt_rad^2 -0.05*action_energy -0.02*action_change_energy",
+      "historical_envelopes": "unchanged; reward is new training surrogate, not a replacement task gate",
+      "terminal": "+15 task success else -15; additional -50 physical failure; -10*sum(abs(local_heading_rad)+abs(walk_lateral_m))"
+    },
+    "scope_exclusions": [
+      "language compiler",
+      "Phase2.3 Final Runtime",
+      "Jev",
+      "Multi-Swarm",
+      "joint policy retraining"
+    ],
+    "seeds": [
+      11,
+      29
+    ],
+    "smoke_timesteps": 512,
+    "source_anchor": "624c8024c6587f7c502b1cc87b2b27797493af03",
+    "split": "explicit distinct transition parameter combinations; nominal simulation seed alone is not unseen evaluation",
+    "torch_threads": 1,
+    "train_timesteps": 8192,
+    "transition_recovery_diagnostic": {
+      "body_velocity_error_max_mps": 0.15,
+      "role": "new diagnostic only, never a task-success envelope; null means no sustained tracking recovery observed within window",
+      "standing": "original RobotState.standing",
+      "sustained_s": 0.2,
+      "window_s": 2.0,
+      "yaw_rate_error_max_radps": 0.15
+    },
+    "treatments": [
+      "frozen_baseline",
+      "deterministic_correction",
+      "learned"
+    ]
+  },
+  "provenance": {
+    "baseline_drift": false,
+    "baseline_files_verified": 219,
+    "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04",
+    "baseline_provenance": {
+      "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+      "baseline_protocol": "configs/experiments/g1_closed_loop_correction_001.yaml",
+      "source_anchor": "624c8024c6587f7c502b1cc87b2b27797493af03"
+    },
+    "case_manifest_sha256": "c84cf2484d9cd6138d19828e09ad9fb7cb57467330c96e08ad8cbed853b0f55e",
+    "code_commit": "3b655bad80458870d6573753214cf986b80d5a41",
+    "device": "cpu",
+    "held_out_checkpoint_selection": false,
+    "language_compiler_invocations": 0,
+    "package_versions": {
+      "gymnasium": "1.4.0",
+      "mujoco": "3.15.0",
+      "numpy": "2.4.6",
+      "stable-baselines3": "2.9.0"
+    },
+    "protocol_path": "D:\\work\\g1-jev-swarm-lab\\experiments\\phase3a\\transition_learning_001\\protocol.json",
+    "protocol_sha256": "d27a92c59f6496a796208dd4b5d8b91ea2a2b98f793a3fc28bba9e3a229663df",
+    "source_hashes": {
+      "scripts\\run_phase3a.py": "7d218f87b3d2260a07331716b07562c0138ac94c61c9b3a542595f70c89a95b3",
+      "src\\g1swarm\\transition_learning\\__init__.py": "f0d0effa68e64d3d02afc973d04ae0a450204baa861408da7ebd162f8e80d903",
+      "src\\g1swarm\\transition_learning\\analysis.py": "abb9a5dcffa53b7cb67eff3c9d7392d9dcb4e27710c3a1b88fcb24c4df6fde20",
+      "src\\g1swarm\\transition_learning\\cases.py": "041e41832e3e00d9fc43aefb2fdb1f6021bba6be7b7c41dc3a2af751b619422c",
+      "src\\g1swarm\\transition_learning\\env.py": "5542043862860e61974204fa0cd5c75a39142d1faaa5e215b5c756a7a6fd2abc",
+      "src\\g1swarm\\transition_learning\\training.py": "a88183d21ee5e357bb890a851b3df6c8e3417957f02577c52132fa8b8f26bb6a"
+    },
+    "torch_threads": 1,
+    "torch_version": "2.14.1+cu130",
+    "verified_case_counts": {
+      "eval": 16,
+      "primitive": 8,
+      "sequence": 2,
+      "train": 12
+    }
+  },
+  "started_at": "2026-10-07T07:31:26.696926+00:00"
+}

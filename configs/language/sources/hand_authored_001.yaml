@@ -1,0 +1,362 @@
+# Hand-authored source for the Phase 2.1 controlled-language corpus.
+#
+# Every entry states the utterance and the language-level expectation. Expected
+# Mission IR is expanded from the named template by
+# scripts/build_language_corpus.py; templates list skills, parameters and order
+# explicitly, and the builder adds the canonical s1..sN ids / linear depends_on
+# chain that the frozen compiler emits.
+#
+# source values used here: hand_authored for controls, Paraphrases, units,
+# ambiguity, unsupported, malformed and capability probes; composition for
+# novel primitive compositions. The generated subset is produced separately by
+# g1swarm.language.corpus_generator (deterministic seed, disjoint utterances).
+source_id: controlled_language_hand_authored_001
+
+templates:
+  # ---- stand / stop -------------------------------------------------------
+  stand_default:
+    steps: [{skill: stand, parameters: {duration_s: 2.0}}]
+  stand5:
+    steps: [{skill: stand, parameters: {duration_s: 5.0}}]
+  stand10:
+    steps: [{skill: stand, parameters: {duration_s: 10.0}}]
+  stand30:
+    steps: [{skill: stand, parameters: {duration_s: 30.0}}]
+  stop:
+    steps: [{skill: stop, parameters: {}}]
+  # ---- walks --------------------------------------------------------------
+  walk2_5:
+    steps: [{skill: walk_forward, parameters: {distance_m: 2.5}}]
+  walk4:
+    steps: [{skill: walk_forward, parameters: {distance_m: 4.0}}]
+  walk6:
+    steps: [{skill: walk_forward, parameters: {distance_m: 6.0}}]
+  walk8:
+    steps: [{skill: walk_forward, parameters: {distance_m: 8.0}}]
+  walk10:
+    steps: [{skill: walk_forward, parameters: {distance_m: 10.0}}]
+  walk12:
+    steps: [{skill: walk_forward, parameters: {distance_m: 12.0}}]
+  walk12_5:
+    steps: [{skill: walk_forward, parameters: {distance_m: 12.5}}]
+  walk15:
+    steps: [{skill: walk_forward, parameters: {distance_m: 15.0}}]
+  walk20:
+    steps: [{skill: walk_forward, parameters: {distance_m: 20.0}}]
+  walk25:
+    steps: [{skill: walk_forward, parameters: {distance_m: 25.0}}]
+  walk50:
+    steps: [{skill: walk_forward, parameters: {distance_m: 50.0}}]
+  # ---- turns --------------------------------------------------------------
+  turn_p30:
+    steps: [{skill: turn, parameters: {angle_deg: 30.0}}]
+  turn_p45:
+    steps: [{skill: turn, parameters: {angle_deg: 45.0}}]
+  turn_p60:
+    steps: [{skill: turn, parameters: {angle_deg: 60.0}}]
+  turn_p90:
+    steps: [{skill: turn, parameters: {angle_deg: 90.0}}]
+  turn_p120:
+    steps: [{skill: turn, parameters: {angle_deg: 120.0}}]
+  turn_n30:
+    steps: [{skill: turn, parameters: {angle_deg: -30.0}}]
+  turn_n45:
+    steps: [{skill: turn, parameters: {angle_deg: -45.0}}]
+  turn_n60:
+    steps: [{skill: turn, parameters: {angle_deg: -60.0}}]
+  turn_n90:
+    steps: [{skill: turn, parameters: {angle_deg: -90.0}}]
+  # ---- short sequences ----------------------------------------------------
+  walk4_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  walk6_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: stop, parameters: {}}
+  walk4_turn_p45_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: stop, parameters: {}}
+  walk4_turn_n45_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: stop, parameters: {}}
+  turn_p45_stop:
+    steps:
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: stop, parameters: {}}
+  turn_n45_stop:
+    steps:
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: stop, parameters: {}}
+  turn_n45_walk6_stop:
+    steps:
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: stop, parameters: {}}
+  # ---- long compositions --------------------------------------------------
+  walk6_turn_n45_walk6_turn_p45_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: stop, parameters: {}}
+  stand1_walk4_turn_p45_walk4_stop:
+    steps:
+      - {skill: stand, parameters: {duration_s: 1.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  stand5_walk10_turn_n30_walk4_stop:
+    steps:
+      - {skill: stand, parameters: {duration_s: 5.0}}
+      - {skill: walk_forward, parameters: {distance_m: 10.0}}
+      - {skill: turn, parameters: {angle_deg: -30.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  stand5_walk4_turn_p45_walk4_stop:
+    steps:
+      - {skill: stand, parameters: {duration_s: 5.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  walk8_turn_n45_walk6_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 8.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: stop, parameters: {}}
+  turn_p90_walk6_stop:
+    steps:
+      - {skill: turn, parameters: {angle_deg: 90.0}}
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: stop, parameters: {}}
+  walk10_turn_n90_walk4_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 10.0}}
+      - {skill: turn, parameters: {angle_deg: -90.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  turn_p45_walk8_turn_n45_walk8_stop:
+    steps:
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 8.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 8.0}}
+      - {skill: stop, parameters: {}}
+  turn_n45_walk8_turn_p45_walk8_stop:
+    steps:
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 8.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 8.0}}
+      - {skill: stop, parameters: {}}
+  stand10_walk6_turn_n90_stop:
+    steps:
+      - {skill: stand, parameters: {duration_s: 10.0}}
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: turn, parameters: {angle_deg: -90.0}}
+      - {skill: stop, parameters: {}}
+  walk6_turn_p45_walk6_turn_n45_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 6.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: stop, parameters: {}}
+  stop_walk4_stop:
+    steps:
+      - {skill: stop, parameters: {}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  walk4_turn_n45_walk4_stop:
+    steps:
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: stop, parameters: {}}
+  h8_mix1:
+    steps:
+      - {skill: stand, parameters: {duration_s: 1.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: 45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: -45.0}}
+      - {skill: walk_forward, parameters: {distance_m: 4.0}}
+      - {skill: turn, parameters: {angle_deg: 90.0}}
+      - {skill: stop, parameters: {}}
+
+entries:
+  # ================= A. atomic valid =================
+  - {sample_id: cl-a-001, group_id: g-a-001, category: atomic_valid, source: hand_authored, utterance: "站立", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand duration uses the StandSkill contract default of 2.0 s"}
+  - {sample_id: cl-a-002, group_id: g-a-002, category: atomic_valid, source: hand_authored, utterance: "站好", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand synonym"}
+  - {sample_id: cl-a-003, group_id: g-a-003, category: atomic_valid, source: hand_authored, utterance: "保持站立", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand synonym"}
+  - {sample_id: cl-a-004, group_id: g-a-004, category: atomic_valid, source: hand_authored, utterance: "站立5秒", expected_compiler_status: SUCCESS, template: stand5, expected_runtime_status: SUCCESS, horizon: 1, notes: "explicit stand duration"}
+  - {sample_id: cl-a-005, group_id: g-a-005, category: atomic_valid, source: hand_authored, utterance: "站好十秒", expected_compiler_status: SUCCESS, template: stand10, expected_runtime_status: SUCCESS, horizon: 1, notes: "Chinese-number stand duration"}
+  - {sample_id: cl-a-006, group_id: g-a-006, category: atomic_valid, source: hand_authored, utterance: "停止", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop synonym"}
+  - {sample_id: cl-a-007, group_id: g-a-007, category: atomic_valid, source: hand_authored, utterance: "停下", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop synonym"}
+  - {sample_id: cl-a-008, group_id: g-a-008, category: atomic_valid, source: hand_authored, utterance: "立即停止", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "emphatic stop synonym"}
+  - {sample_id: cl-a-009, group_id: g-a-009, category: atomic_valid, source: hand_authored, utterance: "前进4米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, e2e: true, horizon: 1, oracle_mission_id: h1-walk4, notes: "H1 baseline walk"}
+  - {sample_id: cl-a-010, group_id: g-a-010, category: atomic_valid, source: hand_authored, utterance: "往前走4米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "walk synonym"}
+  - {sample_id: cl-a-011, group_id: g-a-011, category: atomic_valid, source: hand_authored, utterance: "向前走四米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, e2e: true, horizon: 1, oracle_mission_id: h1-walk4, notes: "Chinese number end-to-end probe"}
+  - {sample_id: cl-a-012, group_id: g-a-012, category: atomic_valid, source: hand_authored, utterance: "向前移动4m", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "m unit"}
+  - {sample_id: cl-a-013, group_id: g-a-013, category: atomic_valid, source: hand_authored, utterance: "往前移动6米", expected_compiler_status: SUCCESS, template: walk6, expected_runtime_status: SUCCESS, horizon: 1, notes: "mid-range walk"}
+  - {sample_id: cl-a-014, group_id: g-a-014, category: atomic_valid, source: hand_authored, utterance: "前进8米", expected_compiler_status: SUCCESS, template: walk8, expected_runtime_status: SUCCESS, e2e: true, horizon: 1, oracle_mission_id: h1-walk8, notes: "closed-loop grounding probe"}
+  - {sample_id: cl-a-015, group_id: g-a-015, category: atomic_valid, source: hand_authored, utterance: "前进10米", expected_compiler_status: SUCCESS, template: walk10, expected_runtime_status: SUCCESS, horizon: 1, notes: "tabulated walk evidence point"}
+  - {sample_id: cl-a-016, group_id: g-a-016, category: atomic_valid, source: hand_authored, utterance: "前进12米", expected_compiler_status: SUCCESS, template: walk12, expected_runtime_status: SUCCESS, horizon: 1, notes: "boundary-extension evidence point"}
+  - {sample_id: cl-a-017, group_id: g-a-017, category: atomic_valid, source: hand_authored, utterance: "左转45度", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, e2e: true, horizon: 1, oracle_mission_id: h1-turn45, notes: "positive turn sign probe"}
+  - {sample_id: cl-a-018, group_id: g-a-018, category: atomic_valid, source: hand_authored, utterance: "向左转45°", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "degree sign unit"}
+  - {sample_id: cl-a-019, group_id: g-a-019, category: atomic_valid, source: hand_authored, utterance: "逆时针转45度", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "counter-clockwise synonym"}
+  - {sample_id: cl-a-020, group_id: g-a-020, category: atomic_valid, source: hand_authored, utterance: "左转90度", expected_compiler_status: SUCCESS, template: turn_p90, expected_runtime_status: SUCCESS, horizon: 1, notes: "right-angle left turn"}
+  - {sample_id: cl-a-021, group_id: g-a-021, category: atomic_valid, source: hand_authored, utterance: "向左转六十度", expected_compiler_status: SUCCESS, template: turn_p60, expected_runtime_status: SUCCESS, horizon: 1, notes: "Chinese-number turn"}
+  - {sample_id: cl-a-022, group_id: g-a-022, category: atomic_valid, source: hand_authored, utterance: "右转45度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, e2e: true, horizon: 1, notes: "negative turn sign probe"}
+  - {sample_id: cl-a-023, group_id: g-a-023, category: atomic_valid, source: hand_authored, utterance: "向右转45°", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "degree sign unit"}
+  - {sample_id: cl-a-024, group_id: g-a-024, category: atomic_valid, source: hand_authored, utterance: "顺时针转45度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "clockwise synonym"}
+  - {sample_id: cl-a-025, group_id: g-a-025, category: atomic_valid, source: hand_authored, utterance: "右转90度", expected_compiler_status: SUCCESS, template: turn_n90, expected_runtime_status: SUCCESS, horizon: 1, notes: "right-angle right turn"}
+  - {sample_id: cl-a-026, group_id: g-a-026, category: atomic_valid, source: hand_authored, utterance: "向右转四十五度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "Chinese-number negative turn"}
+
+  # ================= B. paraphrase groups =================
+  - {sample_id: cl-b-001, group_id: para-walk4, category: paraphrase, source: hand_authored, utterance: "向前移动四米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, e2e: true, horizon: 1, oracle_mission_id: h1-walk4, notes: "walk4 paraphrase group"}
+  - {sample_id: cl-b-002, group_id: para-walk4, category: paraphrase, source: hand_authored, utterance: "往前移动4.0米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "walk4 paraphrase group"}
+  - {sample_id: cl-b-003, group_id: para-walk4, category: paraphrase, source: hand_authored, utterance: "往前走4.0米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "walk4 paraphrase group"}
+  - {sample_id: cl-b-004, group_id: para-walk4, category: paraphrase, source: hand_authored, utterance: "向前走4m", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "walk4 paraphrase group"}
+  - {sample_id: cl-b-005, group_id: para-walk4, category: paraphrase, source: hand_authored, utterance: "往前移动四米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "walk4 paraphrase group"}
+  - {sample_id: cl-b-006, group_id: para-turn-left45, category: paraphrase, source: hand_authored, utterance: "向左转四十五度", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "left45 paraphrase group"}
+  - {sample_id: cl-b-007, group_id: para-turn-left45, category: paraphrase, source: hand_authored, utterance: "逆时针旋转45°", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "left45 paraphrase group"}
+  - {sample_id: cl-b-008, group_id: para-turn-left45, category: paraphrase, source: hand_authored, utterance: "向左转45.0度", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "left45 paraphrase group"}
+  - {sample_id: cl-b-009, group_id: para-turn-left45, category: paraphrase, source: hand_authored, utterance: "逆时针转四十五度", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "left45 paraphrase group"}
+  - {sample_id: cl-b-010, group_id: para-turn-left45, category: paraphrase, source: hand_authored, utterance: "左转45.0度", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "left45 paraphrase group"}
+  - {sample_id: cl-b-011, group_id: para-turn-right45, category: paraphrase, source: hand_authored, utterance: "顺时针旋转四十五度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "right45 paraphrase group"}
+  - {sample_id: cl-b-012, group_id: para-turn-right45, category: paraphrase, source: hand_authored, utterance: "顺时针旋转45°", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "right45 paraphrase group"}
+  - {sample_id: cl-b-013, group_id: para-turn-right45, category: paraphrase, source: hand_authored, utterance: "向右转45.0度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "right45 paraphrase group"}
+  - {sample_id: cl-b-014, group_id: para-turn-right45, category: paraphrase, source: hand_authored, utterance: "顺时针转四十五度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "right45 paraphrase group"}
+  - {sample_id: cl-b-015, group_id: para-turn-right45, category: paraphrase, source: hand_authored, utterance: "右转45.0度", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "right45 paraphrase group"}
+  - {sample_id: cl-b-016, group_id: para-stop, category: paraphrase, source: hand_authored, utterance: "停止。", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop paraphrase group"}
+  - {sample_id: cl-b-017, group_id: para-stop, category: paraphrase, source: hand_authored, utterance: "停下。", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop paraphrase group"}
+  - {sample_id: cl-b-018, group_id: para-stop, category: paraphrase, source: hand_authored, utterance: "立即停止。", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop paraphrase group"}
+  - {sample_id: cl-b-019, group_id: para-stop, category: paraphrase, source: hand_authored, utterance: "停止;", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop paraphrase group"}
+  - {sample_id: cl-b-020, group_id: para-stop, category: paraphrase, source: hand_authored, utterance: "停下;", expected_compiler_status: SUCCESS, template: stop, expected_runtime_status: SUCCESS, horizon: 1, notes: "stop paraphrase group"}
+  - {sample_id: cl-b-021, group_id: para-walk6-stop, category: paraphrase, source: hand_authored, utterance: "往前走6米然后停止", expected_compiler_status: SUCCESS, template: walk6_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "walk6-stop paraphrase group"}
+  - {sample_id: cl-b-022, group_id: para-walk6-stop, category: paraphrase, source: hand_authored, utterance: "向前走六米，再停下", expected_compiler_status: SUCCESS, template: walk6_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "walk6-stop paraphrase group"}
+  - {sample_id: cl-b-023, group_id: para-walk6-stop, category: paraphrase, source: hand_authored, utterance: "向前移动6m，接着立即停止", expected_compiler_status: SUCCESS, template: walk6_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "walk6-stop paraphrase group"}
+  - {sample_id: cl-b-024, group_id: para-walk6-stop, category: paraphrase, source: hand_authored, utterance: "往前移动六米，之后停止", expected_compiler_status: SUCCESS, template: walk6_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "walk6-stop paraphrase group"}
+  - {sample_id: cl-b-025, group_id: para-walk6-stop, category: paraphrase, source: hand_authored, utterance: "前进6米，最后停下", expected_compiler_status: SUCCESS, template: walk6_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "walk6-stop paraphrase group"}
+  - {sample_id: cl-b-026, group_id: para-stand-default, category: paraphrase, source: hand_authored, utterance: "站立。", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand paraphrase group"}
+  - {sample_id: cl-b-027, group_id: para-stand-default, category: paraphrase, source: hand_authored, utterance: "站好。", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand paraphrase group"}
+  - {sample_id: cl-b-028, group_id: para-stand-default, category: paraphrase, source: hand_authored, utterance: "保持站立。", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand paraphrase group"}
+  - {sample_id: cl-b-029, group_id: para-stand-default, category: paraphrase, source: hand_authored, utterance: "站立;", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand paraphrase group"}
+  - {sample_id: cl-b-030, group_id: para-stand-default, category: paraphrase, source: hand_authored, utterance: "站好;", expected_compiler_status: SUCCESS, template: stand_default, expected_runtime_status: SUCCESS, horizon: 1, notes: "stand paraphrase group"}
+  - {sample_id: cl-b-031, group_id: para-walk4-left45, category: paraphrase, source: hand_authored, utterance: "先前进4米然后左转45度最后停止", expected_compiler_status: SUCCESS, template: walk4_turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "walk4-left45-stop paraphrase group"}
+  - {sample_id: cl-b-032, group_id: para-walk4-left45, category: paraphrase, source: hand_authored, utterance: "前进4米，再向左转45°，最后停止", expected_compiler_status: SUCCESS, template: walk4_turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "walk4-left45-stop paraphrase group"}
+  - {sample_id: cl-b-033, group_id: para-walk4-left45, category: paraphrase, source: hand_authored, utterance: "往前走四米，接着逆时针转45度，最后立即停止", expected_compiler_status: SUCCESS, template: walk4_turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "walk4-left45-stop paraphrase group"}
+  - {sample_id: cl-b-034, group_id: para-walk4-left45, category: paraphrase, source: hand_authored, utterance: "向前走4m，之后左转四十五度，最后停下", expected_compiler_status: SUCCESS, template: walk4_turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "walk4-left45-stop paraphrase group"}
+  - {sample_id: cl-b-035, group_id: para-walk4-left45, category: paraphrase, source: hand_authored, utterance: "向前移动4米，然后向左转45度，最后停止", expected_compiler_status: SUCCESS, template: walk4_turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "walk4-left45-stop paraphrase group"}
+  - {sample_id: cl-b-036, group_id: para-left45-stop, category: paraphrase, source: hand_authored, utterance: "左转45度然后停止", expected_compiler_status: SUCCESS, template: turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "left45-stop paraphrase group"}
+  - {sample_id: cl-b-037, group_id: para-left45-stop, category: paraphrase, source: hand_authored, utterance: "先向左转45°，再停下", expected_compiler_status: SUCCESS, template: turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "left45-stop paraphrase group"}
+  - {sample_id: cl-b-038, group_id: para-left45-stop, category: paraphrase, source: hand_authored, utterance: "逆时针转45度，接着立即停止", expected_compiler_status: SUCCESS, template: turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "left45-stop paraphrase group"}
+  - {sample_id: cl-b-039, group_id: para-left45-stop, category: paraphrase, source: hand_authored, utterance: "左转四十五度，之后停止", expected_compiler_status: SUCCESS, template: turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "left45-stop paraphrase group"}
+  - {sample_id: cl-b-040, group_id: para-left45-stop, category: paraphrase, source: hand_authored, utterance: "向左转45度，最后停下", expected_compiler_status: SUCCESS, template: turn_p45_stop, expected_runtime_status: SUCCESS, horizon: 2, notes: "left45-stop paraphrase group"}
+
+  # ================= C. unit and number variants =================
+  - {sample_id: cl-c-001, group_id: g-c-001, category: unit_variant, source: hand_authored, utterance: "前进4.0米", expected_compiler_status: SUCCESS, template: walk4, expected_runtime_status: SUCCESS, horizon: 1, notes: "decimal metre spelling"}
+  - {sample_id: cl-c-002, group_id: g-c-002, category: unit_variant, source: hand_authored, utterance: "前进6m", expected_compiler_status: SUCCESS, template: walk6, expected_runtime_status: SUCCESS, horizon: 1, notes: "m unit"}
+  - {sample_id: cl-c-003, group_id: g-c-003, category: unit_variant, source: hand_authored, utterance: "前进6.0米", expected_compiler_status: SUCCESS, template: walk6, expected_runtime_status: SUCCESS, horizon: 1, notes: "decimal metre spelling"}
+  - {sample_id: cl-c-004, group_id: g-c-004, category: unit_variant, source: hand_authored, utterance: "前进8.0米", expected_compiler_status: SUCCESS, template: walk8, expected_runtime_status: SUCCESS, horizon: 1, notes: "decimal metre spelling"}
+  - {sample_id: cl-c-005, group_id: g-c-005, category: unit_variant, source: hand_authored, utterance: "前进10m", expected_compiler_status: SUCCESS, template: walk10, expected_runtime_status: SUCCESS, horizon: 1, notes: "m unit"}
+  - {sample_id: cl-c-006, group_id: g-c-006, category: unit_variant, source: hand_authored, utterance: "前进12m", expected_compiler_status: SUCCESS, template: walk12, expected_runtime_status: SUCCESS, horizon: 1, notes: "m unit"}
+  - {sample_id: cl-c-007, group_id: g-c-007, category: unit_variant, source: hand_authored, utterance: "前进15.0米", expected_compiler_status: SUCCESS, template: walk15, expected_runtime_status: SUCCESS, horizon: 1, notes: "decimal metre spelling"}
+  - {sample_id: cl-c-008, group_id: g-c-008, category: unit_variant, source: hand_authored, utterance: "前进20m", expected_compiler_status: SUCCESS, template: walk20, expected_runtime_status: SUCCESS, horizon: 1, notes: "m unit at the extension boundary"}
+  - {sample_id: cl-c-009, group_id: g-c-009, category: unit_variant, source: hand_authored, utterance: "左转45°", expected_compiler_status: SUCCESS, template: turn_p45, expected_runtime_status: SUCCESS, horizon: 1, notes: "degree sign"}
+  - {sample_id: cl-c-010, group_id: g-c-010, category: unit_variant, source: hand_authored, utterance: "右转45°", expected_compiler_status: SUCCESS, template: turn_n45, expected_runtime_status: SUCCESS, horizon: 1, notes: "degree sign"}
+  - {sample_id: cl-c-011, group_id: g-c-011, category: unit_variant, source: hand_authored, utterance: "左转90°", expected_compiler_status: SUCCESS, template: turn_p90, expected_runtime_status: SUCCESS, horizon: 1, notes: "degree sign"}
+  - {sample_id: cl-c-012, group_id: g-c-012, category: unit_variant, source: hand_authored, utterance: "右转90°", expected_compiler_status: SUCCESS, template: turn_n90, expected_runtime_status: SUCCESS, horizon: 1, notes: "degree sign"}
+  - {sample_id: cl-c-013, group_id: g-c-013, category: unit_variant, source: hand_authored, utterance: "左转30°", expected_compiler_status: SUCCESS, template: turn_p30, expected_runtime_status: SUCCESS, horizon: 1, notes: "small left turn"}
+  - {sample_id: cl-c-014, group_id: g-c-014, category: unit_variant, source: hand_authored, utterance: "右转30°", expected_compiler_status: SUCCESS, template: turn_n30, expected_runtime_status: SUCCESS, horizon: 1, notes: "small right turn"}
+  - {sample_id: cl-c-015, group_id: g-c-015, category: unit_variant, source: hand_authored, utterance: "左转60°", expected_compiler_status: SUCCESS, template: turn_p60, expected_runtime_status: SUCCESS, horizon: 1, notes: "mid left turn"}
+  - {sample_id: cl-c-016, group_id: g-c-016, category: unit_variant, source: hand_authored, utterance: "右转60°", expected_compiler_status: SUCCESS, template: turn_n60, expected_runtime_status: SUCCESS, horizon: 1, notes: "mid right turn"}
+
+  # ================= E. composition =================
+  - {sample_id: cl-e-001, group_id: g-e-001, category: composition, source: composition, utterance: "先前进8米，再右转45度，然后前进6米，最后停止。", expected_compiler_status: SUCCESS, template: walk8_turn_n45_walk6_stop, expected_runtime_status: SUCCESS, e2e: true, horizon: 4, notes: "unseen walk-turn-walk-stop composition"}
+  - {sample_id: cl-e-002, group_id: g-e-002, category: composition, source: composition, utterance: "先左转90度，再前进6米，最后停止。", expected_compiler_status: SUCCESS, template: turn_p90_walk6_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "turn-before-walk heading propagation"}
+  - {sample_id: cl-e-003, group_id: g-e-003, category: composition, source: composition, utterance: "先站立5秒，然后前进4米，再左转45度，之后前进4米，最后停止。", expected_compiler_status: SUCCESS, template: stand5_walk4_turn_p45_walk4_stop, expected_runtime_status: SUCCESS, horizon: 5, notes: "stand5-walk4-turn-walk-stop composition"}
+  - {sample_id: cl-e-004, group_id: g-e-004, category: composition, source: composition, utterance: "先前进10米，再右转90度，然后前进4米，最后停止。", expected_compiler_status: SUCCESS, template: walk10_turn_n90_walk4_stop, expected_runtime_status: SUCCESS, horizon: 4, notes: "long first leg with right-angle turn"}
+  - {sample_id: cl-e-005, group_id: g-e-005, category: composition, source: composition, utterance: "先右转45度，然后前进8米，再左转45度，然后前进8米，最后停止。", expected_compiler_status: SUCCESS, template: turn_n45_walk8_turn_p45_walk8_stop, expected_runtime_status: SUCCESS, horizon: 5, notes: "mirrored S-shaped composition without path planning"}
+  - {sample_id: cl-e-006, group_id: g-e-006, category: composition, source: composition, utterance: "站立10秒，然后前进6米，再向右转90度，最后停止。", expected_compiler_status: SUCCESS, template: stand10_walk6_turn_n90_stop, expected_runtime_status: SUCCESS, horizon: 4, notes: "stand-walk-turn-stop composition"}
+  - {sample_id: cl-e-007, group_id: g-e-007, category: composition, source: composition, utterance: "前进6米，然后右转45度，接着前进6米，再左转45度，最后停止。", expected_compiler_status: SUCCESS, template: walk6_turn_n45_walk6_turn_p45_stop, expected_runtime_status: SUCCESS, e2e: true, horizon: 5, oracle_mission_id: h5-walk6-turn-45-walk6-turn45-stop, notes: "H5 left-right turn composition"}
+  - {sample_id: cl-e-008, group_id: g-e-008, category: composition, source: composition, utterance: "先停止，然后前进4米，最后停止。", expected_compiler_status: SUCCESS, template: stop_walk4_stop, expected_runtime_status: SUCCESS, horizon: 3, notes: "stop-walk-stop transition composition"}
+  - {sample_id: cl-e-009, group_id: g-e-009, category: composition, source: composition, utterance: "先站立1秒，然后前进4米，再左转45度，之后前进4米，最后停止。", expected_compiler_status: SUCCESS, template: stand1_walk4_turn_p45_walk4_stop, expected_runtime_status: SUCCESS, e2e: true, horizon: 5, oracle_mission_id: h5-stand-walk4-turn45-walk4-stop, notes: "H5 stand-walk-turn-walk-stop composition"}
+  - {sample_id: cl-e-010, group_id: g-e-010, category: composition, source: composition, utterance: "先站立1秒，然后前进4米，再左转45度，然后前进4米，再右转45度，然后前进4米，再左转90度，最后停止。", expected_compiler_status: SUCCESS, template: h8_mix1, expected_runtime_status: SUCCESS, e2e: true, horizon: 8, oracle_mission_id: h8-mix1, notes: "H8 full skill-mix composition"}
+  - {sample_id: cl-e-011, group_id: g-e-011, category: composition, source: composition, utterance: "先站立5秒，然后前进10米，再右转30度，之后前进4米，最后停止。", expected_compiler_status: SUCCESS, template: stand5_walk10_turn_n30_walk4_stop, expected_runtime_status: SUCCESS, horizon: 5, notes: "H5 longest tabulated walk composition"}
+
+  # ================= F. ambiguous =================
+  - {sample_id: cl-f-001, group_id: g-f-001, category: ambiguous, source: hand_authored, utterance: "往前走一点", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague quantity"}
+  - {sample_id: cl-f-002, group_id: g-f-002, category: ambiguous, source: hand_authored, utterance: "走一会", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague duration"}
+  - {sample_id: cl-f-003, group_id: g-f-003, category: ambiguous, source: hand_authored, utterance: "前进一段", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague distance"}
+  - {sample_id: cl-f-004, group_id: g-f-004, category: ambiguous, source: hand_authored, utterance: "前进几米", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague quantity"}
+  - {sample_id: cl-f-005, group_id: g-f-005, category: ambiguous, source: hand_authored, utterance: "大概走一下", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague action"}
+  - {sample_id: cl-f-006, group_id: g-f-006, category: ambiguous, source: hand_authored, utterance: "走得差不多远", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague quantity"}
+  - {sample_id: cl-f-007, group_id: g-f-007, category: ambiguous, source: hand_authored, utterance: "少量前进", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague quantity"}
+  - {sample_id: cl-f-008, group_id: g-f-008, category: ambiguous, source: hand_authored, utterance: "走若干米", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague quantity"}
+  - {sample_id: cl-f-009, group_id: g-f-009, category: ambiguous, source: hand_authored, utterance: "转过去", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague turn"}
+  - {sample_id: cl-f-010, group_id: g-f-010, category: ambiguous, source: hand_authored, utterance: "转一下", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague turn"}
+  - {sample_id: cl-f-011, group_id: g-f-011, category: ambiguous, source: hand_authored, utterance: "往那边走", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague direction"}
+  - {sample_id: cl-f-012, group_id: g-f-012, category: ambiguous, source: hand_authored, utterance: "走到那里", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague target"}
+  - {sample_id: cl-f-013, group_id: g-f-013, category: ambiguous, source: hand_authored, utterance: "随便转个方向", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "explicitly undefined direction"}
+  - {sample_id: cl-f-014, group_id: g-f-014, category: ambiguous, source: hand_authored, utterance: "朝那边前进", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague direction"}
+  - {sample_id: cl-f-015, group_id: g-f-015, category: ambiguous, source: hand_authored, utterance: "向那里走", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague target"}
+  - {sample_id: cl-f-016, group_id: g-f-016, category: ambiguous, source: hand_authored, utterance: "转个方向", expected_compiler_status: AMBIGUOUS, expected_error_code: AMBIGUOUS_COMMAND, expected_runtime_status: NOT_RUN, notes: "vague direction"}
+  - {sample_id: cl-f-017, group_id: g-f-017, category: ambiguous, source: hand_authored, utterance: "前进", expected_compiler_status: AMBIGUOUS, expected_error_code: MISSING_PARAMETER, expected_runtime_status: NOT_RUN, notes: "missing distance"}
+  - {sample_id: cl-f-018, group_id: g-f-018, category: ambiguous, source: hand_authored, utterance: "右转", expected_compiler_status: AMBIGUOUS, expected_error_code: MISSING_PARAMETER, expected_runtime_status: NOT_RUN, notes: "missing angle must not default to 45 deg"}
+
+  # ================= G. unsupported capability =================
+  - {sample_id: cl-g-001, group_id: g-g-001, category: unsupported, source: hand_authored, utterance: "跳一下", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "jump is not a runtime capability"}
+  - {sample_id: cl-g-002, group_id: g-g-002, category: unsupported, source: hand_authored, utterance: "跑起来", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "running is not a runtime capability"}
+  - {sample_id: cl-g-003, group_id: g-g-003, category: unsupported, source: hand_authored, utterance: "坐下", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "sitting is not a runtime capability"}
+  - {sample_id: cl-g-004, group_id: g-g-004, category: unsupported, source: hand_authored, utterance: "蹲下", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "crouching is not a runtime capability"}
+  - {sample_id: cl-g-005, group_id: g-g-005, category: unsupported, source: hand_authored, utterance: "挥手", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "waving is not a runtime capability"}
+  - {sample_id: cl-g-006, group_id: g-g-006, category: unsupported, source: hand_authored, utterance: "拿一个杯子", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "manipulation is not a runtime capability"}
+  - {sample_id: cl-g-007, group_id: g-g-007, category: unsupported, source: hand_authored, utterance: "抓东西", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "grasping is not a runtime capability"}
+  - {sample_id: cl-g-008, group_id: g-g-008, category: unsupported, source: hand_authored, utterance: "去桌子那里", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "navigation to an object is not a runtime capability"}
+  - {sample_id: cl-g-009, group_id: g-g-009, category: unsupported, source: hand_authored, utterance: "找红色箱子", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "perception and search are not runtime capabilities"}
+  - {sample_id: cl-g-010, group_id: g-g-010, category: unsupported, source: hand_authored, utterance: "绕过障碍", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "obstacle avoidance is not a runtime capability"}
+  - {sample_id: cl-g-011, group_id: g-g-011, category: unsupported, source: hand_authored, utterance: "推开门", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "contact manipulation is not a runtime capability"}
+  - {sample_id: cl-g-012, group_id: g-g-012, category: unsupported, source: hand_authored, utterance: "拉一下", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "pulling is not a runtime capability"}
+  - {sample_id: cl-g-013, group_id: g-g-013, category: unsupported, source: hand_authored, utterance: "扔垃圾", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "throwing is not a runtime capability"}
+  - {sample_id: cl-g-014, group_id: g-g-014, category: unsupported, source: hand_authored, utterance: "捡球", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "picking is not a runtime capability"}
+  - {sample_id: cl-g-015, group_id: g-g-015, category: unsupported, source: hand_authored, utterance: "爬上台阶", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "climbing is not a runtime capability"}
+  - {sample_id: cl-g-016, group_id: g-g-016, category: unsupported, source: hand_authored, utterance: "打开门", expected_compiler_status: UNSUPPORTED, expected_error_code: UNSUPPORTED_LANGUAGE_CAPABILITY, expected_runtime_status: NOT_RUN, notes: "door interaction is not a runtime capability"}
+
+  # ================= H. malformed / fuzz =================
+  - {sample_id: cl-h-001, group_id: g-h-001, category: malformed, source: hand_authored, utterance: "前进四四米", expected_compiler_status: MALFORMED, expected_error_code: MALFORMED_NUMBER, expected_runtime_status: NOT_RUN, notes: "malformed Chinese number"}
+  - {sample_id: cl-h-002, group_id: g-h-002, category: malformed, source: hand_authored, utterance: "前进2.5.5米", expected_compiler_status: MALFORMED, expected_error_code: MALFORMED_NUMBER, expected_runtime_status: NOT_RUN, notes: "malformed decimal"}
+  - {sample_id: cl-h-003, group_id: g-h-003, category: malformed, source: hand_authored, utterance: "前进NaN米", expected_compiler_status: MALFORMED, expected_error_code: MALFORMED_NUMBER, expected_runtime_status: NOT_RUN, notes: "NaN fuzz input"}
+  - {sample_id: cl-h-004, group_id: g-h-004, category: malformed, source: hand_authored, utterance: "前进Infinity米", expected_compiler_status: MALFORMED, expected_error_code: MALFORMED_NUMBER, expected_runtime_status: NOT_RUN, notes: "Infinity fuzz input"}
+  - {sample_id: cl-h-005, group_id: g-h-005, category: malformed, source: hand_authored, utterance: "前进1e999米", expected_compiler_status: MALFORMED, expected_error_code: MALFORMED_NUMBER, expected_runtime_status: NOT_RUN, notes: "overflow exponent fuzz input"}
+  - {sample_id: cl-h-006, group_id: g-h-006, category: malformed, source: hand_authored, utterance: "前进4英尺", expected_compiler_status: MALFORMED, expected_error_code: INVALID_UNIT, expected_runtime_status: NOT_RUN, notes: "unsupported unit"}
+  - {sample_id: cl-h-007, group_id: g-h-007, category: malformed, source: hand_authored, utterance: "左转45rad", expected_compiler_status: MALFORMED, expected_error_code: INVALID_UNIT, expected_runtime_status: NOT_RUN, notes: "radians are out of the controlled unit set"}
+  - {sample_id: cl-h-008, group_id: g-h-008, category: malformed, source: hand_authored, utterance: "左转45弧度", expected_compiler_status: MALFORMED, expected_error_code: INVALID_UNIT, expected_runtime_status: NOT_RUN, notes: "radians are out of the controlled unit set"}
+  - {sample_id: cl-h-009, group_id: g-h-009, category: malformed, source: hand_authored, utterance: "前进4米米", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "repeated unit"}
+  - {sample_id: cl-h-010, group_id: g-h-010, category: malformed, source: hand_authored, utterance: "前进4", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "distance without a unit"}
+  - {sample_id: cl-h-011, group_id: g-h-011, category: malformed, source: hand_authored, utterance: "左转45", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "angle without a unit"}
+  - {sample_id: cl-h-012, group_id: g-h-012, category: malformed, source: hand_authored, utterance: "__import__('os').system('dir')", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "Python-like input must stay inert text"}
+  - {sample_id: cl-h-013, group_id: g-h-013, category: malformed, source: hand_authored, utterance: "; rm -rf /", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "shell-like input must stay inert text"}
+  - {sample_id: cl-h-014, group_id: g-h-014, category: malformed, source: hand_authored, utterance: "../../etc/passwd", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "path-like input must stay inert text"}
+  - {sample_id: cl-h-015, group_id: g-h-015, category: malformed, source: hand_authored, utterance: "{skill: walk_forward}", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "YAML-looking input must not be interpreted"}
+  - {sample_id: cl-h-016, group_id: g-h-016, category: malformed, source: hand_authored, utterance: "前进4米，然后，然后，然后停止。", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "repeated connector fuzz input"}
+  - {sample_id: cl-h-017, group_id: g-h-017, category: malformed, source: hand_authored, utterance: "前进4米，，，，，", expected_compiler_status: MALFORMED, expected_error_code: LANGUAGE_PARSE_ERROR, expected_runtime_status: NOT_RUN, notes: "punctuation-flood fuzz input"}
+  - {sample_id: cl-h-018, group_id: g-h-018, category: malformed, source: hand_authored, utterance_repeat: {text: "前进4米，", count: 120}, expected_compiler_status: MALFORMED, expected_error_code: INPUT_TOO_LONG, expected_runtime_status: NOT_RUN, notes: "input-length bound fuzz input"}
+
+  # ================= I. capability unknown =================
+  - {sample_id: cl-i-001, group_id: g-i-001, category: capability_unknown, source: hand_authored, utterance: "前进2.5米", expected_compiler_status: SUCCESS, template: walk2_5, expected_runtime_status: REJECTED, expected_failure_type: CAPABILITY_UNKNOWN, expected_simulation_steps: 0, horizon: 1, notes: "no recorded evidence at 2.5 m; no interpolation"}
+  - {sample_id: cl-i-002, group_id: g-i-002, category: capability_unknown, source: hand_authored, utterance: "前进12.5米", expected_compiler_status: SUCCESS, template: walk12_5, expected_runtime_status: REJECTED, expected_failure_type: CAPABILITY_UNKNOWN, expected_simulation_steps: 0, horizon: 1, notes: "no recorded evidence at 12.5 m; no interpolation"}
+  - {sample_id: cl-i-003, group_id: g-i-003, category: capability_unknown, source: hand_authored, utterance: "前进25米", expected_compiler_status: SUCCESS, template: walk25, expected_runtime_status: REJECTED, expected_failure_type: CAPABILITY_UNKNOWN, expected_simulation_steps: 0, e2e: true, horizon: 1, notes: "required Phase 2.1 capability-unknown end-to-end case"}
+  - {sample_id: cl-i-004, group_id: g-i-004, category: capability_unknown, source: hand_authored, utterance: "前进50米", expected_compiler_status: SUCCESS, template: walk50, expected_runtime_status: REJECTED, expected_failure_type: CAPABILITY_UNKNOWN, expected_simulation_steps: 0, horizon: 1, notes: "far beyond recorded walk evidence"}
+  - {sample_id: cl-i-005, group_id: g-i-005, category: capability_unknown, source: hand_authored, utterance: "左转120度", expected_compiler_status: SUCCESS, template: turn_p120, expected_runtime_status: REJECTED, expected_failure_type: CAPABILITY_UNKNOWN, expected_simulation_steps: 0, horizon: 1, notes: "turn beyond the validated +/-90 deg range"}
+  - {sample_id: cl-i-006, group_id: g-i-006, category: capability_unknown, source: hand_authored, utterance: "站立30秒", expected_compiler_status: SUCCESS, template: stand30, expected_runtime_status: REJECTED, expected_failure_type: CAPABILITY_UNKNOWN, expected_simulation_steps: 0, horizon: 1, notes: "stand beyond the validated 20 s range"}

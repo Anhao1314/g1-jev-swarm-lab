@@ -1,0 +1,124 @@
+# Phase 1.2b FROZEN protocol: walk-distance boundary refinement + segmentation.
+#
+# Reuses the Phase 1.2 nominal warehouse task envelope unchanged. No controller
+# parameter, policy weight, action scale or threshold is modified. One research
+# question per experiment: (A) refine the 2-5 m task boundary, (B) compare a
+# single long WalkForward against 2 m segmented execution at 4/6/8 m.
+experiment_id: g1_distance_segmentation_001
+protocol_version: "1.0.0"
+frozen: true
+robot_config: configs/robot/g1_locomotion_12dof.yaml
+provenance:
+  model_source: https://github.com/unitreerobotics/unitree_rl_gym
+  model_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  model_xml: resources/robots/g1_description/scene.xml
+  controller_source: https://github.com/unitreerobotics/unitree_rl_gym/deploy/deploy_mujoco/deploy_mujoco.py
+  controller_commit: 276801e46c5d433564f24658bac64f254b7d2d4b
+  controller_kind: official_pretrained_policy
+  policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  dof: 12
+  actuators: 12
+thresholds:
+  walk:
+    target_distance_m: 2.0
+    tolerance_min_m: 0.2
+    speed_mps: 0.5
+    timeout_min_s: 15.0
+    timeout_s_per_m: 6.0
+  envelopes:
+    nominal:
+      distance_error_floor_m: 0.30
+      distance_error_relative: 0.10
+      lateral_floor_m: 0.35
+      lateral_relative: 0.07
+      heading_max_deg: 15.0
+      timeout_floor_s: 15.0
+      timeout_s_per_m: 6.0
+    strict:
+      distance_error_floor_m: 0.15
+      distance_error_relative: 0.05
+      lateral_floor_m: 0.20
+      lateral_relative: 0.035
+      heading_max_deg: 8.0
+      timeout_floor_s: 12.0
+      timeout_s_per_m: 5.0
+  push:
+    direction: [0.0, 1.0, 0.0]
+    duration_s: 0.2
+    trigger_s_range: [0.8, 1.2]
+  joint:
+    velocity_std_radps: 0.05
+  zones:
+    reliable_min_rate: 0.90
+    failure_max_rate: 0.30
+  risk:
+    min_runs_for_label: 3
+    min_runs_for_low: 5
+  stop:
+    window_s: 1.0
+    speed_threshold_mps: 0.10
+    max_duration_s: 4.0
+boundary:
+  safe_start_m: 2.0
+  initial_bracket_m: [2.0, 5.0]
+  resolution_m: 0.25
+  bracket_provenance: >
+    Phase 1.2 experiment g1_failure_boundary_001: 2 m task success under the
+    nominal envelope, 5 m and 7.5 m task failure (EXCESSIVE_DRIFT). Those runs
+    are provenance only; the refined boundary below comes from Phase 1.2b runs.
+segmentation:
+  segment_length_m: 2.0
+  total_distances_m: [4.0, 6.0, 8.0]
+  memory_semantics:
+    direct_long: one WalkForward invocation, one LSTM reset at invocation start
+    segmented_reset: standard skill lifecycle, LSTM reset per WalkForward call
+    segmented_continuous: reset_memory=False, recurrent state continuous across segments
+    segmented_state_aware: continuous memory + remaining mission-axis distance recomputed
+  stop_semantics: existing StopSkill after every segment (frozen Phase 1 window/threshold)
+improvement:
+  material_factor: 0.8
+  rule: >
+    IMPROVED means (a) task outcome FAIL->PASS at the same total distance, or
+    (b) same task outcome with both |lateral drift| and |heading error| reduced
+    by at least 20% and no physical-safety regression. Time overhead alone is
+    never an improvement. Continuous effect sizes are reported without forcing
+    a binary label.
+mission_frame:
+  definition: >
+    Fixed at mission start: origin at the initial base position, +X along the
+    initial heading. Forward progress, lateral drift and heading error for every
+    treatment and every segment are projected onto this frame.
+sampling:
+  exploration_seeds_deterministic: 1
+  exploration_seeds_stochastic: 2
+  final_runs_per_point:
+    reliable: 5
+    transition: 10
+    failure: 5
+    deterministic: 3
+  final_seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+experiments:
+  A_distance:
+    parameter: target_distance_m
+    unit: m
+    direction: increase
+    deterministic: true
+    safe_start: 2.0
+    candidates: [3.5, 5.0]
+    max_evaluations: 10
+    refinement_rounds: 3
+    resolution: 0.25
+    task:
+      target_distance_m: 2.0
+pilot_points:
+  A_distance: 3.5
+pilot:
+  missions:
+    - [direct_long, 4.0]
+    - [segmented_continuous, 4.0]
+    - [segmented_reset, 4.0]
+notes: >
+  Characterization only. The segmented treatments use the existing skills; the
+  only skill-level change is an explicit `reset_memory` flag on WalkForward
+  whose default (True) preserves the Phase 1/1.1/1.2 lifecycle. The LSTM reset
+  confound is measured and reported separately, never attributed to planning.

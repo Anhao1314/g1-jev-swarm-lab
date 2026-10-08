@@ -1,0 +1,258 @@
+{
+  "inherited_freeze": {
+    "case_manifest_sha256": "641dcdf36447976cfb29e64dd24bbe911beaca8284ef7299f82f9cb7ce38a909",
+    "history": {
+      "all_heading_history_files_verified": 492,
+      "all_history_files_verified": 314,
+      "baseline": {
+        "baseline_drift": false,
+        "baseline_files_verified": 219,
+        "baseline_freeze_sha256": "5c2d13fdf83512ecba7f3ba8126fc45a542f725ae115098d3c587a0c4c96ec04"
+      },
+      "cases": {
+        "case_manifest_sha256": "c84cf2484d9cd6138d19828e09ad9fb7cb57467330c96e08ad8cbed853b0f55e",
+        "verified_case_counts": {
+          "eval": 16,
+          "primitive": 8,
+          "sequence": 2,
+          "train": 12
+        }
+      },
+      "heading_history_manifest_sha256": "d22139534411139d51e0411babfe16eef43c395612890696c7e6f5b061510f0f",
+      "historical_drift": false,
+      "history_files_verified": 189,
+      "history_manifest_sha256": "fc005912a1bdf1c4edd1a3bf6a340f9bd73e6f5ab51c2b650d667db36dcfa9a3",
+      "origin_history_manifest_sha256": "3f34ae8c76591eb2a99fc4022fc6f87427ce382fcf7f40a8672fe7db515d218e"
+    },
+    "history_manifest_sha256": "b124a1f66eed10b59ad8ed3e4e1ff7de34e382bc67e28a1a136c654dd34ddfc4",
+    "new_case_counts": {
+      "heldout": 16,
+      "regression": 26,
+      "training": 12
+    },
+    "new_history_files_verified": 669,
+    "protocol_sha256": "df0529a7f9f542463eadf99a1b01c36346344bec184009b13b44eef688781afb"
+  },
+  "preflight": {
+    "acquisition_sources_committed": true,
+    "historical_drift": false,
+    "pinned_files_verified": 284
+  },
+  "protocol": {
+    "authority": {
+      "decision_period_s": 0.1,
+      "legacy_window_s": 2.0,
+      "mask": "First-Walk applied authority remains 14s; original 2s mask remains at all other nodes",
+      "normalized_action_box": [
+        -1,
+        1
+      ],
+      "observation": "Original61 features and original2s active flag retained; deterministic probe ignores observation/reward",
+      "physical_bounds": [
+        0.1,
+        0.06,
+        0.12
+      ],
+      "physics_timestep_s": 0.002,
+      "policy_period_s": 0.02,
+      "probe_subset": "yaw-only (0,0,-1), first Walk only; zero elsewhere",
+      "scope_limit": "Later residual actions cannot repair the first Walk strict failure; finite first-window profiles do not cover all continuous admissible action sequences",
+      "total_yaw_limit_radps": 0.6,
+      "units": [
+        "m/s",
+        "m/s",
+        "rad/s"
+      ],
+      "velocity_basis": "body command inputs to frozen locomotion controller",
+      "window_s": 14.0
+    },
+    "base_commit": "0aad8ef",
+    "budget": {
+      "action_scan": false,
+      "alpha_scan": false,
+      "checkpoint_writes": 0,
+      "confirmation_runs": 1,
+      "control_runs": 0,
+      "historical_window_s": 2.0,
+      "longer_window_primary_runs": 1,
+      "maximum_complete_case_executions": 2,
+      "provider_calls": 0,
+      "training_steps": 0,
+      "window_scan": false,
+      "windows_tested_s": [
+        14.0
+      ]
+    },
+    "case_sha256": "6850ebbcc9ab86a161fbdc8b26ba6c20e0b1f88114fde7e01e55942a5799ee98",
+    "class": "Experimental",
+    "component_comparison": {
+      "cells": [
+        "off",
+        "lateral_only",
+        "yaw_only",
+        "combined"
+      ],
+      "interaction_formula": "combined - lateral_only - yaw_only + off",
+      "interpretation": "descriptive deterministic finite difference only, not strict causal additivity",
+      "norm": "report endpoint norm per cell, no norm-additivity claim",
+      "raw_outcomes": [
+        "first_walk_local_lateral_m",
+        "final_world_error_x_m",
+        "final_world_error_y_m",
+        "wrapped_commanded_heading_error_deg"
+      ]
+    },
+    "contract_id": "SC-3A.4c-001",
+    "contract_sha256": "19a5b637502036714bebaf381776799d8022fc6843ab8d0dfd1371d8fcc222fc",
+    "controls": [
+      "Read-only historical residual-off, 14 s lateral-only and 14 s combined; inherited combined2/zero14/repeat gates remain PASS",
+      "Exact pre-Stand and first-Walk start/reference anchor gate for each new run",
+      "Local adapter/source hash and offline action schedule checks before physics"
+    ],
+    "evidence": [
+      "immutable manifest",
+      "all raw result rows including failures",
+      "10Hz command/decision/state traces",
+      "full-step command/torque/physics hashes",
+      "20Hz state archives and exact final pose (acquisition samples, no media)",
+      "callback proposed action/reward ledger",
+      "paired/off/zero and repeat integrity",
+      "summary and failure attribution"
+    ],
+    "experiment_id": "residual_yaw_component_001",
+    "frozen": true,
+    "global_claim": {
+      "additional_requirements": [
+        "final absolute commanded-axis lateral not worse",
+        "final absolute wrapped commanded-heading error not worse"
+      ],
+      "metric": "final commanded-world Euclidean endpoint error strictly lower than its alpha0.5 residual-off baseline",
+      "not_claimed": "all-prefix or all-component Pareto improvement; no new historical global success threshold",
+      "required_disclosure": [
+        "full final XY vector including any X regression",
+        "per-node world vector/norm/head, including prefix tradeoff",
+        "Turn/Stand/Stop translation contributions"
+      ]
+    },
+    "historical_source": {
+      "combined14_protocol_sha256": "122e5210c10db7c59f27e2ad379aa269352d6353b344bac8e3899c27136cf710",
+      "combined14_run": "03--combined14--primary",
+      "lateral14_protocol_sha256": "5fb87f7d34260dcbb88268928cb53a8ea42a80756128894b3296c75a54eb98e4",
+      "lateral14_run": "01--lateral14--primary",
+      "lateral2_run": "03--lateral_inward--primary",
+      "off_run": "01--off--primary"
+    },
+    "interpretation": "Within-case deterministic fixed14s 2x2 component contrast. Raw outcome interaction I = q_combined - q_lateral - q_yaw + q_off for first-Walk local lateral, final world X/Y, and wrapped final commanded-heading error. Norm is nonlinear derived metric; report it without actuator-additivity inference. Reference-feedback dynamics can couple components. No invented interaction-significance threshold, generalization, baseline adoption or full-space infeasibility.",
+    "local_claim": "STRICT endpoint eligibility on all original nodes; nominal independent secondary report; not continuous/environmental corridor safety",
+    "origin": "actual node start; frozen selector unchanged",
+    "phase": "3A.4g mechanism",
+    "physical_claim": "original complete physical success, finite/valid execution and all original nodes SUCCESS; report status/fall/tilt/height separately",
+    "preregistration": {
+      "action": [
+        0,
+        0,
+        -1
+      ],
+      "chosen_before_new_physics": true,
+      "conditional_confirmation": "Run one exact repeat only if primary passes all-node strict, complete physical success and frozen paired global condition; otherwise stop after primary and retain negative result.",
+      "rationale": "Complete the missing actuator component control at frozen 14 s. Compare yaw-only against retained off, lateral-only, and combined without selecting another profile.",
+      "window_s": 14.0
+    },
+    "preserved": [
+      "policy/PD/gains/clamps/reference selector/evaluator",
+      "original observation and dense_reward callback path; reward ignored, never tuned",
+      "node boundaries/targets/skill lifecycle and all envelopes",
+      "Console and all historical evidence",
+      "Legacy2s transition diagnostic monitor and observation active feature; applied firstWalk authority mask remains fixed at14s"
+    ],
+    "probes_in_order": [
+      {
+        "action": [
+          0,
+          0,
+          -1
+        ],
+        "end_s": 14.0,
+        "id": "yaw_only",
+        "onset_s": 0.0
+      }
+    ],
+    "process_limits": {
+      "failure": "preserve partial; no automatic retry",
+      "inactivity_diagnostic_after_s": 30,
+      "maximum_campaign_wall_s": 180,
+      "progress": "flushed10Hz trace and decision ledger plus per-run completed message"
+    },
+    "question": "At fixed 14 s authority and unchanged alpha0.5 reference, does yaw-only (0,0,-1) satisfy first-Walk strict, physical, and same-reference global conditions? What are the descriptive component and interaction effects across retained off/lateral-only/combined and new yaw-only?",
+    "reference_alpha": 0.5,
+    "reference_choice": "fixed retained challenge, not alpha optimization",
+    "roundoff_audit_tolerance": 1e-10,
+    "roundoff_role": "arithmetic verification only, not a task threshold; paired gains within this resolution cannot establish FEASIBLE",
+    "run_plan": [
+      {
+        "id": "01--yaw14--primary",
+        "probe_id": "yaw_only",
+        "repetition": 0,
+        "window_s": 14.0
+      },
+      {
+        "id": "02--yaw14--confirm",
+        "probe_id": "yaw_only",
+        "repetition": 1,
+        "window_s": 14.0
+      }
+    ],
+    "schedule_and_stop": "Run yaw14 primary; if joint gate fails, stop without confirmation; if it qualifies, run one deterministic repeat. Integrity/incomplete failure stops preserving partial. No alternate action, amplitude or duration.",
+    "source_manifest_sha256": "9dfa4e10fffe925687ebb395d7a60d0c7f2d49dcddb814cc8eb90791410819c8",
+    "stopping_boundary": "After primary, optional exact witness confirmation, targeted audit/report and Git closeout. No PPO, reward alignment, Jev, Multi-Swarm, or window search.",
+    "verdict_rules": {
+      "FEASIBLE": "Only repeated exact yaw14 witness satisfying frozen strict, complete physical and paired-global conditions.",
+      "INCONCLUSIVE": "No repeated joint witness and no full-space certificate; retain probed failures and measured window/authority effects without training expansion.",
+      "NOT_FEASIBLE": "Only with a validated reachability/invariant bound covering the entire admissible continuous authority or mutually incompatible required hard goals; saturation/failed probes/command integrals are not such proof."
+    }
+  },
+  "provenance": {
+    "PPO_training": false,
+    "base_policy_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+    "case_sha256": "6850ebbcc9ab86a161fbdc8b26ba6c20e0b1f88114fde7e01e55942a5799ee98",
+    "checkpoint_writes": 0,
+    "code_commit": "660409c8cbd3fcd183c6e778572729bd8f47a125",
+    "contract_sha256": "19a5b637502036714bebaf381776799d8022fc6843ab8d0dfd1371d8fcc222fc",
+    "experiment_id": "residual_yaw_component_001",
+    "optimizer_updates": 0,
+    "packages": {
+      "gymnasium": "1.4.0",
+      "mujoco": "3.15.0",
+      "numpy": "2.4.6",
+      "torch": "2.14.1+cu130"
+    },
+    "protocol_sha256": "803dc8e0d7dd66e9524047740248368f3f9072f23f1d701c19bec0e12dbd502b",
+    "reference_alpha": 0.5,
+    "seed": 0,
+    "source_hashes": {
+      "experiments/phase3a/residual_yaw_component_001/audit.py": "d1a8f686d1807da5bcf17a06227ae638415b58bc68047ca0786050b10069181c",
+      "experiments/phase3a/residual_yaw_component_001/case.json": "6850ebbcc9ab86a161fbdc8b26ba6c20e0b1f88114fde7e01e55942a5799ee98",
+      "experiments/phase3a/residual_yaw_component_001/controller.py": "babba76caa10dbef3e86166c1ce151e7734d1d391d7fa12d228e3c7e4b761553",
+      "experiments/phase3a/residual_yaw_component_001/protocol.json": "803dc8e0d7dd66e9524047740248368f3f9072f23f1d701c19bec0e12dbd502b",
+      "experiments/phase3a/residual_yaw_component_001/source_manifest.json": "9dfa4e10fffe925687ebb395d7a60d0c7f2d49dcddb814cc8eb90791410819c8",
+      "experiments/phase3a/residual_yaw_component_001/study.py": "72a1ec3fc334b5359039aef5c5150e3135df00998f42cfd0fe993d46d9683e98",
+      "experiments/phase3a/residual_yaw_component_001/test_study.py": "0d3792a4983a8f7b5035222c76cab83624f1eda91e70565abb2a36f7ea755951"
+    },
+    "source_manifest_sha256": "9dfa4e10fffe925687ebb395d7a60d0c7f2d49dcddb814cc8eb90791410819c8",
+    "torch_threads": 1
+  },
+  "run_plan": [
+    [
+      "01--yaw14--primary",
+      "yaw_only",
+      14.0,
+      0
+    ],
+    [
+      "02--yaw14--confirm",
+      "yaw_only",
+      14.0,
+      1
+    ]
+  ]
+}

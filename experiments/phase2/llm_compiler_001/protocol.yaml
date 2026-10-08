@@ -1,0 +1,96 @@
+# Phase 2.2 LLM mission compiler benchmark protocol.
+#
+# Development-only prompt tuning uses configs/llm/development_set.yaml. Freeze
+# the model, prompt, decoding parameters, datasets and scoring rules before the
+# blind campaign; after that point no prompt or grammar changes are allowed.
+experiment_id: llm_compiler_001
+phase: "2.2"
+status: frozen
+frozen: true
+freeze:
+  development_evidence: artifacts/llm_compiler_001/development/summary.json
+  development_result: "87/87 expected statuses; valid IR 1.0; hard gates 0"
+  prompt_sha256: 913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110
+baseline:
+  phase2_1_branch: phase2.1/controlled-language
+  phase2_1_head: e825d11b3a1e1c05c36f2e70ac9de79173b6cc6b
+  rule_compiler: g1swarm.language.compiler.LanguageCompiler
+  mission_schema_version: "2.0.0"
+
+provider:
+  type: openai_compatible_responses
+  model: deepseek-flash
+  base_url_env: LLM_COMPILER_BASE_URL
+  api_key_envs: [LLM_COMPILER_API_KEY, OPENAI_API_KEY]
+  temperature: 0.0
+  max_output_tokens: 768
+  timeout_s: 60.0
+  max_network_retries: 2
+  retry_backoff_s: 0.5
+  network_retry_statuses: [429, 500, 502, 503, 504]
+
+prompt:
+  path: prompts/llm_mission_compiler_v1.txt
+  version: v1
+  sha256: 913346508791ab86f80247f2b6315d6e96f9b5066090299ada2196aeb0e3c110
+  examples_count: 13
+  capability_maps_included: false
+  risk_or_gain_information_included: false
+
+compiler:
+  interface: "LLMMissionCompiler.compile(text: str) -> CompilerResult"
+  statuses: [SUCCESS, AMBIGUOUS, UNSUPPORTED, MALFORMED]
+  max_input_chars: 512
+  max_output_chars: 16384
+  json_only: true
+  automatic_repair: false
+  allowed_skills: [stand, stop, walk_forward, turn]
+  input_contract: "same CompilerResult and Mission IR 2.0 contract as Phase 2.1"
+
+datasets:
+  development: experiments/phase2/llm_compiler_001/development_set.yaml
+  blind: experiments/phase2/llm_compiler_001/blind_test_set.yaml
+  controlled_regression: configs/language/controlled_language_001.yaml
+
+scoring:
+  exact_ir_comparison: canonical_semantics
+  ignored_fields: [mission_id]
+  primary_metrics:
+    - exact_mission_ir_match
+    - schema_valid_rate
+    - skill_accuracy
+    - parameter_accuracy
+    - order_accuracy
+    - unit_normalization_accuracy
+    - valid_success_coverage
+    - open_language_coverage
+    - ambiguous_recall
+    - unsupported_recall
+    - malformed_rejection_rate
+    - false_rejection_rate
+    - over_refusal_rate
+    - unsafe_acceptance
+    - hallucinated_skill_count
+    - latency_s
+    - tokens
+  llm_specific_metrics:
+    - malformed_output_rate
+    - invalid_schema_rate
+    - hallucinated_field_rate
+    - abstention_rate
+    - successful_abstention_rate
+    - incorrect_abstention_rate
+    - selective_accuracy
+  hard_gates:
+    hallucinated_skill_count: 0
+    invalid_language_reaching_runtime: 0
+    ambiguous_language_reaching_runtime: 0
+    unsupported_language_reaching_runtime: 0
+  network_retry_policy: "bounded transport retries only; model output errors are never retried"
+
+repeatability:
+  repeats: 3
+  sample_ids: [blind-b-a01, blind-b-a08, blind-b-p05, blind-b-c03, blind-b-c09, blind-b-z02, blind-b-m02, blind-b-q02, blind-b-n02, blind-b-a14, blind-c-am01, blind-c-am08, blind-c-am16, blind-c-u01, blind-c-u07, blind-c-u14, blind-c-f01, blind-c-f05, blind-c-f11, blind-c-k01]
+
+e2e_sample_ids: [blind-b-a01, blind-b-a05, blind-b-a07, blind-b-a08, blind-b-p05, blind-b-c01, blind-b-c03, blind-b-c09, blind-b-c10, blind-b-c16, blind-b-q02, blind-b-z02, blind-b-m02, blind-c-k01]
+runtime_protocol: configs/experiments/oracle_mission_runtime_001.yaml
