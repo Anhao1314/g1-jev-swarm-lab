@@ -1,0 +1,75 @@
+{
+  "experiment_id": "adaptive_mission_lifecycle_001",
+  "status": "PREDECLARED_BEFORE_PHYSICS",
+  "research_ops_route": "mechanism_experiment_with_claim_audit",
+  "base_commit": "571c0b06d5ff9661d197faed96073263099e14c0",
+  "seed": 0,
+  "source_protocol": "configs/experiments/oracle_mission_runtime_001.yaml",
+  "parent_mission_source": "experiments/m2/closed_loop_mission_001/protocol.json",
+  "halt_contract_source": "experiments/m2/post_failure_halt_001/protocol.json",
+  "new_mission": {
+    "schema_version": "2.0.0",
+    "mission_id": "m22-new-walk4-turn45-stop",
+    "steps": [
+      {"id": "n1", "skill": "walk_forward", "parameters": {"distance_m": 4.0}},
+      {"id": "n2", "skill": "turn", "parameters": {"angle_deg": 45.0}, "depends_on": ["n1"]},
+      {"id": "n3", "skill": "stop", "parameters": {}, "depends_on": ["n2"]}
+    ]
+  },
+  "selection_basis": "The new task retains the already grounded successful Oracle Walk4/Turn45/Stop template, with distinct mission and node IDs. Its post-halt starting state has not been validated for restart; this is one conditional feasibility case, not route recovery. Walk2 is excluded because the frozen capability map has no exact 2m grounding cell.",
+  "state_assessment": {
+    "parent_must_remain_failed": true,
+    "parent_halt_status": "HALT_SUCCEEDED",
+    "all_frozen_halt_checks": true,
+    "max_instantaneous_speed_mps": 0.1,
+    "max_halt_last_1s_mean_speed_mps": 0.1,
+    "require_finite_standing_no_fall": true,
+    "require_exact_current_state_equals_halt_endpoint": true,
+    "require_valid_grounded_new_oracle_mission_without_override": true,
+    "require_distinct_mission_and_node_ids": true,
+    "scope": "Eligibility for this exact new local task at this observed simulation instant; no dwell, generic safe/recovered, or hardware stopping claim."
+  },
+  "authorization": {
+    "kind": "IN_PROCESS_TEST_ONLY_ALLOWLIST",
+    "explicit_study_configuration": true,
+    "complete_canonical_new_mission_binding": true,
+    "parent_result_receipt_binding": true,
+    "session_and_fresh_assessment_binding": true,
+    "single_use": true,
+    "opaque_grant_not_serialized": true,
+    "production_human_principal_authority": false
+  },
+  "maximum_physics_runs": 3,
+  "execution_order": ["adaptive_authorized", "halt_only_no_authorization", "normal_control"],
+  "runs": {
+    "adaptive_authorized": "Original frozen failure with strict feedback and opt-in M2.1 halt; fresh assessment; missing and forged/mismatched grant probes with zero dispatch; matching study grant permits the new mission only if state and mission checks pass. Attempt replay after dispatch; zero further steps required.",
+    "halt_only_no_authorization": "Same original failure, strict feedback and halt, but no grant. Assess real final state and refuse new task with ESCALATE; no new task nodes or physics. This is the paired halt-only/static lifecycle control.",
+    "normal_control": "Original frozen normal mission, strict feedback and opt-in halt configured; no new task requested. Compare original 3/3 nodes, no halt and pose/result metrics to retained R1 control."
+  },
+  "offline_controls": [
+    "Retained real parent pre-halt state must fail task-scoped state assessment; explicitly a read-only recorded-state control, not a new live run.",
+    "Focused fixture tests for failed halt, nonfinite/not-standing/high-speed state, missing/forged/mismatched/stale/replayed grant, mission validation/grounding and parent evidence mutation."
+  ],
+  "acceptance": {
+    "startup_reset_calls": 2,
+    "post_initialization_reset_calls": 0,
+    "one_simulation_and_controller_identity_per_run": true,
+    "parent_walk_halt_prefix_matches_retained_m2_1": true,
+    "parent_graph_failed_and_dependents_blocked_unchanged": true,
+    "parent_result_and_ledger_bytes_unchanged_after_lifecycle": true,
+    "exact_full_state_time_steps_at_assessment_and_new_task_start": true,
+    "denied_requests_zero_new_skill_and_physics_steps": true,
+    "new_mission_uses_existing_strict_and_physical_evaluators": true,
+    "new_task_final_stop_max_instantaneous_speed_mps": 0.1,
+    "new_task_final_stop_max_window_mean_speed_mps": 0.1,
+    "new_task_finite_standing_no_fall_throughout": true,
+    "normal_control_matches_retained_r1": true
+  },
+  "comparators": {
+    "historical_static_dispatch": "experiments/m2/closed_loop_mission_001/artifacts/failure_mission--static_dispatch",
+    "historical_halt_only": "experiments/m2/post_failure_halt_integration_001/artifacts/failure_opt_in",
+    "historical_normal": "experiments/m2/post_failure_halt_integration_001/artifacts/safe_opt_in"
+  },
+  "stop_rule": "Run each declared seed-0 case at most once. Retain all outcomes. An ineligible assessment or denied authorization executes zero new task nodes; no substitute or parameter tuning. A new task failure retains FAILED and may invoke only the already configured frozen M2.1 halt for a strict Walk failure, then escalates with no further mission. Stop remaining acquisition immediately on reset/continuity/source-integrity violation or acquisition exception; preserve partial evidence. No extra case, seed, retry, recovery search, training or model call.",
+  "interpretation": "A successful new task would show only bounded same-session mission restart feasibility with experimental configuration authorization. It does not repair the original route, erase its strict failure, establish Human Principal Authority, unlock Language Runtime, or prove production/hardware safety."
+}
