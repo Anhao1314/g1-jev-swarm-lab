@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "baseline_commit": "be72fadd909c3d3974f275b353a584d3c914d9f5",
-  "active_line": "embodied Phase 3A.4g reviewed baseline; Phase 3B.0a bounded decision-benchmark acquisition",
-  "experiment": "residual_yaw_component_001",
-  "decision": "ops/decisions/phase3a4g-selection.json",
+  "baseline_commit": "6903d277281c408a0f2757af5875aee6c24b4bd9",
+  "active_line": "R1 reviewed Evidence-Native Adaptive Embodied Runtime; retained M2.0 feedback and bounded M2.1 post-failure halt",
+  "experiment": "post_failure_halt_integration_001",
+  "decision": "ops/decisions/r1-selection.json",
   "anchors": {
     "ops/decisions/phase3a4g-selection.json": "d8fee0c31f4cb730a4e5b7acc11f09f8e75642511b8675bbf1364c828e430e19",
     "experiments/phase3a/residual_yaw_component_001/protocol.json": "803dc8e0d7dd66e9524047740248368f3f9072f23f1d701c19bec0e12dbd502b",
@@ -14,7 +14,17 @@
     "experiments/phase3a/residual_yaw_component_001/interpretation_review.json": "60390eb9261bc543396d8706444bf7174d09a35e592d6064f7729dc2b0b6d62d",
     "experiments/research_console/residual_authority_replay_001/manifest.json": "c255be2ebc84f550c8c06df31199852af5fa1b92713c8d6e44aa5ea29955eaec",
     "console/qa/authority-validation.json": "830d4add2bf39d213424d0ee5a5781a59eb2dd807b160c29b91a9bd53f8f8756",
-    "console/qa/authority-browser-qa.json": "7ed41b95394e1fc8b1eb645ff3495f46f15964e931608a02b721ad1999e52597"
+    "console/qa/authority-browser-qa.json": "7ed41b95394e1fc8b1eb645ff3495f46f15964e931608a02b721ad1999e52597",
+    "ops/decisions/r1-selection.json": "6ae686314a019326e0235e28ccf5658118ed79c69c5ce128379d7f6e0a47be7b",
+    "experiments/m2/closed_loop_mission_001/protocol.json": "48ea86a3f8214ad4f4e99c288666c9d4c12db47f2f046894d62bce8f85ddfb3f",
+    "experiments/m2/closed_loop_mission_001/report.md": "cd8e79a91a23c5f15eb23cbe1785db85e734e4596a8b60ada5ed51f37c931f94",
+    "experiments/m2/closed_loop_mission_001/audit.json": "3e49cca2b87d7536624a39181b36f38d76ef9c5ad38d244ff03d8f8d92c3cc14",
+    "experiments/m2/closed_loop_mission_001/source_manifest.json": "26c1dc3fc195455dff9d4adc0586ec9e0758a007fb809fb5681f0e45e5ad4fbf",
+    "experiments/m2/post_failure_halt_integration_001/protocol.json": "737e1f2451216bf54a6547727320e05d42ef664321182d41883dfc412283d3f4",
+    "experiments/m2/post_failure_halt_integration_001/report.md": "1e3e2b99fc1970fdc7a6ac6ff86b4d39b39c6dd03fe42a4d2893a2321b4baa51",
+    "experiments/m2/post_failure_halt_integration_001/audit.json": "d38180bcf0011ccdd29ce26301c3b5d38fe5998e34474c4796741a3b424ccb8e",
+    "experiments/m2/post_failure_halt_integration_001/source_manifest.json": "ff7cf143306bb23d9d9df49a1bc2a8d4a5e906d1bd12cec326997549e9719ef6",
+    "experiments/research_console/m2_post_failure_halt_001/manifest.json": "ff1305bb7901615bc6fa817c0f25a97e96e51129dff6d3b42308f63744fabfc8"
   },
   "frozen_assets": [
     "historical experiments/phase3a/**",
@@ -23,19 +33,19 @@
     "external D:/work/mujoco-lab (do not inspect or modify)"
   ],
   "allowed": [
-    "Phase 3B.0a frozen small distinct-state acquisition with complete fixed-14s four-mode outcomes and targeted audit",
-    "read-only retained Phase 1/Phase 3 evidence, deterministic Oracle scoring and explicit negative/censored-cell retention",
-    "explicit scoped Git commit and bounded push"
+    "read-only reproduction and targeted validation of retained Oracle Mission IR, M2 Runtime, Console and Research Ops",
+    "reviewed R1 integration documentation and scoped implementation fixes with affected regression checks",
+    "explicit separate authorization and frozen protocol before any future scientific acquisition"
   ],
   "forbidden": [
-    "Phase 3A.5, PPO training, reward tuning, Jev API/control, Multi-Swarm, Language Runtime integration",
-    "residual profile/window/amplitude search, undeclared state/severity scan, or physics beyond frozen Phase 3B.0a budget",
-    "changing verdicts, thresholds, historical evidence or Runtime gate"
+    "rewriting historical experiments, negative results, thresholds, labels, raw artifacts or provenance",
+    "claiming hardware-safe physical halt, generalized stopping, Jev online authority or production readiness from M2.1",
+    "Language Runtime / D011 adoption, independent Source Authority branch merge, Phase 3A.5, PPO training, reward tuning, Multi-Swarm or new physics/model experiments without a separately frozen plan"
   ],
   "tests": {
-    "ops": ".venv/Scripts/python.exe -m pytest tests/test_research_ops.py -q",
-    "console_binding": ".venv/Scripts/python.exe -m pytest console/tests/test_authority_replay.py -q",
-    "console_transport": ".venv/Scripts/python.exe -m pytest console/tests/test_server.py -q",
+    "ops": "python -m pytest tests/test_research_ops.py -q",
+    "mission_runtime": "python -m pytest tests/test_mission_runtime.py tests/test_m2_physical_halt_runtime.py -q",
+    "console_binding": "python -m pytest console/tests/test_integrity.py console/tests/test_server.py -q",
     "console_frontend": "node --test console/web/data.test.js"
   }
 }

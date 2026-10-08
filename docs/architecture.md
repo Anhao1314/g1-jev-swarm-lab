@@ -1,5 +1,11 @@
 # Architecture v0.1
 
+> Historical target architecture. This document describes research directions,
+> not the R1 implementation. The [project README](../README.md) records the
+> current Oracle Mission IR → deterministic Task Graph → G1 skill → measured
+> feedback path. Jev, Multi-Swarm, natural-language dispatch, and hardware
+> emergency stopping have not been accepted into that runtime.
+
 ## Principle
 
 Different time scales and responsibilities must remain separated.

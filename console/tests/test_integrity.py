@@ -54,20 +54,31 @@ def _lateral(position, origin, heading):
 
 
 def test_all_original_scientific_files_remain_byte_identical():
-    """Preserve the historical snapshot while allowing the scoped M2 code edit."""
+    """Preserve committed science; tolerate checkout-only CRLF/LF conversion."""
     snapshot = _json(ROOT / "console/audit/scientific_snapshot_before.json")
     assert snapshot["source_commit"] == "86d1883db84a53de57eacfab061234f2a118c94c"
     assert snapshot["tracked_file_count"] == len(snapshot["files"]) == 1348
     m2_changes = {"src/g1swarm/mission/live_session.py", "src/g1swarm/mission/runtime.py",
                   "tests/test_mission_runtime.py"}
+    changed = set(subprocess.check_output(
+        ["git", "diff", "--name-only", snapshot["source_commit"], "HEAD"], cwd=ROOT
+    ).decode().splitlines())
+    assert changed.intersection(snapshot["files"]) == m2_changes
     frozen_m2 = _json(ROOT / "experiments/m2/closed_loop_mission_001/source_manifest.json")["files"]
     for relative, expected in snapshot["files"].items():
         path = ROOT / relative
         assert path.is_file(), f"Original scientific file missing: {relative}"
         data = (subprocess.check_output(["git", "show", f"{snapshot['source_commit']}:{relative}"], cwd=ROOT)
                 if relative in m2_changes else path.read_bytes())
-        assert len(data) == expected["bytes"], relative
-        assert hashlib.sha256(data).hexdigest() == expected["sha256"], relative
+        if len(data) != expected["bytes"] or hashlib.sha256(data).hexdigest() != expected["sha256"]:
+            source = subprocess.check_output(
+                ["git", "show", f"{snapshot['source_commit']}:{relative}"], cwd=ROOT
+            )
+            variants = (source, source.replace(b"\r\n", b"\n"), source.replace(b"\n", b"\r\n"))
+            assert any(len(v) == expected["bytes"] and
+                       hashlib.sha256(v).hexdigest() == expected["sha256"] for v in variants), relative
+            if relative not in m2_changes:
+                assert data.replace(b"\r\n", b"\n") == source.replace(b"\r\n", b"\n"), relative
     historical_runtime = subprocess.check_output(
         ["git", "show", "d16e9d49c4938ffde10a652daf24a572b6414b7a:src/g1swarm/mission/runtime.py"], cwd=ROOT)
     assert hashlib.sha256(historical_runtime).hexdigest() == frozen_m2["src/g1swarm/mission/runtime.py"]

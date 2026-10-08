@@ -89,7 +89,11 @@ def test_live_retained_console_inventory_without_physics():
     result=ops.check_console()
     assert result['inventory']['source_files']==41
     assert result['scientific_exports_verified']==61
-    assert result['browser_qa']=='REUSED_BYTE_IDENTICAL_RECEIPT'
+    assert result['browser_qa']=='REQUIRES_FRESH_BROWSER_QA'
+    assert result['browser_identity_mismatches']==[
+        'console/README.md', 'console/server.py', 'console/web/app.js',
+        'console/web/data.js', 'console/web/data.test.js',
+        'console/web/index.html', 'console/web/styles.css']
     assert result['fresh_browser_run'] is False
     assert result['new_physics_steps']==0
 
