@@ -2,11 +2,11 @@
 
 This repository is a **Unitree G1 MuJoCo research testbed**. Its current single-agent path executes structured missions, evaluates measured skill outcomes, changes Task Graph flow on a strict failure, and records the decision alongside robot motion. Evidence, including unsuccessful experiments, determines which capabilities the runtime may use. The system is **not production-ready** or certified for robot safety.
 
-## Latest reviewed working-branch qualification
+## Latest accepted bounded qualification
 
 M2.2 demonstrated a bounded same-session Failure → Halt → Assess → explicitly authorized new Mission lifecycle. M2.3 added offline issuer-owned immutable Mission handoff. M2.3b now retains **`PASS_BOUNDED_REAL_MUJOCO_TRUSTED_HANDOFF`**: in one previously seen seed-0 MuJoCo state, a correct TEST_ONLY grant executes a distinct Walk4 → Turn45 → Stop mission (3/3, strict and physical PASS); five invalid controls and accepted-grant replay dispatch zero additional physics. The original task remains FAILED, the complete signed and executed plans match, and no simulator reset occurs after initialization. See the [qualification report](experiments/m2/trusted_handoff_qualification_001/report.md) and [final release gate](experiments/m2/trusted_handoff_qualification_001/release_gate/review.md).
 
-This is a **reviewed working-branch result**, not accepted-main publication: Research Ops remains `working_branch_only` / `PR_PENDING_NOT_ACCEPTED_MAIN`. Marking PR #7 Ready for Review does not change that status. A future merge requires an explicit reviewed accepted-main publication decision; no automatic pointer promotion is authorized.
+PR #7 was merged by **merge commit `884edde`** and passed independent main acceptance. A new [publication decision](ops/decisions/m23b-main-publication.json) selects this accepted-main baseline; the old `working_branch_only` / `PR_PENDING_NOT_ACCEPTED_MAIN` decision remains immutable historical evidence. [M2.4 cross-state design](experiments/m2/cross_state_reliability_design_001/design.md) is a separate pending proposal, with no new physics or reliability result and no acquisition authorization.
 
 The grant is validated only through a trusted, serial, in-process TEST_ONLY entry with simulated principal and explicit host permission. It does not establish production Human Principal Authority, concurrent atomic consume-and-dispatch, durable replay protection, continuous cancellation or hardware safety. Exact agreement with retained M2.2 traces proves bounded adapter non-interference, not independent physical generalization. The parent halt has a narrow mean-speed margin below 0.10 m/s. Jev and Language Runtime/D011 remain BLOCKED.
 
