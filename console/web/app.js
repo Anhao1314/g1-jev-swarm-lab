@@ -1,4 +1,4 @@
-import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, visibleNodeOutcome, statusKind, trajectoryBounds, plotTransform, nearestSample, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
+import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, runtimeDecisionForEvent, visibleNodeOutcome, statusKind, trajectoryBounds, plotTransform, nearestSample, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
 import {armColors, renderAuthority, renderMechanismCharts} from "./mechanism.js";
 
 const $ = id => document.getElementById(id);
@@ -470,7 +470,7 @@ async function openInspector(run, event = null) {
       if (event.metric) selected.append(element("div", "mono", `${event.metric}: ${finite(event.value) ? event.value.toFixed(6) : (event.value ?? "See source")}`));
       selected.append(element("div", "small", event.source_comparison ? "Source-bound paired arithmetic from the original window trace/audit or formal endpoints; not the nearest video frame." : event.derived ? "Derived instantaneous reading. Frozen source node outcomes remain the scoring authority." : "Source-bound evidence marker. Follow the raw locator to inspect the frozen metric."));
       content.push(selected);
-      const decision = run.runtime_kind === "closed_loop_mission" ? run.runtime_decisions?.find(item => item.node_index === event.node_index && Math.abs(item.time_s - event.time_s) < 1e-8) : null;
+      const decision = runtimeDecisionForEvent(run, event);
       if (decision) {
         const detail = element("details", "inspector-section");
         detail.append(element("summary", "small", "Full recorded decision and evaluation"), element("pre", "json-summary", JSON.stringify(decision, null, 2)));

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, visibleNodeOutcome, trajectoryBounds, plotTransform, nearestSample, statusKind, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
+import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, runtimeDecisionForEvent, visibleNodeOutcome, trajectoryBounds, plotTransform, nearestSample, statusKind, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
 
 test("shows an actual retained sample instead of interpolating an observation", () => {
   const samples = [
@@ -98,6 +98,19 @@ test("closed-loop decisions and outcomes appear only after their recorded times"
   assert.equal(visibleNodeOutcome(run, node, 1.99), false);
   assert.equal(visibleNodeOutcome(run, node, 2), true);
   assert.equal(visibleNodeOutcome({}, node, 0), true);
+});
+
+test("Inspector distinguishes same-time handoff refusals by exact source identity", () => {
+  const decisions = [
+    {node_index: null, time_s: 14, source_locator: "lifecycle_events.json#/5", decision: "trusted_handoff_rejected", evaluation: {reason: "PLAN_CHANGED"}},
+    {node_index: null, time_s: 14, source_locator: "lifecycle_events.json#/6", decision: "trusted_handoff_rejected", evaluation: {reason: "PRINCIPAL_INVALID"}},
+    {node_index: null, time_s: 14, source_locator: "qualification.json", decision: "QUALIFICATION_RECORDED", evaluation: {physics_steps_delta: 0}},
+  ];
+  const run = {runtime_kind: "closed_loop_mission", runtime_decisions: decisions};
+  assert.equal(runtimeDecisionForEvent(run, {...decisions[1]}), decisions[1]);
+  assert.equal(runtimeDecisionForEvent(run, {...decisions[2]}), decisions[2]);
+  assert.equal(runtimeDecisionForEvent(run, {node_index: null, time_s: 14, source_locator: "unknown.json"}), null);
+  assert.equal(runtimeDecisionForEvent(run, {node_index: null, time_s: 14}), decisions[0]);
 });
 
 test("physical halt status and request remain distinct from task block", () => {

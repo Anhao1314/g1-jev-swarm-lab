@@ -183,6 +183,8 @@ class ConsoleData:
             ("continuity", "Same-session and original evidence continuity"),
             ("new_result", "Separate new mission result"),
             ("new_ledger", "Separate new mission runtime ledger"),
+            ("handoff", "TEST_ONLY immutable Mission handoff evidence"),
+            ("qualification", "Trusted same-session handoff qualification checks"),
         ):
             relative = self._source_path(provenance, name)
             if relative is None:
