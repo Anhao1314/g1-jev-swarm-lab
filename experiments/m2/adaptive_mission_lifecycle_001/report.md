@@ -129,3 +129,35 @@ Jev remains ineligible for online use and Language Runtime / D011 remains
 BLOCKED. No Jev call, language dispatch, PPO training, reward change,
 recovery search or Multi-Swarm was introduced. Further acquisition is not
 required for this bounded implementation verdict.
+
+## Final implementation verification and Console
+
+The combined no-physics Runtime/lifecycle/Console/Research Ops target recorded
+126 passing tests and one failure: the legacy retained-closeout adapter
+correctly refused the stale R1 selection after new Console evidence was added.
+An explicit M2.2 selection was then reviewed against this independent audit,
+preserving all 20 old anchors and adding eight named evidence anchors. Its
+context is `CURRENT` with 28/28 anchors; the affected Research Ops target then
+passed all 22 tests. Two existing live-session physics tests were explicitly
+excluded from the formal verification command. The initial failed metadata
+check is retained, not rewritten as an initial all-pass result.
+
+Console frontend checks passed 12 tests. The new replay namespace is
+`experiments/research_console/m2_adaptive_lifecycle_001`; its three videos
+restore original captured states with `mj_forward` and no physics stepping.
+Fresh browser QA observed the original FAILED/new SUCCESS separately at the
+exact final time, eligible-but-unauthorized refusal with no new execution,
+and the unchanged normal control. Inspector seed 0, official policy hash,
+source commit and separate parent/new raw evidence links were verified.
+The timeline range now retains the exact final time rather than rounding it
+down and hiding the completion event. See that namespace's `browser_qa.json`,
+`http_qa.json`, `tests_receipt.json` and render manifests.
+
+[Validation receipt](validation.json) records the commands, initial failure,
+targeted resolution, and measured Research Ops intervals. These command
+intervals do not measure complete reasoning/implementation effort or token
+usage. The read-only Console can be started with:
+
+```powershell
+python console/server.py --data experiments/research_console/m2_adaptive_lifecycle_001 --port 8773
+```
