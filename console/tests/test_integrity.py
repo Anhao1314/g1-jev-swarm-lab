@@ -84,7 +84,12 @@ def test_all_original_scientific_files_remain_byte_identical():
     assert hashlib.sha256(historical_runtime).hexdigest() == frozen_m2["src/g1swarm/mission/runtime.py"]
     integration = _json(ROOT / "experiments/m2/post_failure_halt_integration_001/source_manifest.json")["files"]
     for relative in ("src/g1swarm/mission/runtime.py", "src/g1swarm/mission/live_session.py"):
-        assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == integration[relative]
+        frozen_source = subprocess.check_output(
+            ["git", "show", f"4ace485cacae7de1dbfa866a94960b37abb81ef0:{relative}"], cwd=ROOT)
+        assert hashlib.sha256(frozen_source).hexdigest() == integration[relative]
+    lifecycle = _json(ROOT / "experiments/m2/adaptive_mission_lifecycle_001/source_manifest.json")["files"]
+    for relative in ("src/g1swarm/mission/runtime.py", "src/g1swarm/mission/live_session.py"):
+        assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == lifecycle[relative]
 
 
 @pytest.mark.parametrize("arm", ARMS)
