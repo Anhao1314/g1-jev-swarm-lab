@@ -9,6 +9,7 @@ const skillLabel = value => skillLabels[value] ?? value ?? "Unavailable";
 const metricDefinitions = [
   {key: "skill", label: "Current skill", format: skillLabel},
   {key: "time_s", label: "Simulation time", format: value => formatNumber(value, 2, " s")},
+  {key: "speed_mps", label: "Planar speed", format: value => formatNumber(value, 3, " m/s"), description: "Recorded base planar speed; physical halt result is scored from the source trace, not video frames."},
   {key: "actual_heading_deg", label: "Actual heading", format: value => formatNumber(value, 2, "°"), description: "Robot yaw in the world frame."},
   {key: "commanded_heading_deg", label: "Commanded heading", format: value => formatNumber(value, 2, "°"), description: "Frozen ideal mission heading."},
   {key: "reference_heading_deg", label: "Correction reference", format: value => formatNumber(value, 2, "°"), description: "Walking correction heading. Unavailable outside a Walk node."},
@@ -219,7 +220,10 @@ function drawPlayhead() {
     if (!status) continue;
     const completed = (recordedSample(run)?.time_s ?? state.time) >= run.duration_s - 1e-8;
     status.replaceChildren(element("span", "case-outcomes-label", "Case"));
-    if (completed) status.append(statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
+    if (completed) {
+      status.append(statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
+      if (run.summary?.halt_status) status.append(statusPill("Halt", run.summary.halt_status));
+    }
     else status.append(element("span", "small muted", "Outcome at completion"));
   }
   if (focusedSample) $("clock").textContent = formatTime(displayTime(focusedSample.time_s));
@@ -248,6 +252,7 @@ function drawMetrics() {
     rows.push(heading);
   }
   for (const metric of metricDefinitions) {
+    if (metric.key === "speed_mps" && !currentRun().samples.some(sample => finite(sample.speed_mps))) continue;
     if (!currentRun().authority && ["reference_lateral_m", "global_endpoint_error_m", "residual_action"].includes(metric.key)) continue;
     const row = element("div", "metric-row");
     const name = element("span", "metric-name", metric.label);

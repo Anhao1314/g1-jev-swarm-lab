@@ -176,6 +176,7 @@ class ConsoleData:
             ("decisions", "Original residual decisions"),
             ("independent_audit", "Independent source arithmetic audit"),
             ("runtime_ledger", "Original runtime decision ledger"),
+            ("halt", "Independent physical halt result"),
         ):
             relative = self._source_path(provenance, name)
             if relative is None:

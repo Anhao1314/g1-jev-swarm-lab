@@ -98,3 +98,17 @@ test("closed-loop decisions and outcomes appear only after their recorded times"
   assert.equal(visibleNodeOutcome(run, node, 2), true);
   assert.equal(visibleNodeOutcome({}, node, 0), true);
 });
+
+test("physical halt status and request remain distinct from task block", () => {
+  const run = {runtime_kind: "closed_loop_mission", runtime_decisions: [
+    {time_s: 12, decision: "STOP_DEPENDENTS"},
+    {time_s: 12, decision: "PHYSICAL_HALT_REQUESTED"},
+    {time_s: 13.4, decision: "HALT_SUCCEEDED"}]};
+  assert.deepEqual(runtimeDecisionsAt(run, 11.9), []);
+  assert.deepEqual(runtimeDecisionsAt(run, 12).map(item => item.decision),
+    ["STOP_DEPENDENTS", "PHYSICAL_HALT_REQUESTED"]);
+  assert.deepEqual(runtimeDecisionsAt(run, 13.4).map(item => item.decision),
+    ["STOP_DEPENDENTS", "PHYSICAL_HALT_REQUESTED", "HALT_SUCCEEDED"]);
+  assert.equal(statusKind("HALT_SUCCEEDED"), "pass");
+  assert.equal(statusKind("HALT_FAILED"), "fail");
+});

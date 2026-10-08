@@ -47,8 +47,8 @@ export function visibleNodeOutcome(run, node, time) {
 }
 export function statusKind(value) {
   const name = String(value ?? "").toUpperCase();
-  if (["PASS", "SUCCESS", "TRUE", "SUCCEEDED"].includes(name)) return "pass";
-  if (["FAIL", "FAILED", "FALSE", "FAILURE", "EXCESSIVE_DRIFT"].includes(name)) return "fail";
+  if (["PASS", "SUCCESS", "TRUE", "SUCCEEDED", "HALT_SUCCEEDED"].includes(name)) return "pass";
+  if (["FAIL", "FAILED", "FALSE", "FAILURE", "EXCESSIVE_DRIFT", "HALT_FAILED"].includes(name)) return "fail";
   return "unknown";
 }
 export function trajectoryBounds(runs) {
