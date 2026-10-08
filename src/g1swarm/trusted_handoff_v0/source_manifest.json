@@ -1,0 +1,112 @@
+{
+  "source_commit": "a2325d393c3ffc46eaf7252122b61179ea0e35cb",
+  "source_branch": "phase2.4/source-authority",
+  "source_verdict": "PASS_OFFLINE_HANDOFF_WITH_INHERITED_FAILURES",
+  "integration_scope": "selective TEST_ONLY principal and canonical handoff only; no whole branch merge",
+  "sources": [
+    {
+      "path": "src/g1swarm/human_principal_001/contract.py",
+      "git_blob": "36b82c92020dfa21a128f4b80b615afe5f217615",
+      "git_blob_bytes_sha256": "99512c267fb09a51f8996f70a83dfaf51fbf7d11b2aa46f0bd9b8b0e67ee0e63",
+      "working_bytes_sha256": "99512c267fb09a51f8996f70a83dfaf51fbf7d11b2aa46f0bd9b8b0e67ee0e63"
+    },
+    {
+      "path": "src/g1swarm/execution_handoff_001/contract.py",
+      "git_blob": "0d86defcb319bab655cb08e7551bc804a3d5c57c",
+      "git_blob_bytes_sha256": "5ee94da2c2871acdb0dfa25bb0e7781ed1b9fa65046579857424e508a751d62f",
+      "working_bytes_sha256": "6ace1988cd7bf6b556c912e2747dfa9e1ea722e4bfcdf238def647735fe6b14b"
+    },
+    {
+      "path": "src/g1swarm/authority_release_001/gate.py",
+      "git_blob": "299b8757a0e30ce99055b11137d614db7c88f6cf",
+      "git_blob_bytes_sha256": "017dbf769c3115d54232699e58c34e928255edc3eba18c0cc414ef983bdc6ccb",
+      "working_bytes_sha256": "017dbf769c3115d54232699e58c34e928255edc3eba18c0cc414ef983bdc6ccb"
+    },
+    {
+      "path": "src/g1swarm/authority_mechanism_001/contract.py",
+      "git_blob": "c0f25a5c4830d8a8d575ab391e280d22d4ecbade",
+      "git_blob_bytes_sha256": "334a9b582e21acc170817584eeac3bb9f95c5517accf8f54a355e15d983a5699",
+      "working_bytes_sha256": "334a9b582e21acc170817584eeac3bb9f95c5517accf8f54a355e15d983a5699"
+    },
+    {
+      "path": "reports/execution_handoff_001/CONTRACT.md",
+      "git_blob": "4187b53189a498ff7166a1b445d5b29fd74773d5",
+      "git_blob_bytes_sha256": "a99e13531c080c851385eaadccbd0d00595f8940e23b8c34f0992f841e0a1faa",
+      "working_bytes_sha256": "a99e13531c080c851385eaadccbd0d00595f8940e23b8c34f0992f841e0a1faa"
+    },
+    {
+      "path": "reports/execution_handoff_001/verification.json",
+      "git_blob": "bc045b72d8c20a4c579ae44b0979c6607a6c748a",
+      "git_blob_bytes_sha256": "df702b6a35b8d8fbc1c3719409f32923fe36d5227c9b4185e8a0b1bee38cde84",
+      "working_bytes_sha256": "df702b6a35b8d8fbc1c3719409f32923fe36d5227c9b4185e8a0b1bee38cde84"
+    },
+    {
+      "path": "tests/execution_handoff_001/test_handoff.py",
+      "git_blob": "8b66ffa031352d8d27f9c7675dcbec9ad9de09d3",
+      "git_blob_bytes_sha256": "7a65f60e6753fb2d3e224667897fd84d7a92f8e517a8c831216876defe2f9c58",
+      "working_bytes_sha256": "6b22b38ca15912552321861a7f892d4733f30dec80e39c3ad860abb44139a1bf"
+    }
+  ],
+  "adaptations": [
+    {
+      "target": "principal.py",
+      "source": "src/g1swarm/human_principal_001/contract.py",
+      "changes": [
+        "import Decision/Origin/SCOPES/source_digest/is_current_request from narrow .support",
+        "semantics_digest source list binds integrated compatibility modules, M2.2 lifecycle/live session, handoff adapter and structural guard",
+        "doc-only clarification: issuer never dispatches; consumer separately enforces lifecycle/permission gates"
+      ]
+    },
+    {
+      "target": "handoff.py",
+      "source": "src/g1swarm/execution_handoff_001/contract.py",
+      "changes": [
+        "import TestPrincipalAuthority/ASSURANCE/full_plan_json from .principal",
+        "import claim_request from narrow .support",
+        "doc-only clarification: issuer never executes; integrated consumer separately enforces gates"
+      ]
+    },
+    {
+      "target": "support.py",
+      "source": [
+        "src/g1swarm/authority_release_001/gate.py",
+        "src/g1swarm/authority_mechanism_001/contract.py"
+      ],
+      "changes": [
+        "extract exact request context, registry and begin/current/claim primitives",
+        "extract Decision/Origin/SCOPES/source_digest only",
+        "remove unrelated certificate/bounded/release/provider dependencies; no new authorizer"
+      ]
+    },
+    {
+      "target": "__init__.py",
+      "source": null,
+      "changes": [
+        "explicit integrated TEST_ONLY public exports"
+      ]
+    },
+    {
+      "target": "tests/test_m23_handoff_v0.py",
+      "source": "tests/execution_handoff_001/test_handoff.py",
+      "changes": [
+        "imports use trusted_handoff_v0 compatibility namespace",
+        "replace unrelated CompilerResult/public-gate fixture import with identical local principal/source/mission fixture",
+        "semantics monkeypatch targets integrated principal module"
+      ]
+    }
+  ],
+  "limitations": [
+    "simulated principal names do not authenticate real humans",
+    "fixture principal confirmation grants no independent runtime execution permissions",
+    "process-local identity registration and handoff consumption do not guarantee atomic physical dispatch or durable replay prevention",
+    "new adapter must independently bind live physical lifecycle state and TEST_ONLY runtime permission",
+    "Language Runtime and D011 remain BLOCKED"
+  ],
+  "initial_adapted_files": {
+    "principal.py": "36c0337189c35ee60e5aed8c9fd1c515ffbe9ba77ee4ec7a6001cb2b5032e692",
+    "handoff.py": "4a17e13614f062ff4a9b4279e824a4048ede037a8d41840db1b4d279b2eedd47",
+    "support.py": "ead81f09b2ae471808921ea3923f1cf033ab392d089c0f214d293d2c0d812df6",
+    "__init__.py": "6ab9de3313e442ee1f616487a3fef9c0428e6a4ef98f2d6ad2433bcacf812024",
+    "tests/test_m23_handoff_v0.py": "45b6b84508d3fa2eddef156c13539ef0f59cf3f417c3b1ccdc649ba3538cc9d6"
+  }
+}
