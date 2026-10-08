@@ -1,0 +1,375 @@
+{
+  "experiment_id": "cross_state_reliability_design_001",
+  "phase": "M2.4",
+  "status": "DESIGN_FROZEN_NO_ACQUISITION_AUTHORIZATION",
+  "physics_authorized": false,
+  "accepted_main_commit": "884edde1dd19931a8cc3d33c0640a42874f2e6bf",
+  "seed": 0,
+  "states": [
+    {
+      "id": "seen_reference_walk6",
+      "role": "seen_compatibility_anchor",
+      "parent_mission": {
+        "schema_version": "2.0.0",
+        "mission_id": "m2-open-loop-walk6-turn45-stop",
+        "steps": [
+          {
+            "id": "s1",
+            "skill": "walk_forward",
+            "parameters": {
+              "distance_m": 6.0
+            },
+            "execution_mode_override": "open_loop"
+          },
+          {
+            "id": "s2",
+            "skill": "turn",
+            "parameters": {
+              "angle_deg": 45.0
+            },
+            "depends_on": [
+              "s1"
+            ]
+          },
+          {
+            "id": "s3",
+            "skill": "stop",
+            "parameters": {},
+            "depends_on": [
+              "s2"
+            ]
+          }
+        ]
+      },
+      "push": null,
+      "max_steps_per_arm": 40000
+    },
+    {
+      "id": "transition_turn45_walk6",
+      "role": "new_reachable_history_condition",
+      "parent_mission": {
+        "schema_version": "2.0.0",
+        "mission_id": "m24-parent-turn45-walk6",
+        "steps": [
+          {
+            "id": "s0",
+            "skill": "turn",
+            "parameters": {
+              "angle_deg": 45.0
+            }
+          },
+          {
+            "id": "s1",
+            "skill": "walk_forward",
+            "parameters": {
+              "distance_m": 6.0
+            },
+            "execution_mode_override": "open_loop",
+            "depends_on": [
+              "s0"
+            ]
+          },
+          {
+            "id": "s2",
+            "skill": "turn",
+            "parameters": {
+              "angle_deg": 45.0
+            },
+            "depends_on": [
+              "s1"
+            ]
+          },
+          {
+            "id": "s3",
+            "skill": "stop",
+            "parameters": {},
+            "depends_on": [
+              "s2"
+            ]
+          }
+        ]
+      },
+      "push": null,
+      "max_steps_per_arm": 45000
+    },
+    {
+      "id": "push60_walk6",
+      "role": "new_reachable_disturbed_condition",
+      "parent_mission": {
+        "schema_version": "2.0.0",
+        "mission_id": "m24-parent-push60-walk6",
+        "steps": [
+          {
+            "id": "s1",
+            "skill": "walk_forward",
+            "parameters": {
+              "distance_m": 6.0
+            },
+            "execution_mode_override": "open_loop"
+          },
+          {
+            "id": "s2",
+            "skill": "turn",
+            "parameters": {
+              "angle_deg": 45.0
+            },
+            "depends_on": [
+              "s1"
+            ]
+          },
+          {
+            "id": "s3",
+            "skill": "stop",
+            "parameters": {},
+            "depends_on": [
+              "s2"
+            ]
+          }
+        ]
+      },
+      "push": {
+        "force_n": 60.0,
+        "direction_world": [
+          0,
+          1,
+          0
+        ],
+        "relative_first_walk_trigger_s": 1.0,
+        "duration_s": 0.2,
+        "zero_force_before_halt_required": true,
+        "random_trigger": false
+      },
+      "max_steps_per_arm": 40000
+    }
+  ],
+  "run_order": [
+    {
+      "state_id": "seen_reference_walk6",
+      "arm": "authorized_new_mission",
+      "max_steps": 40000,
+      "max_wall_s": 120
+    },
+    {
+      "state_id": "seen_reference_walk6",
+      "arm": "authorization_refusals",
+      "max_steps": 40000,
+      "max_wall_s": 120
+    },
+    {
+      "state_id": "transition_turn45_walk6",
+      "arm": "authorized_new_mission",
+      "max_steps": 45000,
+      "max_wall_s": 120
+    },
+    {
+      "state_id": "transition_turn45_walk6",
+      "arm": "authorization_refusals",
+      "max_steps": 45000,
+      "max_wall_s": 120
+    },
+    {
+      "state_id": "push60_walk6",
+      "arm": "authorized_new_mission",
+      "max_steps": 40000,
+      "max_wall_s": 120
+    },
+    {
+      "state_id": "push60_walk6",
+      "arm": "authorization_refusals",
+      "max_steps": 40000,
+      "max_wall_s": 120
+    },
+    {
+      "state_id": "normal_control",
+      "arm": "unchanged_safe_mission",
+      "max_steps": 20000,
+      "max_wall_s": 120
+    }
+  ],
+  "normal_control": {
+    "schema_version": "2.0.0",
+    "mission_id": "m2-safe-walk4-turn45-stop",
+    "steps": [
+      {
+        "id": "s1",
+        "skill": "walk_forward",
+        "parameters": {
+          "distance_m": 4.0
+        }
+      },
+      {
+        "id": "s2",
+        "skill": "turn",
+        "parameters": {
+          "angle_deg": 45.0
+        },
+        "depends_on": [
+          "s1"
+        ]
+      },
+      {
+        "id": "s3",
+        "skill": "stop",
+        "parameters": {},
+        "depends_on": [
+          "s2"
+        ]
+      }
+    ]
+  },
+  "new_mission": {
+    "schema_version": "2.0.0",
+    "mission_id": "m22-new-walk4-turn45-stop",
+    "steps": [
+      {
+        "id": "n1",
+        "skill": "walk_forward",
+        "parameters": {
+          "distance_m": 4.0
+        }
+      },
+      {
+        "id": "n2",
+        "skill": "turn",
+        "parameters": {
+          "angle_deg": 45.0
+        },
+        "depends_on": [
+          "n1"
+        ]
+      },
+      {
+        "id": "n3",
+        "skill": "stop",
+        "parameters": {},
+        "depends_on": [
+          "n2"
+        ]
+      }
+    ]
+  },
+  "source_text": "向前走4米，左转45度，然后停止。",
+  "expected_complete_plan_sha256": "c3d15a25c9d9877da0139eadd0994f6e475302215ffd61e64fb3de460c3dc79b",
+  "construction": "Fresh unchanged LiveMissionSession initialization per arm; no state teleport, origin transform or post-init reset. Transition uses existing Turn45 incl0.5s settle; force uses existing DisturbanceProxy from Walkstart+1.0 to+1.2. No change to physics timestep/default friction/model or controller. Complete paired parent/halt raw trace equality required; seen anchor also matches M2.3b. Actual body/joint/controller state difference must be demonstrated. Duplicate states not replaced/count as new independent conditions. Seed0 is bookkeeping, not random independence.",
+  "contracts": {
+    "runtime_protocol": "configs/experiments/oracle_mission_runtime_001.yaml",
+    "halt_contract": "experiments/m2/post_failure_halt_001/protocol.json",
+    "halt_acceptance": {
+      "stop_skill_status": "SUCCESS",
+      "max_duration_s": 4.0,
+      "max_final_instantaneous_speed_mps": 0.1,
+      "max_final_window_mean_speed_mps": 0.1,
+      "max_post_block_planar_displacement_m": 0.5,
+      "finite_all_steps": true,
+      "standing_all_steps": true,
+      "no_fall_all_steps": true,
+      "standing_basis": "Existing RobotState standing/fallen computation: base height >=0.55m and tilt <=30deg; no new evaluator or controller threshold."
+    },
+    "state_assessment": {
+      "parent_must_remain_failed": true,
+      "parent_halt_status": "HALT_SUCCEEDED",
+      "all_frozen_halt_checks": true,
+      "max_instantaneous_speed_mps": 0.1,
+      "max_halt_last_1s_mean_speed_mps": 0.1,
+      "require_finite_standing_no_fall": true,
+      "require_exact_current_state_equals_halt_endpoint": true,
+      "require_valid_grounded_new_oracle_mission_without_override": true,
+      "require_distinct_mission_and_node_ids": true,
+      "scope": "Eligibility for this exact new local task at this observed simulation instant; no dwell, generic safe/recovered, or hardware stopping claim."
+    },
+    "strict_evaluator": "g1swarm.boundary.envelope.STRICT_WALK_ENVELOPE",
+    "new_final_stop_speed_mps": 0.1,
+    "new_final_stop_mean_window_s": 1.0,
+    "new_final_stop_mean_speed_mps": 0.1,
+    "parent_open_loop": "Explicit HIGH-risk TEST_ONLY override, no expansion of grounder capabilities",
+    "authority": "Registered simulated TEST_ONLY principal and exact full-plan host permission, trusted serial only"
+  },
+  "budget": {
+    "maximum_runs": 7,
+    "maximum_physics_steps_total": 270000,
+    "maximum_sim_time_s_total_at_dt_0_002": 540,
+    "maximum_wall_s_per_arm": 120,
+    "maximum_wall_s_total": 840,
+    "maximum_attempts_per_arm": 1,
+    "result_driven_retry_or_replacement": false
+  },
+  "negative_requests_if_eligible_order": [
+    "missing_grant",
+    "registered_grant_plan_walk4_to6_mismatch",
+    "replay_burned_mismatch_grant",
+    "registered_display_only_principal_missing_permission",
+    "correct_grant_stale_live_state",
+    "replay_burned_stale_grant"
+  ],
+  "positive_if_eligible": [
+    "correct_registered_complete_plan_grant",
+    "accepted_grant_replay_after_completion"
+  ],
+  "stale_state_control": "Last in refusal arm: issue while eligible, one G1Simulation.step with unchanged current ctrl/no policy evaluation, refresh current_state/increment all counters. Dispatch old grant then replay. Deliberate one physics step recorded separately; each refusal adds zero executor/node/physics/reset. No further new task or halt.",
+  "ineligible_controls": "No prepare or issuance; ESCALATE / NOT_ISSUED with actual reasons, uncovered control denominator. Never count this as successful authorization rejection.",
+  "integrity": {
+    "startup_reset_calls_per_arm": 2,
+    "post_startup_resets": 0,
+    "reset_keyframe_calls": 0,
+    "external_session_factory_calls": 0,
+    "full_issuer_dispatch_persisted_plan_equal": true,
+    "hash_domains_remain_separate": true,
+    "parent_result_graph_ledger_bytes_immutable": true,
+    "old_nodes_not_redispatched": true,
+    "paired_predecision_trace_exact": true,
+    "no_physics_by_current_design": true
+  },
+  "primary_endpoints": [
+    "strict parent outcome and halt trigger presence",
+    "halt request/status/every unchanged acceptance check",
+    "real-time assessment eligible/reasons",
+    "auth refusal zero incremental dispatch",
+    "new mission strictWalk/all_nodes/physical/finalStop"
+  ],
+  "descriptive_metrics": [
+    "pre/post/full speed trace and1s mean",
+    "duration/extra displacement/path",
+    "height/tilt/finite/standing/fall",
+    "all threshold margins",
+    "body/joint/controller state difference",
+    "local route errors/correction saturation/oscillation",
+    "latency/reset/actualplan/provenance/technical censoring"
+  ],
+  "outcome_contract": {
+    "no_trigger": "NO_HALT_TRIGGER; retain parent PASS or skill/physical failure; no forced Stop",
+    "halt_failure": "HALT_FAILED; ESCALATE, no new Mission",
+    "missing_evidence": "ESCALATE with unavailable fields, not halt or authorization success",
+    "task_failure_after_valid_dispatch": "Reliability negative; not auth failure; original staysFAILED",
+    "all_stages_success": "Only bounded two-new-condition support, no generalized reliability/statistical rate",
+    "missing_coverage": "INCONCLUSIVE/PARTIAL if duplicate state/no trigger/censoring",
+    "auth_leak_or_plan_mismatch": "Integration failure and immediate campaign abort"
+  },
+  "stop_rules": [
+    "Current task stops after design/independent review/Git: zero physics",
+    "Future integrity/reset/source/observer/plan/provenance failure aborts entire campaign, saving partial",
+    "Future ordinary science failures retain remaining predeclared arms; no repair/scan/retry",
+    "Unsafe/ineligible arm closes without dispatch; simulator close is not physical safety",
+    "Hard budget/stall saves PARTIAL_STOPPED without duplicate launch",
+    "Complete matrix ends campaign regardless outcome"
+  ],
+  "required_before_future_acquisition": [
+    "Explicit owner approval of question/membership/budget",
+    "Future experiment-only adapter (not old acquire.py unchanged) with conditional missing-trigger/haltfailure/control coverage",
+    "Committed runner/source/official policy-model-asset hash manifest and watchdog before first step",
+    "Independent no-physics preflight and observer/command/reset contract review",
+    "Fresh reference equality validates observer noninterference; preserve every negative cell"
+  ],
+  "prohibited": [
+    "Jev",
+    "PPO",
+    "Multi-Swarm",
+    "Language Runtime/D011",
+    "production authority",
+    "new recovery/controller",
+    "threshold or historical evidence mutation"
+  ],
+  "normative_design": "design.md",
+  "normal_control_contract": "Existing success mission executes normally with strict feedback/opt-in halt configuration. No lifecycle/grant/new Mission requested. Expected3/3 and no halt; report regression honestly, no recovery. Normal SUCCESS is not ESCALATE.",
+  "post_new_task_failure": "Existing opt-in Runtime may request its original independent Stop on a new task strict Walk failure. Record child failure/halt separately; never promote new task toSUCCESS or overwrite parent. This is inherited behavior, not an added recovery. No extra/manual halt outside existing Runtime.",
+  "implementation_review_timing": "Fixed push scheduled using native first-Walk entry simulation_time, exact>=start+1.0 and<start+1.2; must record start/end and xfrc_applied zero. Preserve seed/thread/runtime package versions from accepted acquisition; no RNG sampling. No state injection."
+}
