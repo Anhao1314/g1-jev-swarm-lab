@@ -1,5 +1,6 @@
 """Independent saved-byte M2.4 audit. No simulator, policy, provider or runner imports."""
 import gzip
+import argparse
 import hashlib
 import json
 import math
@@ -83,12 +84,17 @@ def maxdiff(a,b):
     if a is None or b is None: return 0. if a==b else None
     return abs(a-b)
 
-def run(*, verify=False):
+def run(*, verify=False, raw_root=None):
+    if raw_root is not None and not verify:
+        raise ValueError('--raw-root requires read-only verification')
+    global RAW
+    restored_root = Path(raw_root).resolve() if raw_root is not None else ROOT
+    RAW = restored_root / 'experiments/m2/cross_state_reliability_001/artifacts'
     started=time.perf_counter(); checks=[]; stages=[]; endpoints={}; native_total=0; negatives=[]; gaps=[]
     def check(name,passed,cell=None,details=None):
         checks.append({'check':name,'passed':bool(passed),'cell':cell,'details':details})
     spec=read(ROOT/'experiments/m2/cross_state_reliability_001/protocol.json'); seal=read(HERE/'raw_evidence_manifest.json')
-    check('sealed_raw_exact_bytes',all((ROOT/p).stat().st_size==r['bytes'] and sha(ROOT/p)==r['sha256'] for p,r in seal['files'].items()))
+    check('sealed_raw_exact_bytes',all((restored_root/p).stat().st_size==r['bytes'] and sha(restored_root/p)==r['sha256'] for p,r in seal['files'].items()))
     check('approved_readiness_exact',sha(ROOT/'experiments/m2/cross_state_reliability_readiness_001/readiness_manifest.json')==seal['readiness_sha256']=='14219b6edc85d8346a97d5e50895d924c1157c6abffab37bd926dbfe4b138f08')
     receipt=read(RAW/'campaign_receipt.json'); check('seven_once_only_frozen_membership',receipt['completed_cells']==spec['run_order'] and len(list(RAW.glob('*--*')))==7)
     plan=canonical(spec['new_mission']); plan_sha=hashlib.sha256(encoded(plan)).hexdigest(); check('canonical_full_plan_hash',plan_sha==spec['expected_complete_plan_sha256'])
@@ -197,6 +203,10 @@ def run(*, verify=False):
     print(json.dumps({'verdict':verdict,'integrity':result['integrity_verdict'],'failed_checks':[c for c in checks if not c['passed']],'missing_coverage':gaps,'native_steps':native_total}))
 
 if __name__=='__main__':
-    if sys.argv[1:] not in ([], ['--verify']):
-        raise SystemExit('Usage: audit.py [--verify]')
-    run(verify=sys.argv[1:]==['--verify'])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--verify', action='store_true')
+    parser.add_argument('--raw-root', type=Path, help='Restore destination root containing experiments/...; repository comparators remain pinned here')
+    args = parser.parse_args()
+    if args.raw_root is not None and not args.verify:
+        parser.error('--raw-root requires --verify (read-only)')
+    run(verify=args.verify, raw_root=args.raw_root)
