@@ -48,7 +48,8 @@ def semantics_digest():
     names = ["src/g1swarm/mission/ir.py", "src/g1swarm/mission/validator.py",
              "src/g1swarm/mission/task_graph.py", "src/g1swarm/mission/grounding.py",
              "src/g1swarm/mission/runtime.py", "src/g1swarm/skills/basic.py",
-             "src/g1swarm/simplex/canonical.py", "src/g1swarm/human_principal_001/contract.py"]
+             "src/g1swarm/simplex/canonical.py", "src/g1swarm/human_principal_001/contract.py",
+             "src/g1swarm/execution_handoff_001/contract.py"]
     return _digest(_json({name: hashlib.sha256((repo_root()/name).read_bytes()).hexdigest() for name in names}))
 
 
@@ -269,3 +270,27 @@ class TestPrincipalAuthority:
     def audit_events(self):
         with self._lock:
             return [dict(e) for e in self._events]
+
+    def revalidate_handoff_identity(self, confirmation, *, source, plan_json, context):
+        """Read-only identity check after consent consumption; no execution grant."""
+        with self._lock:
+            try:
+                now = self._now()
+                if (type(confirmation) is not Confirmation
+                        or self._responses.get(confirmation.response_id) is not confirmation
+                        or self._response_bodies.get(confirmation.response_id) != _json(asdict(confirmation))
+                        or confirmation.action != "CONFIRM"):
+                    return False
+                offer = self._presentations[confirmation.presentation_id]
+                session = self._sessions[confirmation.session_id]
+                return (self._presentation_bodies[offer.presentation_id] == _json(asdict(offer))
+                        and self._states.get(offer.presentation_id) == "CONSUMED"
+                        and self._session_ok(session, now)
+                        and now < confirmation.expires_at and now < offer.expires_at
+                        and self._requests[offer.presentation_id] is context
+                        and context.context_id == confirmation.context_id
+                        and source_digest(source) == confirmation.source_sha256
+                        and _digest(plan_json) == confirmation.mission_sha256
+                        and semantics_digest() == confirmation.semantics_sha256)
+            except Exception:
+                return False
