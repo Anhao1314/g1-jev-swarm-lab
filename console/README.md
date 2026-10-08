@@ -15,6 +15,13 @@ and new outcomes separately, along with assessment, request, and continuity
 receipts. `ESCALATE` records dispatch refusal; it is not an ongoing physical
 safety controller. See the [M2.2 report](../experiments/m2/adaptive_mission_lifecycle_001/report.md).
 
+The one-use TEST_ONLY grant behavior is verified only through the trusted,
+serialized experiment entry. Its mutable in-process registry and dispatch
+flag have no validated concurrent atomicity contract. The lower-level
+`MissionExecutor.run(existing_session=...)` remains independently callable;
+this is not universal enforcement or a production permission guarantee.
+See the [release scope clarification](../docs/m22-release-review.md).
+
 ## M2 mission feedback and post-failure halt
 
 The current single-agent slice replays the retained M2.0 feedback comparison
