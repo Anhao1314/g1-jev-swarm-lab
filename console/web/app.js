@@ -1,4 +1,4 @@
-import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, statusKind, trajectoryBounds, plotTransform, nearestSample, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
+import {finite, clamp, formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, visibleNodeOutcome, statusKind, trajectoryBounds, plotTransform, nearestSample, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
 import {armColors, renderAuthority, renderMechanismCharts} from "./mechanism.js";
 
 const $ = id => document.getElementById(id);
@@ -75,9 +75,10 @@ function buildVideos() {
     label.append(element("span", `arm-dot${index ? " secondary" : ""}`), element("span", "", run.label));
     const identity = element("div", "video-identity");
     const caseOutcomes = element("div", "case-outcomes");
-    caseOutcomes.append(element("span", "case-outcomes-label", "Case"), statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
+    if (run.runtime_kind === "closed_loop_mission") caseOutcomes.append(element("span", "case-outcomes-label", "Case"), element("span", "small muted", "Outcome at completion"));
+    else caseOutcomes.append(element("span", "case-outcomes-label", "Case"), statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
     identity.append(label, caseOutcomes);
-    const meta = element("div", "video-meta", run.media_caption ?? "Residual off · derived replay");
+    const meta = element("div", "video-meta", run.risk_context ?? run.media_caption ?? "Residual off · derived replay");
     const focus = element("button", "video-focus", "Inspect this arm");
     focus.type = "button";
     focus.addEventListener("click", () => setActive(index));
@@ -211,11 +212,23 @@ function drawPlayhead() {
   $("seek").value = state.time;
   $("clock").textContent = formatTime(displayTime(state.time));
   const focusedSample = recordedSample(currentRun());
+  for (const run of state.runs) {
+    if (run.runtime_kind !== "closed_loop_mission") continue;
+    const card = document.querySelector(`.video-card[data-run-index="${state.runs.indexOf(run)}"]`);
+    const status = card?.querySelector(".case-outcomes");
+    if (!status) continue;
+    const completed = (recordedSample(run)?.time_s ?? state.time) >= run.duration_s - 1e-8;
+    status.replaceChildren(element("span", "case-outcomes-label", "Case"));
+    if (completed) status.append(statusPill("Nominal", run.summary?.task_status), statusPill("Strict", run.summary?.strict_status), statusPill("Physical", run.summary?.physical_status));
+    else status.append(element("span", "small muted", "Outcome at completion"));
+  }
   if (focusedSample) $("clock").textContent = formatTime(displayTime(focusedSample.time_s));
   $("sample-time").textContent = focusedSample ? `${currentRun().visual_source === "state_playback" ? "acquisition" : "retained replay"} ${formatTime(focusedSample.time_s)} · frame ${focusedSample.frame_index}` : "No sample";
   $("metric-context").textContent = state.compare ? "Shared playhead · each arm shows its exact recorded frame" : currentRun().label;
   drawMetrics();
   drawNodeOutcomes();
+  drawRuntimeDecisions();
+  if (currentRun().runtime_kind === "closed_loop_mission") drawEvents();
   drawTrajectory();
   renderAuthority({runs: state.runs, run: currentRun(), time: focusedSample?.time_s ?? state.time, walkFocus: state.walkFocus, seek: value => {pause(); seek(value);}, inspect: openInspector});
   renderMechanismCharts({runs: state.runs, run: currentRun(), time: focusedSample?.time_s ?? state.time,
@@ -270,16 +283,51 @@ function drawNodeOutcomes() {
     const node = state.walkFocus ? run.nodes[1] : nodeAt(run, state.time, sample);
     const arm = element("div", "outcome-arm");
     if (state.compare) arm.append(element("div", "outcome-arm-label", `${run.label} · ${skillLabel(node?.skill)} ${node ? `${node.index + 1}/${run.nodes.length}` : ""}`));
-    arm.append(statusPill("Nominal", node?.task_status), document.createTextNode(" "), statusPill("Strict", node?.strict_status), document.createTextNode(" "), statusPill("Physical", node?.physical_status));
-    if (finite(node?.nominal_lateral_limit_m) || finite(node?.strict_lateral_limit_m)) {
+    const revealed = visibleNodeOutcome(run, node, sample?.time_s ?? state.time);
+    if (revealed) arm.append(statusPill("Nominal", node?.task_status), document.createTextNode(" "), statusPill("Strict", node?.strict_status), document.createTextNode(" "), statusPill("Physical", node?.physical_status));
+    else arm.append(element("span", "small muted", "Outcome pending at this replay time"));
+    if (revealed && (finite(node?.nominal_lateral_limit_m) || finite(node?.strict_lateral_limit_m))) {
       arm.append(element("div", "small muted", `Frozen lateral limits · nominal ${formatNumber(node.nominal_lateral_limit_m, 2, " m")} / strict ${formatNumber(node.strict_lateral_limit_m, 2, " m")}`));
     }
-    if (node?.strict_violations?.length) arm.append(element("div", "strict-reason", `Strict source reason: ${node.strict_violations.map(violation => typeof violation === "string" ? violation : JSON.stringify(violation)).join("; ")}`));
+    if (revealed && node?.strict_violations?.length) arm.append(element("div", "strict-reason", `Strict source reason: ${node.strict_violations.map(violation => typeof violation === "string" ? violation : JSON.stringify(violation)).join("; ")}`));
     if (state.walkFocus && run.authority) arm.append(element("div", "small muted", `Formal Walk end ${formatNumber(run.authority.walk_end_s - run.authority.walk_start_s, 3, "s")} · captured ${formatNumber(sample?.time_s - run.authority.walk_start_s, 3, "s")} (${skillLabel(sample?.skill)})`));
     row.append(arm);
   });
   group.append(row);
   $("node-outcomes").replaceChildren(group);
+}
+
+function decisionText(value) {
+  return typeof value === "string" ? value : value == null ? "Unavailable" : JSON.stringify(value);
+}
+function evaluationSummary(value) {
+  if (typeof value !== "object" || value === null) return decisionText(value);
+  const limits = value.limits ?? {};
+  const parts = [value.satisfied === true ? "Strict PASS" : value.satisfied === false ? "Strict FAIL" : "Evaluation"];
+  if (finite(value.lateral_drift_m) && finite(limits.lateral_drift_max_m)) parts.push(`drift ${formatNumber(value.lateral_drift_m, 3)} / ${formatNumber(limits.lateral_drift_max_m, 3)} m`);
+  if (finite(value.heading_error_deg) && finite(limits.heading_error_max_deg)) parts.push(`heading ${formatNumber(value.heading_error_deg, 2)} / ${formatNumber(limits.heading_error_max_deg, 2)}°`);
+  if (value.violations?.length) parts.push(value.violations.join(", "));
+  return parts.join(" · ");
+}
+function drawRuntimeDecisions() {
+  const panel = $("runtime-panel");
+  const runs = visibleRuns().filter(run => run.runtime_kind === "closed_loop_mission");
+  panel.hidden = !runs.length;
+  if (!runs.length) return;
+  const rows = [];
+  for (const run of runs) {
+    const time = recordedSample(run)?.time_s ?? state.time;
+    for (const item of runtimeDecisionsAt(run, time)) {
+      const row = element("button", "runtime-decision");
+      row.type = "button";
+      row.append(element("strong", "", `${run.label} · ${formatTime(item.time_s)} · node ${Number(item.node_index) + 1}`),
+        element("span", "", `${evaluationSummary(item.evaluation)} · Decide: ${decisionText(item.decision)}`),
+        element("span", "small muted", `Act: ${decisionText(item.action)} · Continue/Stop: ${decisionText(item.continuation)}`));
+      row.addEventListener("click", () => openInspector(run, {...item, label: `Runtime decision · ${decisionText(item.decision)}`, metric: "runtime_decision", source_locator: item.source_locator}));
+      rows.push(row);
+    }
+  }
+  $("runtime-decisions").replaceChildren(...(rows.length ? rows : [element("p", "small muted", "No recorded decision yet at this replay time.")]));
 }
 
 function routePath(points, transform) {
@@ -320,7 +368,7 @@ function drawTrajectory() {
     const displayed = routeSamples(run), points = displayed.map(sample => [sample.x, sample.y]);
     const armColor = armColors[state.runs.indexOf(run) % armColors.length];
     const sample = recordedSample(run);
-    svg.append(svgElement("path", {d: routePath(points, transform), class: `route-future${secondary ? " secondary" : ""}`}));
+    if (run.runtime_kind !== "closed_loop_mission") svg.append(svgElement("path", {d: routePath(points, transform), class: `route-future${secondary ? " secondary" : ""}`}));
     if (sample) {
       const past = displayed.filter(point => point.time_s <= sample.time_s).map(point => [point.x, point.y]); past.push([sample.x, sample.y]);
       const actualPath = svgElement("path", {d: routePath(past, transform), class: "route-actual"}); actualPath.style.stroke = armColor; svg.append(actualPath);
@@ -338,6 +386,7 @@ function drawTrajectory() {
     }
     for (const event of run.events ?? []) {
       if (event.time_s < timeRange().start || event.time_s > timeRange().end) continue;
+      if (run.runtime_kind === "closed_loop_mission" && event.time_s > (recordedSample(run)?.time_s ?? state.time) + 1e-8) continue;
       const at = sampleAt(run.samples, event.time_s);
       if (!at || !finite(at.x) || !finite(at.y)) continue;
       const position = transform.point(at.x, at.y);
@@ -365,6 +414,7 @@ function drawEvents() {
   for (const run of visibleRuns()) {
     for (const event of run.events ?? []) {
       if (event.time_s < timeRange().start || event.time_s > timeRange().end) continue;
+      if (run.runtime_kind === "closed_loop_mission" && event.time_s > (recordedSample(run)?.time_s ?? state.time) + 1e-8) continue;
       const button = element("button", `event-button${event.failure ? " failure" : ""}`);
       button.type = "button";
       button.append(element("span", "", `${state.compare ? `${run.label} · ` : ""}${event.label}`), element("span", "event-time", formatTime(event.time_s)));
@@ -408,6 +458,12 @@ async function openInspector(run, event = null) {
       if (event.metric) selected.append(element("div", "mono", `${event.metric}: ${finite(event.value) ? event.value.toFixed(6) : (event.value ?? "See source")}`));
       selected.append(element("div", "small", event.source_comparison ? "Source-bound paired arithmetic from the original window trace/audit or formal endpoints; not the nearest video frame." : event.derived ? "Derived instantaneous reading. Frozen source node outcomes remain the scoring authority." : "Source-bound evidence marker. Follow the raw locator to inspect the frozen metric."));
       content.push(selected);
+      const decision = run.runtime_kind === "closed_loop_mission" ? run.runtime_decisions?.find(item => item.node_index === event.node_index && Math.abs(item.time_s - event.time_s) < 1e-8) : null;
+      if (decision) {
+        const detail = element("details", "inspector-section");
+        detail.append(element("summary", "small", "Full recorded decision and evaluation"), element("pre", "json-summary", JSON.stringify(decision, null, 2)));
+        content.push(detail);
+      }
     }
     content.push(element("span", "integrity-tag", evidence.integrity_status ?? "Source hashes bound to artifact"));
     const identity = element("section", "inspector-section");
@@ -418,9 +474,12 @@ async function openInspector(run, event = null) {
     if (event?.derived_json_locator) locator.append(provenanceRow("Derived sample JSON locator", event.derived_json_locator, true));
     const node = run.nodes?.find(item => item.index === event?.node_index);
     if (node) {
-      locator.append(provenanceRow("Node", `${node.index + 1} · ${node.skill}`), provenanceRow("Nominal / strict / physical", `${node.task_status ?? "Unavailable"} / ${node.strict_status ?? "Unavailable"} / ${node.physical_status ?? "Unavailable"}`));
-      if (finite(node.nominal_lateral_limit_m)) locator.append(provenanceRow("Frozen nominal / strict lateral limits", `${formatNumber(node.nominal_lateral_limit_m, 3, " m")} / ${formatNumber(node.strict_lateral_limit_m, 3, " m")}`));
-      if (node.strict_violations?.length) locator.append(provenanceRow("Frozen strict failure reason", node.strict_violations.map(violation => typeof violation === "string" ? violation : JSON.stringify(violation)).join("; ")));
+      locator.append(provenanceRow("Node", `${node.index + 1} · ${node.skill}`));
+      if (visibleNodeOutcome(run, node, event?.time_s ?? state.time)) {
+        locator.append(provenanceRow("Nominal / strict / physical", `${node.task_status ?? "Unavailable"} / ${node.strict_status ?? "Unavailable"} / ${node.physical_status ?? "Unavailable"}`));
+        if (finite(node.nominal_lateral_limit_m)) locator.append(provenanceRow("Frozen nominal / strict lateral limits", `${formatNumber(node.nominal_lateral_limit_m, 3, " m")} / ${formatNumber(node.strict_lateral_limit_m, 3, " m")}`));
+        if (node.strict_violations?.length) locator.append(provenanceRow("Frozen strict failure reason", node.strict_violations.map(violation => typeof violation === "string" ? violation : JSON.stringify(violation)).join("; ")));
+      }
     }
     content.push(locator);
     const raw = element("section", "inspector-section"); raw.append(element("h3", "", "Inspect source files"));
@@ -438,7 +497,7 @@ async function openInspector(run, event = null) {
       raw.append(anchor);
     }
     const apiLink = element("a", "raw-link", "Full provenance JSON ↗"); apiLink.href = run.evidence_url; apiLink.target = "_blank"; apiLink.rel = "noopener noreferrer"; raw.append(apiLink); content.push(raw);
-    if (evidence.source_result) {
+    if (evidence.source_result && (run.runtime_kind !== "closed_loop_mission" || state.time >= run.duration_s - 1e-8)) {
       const details = element("details", "inspector-section");
       details.append(element("summary", "small", "Frozen source result"), element("pre", "json-summary", JSON.stringify(evidence.source_result, null, 2)));
       content.push(details);
@@ -477,8 +536,12 @@ async function loadExperiment(experiment) {
     }
     $("treatment").value = state.active;
     state.time = timeRange().start;
-    $("visual-type").textContent = state.walkFocus ? "Acquisition-state playback" : "Derived visualization replay";
-    $("visual-note").textContent = state.walkFocus ? "Original acquired poses · zero new physics steps · Walk 0s is the original node start. Formal endpoints and nearest visual frames remain distinct." : "Historical acquisition unchanged · separately verified retained replay states.";
+    const runtime = state.runs.some(run => run.runtime_kind === "closed_loop_mission");
+    $("phase-label").textContent = runtime ? "M2 · CLOSED-LOOP MISSION" : "PHASE 3A · MECHANISM REPLAY";
+    document.querySelector(".outcome-header h3").textContent = runtime ? "Recorded node outcomes" : "Frozen node outcomes";
+    document.querySelector(".outcome-note").textContent = runtime ? "Node outcomes appear after their recorded completion. Decisions are read from the execution ledger; this replay never controls the robot." : "Instantaneous readings explain motion. Nominal and strict outcomes come from the original evidence and are never rescored by this interface.";
+    $("visual-type").textContent = runtime ? "Recorded mission execution" : state.walkFocus ? "Acquisition-state playback" : "Derived visualization replay";
+    $("visual-note").textContent = runtime ? "Robot video and trajectory are shown only when bound to captured execution states. Decisions and outcomes follow recorded simulation time." : state.walkFocus ? "Original acquired poses · zero new physics steps · Walk 0s is the original node start. Formal endpoints and nearest visual frames remain distinct." : "Historical acquisition unchanged · separately verified retained replay states.";
     buildVideos(); updateLayout();
 }
 

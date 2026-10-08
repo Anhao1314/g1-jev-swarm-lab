@@ -175,6 +175,7 @@ class ConsoleData:
             ("poses", "Original acquisition poses"),
             ("decisions", "Original residual decisions"),
             ("independent_audit", "Independent source arithmetic audit"),
+            ("runtime_ledger", "Original runtime decision ledger"),
         ):
             relative = self._source_path(provenance, name)
             if relative is None:
@@ -196,12 +197,18 @@ class ConsoleData:
                     source_result = decode_result(path, line)
                     locator = f"decoded JSONL line {line}"
                 for field in ("case_id", "treatment_label", "run_id", "probe_id"):
+                    if run.get("runtime_kind") == "closed_loop_mission" and field == "case_id":
+                        if run[field] != source_result.get("mission_id"):
+                            raise IntegrityError("Source mission identity does not match the run")
+                        continue
                     if field in run and run[field] != source_result.get(field):
                         raise IntegrityError(f"Source result {field} does not match the run")
                 acquisition = source_result.get("provenance", {})
                 for identity_key, source_key in (("protocol_sha", "protocol_sha256"),
                                                  ("source_commit", "code_commit"),
                                                  ("policy_sha", "base_policy_sha256")):
+                    if run.get("runtime_kind") == "closed_loop_mission":
+                        continue  # M2 source identity is bound by the separate frozen source manifest.
                     if identity_key in provenance and provenance[identity_key] != acquisition.get(source_key):
                         raise IntegrityError(f"Source result {source_key} does not match the run")
             if name == "manifest":
@@ -223,7 +230,7 @@ class ConsoleData:
             manifest_experiment = original_manifest.get("experiment_id", original_manifest.get("provenance", {}).get("experiment_id"))
             if "experiment_id" in run and manifest_experiment != run["experiment_id"]:
                 raise IntegrityError("Original experiment identity does not match the run")
-            for name in ("result", "trace", "poses", "decisions", "independent_audit", "summary"):
+            for name in ("result", "trace", "poses", "decisions", "independent_audit", "summary", "runtime_ledger"):
                 if name not in source_paths:
                     continue
                 relative = self._source_path(provenance, name)

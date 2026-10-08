@@ -38,6 +38,13 @@ export function nodeAt(run, time, sample = null) {
   const fromSample = run.nodes?.find(node => node.index === sample?.node_index);
   return fromSample ?? run.nodes?.find(node => node.start_s <= time && time <= node.end_s) ?? null;
 }
+export function runtimeDecisionsAt(run, time) {
+  if (run?.runtime_kind !== "closed_loop_mission") return [];
+  return (run.runtime_decisions ?? []).filter(item => finite(item.time_s) && item.time_s <= time + 1e-8);
+}
+export function visibleNodeOutcome(run, node, time) {
+  return run?.runtime_kind !== "closed_loop_mission" || (node && finite(node.end_s) && time >= node.end_s - 1e-8);
+}
 export function statusKind(value) {
   const name = String(value ?? "").toUpperCase();
   if (["PASS", "SUCCESS", "TRUE", "SUCCEEDED"].includes(name)) return "pass";

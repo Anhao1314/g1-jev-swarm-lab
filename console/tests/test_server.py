@@ -105,6 +105,24 @@ def test_original_evidence_preserved_and_allowlisted(service):
             assert response.status == 200
 
 
+def test_runtime_ledger_source_is_hash_bound_and_allowlisted(artifact):
+    repo, root, _ = artifact
+    ledger = repo / "source/runtime_ledger.json"
+    write_json(ledger, {"decisions": [{"time_s": 1, "decision": "CONTINUE"}]})
+    run_path = root / "runs/treatment-off/run.json"
+    run = SERVER.load_json(run_path)
+    run["provenance"]["source_runtime_ledger_path"] = "source/runtime_ledger.json"
+    write_json(run_path, run)
+    write_json(root / "manifest.json", {"files": inventory(root),
+                                         "sources": {f"source/{p}": record for p, record in inventory(repo / "source").items()}})
+    data = SERVER.ConsoleData(root, repo_root=repo)
+    assert any(link["url"] == "/raw/treatment-off/source-runtime_ledger"
+               for link in data.evidence["treatment-off"]["raw_links"])
+    ledger.write_text("{}", encoding="utf-8")
+    with pytest.raises(SERVER.IntegrityError):
+        data.checked(ledger)
+
+
 def test_catalog_reports_verified_sources(service):
     url, _, _ = service
     with fetch(url + "/api/catalog") as response:

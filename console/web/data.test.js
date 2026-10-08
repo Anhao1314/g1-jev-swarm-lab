@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, trajectoryBounds, plotTransform, nearestSample, statusKind, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
+import {formatNumber, formatTime, sampleAt, mediaFrame, frameForSimulationTime, nodeAt, runtimeDecisionsAt, visibleNodeOutcome, trajectoryBounds, plotTransform, nearestSample, statusKind, playbackRange, requestedRunTime, firstWalkDisplaySample} from "./data.js";
 
 test("shows an actual retained sample instead of interpolating an observation", () => {
   const samples = [
@@ -85,4 +85,16 @@ test("nearest completion frame keeps Walk axes without hiding its captured Turn 
   assert.equal(view.commanded_heading_deg,10); assert.equal(view.heading_error_deg,-3);
   assert.equal(view.local_lateral_m,.37); assert.equal(view.reference_lateral_m,-.005);
   assert.equal(source.commanded_heading_deg,-80); assert.equal(source.local_lateral_m,0);
+});
+
+test("closed-loop decisions and outcomes appear only after their recorded times", () => {
+  const run = {runtime_kind: "closed_loop_mission", runtime_decisions: [
+    {time_s: 1, decision: "CONTINUE"}, {time_s: 3, decision: "STOP"}]};
+  const node = {end_s: 2, strict_status: "FAIL"};
+  assert.deepEqual(runtimeDecisionsAt(run, .5), []);
+  assert.deepEqual(runtimeDecisionsAt(run, 1.5).map(item => item.decision), ["CONTINUE"]);
+  assert.deepEqual(runtimeDecisionsAt(run, 3).map(item => item.decision), ["CONTINUE", "STOP"]);
+  assert.equal(visibleNodeOutcome(run, node, 1.99), false);
+  assert.equal(visibleNodeOutcome(run, node, 2), true);
+  assert.equal(visibleNodeOutcome({}, node, 0), true);
 });

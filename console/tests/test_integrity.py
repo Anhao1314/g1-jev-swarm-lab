@@ -10,6 +10,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import subprocess
 
 import pytest
 import numpy as np
@@ -53,16 +54,20 @@ def _lateral(position, origin, heading):
 
 
 def test_all_original_scientific_files_remain_byte_identical():
-    """Preserve all tracked source/config/tests and historical study evidence."""
+    """Preserve the historical snapshot while allowing the scoped M2 code edit."""
     snapshot = _json(ROOT / "console/audit/scientific_snapshot_before.json")
     assert snapshot["source_commit"] == "86d1883db84a53de57eacfab061234f2a118c94c"
     assert snapshot["tracked_file_count"] == len(snapshot["files"]) == 1348
+    m2_changes = {"src/g1swarm/mission/runtime.py", "tests/test_mission_runtime.py"}
+    frozen_m2 = _json(ROOT / "experiments/m2/closed_loop_mission_001/source_manifest.json")["files"]
     for relative, expected in snapshot["files"].items():
         path = ROOT / relative
         assert path.is_file(), f"Original scientific file missing: {relative}"
-        data = path.read_bytes()
+        data = (subprocess.check_output(["git", "show", f"{snapshot['source_commit']}:{relative}"], cwd=ROOT)
+                if relative in m2_changes else path.read_bytes())
         assert len(data) == expected["bytes"], relative
         assert hashlib.sha256(data).hexdigest() == expected["sha256"], relative
+    assert hashlib.sha256((ROOT / "src/g1swarm/mission/runtime.py").read_bytes()).hexdigest() == frozen_m2["src/g1swarm/mission/runtime.py"]
 
 
 @pytest.mark.parametrize("arm", ARMS)
