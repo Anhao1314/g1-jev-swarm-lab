@@ -15,6 +15,10 @@ not a production or hardware safety release.
   content conflict and was rewritten to describe the implemented system.
 - The independent `phase2.4/source-authority` branch is not an ancestor of R1.
   Jev has no online authority; Language Runtime / D011 remains blocked.
+- M2.1's separate physical-halt path is explicitly opted into through the
+  experimental Runtime configuration (`walk_strict_gate` and
+  `physical_halt_contract`) after Task Graph blocking. This does not establish
+  authenticated Human Principal Authority or production authorization.
 - Research Ops selection was reviewed separately from the merge: the 10 earlier
   Phase 3A/Console anchors remain, 10 M2/R1 anchors were added, and `context`
   reports `CURRENT` with 20/20 matching anchors. The selection describes only
@@ -32,7 +36,7 @@ not a production or hardware safety release.
   exports verified. It correctly marks the old browser receipt as requiring
   fresh QA because the Console changed after that receipt.
 - Fresh read-only browser QA of the R1 worktree Console: failure replay showed
-  `STOP_DEPENDENTS` and independent physical-halt request at 12.94 s, then
+  `STOP_DEPENDENTS` and the separate physical-halt request at 12.94 s, then
   `HALT_SUCCEEDED` at 14.28 s with 0.056 m/s displayed at the final captured
   frame. The safe control showed three `CONTINUE` decisions, 3/3 task nodes,
   and `Halt NOT_REQUESTED`. The Console imported retained evidence; no robot
