@@ -8,7 +8,7 @@ This repository is a **Unitree G1 MuJoCo research testbed**. Its current single-
 Reviewed Oracle Mission IR → validation and evidence-grounded Task Graph
     → deterministic G1 skill dispatch → MuJoCo state and skill result
     → strict outcome evaluation → CONTINUE or STOP_DEPENDENTS
-    → optional, separately authorized post-failure StopSkill
+    → optional post-failure StopSkill (experimental configuration opt-in)
     → event ledger, source-bound replay, Research Console
 ```
 
