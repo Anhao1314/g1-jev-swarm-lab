@@ -2,6 +2,20 @@
 
 This repository is a **Unitree G1 MuJoCo research testbed**. Its current single-agent path executes structured missions, evaluates measured skill outcomes, changes Task Graph flow on a strict failure, and records the decision alongside robot motion. Evidence, including unsuccessful experiments, determines which capabilities the runtime may use. The system is **not production-ready** or certified for robot safety.
 
+## Latest reviewed working-branch qualification
+
+M2.2 demonstrated a bounded same-session Failure → Halt → Assess → explicitly authorized new Mission lifecycle. M2.3 added offline issuer-owned immutable Mission handoff. M2.3b now retains **`PASS_BOUNDED_REAL_MUJOCO_TRUSTED_HANDOFF`**: in one previously seen seed-0 MuJoCo state, a correct TEST_ONLY grant executes a distinct Walk4 → Turn45 → Stop mission (3/3, strict and physical PASS); five invalid controls and accepted-grant replay dispatch zero additional physics. The original task remains FAILED, the complete signed and executed plans match, and no simulator reset occurs after initialization. See the [qualification report](experiments/m2/trusted_handoff_qualification_001/report.md) and [final release gate](experiments/m2/trusted_handoff_qualification_001/release_gate/review.md).
+
+This is a **reviewed working-branch result**, not accepted-main publication: Research Ops remains `working_branch_only` / `PR_PENDING_NOT_ACCEPTED_MAIN`. Marking PR #7 Ready for Review does not change that status. A future merge requires an explicit reviewed accepted-main publication decision; no automatic pointer promotion is authorized.
+
+The grant is validated only through a trusted, serial, in-process TEST_ONLY entry with simulated principal and explicit host permission. It does not establish production Human Principal Authority, concurrent atomic consume-and-dispatch, durable replay protection, continuous cancellation or hardware safety. Exact agreement with retained M2.2 traces proves bounded adapter non-interference, not independent physical generalization. The parent halt has a narrow mean-speed margin below 0.10 m/s. Jev and Language Runtime/D011 remain BLOCKED.
+
+Replay this qualification without physics or model calls:
+
+```powershell
+py -3.11 console/server.py --data experiments/research_console/m23b_trusted_handoff_001 --port 8774
+```
+
 ## What runs today
 
 ```text
@@ -24,7 +38,7 @@ The M2.0 [execution report](experiments/m2/closed_loop_mission_001/report.md) an
 ## Current gates
 
 - **Jev:** The Phase 3B.1 node-entry offline risk role was `JEV_RISK_ROLE_NOT_SUPPORTED` (7 false-safe decisions among 11 strict violations). Phase 3B.1b early-risk instrumentation was `INCONCLUSIVE`. Jev has **no online selection, intervention or actuation authority**.
-- **Language Runtime / D011:** `BLOCKED`. Language/compiler experiments and Source Authority development results do not authorize natural-language dispatch into this runtime. The separate Source Authority research branch is not part of this baseline.
+- **Language Runtime / D011:** `BLOCKED`. Language/compiler experiments and Source Authority development results do not authorize natural-language dispatch into this runtime. Only the reviewed, selectively pinned TEST_ONLY handoff adapter is integrated; the separate Source Authority branch is not merged as a whole and language dispatch remains blocked.
 - **Recovery and swarm:** The frozen residual recovery vocabulary was `RECOVERY_VOCABULARY_NOT_READY`. There is no verified Jev-selected recovery, Multi-Swarm runtime or new PPO training in the M2 path.
 - **Safety:** Task refusal, a physical halt request, successful termination and failed termination are distinct states. A successful simulation stop does not establish physical robot safety across situations.
 

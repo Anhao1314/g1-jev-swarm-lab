@@ -42,6 +42,12 @@ export function runtimeDecisionsAt(run, time) {
   if (run?.runtime_kind !== "closed_loop_mission") return [];
   return (run.runtime_decisions ?? []).filter(item => finite(item.time_s) && item.time_s <= time + 1e-8);
 }
+export function runtimeDecisionForEvent(run, event) {
+  if (run?.runtime_kind !== "closed_loop_mission" || !event) return null;
+  const decisions = run.runtime_decisions ?? [];
+  if (event.source_locator) return decisions.find(item => item.source_locator === event.source_locator) ?? null;
+  return decisions.find(item => item.node_index === event.node_index && Math.abs(item.time_s - event.time_s) < 1e-8) ?? null;
+}
 export function visibleNodeOutcome(run, node, time) {
   return run?.runtime_kind !== "closed_loop_mission" || (node && finite(node.end_s) && time >= node.end_s - 1e-8);
 }
