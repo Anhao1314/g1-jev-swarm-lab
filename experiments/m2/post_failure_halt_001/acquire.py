@@ -24,6 +24,10 @@ from experiments.m2.closed_loop_mission_001.acquire import PoseCollector
 
 HERE = Path(__file__).resolve().parent
 SOURCE_PATHS = (
+    "configs/robot/g1_locomotion_12dof.yaml",
+    "third_party/unitree_rl_gym/resources/robots/g1_description/scene.xml",
+    "third_party/unitree_rl_gym/resources/robots/g1_description/g1_12dof.xml",
+    "third_party/unitree_rl_gym/deploy/pre_train/g1/motion.pt",
     "configs/experiments/oracle_mission_runtime_001.yaml",
     "configs/missions/oracle_phase2_001.yaml",
     "experiments/m2/closed_loop_mission_001/protocol.json",
@@ -61,8 +65,18 @@ def freeze() -> None:
     })
 
 
+def freeze_v2() -> None:
+    """Additive amendment: retain v1 and pin the completed acquisition boundary."""
+    paths = (HERE / "protocol.json", HERE / "acquire.py", HERE / "amendment_001.json",
+             HERE / "source_manifest.json", *(ROOT / p for p in SOURCE_PATHS))
+    write_new(HERE / "source_manifest_v2.json", {
+        "status": "AMENDED_FROZEN_BEFORE_PHYSICS",
+        "files": {p.relative_to(ROOT).as_posix(): digest(p) for p in paths},
+    })
+
+
 def verify_sources() -> None:
-    frozen = json.loads((HERE / "source_manifest.json").read_text(encoding="utf-8"))
+    frozen = json.loads((HERE / "source_manifest_v2.json").read_text(encoding="utf-8"))
     for relative, expected in frozen["files"].items():
         if digest(ROOT / relative) != expected:
             raise ValueError(f"Frozen source changed: {relative}")
@@ -90,6 +104,15 @@ def state_row(state) -> dict:
         "fallen": state.fallen,
         "finite": state.is_finite(),
     }
+
+
+def _best_effort_state(session) -> dict | None:
+    if session is None:
+        return None
+    try:
+        return session.simulation.get_robot_state().to_dict()
+    except Exception:
+        return None
 
 
 class DeferredCloseSession(LiveMissionSession):
@@ -156,7 +179,21 @@ def run_halt(session: DeferredCloseSession, poses: PoseCollector, spec: dict) ->
         max_steps=int(round(1200.0 / session.simulation.timestep)), seed=session.seed,
     )
     started = time.perf_counter()
-    result = session.router.execute(SkillRequest("stop", spec["stop_skill_parameters"]), context)
+    try:
+        result = session.router.execute(SkillRequest("stop", spec["stop_skill_parameters"]), context)
+    except Exception as exc:
+        return {
+            "request": "EXPLICIT_INDEPENDENT_PHYSICAL_HALT",
+            "status": "HALT_FAILED",
+            "failure_stage": "stop_skill_or_observer",
+            "failure_type": type(exc).__name__,
+            "failure_reason": str(exc),
+            "pre_halt_state": before.to_dict(),
+            "last_observed_state": _best_effort_state(session),
+            "wall_halt_duration_s": time.perf_counter() - started,
+            "trace": trace.rows,
+            "path_length_m": trace.path_length_m,
+        }
     wall_s = time.perf_counter() - started
     after = session.simulation.get_robot_state()
     rows = trace.rows
@@ -192,9 +229,12 @@ def acquire() -> None:
     missions = json.loads((ROOT / spec["mission_source"]).read_text(encoding="utf-8"))
     protocol = load_protocol(spec["source_protocol"])
     robot = load_yaml(protocol["robot_config"])
+    policy_path = ROOT / robot["controller"]["policy_path"]
+    if digest(policy_path) != protocol["provenance"]["policy_sha256"]:
+        raise ValueError("Actual policy asset does not match frozen protocol SHA-256")
     output = HERE / "artifacts"
     output.mkdir(exist_ok=True)
-    manifest_sha = digest(HERE / "source_manifest.json")
+    manifest_sha = digest(HERE / "source_manifest_v2.json")
     for case_name, run_name in ((spec["failure_case"], "failure_feasibility"),
                                 (spec["safe_control"], "safe_control")):
         run_dir = output / run_name
@@ -214,7 +254,18 @@ def acquire() -> None:
                 assert result.nodes[0]["feedback_decision"]["action"] == trigger["decision_action"]
                 states = {node.node_id: node.state.value for node in graph.nodes}
                 assert all(states[node_id] == "BLOCKED" for node_id in trigger["blocked_task_nodes"])
-                halt = run_halt(session, poses, spec)
+                try:
+                    halt = run_halt(session, poses, spec)
+                except Exception as exc:
+                    halt = {
+                        "request": "EXPLICIT_INDEPENDENT_PHYSICAL_HALT",
+                        "status": "HALT_FAILED",
+                        "failure_stage": "stop_skill_or_observer",
+                        "failure_type": type(exc).__name__,
+                        "failure_reason": str(exc),
+                        "pre_halt_state": session.state().to_dict(),
+                        "last_observed_state": _best_effort_state(session),
+                    }
                 write_new(run_dir / "halt.json", halt)
             else:
                 assert result.state == "SUCCESS" and result.skill_invocations == 3
@@ -229,6 +280,19 @@ def acquire() -> None:
                 "halt_sha256": digest(run_dir / "halt.json") if run_name == "failure_feasibility" else None,
                 "pose_sha256": digest(run_dir / "poses.npz"),
             })
+        except Exception as exc:
+            write_new(run_dir / "acquisition_failure.json", {
+                "status": "ACQUISITION_FAILED",
+                "run": run_name,
+                "failure_type": type(exc).__name__,
+                "failure_reason": str(exc),
+                "source_manifest_sha256": manifest_sha,
+                "mission_result_sha256": digest(run_dir / "mission_result.json") if (run_dir / "mission_result.json").exists() else None,
+                "halt_sha256": digest(run_dir / "halt.json") if (run_dir / "halt.json").exists() else None,
+                "pose_sha256": digest(run_dir / "poses.npz") if (run_dir / "poses.npz").exists() else None,
+                "last_observed_state": _best_effort_state(session),
+            })
+            raise
         finally:
             if session is not None:
                 session.physical_close()
@@ -237,6 +301,8 @@ def acquire() -> None:
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "freeze":
         freeze()
+    elif len(sys.argv) == 2 and sys.argv[1] == "freeze-v2":
+        freeze_v2()
     elif len(sys.argv) == 2 and sys.argv[1] == "acquire":
         acquire()
     else:
