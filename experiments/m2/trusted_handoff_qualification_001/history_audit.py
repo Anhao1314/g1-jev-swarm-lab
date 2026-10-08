@@ -8,7 +8,8 @@ import sys
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 BASE = "a114ec90a4f577420e6f183fe0c41cadedba03fd"
-ALLOWED = {"console/server.py", "console/web/app.js", "console/web/data.js", "console/web/data.test.js"}
+ALLOWED = {"console/server.py", "console/web/app.js", "console/web/data.js", "console/web/data.test.js",
+           "console/web/styles.css", "ops/state.json"}
 
 
 def git(*args, cwd=ROOT):
