@@ -117,8 +117,12 @@ def replay_observed(case, selected_nodes: set[int], *, enabled: bool):
 
 
 def comparable_record(record):
-    """Only execution-independent timing is excluded from exact comparison."""
-    return {key: value for key, value in record.items() if key != "wall_time_s"}
+    """Exclude only host wall-clock timings, retaining every physics field."""
+    comparable = json.loads(json.dumps(record, allow_nan=False))
+    comparable.pop("wall_time_s", None)
+    for node in comparable["nodes"]:
+        node.get("skill_metrics", {}).pop("elapsed_wall_time_s", None)
+    return comparable
 
 
 def assert_equivalent(off, on):

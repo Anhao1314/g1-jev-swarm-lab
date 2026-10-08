@@ -84,3 +84,22 @@ def test_equivalence_rejects_command_difference():
         assert "command_sha256" in str(exc)
     else:
         raise AssertionError("command mismatch was accepted")
+
+
+def test_equivalence_ignores_only_host_wall_clock_fields():
+    record = {"wall_time_s": 2.0, "nodes": [{"duration_s": 3.0,
+              "skill_metrics": {"elapsed_wall_time_s": 1.0, "distance_m": 1.5}}]}
+    off = {"record": record, "observer": {"command_sha256": "same", "command_count": 10,
+           "trace_rows": [], "snapshots": {}}}
+    on = {"record": {"wall_time_s": 9.0, "nodes": [{"duration_s": 3.0,
+          "skill_metrics": {"elapsed_wall_time_s": 8.0, "distance_m": 1.5}}]},
+          "observer": {"command_sha256": "same", "command_count": 10,
+          "trace_rows": [], "snapshots": {"0:1": {}}}}
+    assert observer.assert_equivalent(off, on)
+    on["record"]["nodes"][0]["skill_metrics"]["distance_m"] = 1.6
+    try:
+        observer.assert_equivalent(off, on)
+    except AssertionError as exc:
+        assert "episode record" in str(exc)
+    else:
+        raise AssertionError("scientific metric difference was accepted")
