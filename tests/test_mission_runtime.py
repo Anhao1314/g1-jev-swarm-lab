@@ -173,6 +173,62 @@ def test_success_flow(phase13_grounder: CapabilityGrounder) -> None:
     assert holder["session"].calls[0][1] == "heading_lateral"
 
 
+def test_opt_in_strict_feedback_blocks_after_realized_walk_error(
+    phase13_grounder: CapabilityGrounder, tmp_path
+) -> None:
+    class DriftingSession(FakeSession):
+        def run_node(self, node, execution_mode):
+            execution = super().run_node(node, execution_mode)
+            if node.skill.value == "walk_forward":
+                execution.metrics["lateral_drift_m"] = 0.25  # 4m strict limit is 0.20m
+            return execution
+
+    sessions = []
+
+    def factory(seed):
+        session = DriftingSession()
+        sessions.append(session)
+        return session
+
+    mission = _mission([
+        {"id": "s1", "skill": "walk_forward", "parameters": {"distance_m": 4.0}},
+        {"id": "s2", "skill": "stop", "parameters": {}, "depends_on": ["s1"]},
+    ])
+    common = dict(validator=MissionValidator(), grounder=phase13_grounder,
+                  session_factory=factory, protocol=_protocol(),
+                  provenance={"git_commit": "test-source"})
+    static = MissionExecutor(**common).run(mission, write_evidence=False)
+    feedback_executor = MissionExecutor(**common, walk_strict_gate=True,
+                                        recorder_root=str(tmp_path))
+    feedback = feedback_executor.run(mission)
+    assert static.state == "SUCCESS" and static.completed_nodes == 2
+    assert feedback.state == "FAILED" and feedback.completed_nodes == 0
+    assert feedback.failure_type == MissionFailureType.TASK_ENVELOPE_VIOLATION.value
+    assert feedback.failed_node == "s1" and feedback.physical_success is True
+    assert feedback_executor.last_graph.get("s2").state is NodeState.BLOCKED
+    assert [call[0] for call in sessions[1].calls] == ["s1"]
+    decision = feedback.nodes[0]["feedback_decision"]
+    assert decision["action"] == "STOP_DEPENDENTS"
+    assert decision["evaluation"]["violations"] == ["EXCESSIVE_DRIFT"]
+    assert decision["observed_metrics"]["lateral_drift_m"] == 0.25
+    assert decision["provenance"]["git_commit"] == "test-source"
+    events = (tmp_path / mission["mission_id"] / "events.jsonl").read_text().splitlines()
+    assert any(json.loads(row)["event"] == "feedback_decision" for row in events)
+
+
+def test_opt_in_strict_feedback_continues_bounded_walk(
+    phase13_grounder: CapabilityGrounder,
+) -> None:
+    executor, holder = _executor(phase13_grounder, walk_strict_gate=True)
+    result = executor.run(_mission([
+        {"id": "s1", "skill": "walk_forward", "parameters": {"distance_m": 4.0}},
+        {"id": "s2", "skill": "stop", "parameters": {}, "depends_on": ["s1"]},
+    ]), write_evidence=False)
+    assert result.state == "SUCCESS"
+    assert result.nodes[0]["feedback_decision"]["action"] == "CONTINUE"
+    assert [call[0] for call in holder["session"].calls] == ["s1", "s2"]
+
+
 def test_skill_failure_stops_and_blocks_descendants(phase13_grounder: CapabilityGrounder) -> None:
     executor, holder = _executor(phase13_grounder, behaviors={"s2": "FAILURE"})
     result = executor.run(

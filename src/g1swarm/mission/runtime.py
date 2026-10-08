@@ -15,6 +15,7 @@ from typing import Any, Callable, Mapping, Protocol
 
 from ..evidence import utc_timestamp
 from ..characterization.kinematics import wrap_angle_deg, yaw_deg
+from ..boundary.envelope import STRICT_WALK_ENVELOPE
 from ..simulation.errors import G1SimulationError, InvalidControlError, SimulationStateError
 from ..skills import SkillStatus
 from .evidence import MissionRecorder
@@ -41,6 +42,7 @@ class MissionFailureType(str, Enum):
     MISSION_TIMEOUT = "MISSION_TIMEOUT"
     INVALID_STATE = "INVALID_STATE"
     INTERNAL_ERROR = "INTERNAL_ERROR"
+    TASK_ENVELOPE_VIOLATION = "TASK_ENVELOPE_VIOLATION"
 
 
 class MissionSessionProtocol(Protocol):
@@ -112,6 +114,7 @@ class MissionExecutor:
         recorder_root: str | None = None,
         seed: int = 0,
         provenance: Mapping[str, Any] | None = None,
+        walk_strict_gate: bool = False,
     ) -> None:
         self.validator = validator
         self.grounder = grounder
@@ -120,6 +123,7 @@ class MissionExecutor:
         self.recorder_root = recorder_root
         self.seed = int(seed)
         self.provenance = dict(provenance or {})
+        self.walk_strict_gate = bool(walk_strict_gate)
         self.last_graph: TaskGraph | None = None
 
     # ------------------------------------------------------------------
@@ -270,14 +274,37 @@ class MissionExecutor:
                     )
                     transitions.append(transition)
                     log("transition_checkpoint", transition)
-                if execution.status == SkillStatus.SUCCESS.value and execution.physical_success:
+                gate_decision = None
+                if (
+                    self.walk_strict_gate
+                    and node.skill.value == "walk_forward"
+                    and execution.status == SkillStatus.SUCCESS.value
+                    and execution.physical_success
+                ):
+                    evaluation = STRICT_WALK_ENVELOPE.evaluate(
+                        execution.metrics, float(node.parameters["distance_m"])
+                    )
+                    gate_decision = {
+                        "action": "CONTINUE" if evaluation.satisfied else "STOP_DEPENDENTS",
+                        "reason": "strict_walk_envelope_satisfied" if evaluation.satisfied else "strict_walk_envelope_violated",
+                        "observed_metrics": {
+                            key: execution.metrics[key]
+                            for key in ("distance_error_m", "lateral_drift_m", "heading_error_deg", "simulation_time_s")
+                        },
+                        "evaluation": evaluation.to_dict(),
+                        "evaluator": "g1swarm.boundary.envelope.STRICT_WALK_ENVELOPE",
+                        "provenance": dict(self.provenance),
+                    }
+                    log("feedback_decision", {"node_id": node.node_id, **gate_decision})
+                gate_passed = gate_decision is None or gate_decision["action"] == "CONTINUE"
+                if execution.status == SkillStatus.SUCCESS.value and execution.physical_success and gate_passed:
                     graph.mark_success(
                         node.node_id,
                         result=execution.to_dict(),
                         start_state=start_state,
                         end_state=execution.end_state,
                     )
-                    nodes_payload.append(self._node_payload(node, execution))
+                    nodes_payload.append(self._node_payload(node, execution, decision=gate_decision))
                     log("node_success", {"node_id": node.node_id, "skill": node.skill.value})
                     previous_node = node
                     previous_end_state = execution.end_state
@@ -288,11 +315,19 @@ class MissionExecutor:
                     start_state=start_state,
                     end_state=execution.end_state,
                 )
-                nodes_payload.append(self._node_payload(node, execution))
+                nodes_payload.append(self._node_payload(node, execution, decision=gate_decision))
                 blocked = graph.block_descendants(node.node_id)
                 failed_node = node.node_id
-                failure_type = self._attribute_failure(node, execution, first=previous_node is None)
-                failure_reason = execution.reason or execution.status
+                failure_type = (
+                    MissionFailureType.TASK_ENVELOPE_VIOLATION
+                    if not gate_passed and execution.status == SkillStatus.SUCCESS.value and execution.physical_success
+                    else self._attribute_failure(node, execution, first=previous_node is None)
+                )
+                failure_reason = (
+                    ", ".join(gate_decision["evaluation"]["violations"])
+                    if failure_type is MissionFailureType.TASK_ENVELOPE_VIOLATION
+                    else execution.reason or execution.status
+                )
                 log(
                     "node_failure",
                     {
@@ -409,8 +444,8 @@ class MissionExecutor:
         }
 
     @staticmethod
-    def _node_payload(node, execution: NodeExecution) -> dict[str, Any]:
-        return {
+    def _node_payload(node, execution: NodeExecution, *, decision=None) -> dict[str, Any]:
+        payload = {
             "node_id": node.node_id,
             "skill": node.skill.value,
             "execution_mode": node.execution_mode,
@@ -419,6 +454,9 @@ class MissionExecutor:
             "metrics": dict(execution.metrics),
             "transitions": [],
         }
+        if decision is not None:
+            payload["feedback_decision"] = decision
+        return payload
 
     def _reject(
         self,
