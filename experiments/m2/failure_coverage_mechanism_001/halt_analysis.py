@@ -25,7 +25,7 @@ def analyze(root):
             previous = rows[-n-1:-1]
             assert first == len(rows)
             assert abs(means[-1] - halt['skill_metrics']['final_window_mean_speed_mps']) < 1e-14
-            results.append(dict(case=family, arm=arm, source=str(path), sha256=hashlib.sha256(raw).hexdigest(),
+            results.append(dict(case=family, arm=arm, source=path.relative_to(root).as_posix(), sha256=hashlib.sha256(raw).hexdigest(),
                 start_s=trace[0]['time_s'], end_s=trace[-1]['time_s'], duration_s=halt['simulated_halt_duration_s'],
                 step_s=dt, samples=len(rows), window_samples=n, min_possible_duration_s=n*dt,
                 terminal_window_start_s=terminal[0]['time_s'], terminal_window_end_s=terminal[-1]['time_s'],
