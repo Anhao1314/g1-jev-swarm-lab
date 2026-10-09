@@ -33,6 +33,10 @@ and current source locators in `ops/state.json`, not copied history in prompts.
 
 - Choose the class from actual scope, not as a way to bypass required checks. Git commit/push alone does not turn a Surgical task into a full Release campaign.
 - Prefer targeted validation. Reuse prior passing evidence only when its code, configuration, environment, and covered behavior still apply; identify reused evidence and checks not rerun.
+- Route with `plan --p1` for an integrity repair and `--final-head` for an exact release identity. R0 uses review, R1 focused tests, R2 the applicable protocol/boundary checks. P1 and formal claims keep an independent reviewer; risk routing never grants Owner physical authority.
+- One owner performs the check. Share a brief `handoff` with reviewers instead of repeating the context/history read. Reopen context on changed HEAD, inputs, environment, anchors or scope. Delegate disjoint work only when it adds evidence or saves time; avoid a second author/reviewer doing the same test.
+- Seal new raw evidence once. For already committed receipts use `evidence-ref` at a full commit and verify its blob/SHA; preserve failed identities and byte domains. Never copy a previous bundle merely to make a new report self-contained, delete historical copies, or reference an unsealed growing log as final evidence.
+- Reuse only successful scoped unit receipts with explicit complete code/config/test inputs and live environment metadata. Missing/drifted inputs require a rerun. Protocol gates, independent reviews and final-HEAD checks remain fresh; hash equality is not a scientific decision.
 - Broaden or repeat checks only for a relevant change, failure, unresolved risk, or mandatory protocol/release requirement. Do not weaken a required check to save time.
 
 ## Expensive work and process discipline
@@ -58,6 +62,8 @@ and current source locators in `ops/state.json`, not copied history in prompts.
 Report **Verdict / Evidence / Remaining blockers / Stopping reason**, briefly. Include relevant validation results, limitations, nonblocking findings, and Git status; distinguish completed work from proposals.
 
 Once the authorized deliverable and required evidence are complete, stop. Do not add polish, sampling, broad regression, or the next research phase without a concrete unmet requirement.
+
+Record `begin`/`end` around the actual task window, and `run` at phase boundaries. Report elapsed window separately from overlapping command sums. Attach sanitized session usage when available; missing reasoning/tokens/child cost remain unknown, never zero or estimated savings. Late instrumentation must say `observed-window`, not full-task time.
 
 Current retained state is generated/validated by `research_ops.py context` from
 the source pointers in `ops/state.json`. Phase 3A.5 remains paused. Only an explicit

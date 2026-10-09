@@ -1,0 +1,25 @@
+.........................................F...                            [100%]
+================================== FAILURES ===================================
+_________ test_deleted_bound_input_failed_attempt_is_always_recorded __________
+
+tmp_path = WindowsPath('D:/webcodex/mujoco-g1/ops-efficiency-final-tests/test_deleted_bound_input_faile0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B17EDD5410>
+
+    def test_deleted_bound_input_failed_attempt_is_always_recorded(tmp_path, monkeypatch):
+        old = receipt(tmp_path, monkeypatch)
+        ops.record('attempt', old, tmp_path)
+        monkeypatch.setattr(ops, 'ROOT', tmp_path)
+        monkeypatch.setattr(sys, 'argv', ['research_ops.py', 'run', '--task', 'attempt',
+            '--stage', 'tests', '--label', 'bounded-check', '--bindings', 'code.py', '--',
+            sys.executable, '-c', "from pathlib import Path; Path('code.py').unlink(); raise SystemExit(3)"])
+>       assert ops.main() == 3
+E       assert 1 == 3
+E        +  where 1 = <function main at 0x000001B17EC320C0>()
+E        +    where <function main at 0x000001B17EC320C0> = ops.main
+
+tests\test_research_ops_efficiency.py:143: AssertionError
+---------------------------- Captured stdout call -----------------------------
+{"status": "BLOCKED", "error": "'D:\\\\webcodex\\\\mujoco-g1\\\\ops-efficiency\\\\.research_ops\\\\attempt-1791556424262783300.log' is not in the subpath of 'D:\\\\webcodex\\\\mujoco-g1\\\\ops-efficiency-final-tests\\\\test_deleted_bound_input_faile0' OR one path is relative and the other is absolute."}
+=========================== short test summary info ===========================
+FAILED tests/test_research_ops_efficiency.py::test_deleted_bound_input_failed_attempt_is_always_recorded
+1 failed, 44 passed in 4.27s

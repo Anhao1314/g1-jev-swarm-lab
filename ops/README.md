@@ -64,3 +64,49 @@ Closeout: inspect explicit paths, run only required checks, commit explicit path
 one bounded push (e.g. Git http.lowSpeedTime=30), then check remote SHA. A failed
 network attempt is REMOTE_PENDING; do not spend more reasoning on repeated polls.
 Do not omit mandatory delivery verification to improve benchmark numbers.
+
+## Lightweight additions
+
+Use one owner and a brief `handoff --kind implementation --paths PATH...` for
+scope/context. A reviewer still independently inspects required P1/scientific
+evidence. `plan --p1` retains that review; `--final-head` retains the fresh final
+identity check. Risk R0 is bounded docs, R1 affected implementation checks, R2
+scientific/shared/unknown scope or P1/final identity. No route grants acquisition.
+
+For an unchanged scoped unit check (declare its full relevant input closure):
+
+```powershell
+python scripts/research_ops.py run --task TASK --stage tests --label CHECK --bindings CODE CONFIG TEST --gate unit --invocation-spec CHECK.json -- ABSOLUTE_PYTHON -m pytest TEST
+python scripts/research_ops.py reuse --receipt .research_ops/TASK.jsonl --check-id CHECK --paths CODE CONFIG TEST --invocation-spec CHECK.json
+```
+
+The latest matching attempt is used, including failures. Missing/drifted files,
+environment metadata or raw log force a rerun. Full bindings stay in the local
+journal; stdout is brief. `--gate protocol|independent|final-head` prevents reuse.
+Metadata equality is not a full package-byte audit or scientific authorization.
+
+`CHECK.json` must explicitly declare credential-free argv:
+`{"schema":"nonsecret_test_invocation_v1","nonsecret":true,"argv":["ABSOLUTE_PYTHON","-m","pytest","TEST"]}`.
+Use the actual absolute executable path and literal arguments. Run argv must
+match the specification; reuse checks the same invocation, cwd and executable
+bytes. Legacy receipts without this identity are not reusable. Raw argv is not
+copied into telemetry; do not use an invocation spec for credential-bearing calls.
+Every identified run appends a pending attempt before prechecks/spawn. A no-run
+failure or unfinished attempt blocks fallback to old PASS. See the bounded
+[PR23 repair receipt](efficiency_reuse_repair_001/report.md); prior performance
+measurements belong to their original HEAD and were not remeasured for this API.
+
+```powershell
+python scripts/research_ops.py evidence-ref --revision FULL_COMMIT --paths SEALED_RECEIPT
+python scripts/research_ops.py evidence-ref --verify SAVED_REFERENCE.json
+python scripts/research_ops.py begin --task TASK --scope complete-task
+python scripts/research_ops.py end --task TASK
+python scripts/research_ops.py summary --task TASK --session SANITIZED_SESSION.json
+```
+
+Reference only already committed immutable evidence; new raw failures must be
+sealed once. Git blob bytes and Windows checkout bytes are distinct. LFS pointers
+are not raw payload. Never rewrite a scientific raw closure to adopt this helper.
+Late timing uses `observed-window`; clock/host discontinuity stays unmeasured.
+Session usage is optional, sanitized, parent-window only; missing costs stay null.
+Matched nonphysical results and limitations: [efficiency report](efficiency_001/report.md).
