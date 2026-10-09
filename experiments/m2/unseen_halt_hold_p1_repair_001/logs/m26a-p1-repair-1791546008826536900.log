@@ -1,0 +1,75 @@
+........................................................................ [ 46%]
+..........................................................F............F [ 93%]
+F....FF...                                                               [100%]
+================================== FAILURES ===================================
+_____________________ test_target_environment_no_imports ______________________
+
+    def test_target_environment_no_imports():
+>       report = R["check_target"](require_manifest=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_readiness.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+experiments\m2\unseen_halt_hold_p1_repair_001\readiness.py:262: in check_target
+    clean_process()
+experiments\m2\unseen_halt_hold_p1_repair_001\readiness.py:73: in clean_process
+    require(not any(name in sys.modules for name in FORBIDDEN_IMPORTS),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False
+message = 'Readiness requires a process without simulator/policy/project imports'
+
+    def require(value, message):
+        if not value:
+>           raise ValueError(message)
+E           ValueError: Readiness requires a process without simulator/policy/project imports
+
+experiments\m2\unseen_halt_hold_p1_repair_001\readiness.py:37: ValueError
+_________ test_bad_expected_readiness_sha_rejected_before_environment _________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-282/test_bad_expected_readiness_sh0')
+
+    def test_bad_expected_readiness_sha_rejected_before_environment(tmp_path):
+        here = tmp_path / R["REPAIR_NAMESPACE"]
+        here.mkdir(parents=True)
+        (here / "readiness_manifest.json").write_text("{}")
+>       with pytest.raises(ValueError, match="expected SHA"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'expected SHA'
+E         Actual message: 'Readiness requires a process without simulator/policy/project imports'
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_readiness.py:106: AssertionError
+_____________________ test_wrong_execution_head_rejected ______________________
+
+    def test_wrong_execution_head_rejected():
+>       with pytest.raises(ValueError, match="execution HEAD"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'execution HEAD'
+E         Actual message: 'Readiness requires a process without simulator/policy/project imports'
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_readiness.py:111: AssertionError
+________________ test_blocked_sha_rejected_before_environment _________________
+
+    def test_blocked_sha_rejected_before_environment():
+>       with pytest.raises(ValueError, match="Blocked readiness SHA"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Blocked readiness SHA'
+E         Actual message: 'Readiness requires a process without simulator/policy/project imports'
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_readiness.py:150: AssertionError
+__________________ test_old_path_rejected_before_environment __________________
+
+    def test_old_path_rejected_before_environment():
+>       with pytest.raises(ValueError, match="Wrong repair readiness path"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Wrong repair readiness path'
+E         Actual message: 'Readiness requires a process without simulator/policy/project imports'
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_readiness.py:155: AssertionError
+=========================== short test summary info ===========================
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_readiness.py::test_target_environment_no_imports
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_readiness.py::test_bad_expected_readiness_sha_rejected_before_environment
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_readiness.py::test_wrong_execution_head_rejected
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_readiness.py::test_blocked_sha_rejected_before_environment
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_readiness.py::test_old_path_rejected_before_environment
+5 failed, 149 passed in 20.18s

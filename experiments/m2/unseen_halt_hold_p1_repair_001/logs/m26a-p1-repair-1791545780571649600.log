@@ -1,0 +1,60 @@
+.........................................................FF.....         [100%]
+================================== FAILURES ===================================
+_ test_hardkill_truncated_native_after_known_breach_preserves_prefix_diagnostic[rolling] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-280/test_hardkill_truncated_native0')
+violation = 'rolling'
+
+    @pytest.mark.parametrize("violation", ["rolling","path"])
+    def test_hardkill_truncated_native_after_known_breach_preserves_prefix_diagnostic(tmp_path,violation):
+        folder=tmp_path/"raw";cell=full_cell(folder)
+        native=A.read_jsonl(folder/"native_incremental.jsonl")[:1501]
+        if violation=="rolling": native[-1]["qvel"][0]=40.
+        else: native[-1]["qpos"][0]=native[-2]["qpos"][0]+.21
+        lines(folder/"native_incremental.jsonl",native)
+        with (folder/"native_incremental.jsonl").open("a",encoding="utf8") as f: f.write('{"sequence":1502')
+        lines(folder/"hold_incremental.jsonl",[])
+        # Reconstruct the missing derived observer row only from the matching
+        # completed native row and recorded zero-command journal.
+        lines(folder/"command_incremental.jsonl",A.read_jsonl(folder/"command_incremental.jsonl")[:1501])
+        (folder/"witness.json").unlink(); (folder/"outcome.json").unlink()
+        scored=A.audit_cell(folder,SPEC,cell)
+>       assert scored["status"]=="MISSING_EVIDENCE",scored
+E       AssertionError: {'cell_id': 'seen_no_push_anchor', 'status': 'TECHNICAL_PARTIAL', 'audit_status': 'TECHNICAL_PARTIAL', 'reason': 'TRUNCATED_JOURNAL:native_incremental.jsonl', ...}
+E       assert 'TECHNICAL_PARTIAL' == 'MISSING_EVIDENCE'
+E         
+E         - MISSING_EVIDENCE
+E         + TECHNICAL_PARTIAL
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_audit.py:571: AssertionError
+_ test_hardkill_truncated_native_after_known_breach_preserves_prefix_diagnostic[path] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-280/test_hardkill_truncated_native1')
+violation = 'path'
+
+    @pytest.mark.parametrize("violation", ["rolling","path"])
+    def test_hardkill_truncated_native_after_known_breach_preserves_prefix_diagnostic(tmp_path,violation):
+        folder=tmp_path/"raw";cell=full_cell(folder)
+        native=A.read_jsonl(folder/"native_incremental.jsonl")[:1501]
+        if violation=="rolling": native[-1]["qvel"][0]=40.
+        else: native[-1]["qpos"][0]=native[-2]["qpos"][0]+.21
+        lines(folder/"native_incremental.jsonl",native)
+        with (folder/"native_incremental.jsonl").open("a",encoding="utf8") as f: f.write('{"sequence":1502')
+        lines(folder/"hold_incremental.jsonl",[])
+        # Reconstruct the missing derived observer row only from the matching
+        # completed native row and recorded zero-command journal.
+        lines(folder/"command_incremental.jsonl",A.read_jsonl(folder/"command_incremental.jsonl")[:1501])
+        (folder/"witness.json").unlink(); (folder/"outcome.json").unlink()
+        scored=A.audit_cell(folder,SPEC,cell)
+>       assert scored["status"]=="MISSING_EVIDENCE",scored
+E       AssertionError: {'cell_id': 'seen_no_push_anchor', 'status': 'TECHNICAL_PARTIAL', 'audit_status': 'TECHNICAL_PARTIAL', 'reason': 'TRUNCATED_JOURNAL:native_incremental.jsonl', ...}
+E       assert 'TECHNICAL_PARTIAL' == 'MISSING_EVIDENCE'
+E         
+E         - MISSING_EVIDENCE
+E         + TECHNICAL_PARTIAL
+
+experiments\m2\unseen_halt_hold_p1_repair_001\test_audit.py:571: AssertionError
+=========================== short test summary info ===========================
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_audit.py::test_hardkill_truncated_native_after_known_breach_preserves_prefix_diagnostic[rolling]
+FAILED experiments/m2/unseen_halt_hold_p1_repair_001/test_audit.py::test_hardkill_truncated_native_after_known_breach_preserves_prefix_diagnostic[path]
+2 failed, 62 passed in 15.27s
