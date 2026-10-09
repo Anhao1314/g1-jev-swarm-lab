@@ -14,6 +14,11 @@ the claim tier and independent audit; ordinary UI/docs do not default to it.
 For retained visual evidence use `g1-visual-evidence`; keep workflows in Skills
 and current source locators in `ops/state.json`, not copied history in prompts.
 
+For one clear R0/R1 documentation or nonscientific small fix, use repo-local
+`.agents/skills/g1-fast-fix/SKILL.md` (`$g1-fast-fix`). Its ~5/~8 minute budgets
+are soft; P1/R2, scientific criteria, safety/permissions and frozen evidence exit
+that mode. It never reduces the existing review or Owner authority gates.
+
 ## Scope and autonomy
 
 - Solve one explicit question per task. Start by stating the question, task class, authorized change boundary, evidence needed, and stopping condition; keep this brief.
