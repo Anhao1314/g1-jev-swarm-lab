@@ -127,7 +127,7 @@ def test_backend_source_binding_drift_rejected_before_double(pair,monkeypatch):
     worker=store.claim_worker(packet,binding)
     changed=deepcopy(binding)
     changed['execution_head']='0'*40
-    with pytest.raises(A.AuthorizationError,match='BACKEND_BINDING'):
+    with pytest.raises(A.AuthorizationError,match='AUTHORIZATION_BINDING_MISMATCH'):
         worker.enter_substitute(changed)
     assert not (lease.campaign/'0-backend.json').exists()
 
