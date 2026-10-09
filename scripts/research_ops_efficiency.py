@@ -39,12 +39,39 @@ def bindings(paths, root):
             'environment': live_environment(root)}
 
 
-def reuse(receipt, check_id, paths, gate, root):
+def invocation_identity(spec_path, root, command=None):
+    """Only explicitly declared credential-free argv; never persist raw argv."""
+    from research_ops import read, sha
+    spec = read(spec_path)
+    if set(spec) != {'schema', 'nonsecret', 'argv'} or spec['schema'] != 'nonsecret_test_invocation_v1' or spec['nonsecret'] is not True:
+        raise ValueError('Explicit nonsecret invocation specification required')
+    argv = spec['argv']
+    if not isinstance(argv, list) or not argv or any(not isinstance(arg, str) or '\0' in arg for arg in argv) or not argv[0]:
+        raise ValueError('Unambiguous argv list required')
+    if command is not None and argv != command:
+        raise ValueError('Declared invocation differs from actual command')
+    candidate = Path(argv[0])
+    if not candidate.is_absolute():
+        raise ValueError('Absolute executable required; implicit PATH lookup is ambiguous')
+    executable = candidate.resolve()
+    canonical = {'argv': argv, 'cwd': str(root.resolve()),
+                 'executable': str(executable) if executable else None,
+                 'executable_sha256': sha(executable) if executable and executable.is_file() else None}
+    encoded = json.dumps(canonical, ensure_ascii=True, sort_keys=True, separators=(',', ':')).encode()
+    return {'schema': 'nonsecret_test_invocation_identity_v1', 'sha256': hashlib.sha256(encoded).hexdigest()}
+
+
+def reuse(receipt, check_id, paths, gate, root, *, invocation_spec=None):
     from research_ops import confined, sha
     if gate != 'unit' or receipt.get('gate') != 'unit':
         return {'status': 'FRESH_GATE_REQUIRED', 'eligible': False, 'reason': 'Protocol/final-HEAD/independent gates are never waived'}
     if receipt.get('exit_code') != 0 or receipt.get('label') != check_id or not receipt.get('reuse_bindings'):
         return {'status': 'RERUN_REQUIRED', 'eligible': False, 'reason': 'Missing successful matching check receipt'}
+    try:
+        if invocation_spec is None or receipt.get('invocation_identity') != invocation_identity(invocation_spec, root):
+            raise ValueError('Missing/different actual test invocation identity')
+    except (OSError, ValueError, KeyError, TypeError):
+        return {'status': 'RERUN_REQUIRED', 'eligible': False, 'reason': 'Missing/different actual test invocation identity'}
     try:
         current = bindings(paths, root)
         log = confined(root, receipt['output'].replace('\\', '/'))

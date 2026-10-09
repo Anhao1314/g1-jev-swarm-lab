@@ -27,14 +27,18 @@ def receipt(root, monkeypatch):
     monkeypatch.setattr(efficient, 'live_environment', lambda root: {'python': 'fixture'})
     (root / 'code.py').write_bytes(b'# tested code\n')
     (root / 'log.txt').write_bytes(b'PASS\n')
+    spec = root / 'invocation.json'
+    spec.write_text(json.dumps({'schema': 'nonsecret_test_invocation_v1', 'nonsecret': True,
+                               'argv': [sys.executable, '-c', "print('PASS')"]}))
     return {'gate': 'unit', 'label': 'bounded-check', 'exit_code': 0,
             'output': 'log.txt', 'output_sha256': ops.sha(root / 'log.txt'),
+            'invocation_identity': efficient.invocation_identity(spec, root),
             'reuse_bindings': efficient.bindings(['code.py'], root)}
 
 
 def test_unchanged_scoped_check_reused_without_launch(tmp_path, monkeypatch):
     old = receipt(tmp_path, monkeypatch)
-    result = efficient.reuse(old, 'bounded-check', ['code.py'], 'unit', tmp_path)
+    result = efficient.reuse(old, 'bounded-check', ['code.py'], 'unit', tmp_path, invocation_spec=tmp_path/'invocation.json')
     assert result['eligible'] and not result['fresh_test_run']
     assert result['acquisition_authorized'] is False
 
@@ -51,15 +55,15 @@ def test_reuse_drift_fails_closed(tmp_path, monkeypatch, change):
     if change == 'failed': old['exit_code'] = 1
     if change == 'identity': label = 'different-contract'
     if change == 'missing': old.pop('reuse_bindings')
-    assert not efficient.reuse(old, label, paths, 'unit', tmp_path)['eligible']
+    assert not efficient.reuse(old, label, paths, 'unit', tmp_path, invocation_spec=tmp_path/'invocation.json')['eligible']
 
 
 @pytest.mark.parametrize('gate', ['protocol', 'independent', 'final-head'])
 def test_mandatory_fresh_gate_not_replaced_by_hash_reuse(tmp_path, monkeypatch, gate):
     old = receipt(tmp_path, monkeypatch)
-    assert efficient.reuse(old, 'bounded-check', ['code.py'], gate, tmp_path)['status'] == 'FRESH_GATE_REQUIRED'
+    assert efficient.reuse(old, 'bounded-check', ['code.py'], gate, tmp_path, invocation_spec=tmp_path/'invocation.json')['status'] == 'FRESH_GATE_REQUIRED'
     old['gate'] = gate
-    assert not efficient.reuse(old, 'bounded-check', ['code.py'], 'unit', tmp_path)['eligible']
+    assert not efficient.reuse(old, 'bounded-check', ['code.py'], 'unit', tmp_path, invocation_spec=tmp_path/'invocation.json')['eligible']
 
 
 def fixture_git(root):
@@ -130,7 +134,7 @@ def test_latest_failed_check_is_not_hidden_by_earlier_pass(tmp_path):
 
 def test_missing_gate_identity_is_not_reusable(tmp_path, monkeypatch):
     old = receipt(tmp_path, monkeypatch); old.pop('gate')
-    assert not efficient.reuse(old, 'bounded-check', ['code.py'], 'unit', tmp_path)['eligible']
+    assert not efficient.reuse(old, 'bounded-check', ['code.py'], 'unit', tmp_path, invocation_spec=tmp_path/'invocation.json')['eligible']
 
 
 def test_deleted_bound_input_failed_attempt_is_always_recorded(tmp_path, monkeypatch):
@@ -144,7 +148,7 @@ def test_deleted_bound_input_failed_attempt_is_always_recorded(tmp_path, monkeyp
     current = efficient.load_check_receipt(ops.task_log('attempt', tmp_path), 'bounded-check')
     assert current['exit_code'] == 3 and current['bindings_error'] == 'FileNotFoundError'
     (tmp_path / 'code.py').write_bytes(b'# tested code\n')
-    assert not efficient.reuse(current, 'bounded-check', ['code.py'], 'unit', tmp_path)['eligible']
+    assert not efficient.reuse(current, 'bounded-check', ['code.py'], 'unit', tmp_path, invocation_spec=tmp_path/'invocation.json')['eligible']
 
 
 def test_known_non_document_changes_are_not_review_only():

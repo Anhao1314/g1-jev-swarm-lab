@@ -185,14 +185,67 @@ def record(task, event, root=ROOT):
 def summarize(task, root=ROOT):
     rows = [json.loads(s) for s in task_log(task, root).read_text().splitlines()]
     ends = [r for r in rows if r.get('event') == 'task_end']
+    completed_attempts = {r.get('attempt_id') for r in rows if r.get('event') == 'run_attempt_completed'}
     return {'task': task, 'elapsed_window': {'measured': bool(ends) and ends[0]['elapsed_seconds'] is not None, 'seconds': ends[0]['elapsed_seconds'] if ends else None,
             'scope': ends[0]['scope'] if ends else None, 'limit': 'Monotonic observed window includes waits; stage sums are not end-to-end time'},
             'output_log_bytes': sum(r.get('output_bytes', 0) for r in rows) if any('output_bytes' in r for r in rows) else None,
-            'stages': {stage: {'measured': bool(items := [r for r in rows if r.get('stage') == stage]),
+            'incomplete_attempts': sum(r.get('event') == 'run_attempt_started' and r['attempt_id'] not in completed_attempts for r in rows),
+            'stages': {stage: {'measured': bool(items := [r for r in rows if r.get('stage') == stage and r.get('event') != 'run_attempt_started']),
             'seconds': round(sum(r['seconds'] for r in items), 4) if items else None,
             'events': len(items), 'shell_commands': sum(r.get('shell_commands', 0) for r in items),
             'failed_commands': sum(r.get('exit_code', 0) != 0 for r in items)} for stage in STAGES},
             'token_usage': 'UNAVAILABLE unless imported from session records; intervals may overlap, do not sum as wall time'}
+
+
+def run_attempt(args, started):
+    """Start is append-only before prechecks: interrupted/no-run attempts mask old PASS."""
+    import research_ops_efficiency as efficient
+    path = task_log(args.task, ROOT); path.parent.mkdir(exist_ok=True)
+    attempt_id = str(time.time_ns())
+    record(args.task, {'event': 'run_attempt_started', 'attempt_id': attempt_id,
+        'stage': args.stage, 'label': args.label, 'gate': args.gate, 'exit_code': None,
+        'seconds': 0, 'shell_commands': 0, 'command_started': False}, ROOT)
+    result = {'event': 'run_attempt_completed', 'attempt_id': attempt_id,
+        'stage': args.stage, 'label': args.label, 'gate': args.gate,
+        'source': 'measured_command', 'command_started': False,
+        'command_exit_code': None, 'shell_commands': 0, 'exit_code': 1}
+    phase = 'invocation_precheck'
+    try:
+        command = args.argv[1:] if args.argv[:1] == ['--'] else args.argv
+        if not command: raise ValueError('Missing command after --')
+        if args.invocation_spec:
+            result['invocation_identity'] = efficient.invocation_identity(args.invocation_spec, ROOT, command)
+        phase = 'binding_precheck'
+        before = efficient.bindings(args.bindings, ROOT) if args.bindings else None
+        output = path.parent / f'{args.task}-{attempt_id}.log'
+        phase = 'command_start'
+        with output.open('xb') as stream:
+            code = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT).returncode
+        result.update(command_started=True, command_exit_code=code, exit_code=code,
+                      shell_commands=1, output=str(output.relative_to(ROOT)))
+        phase = 'output_identity'
+        result.update(output_sha256=sha(output), output_bytes=output.stat().st_size)
+        phase = 'binding_postcheck'
+        if args.bindings:
+            after = efficient.bindings(args.bindings, ROOT)
+            result['inputs_unchanged_during_check'] = before == after
+            if before != after:
+                result['exit_code'] = code or 1
+            elif code == 0 and 'invocation_identity' in result:
+                result['reuse_bindings'] = after
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        result.update(failure_phase=phase, error_type=type(error).__name__,
+                      exit_code=result['command_exit_code'] or 1,
+                      inputs_unchanged_during_check=False)
+        if phase == 'binding_postcheck': result['bindings_error'] = type(error).__name__
+        if result['command_started'] is False: result['status'] = 'TECHNICAL_NO_RUN'
+    result['seconds'] = time.perf_counter() - started
+    record(args.task, result, ROOT)
+    code = result['exit_code']
+    if 'reuse_bindings' in result:
+        result = {key: value for key, value in result.items() if key != 'reuse_bindings'}
+        result['reuse_receipt'] = str(path.relative_to(ROOT))
+    return result, code
 
 
 def main():
@@ -203,6 +256,7 @@ def main():
     p = sub.add_parser('check'); p.add_argument('target', choices=('console',))
     p = sub.add_parser('closeout'); p.add_argument('--base', required=True); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--retained-experiment', action='store_true')
     p = sub.add_parser('run'); p.add_argument('--task', required=True); p.add_argument('--stage', choices=STAGES, required=True); p.add_argument('--label', required=True); p.add_argument('--bindings', nargs='+'); p.add_argument('--gate', choices=('unit', 'protocol', 'independent', 'final-head'), default='unit'); p.add_argument('argv', nargs=argparse.REMAINDER)
+    p.add_argument('--invocation-spec', type=Path, help='Explicit credential-free argv JSON; required for reusable results')
     p = sub.add_parser('mark'); p.add_argument('--task', required=True); p.add_argument('--stage', choices=STAGES, required=True); p.add_argument('--label', required=True); p.add_argument('--seconds', type=float, required=True)
     p = sub.add_parser('summary'); p.add_argument('--task', required=True)
     p.add_argument('--session', type=Path, help='Sanitized research_ops_session receipt; never raw messages')
@@ -211,6 +265,7 @@ def main():
     p = sub.add_parser('handoff'); p.add_argument('--kind', choices=('implementation','mechanism','claim'), default='implementation'); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--p1', action='store_true'); p.add_argument('--final-head', action='store_true')
     p = sub.add_parser('evidence-ref'); p.add_argument('--revision'); p.add_argument('--paths', nargs='+'); p.add_argument('--verify', type=Path)
     p = sub.add_parser('reuse'); p.add_argument('--receipt', type=Path, required=True); p.add_argument('--check-id', required=True); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--gate', choices=('unit','protocol','independent','final-head'), default='unit')
+    p.add_argument('--invocation-spec', type=Path)
     args = parser.parse_args(); started = time.perf_counter(); code = 0
     try:
         if args.command == 'context':
@@ -234,35 +289,13 @@ def main():
             elif args.command == 'evidence-ref':
                 result = efficient.verify_ref(read(args.verify), ROOT) if args.verify else efficient.evidence_ref(args.revision or '', args.paths or [], ROOT)
             else:
-                result = efficient.reuse(efficient.load_check_receipt(args.receipt, args.check_id), args.check_id, args.paths, args.gate, ROOT); code = int(not result['eligible'])
+                result = efficient.reuse(efficient.load_check_receipt(args.receipt, args.check_id), args.check_id, args.paths, args.gate, ROOT, invocation_spec=args.invocation_spec); code = int(not result['eligible'])
         elif args.command == 'mark':
             if args.seconds < 0: raise ValueError('Duration cannot be negative')
             result = {'stage': args.stage, 'seconds': args.seconds, 'label': args.label, 'source': 'manual_measured', 'shell_commands': 0}
             record(args.task, result, ROOT)
         else:
-            command = args.argv[1:] if args.argv[:1] == ['--'] else args.argv
-            if not command: raise ValueError('Missing command after --')
-            path = task_log(args.task, ROOT); path.parent.mkdir(exist_ok=True)
-            if args.bindings:
-                import research_ops_efficiency as efficient
-                before = efficient.bindings(args.bindings, ROOT)
-            output = path.parent / f'{args.task}-{time.time_ns()}.log'
-            with output.open('wb') as stream:
-                code = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT).returncode
-            result = {'stage': args.stage, 'label': args.label, 'seconds': time.perf_counter() - started, 'source': 'measured_command',
-                      'shell_commands': 1, 'exit_code': code, 'output': str(output.relative_to(ROOT)), 'output_sha256': sha(output), 'output_bytes': output.stat().st_size, 'gate': args.gate}
-            if args.bindings:
-                try:
-                    after = efficient.bindings(args.bindings, ROOT)
-                    result['inputs_unchanged_during_check'] = before == after
-                    if before == after and code == 0: result['reuse_bindings'] = after
-                except (OSError, ValueError, KeyError) as error:
-                    result['inputs_unchanged_during_check'] = False
-                    result['bindings_error'] = type(error).__name__
-            record(args.task, result, ROOT)
-            if 'reuse_bindings' in result:
-                result = {key: value for key, value in result.items() if key != 'reuse_bindings'}
-                result['reuse_receipt'] = str(path.relative_to(ROOT))
+            result, code = run_attempt(args, started)
         result['ops_elapsed_seconds'] = round(time.perf_counter() - started, 4)
         print(json.dumps(result, ensure_ascii=True, indent=2)); return code
     except (ValueError, OSError, KeyError, subprocess.CalledProcessError) as error:
