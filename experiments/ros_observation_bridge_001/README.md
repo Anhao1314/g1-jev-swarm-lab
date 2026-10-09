@@ -14,8 +14,10 @@ authorization or M2.4's `INCONCLUSIVE` verdict.
 historical samples and sanitized lifecycle events without requiring ROS 2.
 `ROS-R1` requires a real ROS 2 publisher and a separate subscriber to receive
 and check all messages. Unit tests with in-memory message doubles count only
-as contract tests, never as ROS-R1. The [acceptance report](acceptance.md)
-records which level the current host actually reached.
+as contract tests, never as ROS-R1. The original [ROS-R0 acceptance
+report](acceptance.md) records the Windows host limitation. The subsequent
+[ROS-R1 real communication report](r1_runs/attempt_003/README.md) records the
+independent Ubuntu/Jazzy round trip and retains both earlier technical failures.
 
 The replay exposes:
 
@@ -102,7 +104,7 @@ For an already configured Ubuntu 24.04/Jazzy machine, source
 `/opt/ros/jazzy/setup.bash` in **both** terminals and set:
 
 ```bash
-export PYTHONPATH="$PWD/src"
+export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
 export ROS_DOMAIN_ID=77
 export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
 ```
