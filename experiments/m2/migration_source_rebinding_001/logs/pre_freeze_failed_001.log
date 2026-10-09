@@ -1,0 +1,35 @@
+Provenance: exact output text returned by exec_command chunk 6c1976.
+Command: D:\work\g1-jev-swarm-lab\.venv\Scripts\python.exe -m pytest experiments/m2/migration_source_rebinding_001/test_readiness.py -q
+Working directory: D:\webcodex\mujoco-g1\main-codex
+Exit code: 1
+Failure retained: concurrent test fixture used superseded binding schema; no production check was bypassed.
+
+................................F..............                          [100%]
+================================== FAILURES ===================================
+________ test_binding_freezes_exact_origin_delta_and_external_metadata ________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-290/test_binding_freezes_exact_ori0')
+
+    def test_binding_freezes_exact_origin_delta_and_external_metadata(tmp_path):
+        data = valid_binding()
+        write_json(tmp_path / "binding.json", data)
+>       assert R["verify_binding"](ROOT, tmp_path) == data
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+experiments\m2\migration_source_rebinding_001\test_readiness.py:188:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+experiments\m2\migration_source_rebinding_001\readiness.py:207: in verify_binding
+    require(binding == required, "Migration binding identity/delta mismatch")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'Migration binding identity/delta mismatch'
+
+    def require(value, message):
+        if not value:
+>           raise ValueError(message)
+E           ValueError: Migration binding identity/delta mismatch
+
+experiments\m2\migration_source_rebinding_001\readiness.py:36: ValueError
+=========================== short test summary info ===========================
+FAILED experiments/m2/migration_source_rebinding_001/test_readiness.py::test_binding_freezes_exact_origin_delta_and_external_metadata
+1 failed, 46 passed in 4.46s
