@@ -12,6 +12,8 @@ import os
 from pathlib import Path
 import secrets
 import time
+import sys
+import importlib.util
 
 TEST = 'TEST_ONLY_NONPHYSICAL'
 OWNER = 'OWNER_REVIEWED_FROZEN_CAMPAIGN'
@@ -60,6 +62,29 @@ def verify_owner_record(record, binding, trust):
     return {'status':'OWNER_REVIEWED_RECORD_BYTES_VERIFIED','record_sha256':digest(record),
             'production_identity_authenticated':False,'physical_dispatch_enabled':False}
 
+def verify_worker_process(packet,binding,process_view=None):
+    if os.getpid()==packet['worker_pid']:
+        need(os.getppid()==packet['supervisor_pid'],'SUPERVISOR_IDENTITY_MISMATCH')
+        return 'DIRECT_PARENT'
+    need(sys.platform=='win32' and os.getppid()==packet['worker_pid'],'SUPERVISOR_IDENTITY_MISMATCH')
+    descriptor=binding.get('process_identity',{})
+    need(descriptor.get('mode')=='DIRECT_OR_ONE_FROZEN_WINDOWS_VENV_REDIRECTOR'
+         and descriptor.get('maximum_intermediate_launchers')==1,'UNBOUND_INTERMEDIATE_LAUNCHER')
+    if process_view is None:
+        path=Path(__file__).absolute().parent/'process_identity.py'
+        spec=importlib.util.spec_from_file_location('owner_process_witness',path)
+        module=importlib.util.module_from_spec(spec)
+        exec(compile(path.read_bytes(),str(path),'exec'),module.__dict__)
+        process_view=module.view
+    launcher,runtime=process_view(packet['worker_pid']),process_view(os.getpid())
+    need(launcher['parent_pid']==packet['supervisor_pid'] and runtime['parent_pid']==packet['worker_pid']
+         and Path(launcher['image'])==Path(descriptor['launcher_path']) and Path(runtime['image'])==Path(descriptor['runtime_path']),
+         'FROZEN_LAUNCHER_ANCESTRY_OR_IMAGE_MISMATCH')
+    for role in ('launcher','runtime'):
+        path=Path(descriptor[role+'_path'])
+        need(hashlib.sha256(path.read_bytes()).hexdigest()==descriptor[role+'_sha256'],'PROCESS_BINARY_DRIFT')
+    return 'ONE_FROZEN_WINDOWS_VENV_REDIRECTOR'
+
 def issue_test_record(binding, *, record_id=None, now=None, ttl_s=300):
     """Explicit fixture issuance only; cannot issue Owner-kind records."""
     now = time.time() if now is None else now
@@ -100,8 +125,9 @@ class TestLedger:
         state = read(claim)
         verify_record(state['record'],binding,kind=TEST)
         need(state['kind'] == TEST and state['record_sha256'] == digest(state['record']) and
-             state['supervisor_pid'] == packet['supervisor_pid'] == os.getppid(), 'SUPERVISOR_IDENTITY_MISMATCH')
-        need(packet['worker_pid'] == os.getpid() and packet['binding_sha256'] == digest(binding), 'WORKER_IDENTITY_OR_BINDING_MISMATCH')
+             state['supervisor_pid'] == packet['supervisor_pid'], 'SUPERVISOR_IDENTITY_MISMATCH')
+        verify_worker_process(packet,binding)
+        need(packet['binding_sha256'] == digest(binding), 'WORKER_IDENTITY_OR_BINDING_MISMATCH')
         index = packet['index']
         need(type(index) is int and 0 <= index < len(binding['cell_order']), 'CELL_INDEX_INVALID')
         campaign = claim.parent / (claim.stem + '-workers')
@@ -143,8 +169,8 @@ class WorkerLease:
         claim=read(self.packet['claim'])
         verify_record(claim['record'],binding,kind=TEST)
         need(claim['record_sha256']==digest(claim['record']),'BACKEND_RECORD_DRIFT')
-        need(canonical(binding) == canonical(self.binding) and os.getpid() == self.packet['worker_pid']
-             and os.getppid() == self.packet['supervisor_pid'], 'BACKEND_BINDING_OR_PROCESS_MISMATCH')
+        need(canonical(binding) == canonical(self.binding),'BACKEND_BINDING_OR_PROCESS_MISMATCH')
+        process_path=verify_worker_process(self.packet,binding)
         need(not (self.campaign/'closed.json').exists(), 'CAMPAIGN_CLOSED')
         need((self.campaign/f'{self.index}-issued.json').is_file() and (self.campaign/f'{self.index}-used.json').is_file(),
              'BACKEND_WITHOUT_VALID_CONSUMED_WORKER_PERMIT')
@@ -155,4 +181,6 @@ class WorkerLease:
         write_once(self.campaign/f'{self.index}-backend.json',{'kind':TEST,'binding_sha256':digest(binding),'index':self.index})
         return {'status':'NONPHYSICAL_BACKEND_SUBSTITUTE_ONLY','kind':TEST,
                 'cell_id':binding['cell_order'][self.index],'binding_sha256':digest(binding),
+                'process_witness':{'supervisor_pid':self.packet['supervisor_pid'],'launched_pid':self.packet['worker_pid'],
+                                   'runtime_pid':os.getpid(),'parent_pid':os.getppid(),'path':process_path},
                 'physics_steps':0,'policy_inferences':0,'model_loads':0,'physical_outcome':'NOT_MEASURED'}

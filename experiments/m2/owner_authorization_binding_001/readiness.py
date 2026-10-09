@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT = Path('D:/webcodex/mujoco-g1/owner-authorization-binding')
 HERE = ROOT / 'experiments/m2/owner_authorization_binding_001'
@@ -69,8 +70,8 @@ def source_paths():
     # Entire parent evidence namespace is referenced in place, not copied.
     paths.update(p for p in g.helpers()['git_tree'](ROOT,BASE) if p.startswith(PARENT + '/'))
     paths.update(p.relative_to(ROOT).as_posix() for p in HERE.rglob('*') if p.is_file() and p.suffix in ('.py','.ps1','.cmd','.bat','.sh'))
-    paths.update(g.NAMESPACE + '/' + p for p in ('.gitattributes','dependencies.json','binding.json','owner_trust.json','contract.json'))
-    paths.update(p.relative_to(ROOT).as_posix() for p in (HERE/'blocked_candidate_001').rglob('*') if p.is_file())
+    paths.update(g.NAMESPACE + '/' + p for p in ('.gitattributes','dependencies.json','binding.json','owner_trust.json','contract.json','process_binding.json'))
+    paths.update(p.relative_to(ROOT).as_posix() for p in HERE.glob('blocked_candidate_*/*') if p.is_file())
     return paths
 
 def expected_binding():
@@ -83,6 +84,8 @@ def check_target(*, expected_sha, execution_head):
     g = inherited()
     g.require(expected_sha != PARENT_READY_SHA, 'Old PR25 Readiness cannot bind Owner entry')
     g.require(expected_sha != 'ccbb692d43843a806c8a0c3da573399ad833da2f00a91a461b22bfeddc4fcbe7', 'Blocked Owner binding candidate cannot authorize entry')
+    g.require(expected_sha != '5cc7033a51187770e59efd5692a354cdd99fff84ba3e8b83de70465ba45c1207', 'Blocked Windows process candidate cannot authorize entry')
+    g.require(g.load(HERE/'process_binding.json')==process_binding(),'Process executable identity drift')
     g.require(g.digest(ROOT / PARENT / 'readiness_manifest.json') == PARENT_READY_SHA, 'Parent Readiness drift')
     g.require(g.load(HERE / 'owner_trust.json') == {'schema_version':1,'owner_records':{},'physical_dispatch_enabled':False,
               'scope':'TRUSTED_SERIAL_REVIEWED_RECORD_PIN_NOT_PRODUCTION_IDENTITY'}, 'Owner trust/physical enablement drift')
@@ -98,7 +101,17 @@ def canonical_binding(receipt, output, ledger):
             'protocol_sha256':g.digest(ROOT / g.DESIGN),'cell_order':[c['id'] for c in protocol['cells_in_order']],
             'canonical_cells_sha256':canonical_sha(protocol['cells_in_order']),
             'budget':protocol['budget'],'hold_window_s':2.0,'hold_native_steps':1000,
+            'process_identity':process_binding(),
             'output':str(Path(output).absolute()),'ledger':str(Path(ledger).absolute())}
+
+def process_binding():
+    g=inherited()
+    g.helpers()['no_links'](Path(sys.executable).absolute())
+    g.helpers()['no_links'](Path(sys._base_executable).absolute())
+    return {'mode':'DIRECT_OR_ONE_FROZEN_WINDOWS_VENV_REDIRECTOR',
+            'launcher_path':str(Path(sys.executable).resolve()),'launcher_sha256':g.digest(Path(sys.executable).resolve()),
+            'runtime_path':str(Path(sys._base_executable).resolve()),'runtime_sha256':g.digest(Path(sys._base_executable).resolve()),
+            'maximum_intermediate_launchers':1}
 
 # Expose only the helper names required by the unchanged one-shot freeze tool.
 G = inherited()

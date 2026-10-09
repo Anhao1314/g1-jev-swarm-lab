@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 import sys
+import subprocess
 
 import pytest
 
@@ -24,14 +25,15 @@ def pair(tmp_path):
              'protocol_sha256':'d'*64,'source_root':'fixed worktree','cell_order':['one','two'],
              'canonical_cells_sha256':'e'*64,'budget':{'attempts_per_cell':1,'maximum_cells':2,
                  'max_wall_s_per_cell':120,'maximum_wall_s_total':720},
-             'hold_window_s':2.0,'hold_native_steps':1000,'output':str(tmp_path/'output'),'ledger':str(tmp_path/'ledger')}
+             'hold_window_s':2.0,'hold_native_steps':1000,'process_identity':{'unit_only':True},
+             'output':str(tmp_path/'output'),'ledger':str(tmp_path/'ledger')}
     store=A.TestLedger(tmp_path/'ledger')
     record=store.issue_test(binding)
     return binding,record,store
 
 @pytest.mark.parametrize('field',['execution_head','readiness_sha256','source_manifest_sha256','protocol_sha256',
                                   'source_root','cell_order','canonical_cells_sha256','budget','hold_window_s',
-                                  'hold_native_steps','output','ledger'])
+                                  'hold_native_steps','process_identity','output','ledger'])
 def test_complete_binding_tamper_rejected_before_consumption(pair,field):
     binding,record,store=pair
     expected=deepcopy(binding)
@@ -251,3 +253,39 @@ def test_new_binding_covers_canonical_six_cells_and_budget(tmp_path):
     assert binding['cell_order']==[c['id'] for c in protocol['cells_in_order']]
     assert binding['canonical_cells_sha256']==A.digest(protocol['cells_in_order'])
     assert binding['budget']==protocol['budget'] and binding['hold_native_steps']==1000
+
+@pytest.mark.parametrize('fault',['parent','image','hash'])
+def test_pinned_redirector_faults_not_accepted(monkeypatch,fault):
+    descriptor=G.process_binding()
+    binding={'process_identity':deepcopy(descriptor)}
+    packet={'supervisor_pid':111,'worker_pid':222}
+    monkeypatch.setattr(A.os,'getpid',lambda:333)
+    monkeypatch.setattr(A.os,'getppid',lambda:222)
+    def view(pid):
+        if pid==222:
+            return {'pid':pid,'parent_pid':999 if fault=='parent' else 111,
+                    'image':str(HERE/'wrong.exe') if fault=='image' else descriptor['launcher_path']}
+        return {'pid':pid,'parent_pid':222,'image':descriptor['runtime_path']}
+    if fault=='hash':
+        binding['process_identity']['launcher_sha256']='0'*64
+    with pytest.raises(A.AuthorizationError,match='ANCESTRY_OR_IMAGE|BINARY_DRIFT'):
+        A.verify_worker_process(packet,binding,process_view=view)
+
+def test_actual_frozen_interpreter_parent_launcher_chain_without_robot_imports():
+    source="""
+import importlib.util,json,sys
+from pathlib import Path
+p=Path(sys.argv[1]); s=importlib.util.spec_from_file_location('pure_worker_process_check',p)
+m=importlib.util.module_from_spec(s); exec(compile(p.read_bytes(),str(p),'exec'),m.__dict__)
+packet,binding=json.loads(sys.stdin.read())
+mode=m.verify_worker_process(packet,binding)
+assert not {'mujoco','torch','numpy','g1swarm'}.intersection(sys.modules)
+print(json.dumps({'status':'ACTUAL_FROZEN_PROCESS_CHAIN_VERIFIED','mode':mode,'runtime_pid':m.os.getpid(),'parent_pid':m.os.getppid()}))
+"""
+    child=subprocess.Popen([sys.executable,'-c',source,str(HERE/'authority.py')],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    packet={'supervisor_pid':A.os.getpid(),'worker_pid':child.pid}
+    stdout,stderr=child.communicate(json.dumps([packet,{'process_identity':G.process_binding()}]),timeout=15)
+    assert child.returncode==0,stderr
+    result=json.loads(stdout)
+    assert result['status']=='ACTUAL_FROZEN_PROCESS_CHAIN_VERIFIED'
+    assert result['mode'] in ('DIRECT_PARENT','ONE_FROZEN_WINDOWS_VENV_REDIRECTOR')
