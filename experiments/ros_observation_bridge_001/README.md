@@ -88,6 +88,30 @@ are intentionally not copied into this PR.
 
 ## Qualify real ROS 2 delivery
 
+The [ROS-R1 workflow](../../.github/workflows/ros-observation-r1.yml) uses a
+disposable GitHub-hosted Ubuntu 24.04 runner with the official
+`ros:jazzy-ros-base-noble` container. Its
+[`run_r1_acceptance.sh`](run_r1_acceptance.sh) starts the subscriber and
+publisher as separate processes, saves raw stdout/stderr, source hashes,
+environment/package versions, process exit codes and the subscriber receipt,
+then uploads the whole directory even on failure. No package is installed on
+the Windows research host. A green workflow requires the real subscriber
+receipt; an in-memory test cannot satisfy it.
+
+For an already configured Ubuntu 24.04/Jazzy machine, source
+`/opt/ros/jazzy/setup.bash` in **both** terminals and set:
+
+```bash
+export PYTHONPATH="$PWD/src"
+export ROS_DOMAIN_ID=77
+export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+```
+
+Start `python3 experiments/ros_observation_bridge_001/probe_ros2.py --timeout 90`
+in one terminal, then
+`python3 experiments/ros_observation_bridge_001/replay_ros2.py publish --rate 1`
+in the other. Use a new receipt directory outside historical M2 evidence.
+
 On a separate machine or environment **with a working ROS 2 installation**, use
 Python 3.11+ with NumPy and the standard `rclpy`, `sensor_msgs`,
 `geometry_msgs`, `rosgraph_msgs`, and `std_msgs` packages. Source that ROS

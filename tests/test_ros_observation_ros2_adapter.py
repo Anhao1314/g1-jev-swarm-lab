@@ -11,6 +11,7 @@ import sys
 import pytest
 
 from experiments.ros_observation_bridge_001 import replay_ros2 as bridge
+from experiments.ros_observation_bridge_001 import probe_ros2 as probe
 
 
 class Stamp:
@@ -291,3 +292,78 @@ def test_protocol_extra_source_digest_claims_are_enforced(monkeypatch):
     monkeypatch.setattr(bridge, "_load_protocol", lambda path: protocol)
     with pytest.raises(bridge.BridgeError, match="continuity_sha256"):
         bridge.preflight()
+
+
+def test_independent_probe_requires_every_provenance_and_event_field():
+    frozen, _ = bridge.preflight()
+    for sample in (frozen.samples[0], frozen.samples[286], frozen.samples[-1]):
+        projected = json.loads(bridge._provenance_payload(frozen, sample))
+        assert probe._expected_provenance(frozen, sample) == projected
+        for field in ("receipt_sha256", "source_manifest_sha256", "joint_map_sha256", "source_locator", "frame_id"):
+            altered = dict(projected)
+            altered[field] = "tampered"
+            assert altered != probe._expected_provenance(frozen, sample)
+    for index, event in enumerate(frozen.events):
+        projected = json.loads(bridge._event_payload(frozen, event, index))
+        assert probe._expected_event(frozen, event, index) == projected
+        for field in ("source_sha256", "event_sha256", "event"):
+            altered = dict(projected)
+            altered[field] = "tampered"
+            assert altered != probe._expected_event(frozen, event, index)
+
+
+def test_probe_failure_writes_exclusive_structured_receipt(tmp_path, monkeypatch, capsys):
+    monkeypatch.delenv("ROS_DOMAIN_ID", raising=False)
+    path = tmp_path / "failed.json"
+    assert probe.main(["--receipt", str(path)]) == 2
+    first = json.loads(path.read_text(encoding="utf-8"))
+    assert first["status"] == "ROS2_ROUNDTRIP_FAILED"
+    assert "ROS_DOMAIN_ID" in first["reason"]
+    assert probe.main(["--receipt", str(path)]) == 2
+    assert json.loads(path.read_text(encoding="utf-8")) == first
+    assert "receipt_error" in capsys.readouterr().err
+
+
+def test_probe_rejects_receipt_inside_frozen_m2_evidence():
+    historical = probe.Path(__file__).resolve().parents[1] / "experiments" / "m2" / "probe-forbidden.json"
+    with pytest.raises(ValueError, match="historical"):
+        probe._write_receipt(historical, {"status": "TEST"})
+    assert not historical.exists()
+
+
+def test_probe_transcript_projects_every_received_message_field(tmp_path):
+    sample = Sample(0, 1_002_000_000)
+    messages = bridge._make_messages(
+        sample, replay(),
+        {"Clock": Clock, "JointState": JointState, "PoseStamped": PoseStamped, "String": String},
+    )
+    assert probe._message_fields("clock", messages["clock"]) == {
+        "clock": {"sec": 1, "nanosec": 2_000_000}
+    }
+    joint = probe._message_fields("joint_states", messages["joint_states"])
+    assert joint == {
+        "header": {"stamp": {"sec": 1, "nanosec": 2_000_000}, "frame_id": ""},
+        "name": list(sample.joint_names),
+        "position": list(sample.joint_position_rad),
+        "velocity": list(sample.joint_velocity_rad_s),
+        "effort": [],
+    }
+    pose = probe._message_fields("base_pose", messages["base_pose"])
+    assert pose["header"] == {"stamp": {"sec": 1, "nanosec": 2_000_000}, "frame_id": "mujoco_world"}
+    assert pose["pose"] == {
+        "position": {"x": 1.0, "y": 2.0, "z": 0.8},
+        "orientation": {"x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0},
+    }
+    assert probe._message_fields("provenance", messages["provenance"]) == {"data": messages["provenance"].data}
+    assert probe._message_fields("mission_events", String()) == {"data": ""}
+    with pytest.raises(ValueError, match="unknown"):
+        probe._message_fields("motor_command", String())
+    candidate = tmp_path / "messages.jsonl"
+    assert probe._new_output_path(candidate) == candidate.resolve()
+    candidate.write_text("existing", encoding="utf-8")
+    with pytest.raises(ValueError, match="exists"):
+        probe._new_output_path(candidate)
+    historical = probe.Path(__file__).resolve().parents[1] / "experiments" / "m2" / "forbidden-transcript.jsonl"
+    with pytest.raises(ValueError, match="historical"):
+        probe._new_output_path(historical)
+    assert not historical.exists()
