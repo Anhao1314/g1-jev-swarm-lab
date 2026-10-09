@@ -1,0 +1,241 @@
+FFF...........FF......FFFF...                                            [100%]
+================================== FAILURES ===================================
+_________________ test_only_sealed_same_session_run_projects __________________
+
+    def test_only_sealed_same_session_run_projects():
+>       replay = load_frozen_replay(RUN, MAP)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_core.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\g1swarm\ros_observation\core.py:267: in load_frozen_replay
+    mapping = _load_joint_map(map_file, asset_receipt)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\g1swarm\ros_observation\core.py:87: in _load_joint_map
+    _require_hash(path, JOINT_MAP_SHA256)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+expected = 'c4ab6c3bfe81399715ff63b4f5008d95cd31a9ae859547ed17141fd9ced1e56a'
+
+    def _require_hash(path: Path, expected: str) -> None:
+        if _digest(path) != expected:
+>           raise EvidenceIntegrityError(f"SHA256 mismatch: {path}")
+E           g1swarm.ros_observation.core.EvidenceIntegrityError: SHA256 mismatch: D:\work\g1-ros-main-publication\experiments\ros_observation_bridge_001\joint_map.json
+
+src\g1swarm\ros_observation\core.py:64: EvidenceIntegrityError
+____________ test_joint_pose_frame_and_source_row_digest_are_exact ____________
+
+    def test_joint_pose_frame_and_source_row_digest_are_exact():
+>       replay = load_frozen_replay(RUN, MAP)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_core.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\g1swarm\ros_observation\core.py:267: in load_frozen_replay
+    mapping = _load_joint_map(map_file, asset_receipt)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\g1swarm\ros_observation\core.py:87: in _load_joint_map
+    _require_hash(path, JOINT_MAP_SHA256)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+expected = 'c4ab6c3bfe81399715ff63b4f5008d95cd31a9ae859547ed17141fd9ced1e56a'
+
+    def _require_hash(path: Path, expected: str) -> None:
+        if _digest(path) != expected:
+>           raise EvidenceIntegrityError(f"SHA256 mismatch: {path}")
+E           g1swarm.ros_observation.core.EvidenceIntegrityError: SHA256 mismatch: D:\work\g1-ros-main-publication\experiments\ros_observation_bridge_001\joint_map.json
+
+src\g1swarm\ros_observation\core.py:64: EvidenceIntegrityError
+_______ test_failure_halt_authorization_and_rejection_keep_saved_order ________
+
+    def test_failure_halt_authorization_and_rejection_keep_saved_order():
+>       replay = load_frozen_replay(RUN, MAP)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_core.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\g1swarm\ros_observation\core.py:267: in load_frozen_replay
+    mapping = _load_joint_map(map_file, asset_receipt)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\g1swarm\ros_observation\core.py:87: in _load_joint_map
+    _require_hash(path, JOINT_MAP_SHA256)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+expected = 'c4ab6c3bfe81399715ff63b4f5008d95cd31a9ae859547ed17141fd9ced1e56a'
+
+    def _require_hash(path: Path, expected: str) -> None:
+        if _digest(path) != expected:
+>           raise EvidenceIntegrityError(f"SHA256 mismatch: {path}")
+E           g1swarm.ros_observation.core.EvidenceIntegrityError: SHA256 mismatch: D:\work\g1-ros-main-publication\experiments\ros_observation_bridge_001\joint_map.json
+
+src\g1swarm\ros_observation\core.py:64: EvidenceIntegrityError
+_____________ test_unreviewed_run_and_missing_source_fail_closed ______________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-247/test_unreviewed_run_and_missin0')
+
+    def test_unreviewed_run_and_missing_source_fail_closed(tmp_path):
+        run, joint_map, asset = _copied_run(tmp_path)
+        other = run.with_name("new_physics_or_retry")
+        run.rename(other)
+        with pytest.raises(EvidenceIntegrityError, match="reviewed M2.3b"):
+            load_frozen_replay(other, joint_map, asset_receipt_path=asset)
+        other.rename(run)
+        (run / "poses.npz").unlink()
+>       with pytest.raises(EvidenceIntegrityError, match="required file missing"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'required file missing'
+E         Actual message: 'SHA256 mismatch: C:\\Users\\Administrator\\AppData\\Local\\Temp\\pytest-of-Administrator\\pytest-247\\test_unreviewed_run_and_missin0\\experiments\\ros_observation_bridge_001\\joint_map.json'
+
+tests\test_ros_observation_core.py:146: AssertionError
+____________ test_real_frozen_preflight_is_non_ros_and_hash_bound _____________
+
+    def test_real_frozen_preflight_is_non_ros_and_hash_bound():
+>       specimen, receipt = bridge.preflight()
+                            ^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_ros2_adapter.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+protocol_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/protocol.json')
+joint_map_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+asset_receipt_path = None
+
+    def preflight(
+        *,
+        protocol_path: Path = PROTOCOL,
+        joint_map_path: Path = JOINT_MAP,
+        asset_receipt_path: Path | None = None,
+    ) -> tuple[Any, dict[str, Any]]:
+        """Verify frozen bytes and mapping without importing or starting ROS 2."""
+        protocol = _load_protocol(protocol_path)
+        case = protocol["cases"][0]
+        root = protocol_path.resolve().parents[2]
+        run_dir = root / case["root"]
+        if not run_dir.is_dir():
+            raise BridgeError("frozen replay directory is missing")
+        if _digest(joint_map_path) != protocol.get("joint_map_sha256"):
+>           raise BridgeError("joint map SHA256 differs from frozen protocol")
+E           experiments.ros_observation_bridge_001.replay_ros2.BridgeError: joint map SHA256 differs from frozen protocol
+
+experiments\ros_observation_bridge_001\replay_ros2.py:84: BridgeError
+_______ test_frozen_event_between_samples_is_emitted_before_later_pose ________
+
+    def test_frozen_event_between_samples_is_emitted_before_later_pose():
+>       frozen, report = bridge.preflight()
+                         ^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_ros2_adapter.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+protocol_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/protocol.json')
+joint_map_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+asset_receipt_path = None
+
+    def preflight(
+        *,
+        protocol_path: Path = PROTOCOL,
+        joint_map_path: Path = JOINT_MAP,
+        asset_receipt_path: Path | None = None,
+    ) -> tuple[Any, dict[str, Any]]:
+        """Verify frozen bytes and mapping without importing or starting ROS 2."""
+        protocol = _load_protocol(protocol_path)
+        case = protocol["cases"][0]
+        root = protocol_path.resolve().parents[2]
+        run_dir = root / case["root"]
+        if not run_dir.is_dir():
+            raise BridgeError("frozen replay directory is missing")
+        if _digest(joint_map_path) != protocol.get("joint_map_sha256"):
+>           raise BridgeError("joint map SHA256 differs from frozen protocol")
+E           experiments.ros_observation_bridge_001.replay_ros2.BridgeError: joint map SHA256 differs from frozen protocol
+
+experiments\ros_observation_bridge_001\replay_ros2.py:84: BridgeError
+_________ test_parent_event_provenance_names_its_own_original_source __________
+
+    def test_parent_event_provenance_names_its_own_original_source():
+>       frozen, _ = bridge.preflight()
+                    ^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_ros2_adapter.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+protocol_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/protocol.json')
+joint_map_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+asset_receipt_path = None
+
+    def preflight(
+        *,
+        protocol_path: Path = PROTOCOL,
+        joint_map_path: Path = JOINT_MAP,
+        asset_receipt_path: Path | None = None,
+    ) -> tuple[Any, dict[str, Any]]:
+        """Verify frozen bytes and mapping without importing or starting ROS 2."""
+        protocol = _load_protocol(protocol_path)
+        case = protocol["cases"][0]
+        root = protocol_path.resolve().parents[2]
+        run_dir = root / case["root"]
+        if not run_dir.is_dir():
+            raise BridgeError("frozen replay directory is missing")
+        if _digest(joint_map_path) != protocol.get("joint_map_sha256"):
+>           raise BridgeError("joint map SHA256 differs from frozen protocol")
+E           experiments.ros_observation_bridge_001.replay_ros2.BridgeError: joint map SHA256 differs from frozen protocol
+
+experiments\ros_observation_bridge_001\replay_ros2.py:84: BridgeError
+____________ test_protocol_extra_source_digest_claims_are_enforced ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002217EC05810>
+
+    def test_protocol_extra_source_digest_claims_are_enforced(monkeypatch):
+        protocol = bridge._load_protocol(bridge.PROTOCOL)
+        protocol["cases"][0]["continuity_sha256"] = "0" * 64
+        monkeypatch.setattr(bridge, "_load_protocol", lambda path: protocol)
+>       with pytest.raises(bridge.BridgeError, match="continuity_sha256"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'continuity_sha256'
+E         Actual message: 'joint map SHA256 differs from frozen protocol'
+
+tests\test_ros_observation_ros2_adapter.py:293: AssertionError
+______ test_independent_probe_requires_every_provenance_and_event_field _______
+
+    def test_independent_probe_requires_every_provenance_and_event_field():
+>       frozen, _ = bridge.preflight()
+                    ^^^^^^^^^^^^^^^^^^
+
+tests\test_ros_observation_ros2_adapter.py:298: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+protocol_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/protocol.json')
+joint_map_path = WindowsPath('D:/work/g1-ros-main-publication/experiments/ros_observation_bridge_001/joint_map.json')
+asset_receipt_path = None
+
+    def preflight(
+        *,
+        protocol_path: Path = PROTOCOL,
+        joint_map_path: Path = JOINT_MAP,
+        asset_receipt_path: Path | None = None,
+    ) -> tuple[Any, dict[str, Any]]:
+        """Verify frozen bytes and mapping without importing or starting ROS 2."""
+        protocol = _load_protocol(protocol_path)
+        case = protocol["cases"][0]
+        root = protocol_path.resolve().parents[2]
+        run_dir = root / case["root"]
+        if not run_dir.is_dir():
+            raise BridgeError("frozen replay directory is missing")
+        if _digest(joint_map_path) != protocol.get("joint_map_sha256"):
+>           raise BridgeError("joint map SHA256 differs from frozen protocol")
+E           experiments.ros_observation_bridge_001.replay_ros2.BridgeError: joint map SHA256 differs from frozen protocol
+
+experiments\ros_observation_bridge_001\replay_ros2.py:84: BridgeError
+=========================== short test summary info ===========================
+FAILED tests/test_ros_observation_core.py::test_only_sealed_same_session_run_projects
+FAILED tests/test_ros_observation_core.py::test_joint_pose_frame_and_source_row_digest_are_exact
+FAILED tests/test_ros_observation_core.py::test_failure_halt_authorization_and_rejection_keep_saved_order
+FAILED tests/test_ros_observation_core.py::test_unreviewed_run_and_missing_source_fail_closed
+FAILED tests/test_ros_observation_ros2_adapter.py::test_real_frozen_preflight_is_non_ros_and_hash_bound
+FAILED tests/test_ros_observation_ros2_adapter.py::test_frozen_event_between_samples_is_emitted_before_later_pose
+FAILED tests/test_ros_observation_ros2_adapter.py::test_parent_event_provenance_names_its_own_original_source
+FAILED tests/test_ros_observation_ros2_adapter.py::test_protocol_extra_source_digest_claims_are_enforced
+FAILED tests/test_ros_observation_ros2_adapter.py::test_independent_probe_requires_every_provenance_and_event_field
+9 failed, 20 passed in 0.56s
