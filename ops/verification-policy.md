@@ -29,3 +29,23 @@ Reuse tests only if code/config/environment and covered behavior still apply.
 receipt, both visual inventories, and the scientific export inventory. It always
 rehashes; no mtime-only cache. It does not rerun numeric audits or scientific tests.
 Independent auditing cannot be replaced by a script that merely says hashes match.
+
+## Lightweight risk and reuse rules
+
+R0: review-only bounded documentation. R1: affected implementation tests. R2:
+scientific/shared boundaries, unknown scope, P1 repair or final execution identity.
+`--p1` retains an independent implementation/evidence reviewer; formal claims
+retain evidence AND interpretation audit. `--final-head` always requires the
+actual final-HEAD gate. These flags add requirements; they never lower a tier.
+
+`reuse` is advisory for scoped unit checks only. The caller must declare the
+complete relevant code/config/test closure, and the receipt binds live interpreter,
+version/distribution and editable-pointer metadata plus exact files and raw log.
+This is metadata identity, not a hostile-environment/full package-byte audit.
+Unknown coverage, failure, missing receipt or drift means rerun. Protocol evidence
+checks, independent reviews and final-HEAD gates cannot be replaced by reuse.
+
+Use full-commit Git references for already sealed receipts. New failures are
+sealed once; provider/network/technical censoring remains intact. References
+verify Git blob bytes, not checkout representations or scientific applicability.
+Existing frozen manifests/raw closures must not be rewritten to use these helpers.

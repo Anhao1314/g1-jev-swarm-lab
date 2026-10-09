@@ -73,16 +73,16 @@ def context(root=ROOT):
             'tests': state['tests'], 'selection_rule': 'Explicit reviewed pointers; changes fail closed, never choose latest by mtime'}
 
 
-def plan(kind, paths, claims=()):
+def plan(kind, paths, claims=(), *, p1=False, final_head=False):
     tier = 'claim' if claims or kind == 'claim' else kind
     paths = list(dict.fromkeys(paths))
     checks = ['scoped diff review']
     flags = []
     if any(p.startswith('console/') for p in paths):
         checks += ['check console', 'affected Console Python tests', 'node --test console/web/data.test.js if frontend changed', 'fresh affected browser QA if UI/server/data changed']
-    if any(p.startswith(('scripts/research_ops', 'ops/', '.agents/skills/')) or p == 'tests/test_research_ops.py' for p in paths):
-        checks += ['python -m pytest tests/test_research_ops.py -q']
-    if any(p.startswith(('src/', 'configs/', 'scripts/run_', 'experiments/phase')) for p in paths):
+    if any(p.startswith(('scripts/research_ops', 'ops/', '.agents/skills/', 'tests/test_research_ops')) for p in paths):
+        checks += ['python -m pytest tests/test_research_ops.py tests/test_research_ops_efficiency.py -q']
+    if any(p.startswith(('src/', 'configs/', 'scripts/run_', 'experiments/')) for p in paths):
         checks += ['affected scientific contracts and targeted tests', 'execution equivalence before scientific use if observation/execution changed']
         flags += ['Scientific/shared boundary touched; protocol review required. Historical evidence stays immutable.']
     known = ('console/', 'docs/', 'ops/', '.agents/skills/', 'src/', 'configs/', 'experiments/', 'tests/', 'scripts/research_ops')
@@ -93,7 +93,15 @@ def plan(kind, paths, claims=()):
         checks += ['applicable frozen protocol / bounded budget before acquisition', 'evidence / controls / protocol-source-config-policy binding', 'targeted measurement and interpretation audit']
     if tier == 'claim':
         checks += ['strict provenance / frozen splits and thresholds / appropriate baseline', 'independent evidence AND interpretation audit']
+    if p1:
+        checks += ['independent P1 implementation/evidence review; retain failure contrast']
+    if final_head:
+        checks += ['fresh exact-final-HEAD gate; do not reuse an earlier HEAD receipt']
+    docs_only = all(p.startswith('docs/') or p == 'README.md' for p in paths)
+    risk = 'R2' if p1 or final_head or tier != 'implementation' or flags else ('R1' if len(checks) > 1 or not docs_only else 'R0')
     return {'tier': tier, 'claims': list(claims), 'paths': paths, 'checks': checks, 'scope_flags': flags,
+            'risk': risk, 'p1': p1, 'final_head': final_head,
+            'delegation': 'one bounded independent reviewer required' if p1 or tier == 'claim' else 'single owner; delegate only disjoint work with a concrete benefit',
             'full_scientific_audit_default': tier == 'claim', 'acquisition_authorized': False,
             'policy': 'ops/verification-policy.md', 'mandatory_protocol_checks_are_not_optional': True}
 
@@ -176,7 +184,11 @@ def record(task, event, root=ROOT):
 
 def summarize(task, root=ROOT):
     rows = [json.loads(s) for s in task_log(task, root).read_text().splitlines()]
-    return {'task': task, 'stages': {stage: {'measured': bool(items := [r for r in rows if r['stage'] == stage]),
+    ends = [r for r in rows if r.get('event') == 'task_end']
+    return {'task': task, 'elapsed_window': {'measured': bool(ends) and ends[0]['elapsed_seconds'] is not None, 'seconds': ends[0]['elapsed_seconds'] if ends else None,
+            'scope': ends[0]['scope'] if ends else None, 'limit': 'Monotonic observed window includes waits; stage sums are not end-to-end time'},
+            'output_log_bytes': sum(r.get('output_bytes', 0) for r in rows) if any('output_bytes' in r for r in rows) else None,
+            'stages': {stage: {'measured': bool(items := [r for r in rows if r.get('stage') == stage]),
             'seconds': round(sum(r['seconds'] for r in items), 4) if items else None,
             'events': len(items), 'shell_commands': sum(r.get('shell_commands', 0) for r in items),
             'failed_commands': sum(r.get('exit_code', 0) != 0 for r in items)} for stage in STAGES},
@@ -187,36 +199,70 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     sub.add_parser('context')
-    p = sub.add_parser('plan'); p.add_argument('--kind', choices=('implementation', 'mechanism', 'claim'), default='implementation'); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--claim', action='append', default=[])
+    p = sub.add_parser('plan'); p.add_argument('--kind', choices=('implementation', 'mechanism', 'claim'), default='implementation'); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--claim', action='append', default=[]); p.add_argument('--p1', action='store_true'); p.add_argument('--final-head', action='store_true')
     p = sub.add_parser('check'); p.add_argument('target', choices=('console',))
     p = sub.add_parser('closeout'); p.add_argument('--base', required=True); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--retained-experiment', action='store_true')
-    p = sub.add_parser('run'); p.add_argument('--task', required=True); p.add_argument('--stage', choices=STAGES, required=True); p.add_argument('--label', required=True); p.add_argument('argv', nargs=argparse.REMAINDER)
+    p = sub.add_parser('run'); p.add_argument('--task', required=True); p.add_argument('--stage', choices=STAGES, required=True); p.add_argument('--label', required=True); p.add_argument('--bindings', nargs='+'); p.add_argument('--gate', choices=('unit', 'protocol', 'independent', 'final-head'), default='unit'); p.add_argument('argv', nargs=argparse.REMAINDER)
     p = sub.add_parser('mark'); p.add_argument('--task', required=True); p.add_argument('--stage', choices=STAGES, required=True); p.add_argument('--label', required=True); p.add_argument('--seconds', type=float, required=True)
     p = sub.add_parser('summary'); p.add_argument('--task', required=True)
+    p.add_argument('--session', type=Path, help='Sanitized research_ops_session receipt; never raw messages')
+    for action in ('begin', 'end'):
+        p = sub.add_parser(action); p.add_argument('--task', required=True); p.add_argument('--scope', choices=('complete-task', 'observed-window'), default='observed-window')
+    p = sub.add_parser('handoff'); p.add_argument('--kind', choices=('implementation','mechanism','claim'), default='implementation'); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--p1', action='store_true'); p.add_argument('--final-head', action='store_true')
+    p = sub.add_parser('evidence-ref'); p.add_argument('--revision'); p.add_argument('--paths', nargs='+'); p.add_argument('--verify', type=Path)
+    p = sub.add_parser('reuse'); p.add_argument('--receipt', type=Path, required=True); p.add_argument('--check-id', required=True); p.add_argument('--paths', nargs='+', required=True); p.add_argument('--gate', choices=('unit','protocol','independent','final-head'), default='unit')
     args = parser.parse_args(); started = time.perf_counter(); code = 0
     try:
         if args.command == 'context':
             result = context(); code = int(result['status'] != 'CURRENT')
-        elif args.command == 'plan': result = plan(args.kind, args.paths, args.claim)
+        elif args.command == 'plan': result = plan(args.kind, args.paths, args.claim, p1=args.p1, final_head=args.final_head)
         elif args.command == 'check': result = check_console()
         elif args.command == 'closeout':
             result = closeout(args.base, args.paths); code = int(result['status'] != 'PASS_SCOPED_DIFF')
             if args.retained_experiment: result['experiment_closeout'] = retained_experiment_closeout()
-        elif args.command == 'summary': result = summarize(args.task)
+        elif args.command == 'summary':
+            result = summarize(args.task)
+            if args.session:
+                import research_ops_efficiency as efficient
+                result['session_usage'] = efficient.session_stats(read(args.session))
+                result['session_usage_limit'] = 'Parent window only; child costs excluded; missing usage remains null'
+        elif args.command in ('begin', 'end', 'handoff', 'evidence-ref', 'reuse'):
+            import research_ops_efficiency as efficient
+            if args.command in ('begin', 'end'): result = efficient.lifecycle(args.task, args.command, args.scope, ROOT)
+            elif args.command == 'handoff':
+                result = efficient.handoff(args.kind, args.paths, args.p1, args.final_head, ROOT); code = int(result['context_status'] != 'CURRENT')
+            elif args.command == 'evidence-ref':
+                result = efficient.verify_ref(read(args.verify), ROOT) if args.verify else efficient.evidence_ref(args.revision or '', args.paths or [], ROOT)
+            else:
+                result = efficient.reuse(efficient.load_check_receipt(args.receipt, args.check_id), args.check_id, args.paths, args.gate, ROOT); code = int(not result['eligible'])
         elif args.command == 'mark':
             if args.seconds < 0: raise ValueError('Duration cannot be negative')
             result = {'stage': args.stage, 'seconds': args.seconds, 'label': args.label, 'source': 'manual_measured', 'shell_commands': 0}
-            record(args.task, result)
+            record(args.task, result, ROOT)
         else:
             command = args.argv[1:] if args.argv[:1] == ['--'] else args.argv
             if not command: raise ValueError('Missing command after --')
-            path = task_log(args.task); path.parent.mkdir(exist_ok=True)
+            path = task_log(args.task, ROOT); path.parent.mkdir(exist_ok=True)
+            if args.bindings:
+                import research_ops_efficiency as efficient
+                before = efficient.bindings(args.bindings, ROOT)
             output = path.parent / f'{args.task}-{time.time_ns()}.log'
             with output.open('wb') as stream:
                 code = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT).returncode
             result = {'stage': args.stage, 'label': args.label, 'seconds': time.perf_counter() - started, 'source': 'measured_command',
-                      'shell_commands': 1, 'exit_code': code, 'output': str(output.relative_to(ROOT)), 'output_sha256': sha(output)}
-            record(args.task, result)
+                      'shell_commands': 1, 'exit_code': code, 'output': str(output.relative_to(ROOT)), 'output_sha256': sha(output), 'output_bytes': output.stat().st_size, 'gate': args.gate}
+            if args.bindings:
+                try:
+                    after = efficient.bindings(args.bindings, ROOT)
+                    result['inputs_unchanged_during_check'] = before == after
+                    if before == after and code == 0: result['reuse_bindings'] = after
+                except (OSError, ValueError, KeyError) as error:
+                    result['inputs_unchanged_during_check'] = False
+                    result['bindings_error'] = type(error).__name__
+            record(args.task, result, ROOT)
+            if 'reuse_bindings' in result:
+                result = {key: value for key, value in result.items() if key != 'reuse_bindings'}
+                result['reuse_receipt'] = str(path.relative_to(ROOT))
         result['ops_elapsed_seconds'] = round(time.perf_counter() - started, 4)
         print(json.dumps(result, ensure_ascii=True, indent=2)); return code
     except (ValueError, OSError, KeyError, subprocess.CalledProcessError) as error:

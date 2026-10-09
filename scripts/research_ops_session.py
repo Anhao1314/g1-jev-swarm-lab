@@ -83,7 +83,7 @@ def import_session(path, start, end=None):
             'repeated_get_content_references': sum(n - 1 for n in reads.values()), 'file_read_counts': reads,
             'reasoning_items': reasoning_items, 'stage_tool_calls_inferred': {s: stages[s] for s in STAGES},
             'text_tool_output_chars': output_chars, 'recorded_token_usage': dict(usage) or None,
-            'uncached_input_tokens': usage['input_tokens'] - usage['cached_input_tokens'] if usage else None,
+            'uncached_input_tokens': usage['input_tokens'] - usage['cached_input_tokens'] if 'input_tokens' in usage and 'cached_input_tokens' in usage else None,
             'calls': calls, 'limitations': ['Parent rollout only; child work/cost excluded.',
                 'Reasoning items are observable segments, not proven repeated semantic decisions.',
                 'Get-Content references are a lower bound: Python/open/rg/child reads excluded; original files-read count unavailable.',
