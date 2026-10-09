@@ -6,12 +6,16 @@ output_dir="${1:?new output directory required}"
 mkdir -p "$output_dir"
 chmod 700 "$output_dir"
 study="experiments/ros_observation_bridge_001"
+trap '(
+  cd "$output_dir" || exit 0
+  find . -type f ! -name file_hashes.sha256 -print0 | sort -z | xargs -0 sha256sum > file_hashes.sha256
+)' EXIT
 
 # Keep a receipt even when dependencies, discovery, publishing or the probe fail.
 printf '%s\n' 'ROS_R1_FAILED' > "$output_dir/verdict.txt"
 {
   printf 'requested_image=ros:jazzy-ros-base-noble\n'
-  printf 'git_head='; git rev-parse HEAD
+  printf 'git_head='; git -c safe.directory="$PWD" rev-parse HEAD
   printf 'github_run_url=%s/%s/actions/runs/%s\n' "${GITHUB_SERVER_URL:-UNKNOWN}" "${GITHUB_REPOSITORY:-UNKNOWN}" "${GITHUB_RUN_ID:-UNKNOWN}"
   printf 'github_sha=%s\n' "${GITHUB_SHA:-UNKNOWN}"
   printf 'utc='; date -u +%Y-%m-%dT%H:%M:%SZ
@@ -30,9 +34,20 @@ if ! test -f /opt/ros/jazzy/setup.bash; then
   printf '%s\n' 'ROS_JAZZY_SETUP_MISSING' > "$output_dir/blocker.txt"
   exit 0
 fi
+# ROS setup scripts expect a few variables to be unset; turn nounset off only
+# while sourcing the official environment, then restore it for our harness.
+set +u
 # shellcheck disable=SC1091
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/jazzy/setup.bash > "$output_dir/ros_setup.stdout.log" 2> "$output_dir/ros_setup.stderr.log"
+setup_status=$?
+set -u
+if test "$setup_status" -ne 0; then
+  printf 'ROS_SETUP_FAILED=%s\n' "$setup_status" > "$output_dir/blocker.txt"
+  exit 0
+fi
+export PYTHONPATH="$PWD/src"
 printf 'sourced_ROS_DISTRO=%s\n' "${ROS_DISTRO:-UNSET}" >> "$output_dir/environment.log"
+printf 'container_PYTHONPATH=%s\n' "$PYTHONPATH" >> "$output_dir/environment.log"
 python3 - <<'PY' > "$output_dir/ros_imports.log" 2>&1
 import json, platform
 import numpy, rclpy
@@ -94,5 +109,4 @@ if test "$publisher_status" -eq 0 && test "$probe_status" -eq 0 && test "$valida
 else
   printf 'VALIDATION_FAILED=%s\n' "$validation_status" > "$output_dir/blocker.txt"
 fi
-sha256sum "$output_dir"/* > "$output_dir/file_hashes.sha256" 2> "$output_dir/hash_errors.log" || true
 exit 0
