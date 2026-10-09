@@ -1,0 +1,21 @@
+................................F.............                           [100%]
+================================== FAILURES ===================================
+__________ test_backend_source_binding_drift_rejected_before_double ___________
+
+pair = ({'execution_head': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'readiness_sha256': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb... 'record_id': 'f38850673e873be7a74945457d2666fb', ...}, <owner_authority_test.TestLedger object at 0x0000022770C77310>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022770C75C50>
+
+    def test_backend_source_binding_drift_rejected_before_double(pair,monkeypatch):
+        binding,store,lease,packet=delegate(pair,monkeypatch)
+        worker=store.claim_worker(packet,binding)
+        changed=deepcopy(binding)
+        changed['execution_head']='0'*40
+>       with pytest.raises(A.AuthorizationError,match='BACKEND_BINDING'):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'BACKEND_BINDING'
+E         Actual message: 'AUTHORIZATION_BINDING_MISMATCH'
+
+experiments\m2\owner_authorization_binding_001\test_authority.py:130: AssertionError
+=========================== short test summary info ===========================
+FAILED experiments/m2/owner_authorization_binding_001/test_authority.py::test_backend_source_binding_drift_rejected_before_double
+1 failed, 45 passed in 1.04s
