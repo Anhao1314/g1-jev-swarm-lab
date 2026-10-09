@@ -615,3 +615,54 @@ def test_hold_breach_failed_control_counter_update_bound_to_exception_snapshot(t
     witness["final_snapshot"]["qpos"][0]+=.1;dump(folder/"witness.json",witness)
     result=A.audit_cell(folder,SPEC,cell)
     assert result["audit_status"]=="INTEGRITY_FAILURE" and result["scientific_status"] is None,result
+
+
+@pytest.mark.parametrize("earlier_valid_negative",[False,True])
+def test_campaign_excludes_pair_invalid_negative_but_keeps_prior_valid_negative(tmp_path,monkeypatch,earlier_valid_negative):
+    folder=tmp_path/"campaign";folder.mkdir()
+    results=matrix()
+    results[-2].update(parent_branch="STRICT_PASS_NO_HALT",halt="NOT_REQUESTED",hold="NOT_RUN")
+    results[-1].update(parent_branch="NORMAL_STOP",halt="NOT_REQUESTED")
+    bad_index=2 if earlier_valid_negative else 1
+    results[bad_index]["hold"]="FAILED"
+    if earlier_valid_negative: results[1]["hold"]="FAILED"
+    for index,cell in enumerate(SPEC["cells_in_order"]):
+        path=folder/cell["id"];path.mkdir()
+        r=raw(1)
+        if index==bad_index: r["qvel"][1]=.001
+        lines(path/"native_incremental.jsonl",[r])
+        lines(path/"lifecycle_events.jsonl",[{"event":"halt_request"}] if results[index]["parent_branch"]=="STRICT_TRIGGER" else [])
+    dump(folder/"campaign_receipt.json",{"status":"ACQUISITION_COMPLETE_NOT_SCIENTIFIC_VERDICT",
+        "wall_started_monotonic_s":100.,"wall_ended_monotonic_s":101.,"wall_elapsed_s":1.,"frozen_budget":SPEC["budget"]})
+    byid={r["cell_id"]:r for r in results}
+    monkeypatch.setattr(A,"audit_cell",lambda path,*args:deepcopy(byid[path.name]))
+    monkeypatch.setattr(A,"state_distinctness",lambda rows,*args:rows)
+    monkeypatch.setattr(A,"historical_control_check",lambda *args,**kwargs:{"complete":True})
+    hist={"seen_failure_halt_hold":{"native":[raw(1)]}}
+    report=A.audit_campaign(folder,historical=hist)
+    bad=report["cells"][bad_index]
+    assert bad["status"]=="EXPERIMENT_CONDITION_INVALID" and bad["hold"]=="FAILED",bad
+    decision=report["decision"]
+    assert decision["failure_chain_halt_denominator"]==3
+    assert decision["failure_chain_hold_denominator"]==3
+    assert decision["observed_physical_negatives_with_invalid_condition"]==[bad["cell_id"]]
+    assert bad["cell_id"] not in decision["counterexamples"]
+    if earlier_valid_negative:
+        assert decision["scientific_signal"]=="BOUNDED_UNSEEN_COUNTEREXAMPLE"
+        assert decision["counterexamples"]==[results[1]["cell_id"]]
+    else:
+        assert decision["scientific_signal"]=="INCONCLUSIVE_COVERAGE_OR_TECHNICAL"
+        assert decision["counterexamples"]==[]
+
+
+def test_mark_condition_invalid_retains_raw_scores_and_excludes_qualification():
+    rows=matrix();rows[1]["hold"]="FAILED"
+    issue={"audit_status":"INTEGRITY_FAILURE","reason":"injectedfullcontrolorpairmismatch"}
+    A.mark_condition_invalid(rows[1],issue)
+    assert rows[1]["hold"]=="FAILED" and rows[1]["raw_scoring_status_before_condition_check"]=="VALID"
+    score=A.campaign_score(rows,SPEC)
+    assert rows[1]["cell_id"] not in score["counterexamples"]
+    assert score["failure_chain_halt_denominator"]==5
+    # Direct caller cannot bypass this exclusion by leaving the old VALIDlabel.
+    rows[1]["status"]="VALID"
+    assert A.campaign_score(rows,SPEC)["failure_chain_halt_denominator"]==5

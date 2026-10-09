@@ -29,6 +29,12 @@ BLOCKED_DELIVERY = {
     "readiness_sha256": "c052cb3b155a2182be0481f530b3c3dcbee4fa53c74c38313c8e8220923207eb",
     "status": "BLOCKED_FOR_ACQUISITION",
 }
+SUPERSEDED_IDENTITY = {
+    "execution_code_head": "0eb17bb95319027219bc30f24b718a6fd6914d68",
+    "readiness_sha256": "cf8aadc054d673a86f8835f205b2a4469fba00bc3fecafaba0a720926649e243",
+    "source_manifest_sha256": "2decc94993c3164dfd75c8190e60ba4feb04ba01e1d1c3916a3f371e05315519",
+    "status": "BLOCKED_SUPERSEDED_ENGINEERING_CANDIDATE",
+}
 FORBIDDEN_IMPORTS = ("mujoco", "torch", "g1swarm")
 
 
@@ -67,6 +73,37 @@ def repair_identity(manifest, *, source=False):
             "Wrong repair status or physics authority")
     require(manifest.get("execution_code_head") != BLOCKED_DELIVERY["head"],
             "Blocked execution HEAD cannot be the repaired execution code")
+    require(manifest.get("execution_code_head") != SUPERSEDED_IDENTITY["execution_code_head"],
+            "Superseded execution HEAD cannot be current repaired execution code")
+
+
+def superseded_candidates(root=ROOT, here=HERE):
+    """Bind rejected engineering receipts and byte-exact archived original files."""
+    archive = here / "superseded_candidate_001"
+    require(archive.resolve().is_relative_to(root.resolve()) and not archive.is_symlink(),
+            "Superseded archive escapes root")
+    for path in archive.rglob("*"):
+        require(not path.is_symlink() and path.resolve().is_relative_to(archive.resolve()),
+                "Superseded archive contains escaping links")
+    rejection = archive / "rejection.json"
+    data = load(rejection)
+    require(all(data.get(key) == value for key, value in SUPERSEDED_IDENTITY.items()),
+            "Superseded engineering candidate identity changed")
+    originals = data["source_raw_sha256"]
+    require(len(originals) == 25, "Superseded original archive membership changed")
+    actual_originals = {path.relative_to(archive / "original_root").as_posix()
+                        for path in (archive / "original_root").rglob("*") if path.is_file()}
+    require(set(originals) == actual_originals, "Superseded original archive membership mismatch")
+    for name, sha in originals.items():
+        require(digest(contained(archive / "original_root", name)) == sha,
+                "Superseded original bytes changed: " + name)
+    for key, filename in (("readiness_sha256", "readiness_manifest.json"),
+                          ("source_manifest_sha256", "source_manifest.json")):
+        require(digest(archive / "original_root" / REPAIR_NAMESPACE / filename) == data[key],
+                "Superseded original receipt hash mismatch")
+    return [dict(SUPERSEDED_IDENTITY,
+                 rejection_path=rejection.relative_to(root).as_posix(),
+                 rejection_sha256=digest(rejection))]
 
 
 def clean_process():
@@ -208,6 +245,9 @@ def expected_source_paths(root=ROOT, here=HERE):
                                  cwd=root, check=True, stdout=subprocess.PIPE, text=True).stdout.splitlines()
     require(len(blocked_tree) == 41, "Blocked PR20 bundle membership changed")
     paths.update(blocked_tree)  # Complete failed delivery and its tests/receipts retained.
+    superseded_candidates(root, here)
+    archive = here / "superseded_candidate_001"
+    paths.update(path.relative_to(root).as_posix() for path in archive.rglob("*") if path.is_file())
     prefix = here.relative_to(root).as_posix()
     paths.update(prefix + "/" + p.name for p in here.iterdir() if p.is_file() and
                  (p.suffix == ".py" or p.name in (".gitattributes", "dependencies.json", "assets_receipt.json")))
@@ -219,6 +259,8 @@ def verify_sources(root=ROOT, here=HERE):
     require(here.resolve() == contained(root, REPAIR_NAMESPACE), "Wrong repair source path")
     manifest = load(here / "source_manifest.json")
     repair_identity(manifest, source=True)
+    require(manifest.get("superseded_engineering_candidates") == superseded_candidates(root, here),
+            "Superseded candidate source binding mismatch")
     require(manifest["physics_authorized"] is False, "Source freeze cannot authorize physics")
     require(manifest["design_head"] == DESIGN_HEAD, "Wrong frozen design HEAD")
     code_head = manifest["execution_code_head"]
@@ -262,6 +304,8 @@ def check_target(*, expected_sha=None, root=ROOT, here=HERE, require_manifest=Tr
     clean_process()
     require(here.resolve() == contained(root, REPAIR_NAMESPACE), "Wrong repair readiness path")
     require(expected_sha != BLOCKED_DELIVERY["readiness_sha256"], "Blocked readiness SHA cannot authorize repaired execution")
+    require(expected_sha != SUPERSEDED_IDENTITY["readiness_sha256"],
+            "Superseded readiness SHA cannot authorize repaired execution")
     if expected_sha is not None:
         require(require_manifest and digest(here / "readiness_manifest.json") == expected_sha,
                 "Readiness identity differs from separately frozen expected SHA")
@@ -280,6 +324,8 @@ def check_target(*, expected_sha=None, root=ROOT, here=HERE, require_manifest=Tr
         readiness = load(here / "readiness_manifest.json")
         repair_identity(readiness)
         source = load(here / "source_manifest.json")
+        require(readiness.get("superseded_engineering_candidates") == source.get("superseded_engineering_candidates"),
+                "Superseded candidate readiness binding mismatch")
         require(readiness["execution_code_head"] == source["execution_code_head"], "Readiness execution code identity mismatch")
         protocol = load(root / DESIGN / "protocol.json")
         require(readiness["freeze"] == protocol["budget"] and

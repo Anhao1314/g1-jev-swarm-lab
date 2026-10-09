@@ -63,6 +63,7 @@ def freeze(code_head: str) -> dict:
         "status": "EXECUTION_BYTES_FROZEN_NO_PHYSICS_AUTHORITY",
         "repair_namespace": readiness.REPAIR_NAMESPACE,
         "blocked_delivery": readiness.BLOCKED_DELIVERY,
+        "superseded_engineering_candidates": readiness.superseded_candidates(ROOT, HERE),
         "physics_authorized": False,
         "design_head": readiness.DESIGN_HEAD,
         "execution_code_head": code_head,

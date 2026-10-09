@@ -174,8 +174,7 @@ def test_expected_source_closure_includes_runtime_and_raw_history():
     assert "experiments/m2/post_halt_hold_qualification_001/raw/campaign_001.zip" in paths
     assert "experiments/m2/cross_state_reliability_archives_001/manifest.json" in paths
     assert sum(name.startswith(R["DESIGN"] + "/") for name in paths) == 16
-    assert not any(name.endswith("/readiness_manifest.json") and
-                   name.startswith("experiments/m2/unseen_halt_hold_p1_repair_001/") for name in paths)
+    assert R["REPAIR_NAMESPACE"] + "/readiness_manifest.json" not in paths
 
 
 def test_expected_source_closure_captures_all_new_python():
@@ -221,3 +220,31 @@ def test_source_closure_preserves_complete_blocked_bundle():
     assert len(blocked) == 41
     assert R["BLOCKED_BUNDLE"] + "/readiness_manifest.json" in blocked
     assert R["BLOCKED_BUNDLE"] + "/source_manifest.json" in blocked
+
+
+def test_superseded_archive_membership_and_original_hashes():
+    candidates = R["superseded_candidates"]()
+    assert len(candidates) == 1
+    assert candidates[0]["readiness_sha256"] == R["SUPERSEDED_IDENTITY"]["readiness_sha256"]
+    paths = R["expected_source_paths"]()
+    prefix = R["REPAIR_NAMESPACE"] + "/superseded_candidate_001/"
+    assert len([name for name in paths if name.startswith(prefix)]) == 33
+    assert candidates[0]["rejection_path"] in paths
+
+
+def test_superseded_original_hash_drift_rejected(monkeypatch):
+    # Fault inject a hash mismatch without mutating the preserved archive or
+    # duplicating its deliberately deep provenance path under a Windows tempdir.
+    archive = R["HERE"] / "superseded_candidate_001"
+    victim = archive / "original_root" / R["REPAIR_NAMESPACE"] / "dependencies.json"
+    real_digest = R["digest"]
+    def mismatched_digest(path):
+        return "0" * 64 if Path(path).resolve() == victim.resolve() else real_digest(path)
+    monkeypatch.setitem(R["superseded_candidates"].__globals__, "digest", mismatched_digest)
+    with pytest.raises(ValueError, match="Superseded original bytes changed"):
+        R["superseded_candidates"]()
+
+
+def test_superseded_readiness_sha_refused_before_environment():
+    child = child_gate(expected_sha=R["SUPERSEDED_IDENTITY"]["readiness_sha256"])
+    assert not child["ok"] and "Superseded readiness SHA" in child["error"]

@@ -657,7 +657,13 @@ def campaign_score(results, spec):
     byid = {r["cell_id"]: r for r in results}
     planned = [c["id"] for c in spec["cells_in_order"]]
     need([r["cell_id"] for r in results] == planned, "CAMPAIGN_CELL_ORDER_MISMATCH")
-    valid = [r for r in results if r.get("status") == "VALID"]
+    # Raw numerical failure remains visible, but a mismatched experiment
+    # condition cannot supply a qualified counterexample or denominator.
+    def qualified(row):
+        return (row.get("status") == "VALID" and row.get("experiment_condition_valid", True)
+                and not row.get("pair_integrity_issues") and not row.get("routing_integrity_issues")
+                and not row.get("experiment_condition_integrity_issues"))
+    valid = [r for r in results if qualified(r)]
     new = set(spec["required_primary_cells"] + spec["secondary_unseen_cells"])
     negatives, aliases = [], []
     for r in valid:
@@ -683,9 +689,19 @@ def campaign_score(results, spec):
     eligible = [r for r in requested if r.get("halt") == "SUCCEEDED"]
     return {"scientific_signal": scientific, "campaign_completion": "COMPLETE" if complete else "PARTIAL",
             "counterexamples": negatives, "condition_negatives_not_distinct": aliases,
+            "observed_physical_negatives_with_invalid_condition": [r["cell_id"] for r in results
+                if not qualified(r) and (r.get("halt") == "FAILED" or r.get("hold") == "FAILED")],
             "failure_chain_halt_denominator": len(requested), "failure_chain_hold_denominator": len(eligible),
             "halt_success_fraction": sum(r["halt"] == "SUCCEEDED" for r in requested)/len(requested) if requested else None,
             "hold_success_fraction": sum(r["hold"] == "SUCCEEDED" for r in eligible)/len(eligible) if eligible else None}
+
+
+def mark_condition_invalid(row, issue):
+    """Retain raw Halt/Hold values while excluding the invalid condition."""
+    row.setdefault("raw_scoring_status_before_condition_check", row.get("status"))
+    row["status"] = "EXPERIMENT_CONDITION_INVALID"
+    row["experiment_condition_valid"] = False
+    row.setdefault("experiment_condition_integrity_issues", []).append(issue)
 
 
 def verify_byte_maps(source_files, readiness_files, *, root=ROOT):
@@ -782,21 +798,28 @@ def audit_campaign(folder, *, spec_path=DESIGN / "protocol.json", historical=Non
                      "reason": getattr(exc, "reason", str(exc))}
             result["historical_control_raw_reproduction"] = issue
             control_issues.append(issue)
+            mark_condition_invalid(result, issue)
     state_distinctness(results, hist, spec)
-    valid_byid = {r["cell_id"]: r for r in results if r.get("status") == "VALID"}
+    valid_byid = {r["cell_id"]: r for r in results if r.get("status") == "VALID"
+                  or r.get("raw_scoring_status_before_condition_check") == "VALID"}
     raw_byid = {name: read_jsonl(folder/name/"native_incremental.jsonl") for name in valid_byid}
     anchor = raw_byid.get("seen_no_push_anchor")
-    if anchor is not None:
-        for cell in spec["cells_in_order"]:
-            if cell["push"] and cell["id"] in raw_byid:
-                prefix = cell["push"]["native_pre_step_start_index"]
-                actual = min(prefix, len(raw_byid[cell["id"]]))
-                try:
-                    raw_prefix(anchor, raw_byid[cell["id"]], actual)
-                except EvidenceError as exc:
-                    issue = {"cell_id": cell["id"], "audit_status": exc.category, "reason": exc.reason}
-                    valid_byid[cell["id"]].setdefault("pair_integrity_issues", []).append(issue)
-                    control_issues.append(issue)
+    for cell in spec["cells_in_order"]:
+        if cell["push"] and cell["id"] in raw_byid:
+            prefix = cell["push"]["native_pre_step_start_index"]
+            actual = min(prefix, len(raw_byid[cell["id"]]))
+            try:
+                need(anchor is not None, "PAIRED_CURRENT_ANCHOR_MISSING", "MISSING_EVIDENCE")
+                raw_prefix(anchor, raw_byid[cell["id"]], actual)
+                # An invalid anchor cannot lend authority to a similarly
+                # corrupted pre-pulse pair: also bind to the sealed source.
+                need("seen_failure_halt_hold" in hist, "PAIRED_CANONICAL_ANCHOR_MISSING", "MISSING_EVIDENCE")
+                raw_prefix(hist["seen_failure_halt_hold"]["native"], raw_byid[cell["id"]], actual)
+            except EvidenceError as exc:
+                issue = {"cell_id": cell["id"], "audit_status": exc.category, "reason": exc.reason}
+                valid_byid[cell["id"]].setdefault("pair_integrity_issues", []).append(issue)
+                mark_condition_invalid(valid_byid[cell["id"]], issue)
+                control_issues.append(issue)
     observed_ids = [r["cell_id"] for r in results if r.get("status") != "NOT_RUN"]
     need(observed_ids == [c["id"] for c in spec["cells_in_order"][:len(observed_ids)]], "CAMPAIGN_REORDER_OR_GAP")
     counts = {name: journal_coverage(folder/name/"native_incremental.jsonl") for name in observed_ids
@@ -822,10 +845,12 @@ def audit_campaign(folder, *, spec_path=DESIGN / "protocol.json", historical=Non
         need(receipt.get("protocol_sha256") == digest(spec_path), "CAMPAIGN_DESIGN_BINDING_MISMATCH")
         if execution_head:
             need(receipt.get("execution_head") == execution_head, "CAMPAIGN_EXECUTION_HEAD_MISMATCH")
-    decision = campaign_score(results, spec)
     for row in results:
-        control_issues.extend({"cell_id": row["cell_id"], "audit_status": "INTEGRITY_FAILURE", "reason": reason}
-                              for reason in row.get("routing_integrity_issues", []))
+        for reason in row.get("routing_integrity_issues", []):
+            issue={"cell_id":row["cell_id"],"audit_status":"INTEGRITY_FAILURE","reason":reason}
+            control_issues.append(issue)
+            mark_condition_invalid(row,issue)
+    decision = campaign_score(results, spec)
     if control_issues and decision["scientific_signal"] == "BOUNDED_PRIMARY_PAIR_SUPPORTED":
         decision["scientific_signal"] = "INCONCLUSIVE_COVERAGE_OR_TECHNICAL"
     observed_event_counts = {"first_walk_end": 0, "halt_request": 0, "stop_return": 0}
