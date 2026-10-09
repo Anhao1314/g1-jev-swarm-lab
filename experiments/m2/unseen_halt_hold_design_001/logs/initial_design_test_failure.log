@@ -1,0 +1,64 @@
+F........................                                                [100%]
+================================== FAILURES ===================================
+___________________ test_static_contract_and_bound_sources ____________________
+
+    def test_static_contract_and_bound_sources():
+>       assert mod.validate()['status']=='CANDIDATE_DESIGN_CHECK_PASS_NO_PHYSICS'
+               ^^^^^^^^^^^^^^
+
+experiments\m2\unseen_halt_hold_design_001\test_design.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+spec = {'baseline_main_commit': '4e2a51bf143cafea5eb90e89a88e1f04c156c9c8', 'before_acquisition_required': ['Independent scie...ot-distinct physical failures remain recorded condition-level negatives, not unseen-state counterexamples.', ...}, ...}
+
+    def validate(spec=None):
+        if 'mujoco' in sys.modules or 'torch' in sys.modules:
+            raise ValueError('Design checker must not import simulator or policy runtime')
+        spec = read(HERE/'protocol.json') if spec is None else spec
+        binding = read(HERE/'source_binding.json')
+        for path,expected in binding['files'].items():
+            if hashlib.sha256(blob(binding['baseline_commit'],path)).hexdigest()!=expected:
+                raise ValueError('Historical Git source/hash mismatch: '+path)
+        m24 = json.loads(blob(binding['baseline_commit'],'experiments/m2/cross_state_reliability_001/protocol.json'))
+        m25 = json.loads(blob(binding['baseline_commit'],'experiments/m2/post_halt_hold_design_001/protocol.json'))
+        halt = json.loads(blob(binding['baseline_commit'],'experiments/m2/post_failure_halt_001/protocol.json'))
+        assert spec['baseline_main_commit']==binding['baseline_commit']
+        assert spec['physics_authorized'] is False and spec['execution_adapter_implemented'] is False
+        assert spec['scientific_result']=='UNMEASURED_NO_PHYSICS'
+        assert spec['layer2_halt']['stop_skill_parameters']==halt['stop_skill_parameters']
+        assert spec['layer2_halt']['acceptance']==halt['acceptance']
+        assert spec['layer3_hold']['contract']==m25['hold']
+        assert spec['layer3_hold']['continuity']==m25['continuity_and_integrity']
+        expected=[('seen_no_push_anchor',None,None),('unseen_minus_y_early',-1,500),
+                  ('unseen_minus_y_late',-1,2000),('unseen_plus_y_late_partner',1,2000),
+                  ('seen_plus_y_early_control',1,500),('normal_stop_control',None,None)]
+        assert len(spec['cells_in_order'])==6
+        for cell,(id,sign,start) in zip(spec['cells_in_order'],expected):
+            assert cell['id']==id and cell['attempts']==1 and cell['seed']==0
+            assert cell['max_native_steps']==30000 and cell['max_wall_s']==120
+            assert cell['future_outcome']=='UNMEASURED'
+            assert cell['mission']==(m24['normal_control'] if id=='normal_stop_control' else m24['states'][0]['parent_mission'])
+            push=cell['push']
+            if sign is None: assert push is None
+            else:
+                assert push['force_n']==60 and push['direction_world']==[0,sign,0]
+                assert push['duration_s']==.2 and push['relative_first_walk_trigger_s']==start*.002
+                assert push['native_pre_step_start_index']==start and push['native_intervals_if_walk_reaches_window_end']==100
+                assert push['frame']=='world' and push['body']=='pelvis' and push['random_trigger'] is False
+                active=[n for n in range(2201) if force_at_pre_step(push,n)!=(0,0,0)]
+                assert active==list(range(start,start+100))
+        b=spec['budget']
+        assert b['maximum_cells']==6 and b['attempts_per_cell']==1
+        assert b['maximum_native_steps_total']==180000 and b['maximum_wall_s_total']==720
+        assert b['max_native_steps_per_cell']==30000 and b['max_wall_s_per_cell']==120
+        for seconds in b['conservative_skill_time_bounds_s'].values(): assert seconds/.002 <30000
+        assert b['conservative_skill_time_bounds_s']=={'challenge_parent_no_halt_complete':50.5,'challenge_failure_halt_hold':42.0,'normal_parent_and_hold':40.5}
+        import yaml
+>       timing=yaml.safe_load(blob(binding['baseline_commit'],'configs/experiments/oracle_mission_runtime_001.yaml'))['skills']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'skills'
+
+experiments\m2\unseen_halt_hold_design_001\check_design.py:162: KeyError
+=========================== short test summary info ===========================
+FAILED experiments/m2/unseen_halt_hold_design_001/test_design.py::test_static_contract_and_bound_sources
+1 failed, 24 passed in 6.96s
