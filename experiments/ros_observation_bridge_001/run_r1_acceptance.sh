@@ -45,9 +45,12 @@ if test "$setup_status" -ne 0; then
   printf 'ROS_SETUP_FAILED=%s\n' "$setup_status" > "$output_dir/blocker.txt"
   exit 0
 fi
-export PYTHONPATH="$PWD/src"
+# Preserve the official ROS Python path added by setup.bash; only prepend the
+# isolated repository converter. Replacing PYTHONPATH hides apt-installed rclpy.
+export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
 printf 'sourced_ROS_DISTRO=%s\n' "${ROS_DISTRO:-UNSET}" >> "$output_dir/environment.log"
 printf 'container_PYTHONPATH=%s\n' "$PYTHONPATH" >> "$output_dir/environment.log"
+printf 'container_python3=%s\n' "$(command -v python3)" >> "$output_dir/environment.log"
 python3 - <<'PY' > "$output_dir/ros_imports.log" 2>&1
 import json, platform
 import numpy, rclpy
