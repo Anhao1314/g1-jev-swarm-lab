@@ -1,0 +1,15 @@
+# 独立迁移来源绑定工程审查
+
+Reviewer: 独立只读Codex子代理 migration_rebinding_audit；非实现作者，非Owner。根代理原样归档结论。本审查未修改文件、运行测试、物理或策略调用。
+
+**PASS_MIGRATION_SOURCE_REBINDING_ENGINEERING_REVIEW**
+
+独立SHA核验520项来源、8项Readiness绑定、34项历史失败归档及原位置文件，全部一致。原基线2787项Git mode/blob不变。53项XML测试无失败/跳过，原159/161保持不变。源码固定root通过Git顶层、worktree注册、gitdir及回链验证。早期worktree注册检查遗漏已在冻结前修复。
+
+已核实真实correct-HEAD清单提交693503c37a4bf95d1207261d5ace826c09adf638的fresh-process CLI PASS，日志SHA5a9788aeb310fa29de722e58ac9eed67a681041a63ca01d836c36ebc4b9f0428。错误HEAD日志SHAfaae9c25bc58f6e0558a36f36632982ec09b915b1e27ab4afbe3ceb318aec1a3明确拒绝exactHEAD不一致，而非旧origin错误。
+
+Code HEAD fb85e13e3ad36d267a991aea1f0972c1205dffd2；Source SHA17be268d950b2799aff72b6042921ce85be9307cea89cafad17c4fd5fedd9ad6；Readiness SHAed618a31de837f87aca0b855a21013701f9ac762939c841b371cd911fef1b21e。
+
+外部环境41版本保持一致，旧editable .pth/direct_url保留并哈希绑定；新preflight显式选择新root实际解析结果。无残留迁移来源/非物理预检工程阻断。原采集器尚未接入新gate，本结果不构成采集资格或授权。
+
+最终报告提交后的精确最终HEAD必须再做一次fresh-process CLI核验；无需重复测试或科学采集。
