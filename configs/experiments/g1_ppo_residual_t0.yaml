@@ -1,0 +1,192 @@
+experiment_id: g1_ppo_residual_t0
+phase: T0_design_only
+status: NO_TRAINING_PERFORMED
+source_anchor: 4e2a51bf143cafea5eb90e89a88e1f04c156c9c8
+branch: research/g1-ppo-residual-t0
+
+question: >
+  Can a bounded high-level yaw-rate residual improve disturbance adaptation,
+  path tracking, or long-task execution relative to the frozen Phase 1.3
+  deterministic controller without modifying the pretrained joint policy?
+
+frozen_foundation:
+  robot_config: configs/robot/g1_locomotion_12dof.yaml
+  pretrained_policy_sha256: cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d
+  deterministic_controller: src/g1swarm/control/path_correction.py
+  deterministic_mode: heading_lateral
+  k_heading: 1.5
+  k_lateral: 1.0
+  total_yaw_limit_radps: 0.6
+  deadband_radps: 0.01
+  physics_period_s: 0.002
+  base_policy_period_s: 0.02
+  residual_decision_period_s: 0.1
+
+action:
+  space: Box
+  shape: [1]
+  normalized_bounds: [-1.0, 1.0]
+  name: delta_yaw_rate
+  residual_limit_radps: 0.12
+  composition: applied_yaw = clip(deterministic_yaw + 0.12 * action[0], -0.6, 0.6)
+  authority_mask: walk_forward_only
+  candidate_window: full_walk_until_skill_terminal
+  hold_between_decisions: true
+  preserves_exactly: [vx_command, vy_command, pretrained_policy, PD_gains, action_scale]
+  prohibited_outputs: [joint_torque, joint_target, base_pose, PD_gain, vx_residual, vy_residual]
+
+observation:
+  space: Box
+  shape: [18]
+  bounds: [-1.0, 1.0]
+  clipping_requires_raw_info_logging: true
+  features_in_order:
+    - sin_heading_error
+    - cos_heading_error
+    - lateral_error_over_nominal_envelope
+    - forward_progress_fraction
+    - remaining_distance_fraction
+    - task_time_remaining_fraction
+    - mission_forward_velocity_over_0_5mps
+    - mission_lateral_velocity_over_0_5mps
+    - base_yaw_rate_over_0_6radps
+    - gravity_projection_x
+    - gravity_projection_y
+    - gravity_projection_z
+    - base_height_delta_from_reset_over_0_2m
+    - nominal_forward_command_over_0_5mps
+    - deterministic_yaw_command_over_0_6radps
+    - previous_normalized_residual_action
+    - previous_total_yaw_saturation_flag
+    - standing_flag
+  excluded: [raw_joint_positions, raw_joint_velocities, policy_hidden_state, disturbance_label]
+  limitation: >
+    The frozen low-level policy is recurrent and its hidden state is not exposed;
+    this observation is therefore not claimed to prove the Markov property.
+  velocity_rule: >
+    Derive mission-frame velocity from successive projected positions until the
+    qvel frame convention is explicitly verified for the new environment.
+
+reward:
+  role: candidate_smoke_objective_not_scientific_metric
+  gamma: 0.99
+  potential: >
+    -(1.0*(lateral_error/E_lateral)^2 + 0.5*(heading_error/radians(15))^2
+    + 0.25*(remaining_distance/target_distance)^2)
+  scales:
+    E_lateral: max(0.35m, 0.07 * target_distance_m)
+  shaping: gamma * potential_next - potential_current
+  costs:
+    action_l2: 0.02
+    action_delta_l2: 0.01
+    tilt_excess_weight: 0.10
+    total_yaw_saturation: 0.05
+  tilt_excess:
+    onset_deg: 15.0
+    scale_deg: 15.0
+    clipped_bounds: [0.0, 2.0]
+    formula: clip(max(0, tilt_deg - 15) / 15, 0, 2)
+  terminal_events:
+    task_success: 5.0
+    target_reached_outside_envelope: -5.0
+    physical_failure: -20.0
+    task_horizon_exhausted: -5.0
+  guardrails:
+    - Training return never replaces frozen task, physical, nominal, or strict metrics.
+    - Progress is represented inside the potential to discourage delay without rewarding raw speed alone.
+    - All reward terms and raw components must be logged separately.
+    - Non-finite or contract-invalid transitions are invalid evidence and stop the run.
+
+episode:
+  reset:
+    - Select only a case from the authorized split manifest using the recorded seed.
+    - Reset simulator to the declared initial state or keyframe.
+    - Reset the pretrained recurrent controller once using the inherited skill lifecycle.
+    - Freeze the mission frame and clear previous residual/action state.
+  terminated:
+    - target_reached_and_frozen_envelope_task_success
+    - target_reached_outside_frozen_envelope
+    - physical_failure_or_fall
+    - task_defined_horizon_exhausted_with_remaining_time_observed
+  truncated:
+    - external_smoke_decision_budget
+    - external_wall_clock_watchdog
+    - owner_or_process_interrupt
+  invalid_not_scored:
+    - non_finite_state_observation_action_reward_or_loss
+    - controller_or_simulator_exception
+    - zero_residual_equivalence_failure
+
+data_isolation:
+  historical_seen_regression:
+    role: engineering_and_regression_only
+    includes: [Phase_1, Phase_1_3, Phase_3A]
+    may_be_called_unseen: false
+  smoke_train:
+    role: T1_pipeline_only
+    source: one predeclared historical_seen case
+    may_support_performance_claim: false
+  formal_train:
+    status: PENDING_SEPARATE_FREEZE_AND_OWNER_AUTHORIZATION
+  validation:
+    status: PENDING_INDEPENDENT_MANIFEST_AFTER_ENVIRONMENT_AND_REWARD_FREEZE
+    gradients_or_normalization_fit: forbidden
+  unseen_test:
+    status: SEALED_NOT_AVAILABLE_TO_T0_OR_T1_SMOKE
+    one_shot_after_checkpoint_lock: true
+    tuning_or_checkpoint_selection: forbidden
+  forbidden_sources:
+    - M2.6A unseen cases or state
+    - any case selected after inspecting evaluation outcome
+
+comparators:
+  primary: frozen_Phase_1_3_heading_lateral
+  engineering_control: same_wrapper_with_exact_zero_residual
+  candidate: PPO_yaw_residual
+  historical_context_only: prior_Phase_3A_three_axis_transition_residual
+  adoption_rule: no adoption without paired multi_seed formal evaluation and independent audit
+
+t1_smoke_candidate:
+  authorization_required: true
+  purpose: pipeline_and_contract_validation_only
+  performance_claim_allowed: false
+  device: cpu
+  torch_threads: 1
+  seed: 7
+  total_decisions: 256
+  ppo:
+    n_steps: 128
+    batch_size: 64
+    n_epochs: 2
+    learning_rate: 0.0003
+    gamma: 0.99
+    gae_lambda: 0.95
+    clip_range: 0.2
+    target_kl: 0.03
+    network: [32, 32]
+  checkpoints_at_decisions: [0, 128, 256]
+  checkpoint_selection: fixed_final_only_no_evaluation_selection
+  wall_clock_watchdog_s: 600
+  readiness_preconditions:
+    - Separate Owner authorization for policy loading, MuJoCo stepping, and PPO updates.
+    - Restore and verify the pinned policy and MJCF assets without changing frozen history.
+    - Provide an isolated dependency lock; this T0 worktree currently has no .venv.
+    - Verify reset count, command ordering, velocity frame, and zero-residual step equivalence.
+  stop_immediately_on:
+    - any zero_residual command or physical equivalence mismatch
+    - any residual outside 0.12 rad/s or total yaw outside 0.6 rad/s
+    - any requested normalized action outside [-1, 1]
+    - any residual authority outside walk_forward
+    - any non_finite value or simulator/controller exception
+    - any physical fall or inherited safety violation
+    - checkpoint reload tensor or action mismatch
+    - access to validation, unseen, or M2.6A data
+    - missing provenance, decision ledger, or partial-evidence retention
+
+t0_execution:
+  physics_steps: 0
+  policy_loads: 0
+  optimizer_updates: 0
+  checkpoint_writes: 0
+  gpu_calls: 0
+  status: NO_TRAINING_PERFORMED
