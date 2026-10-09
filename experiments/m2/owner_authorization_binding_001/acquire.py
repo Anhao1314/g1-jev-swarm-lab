@@ -47,11 +47,13 @@ def offline_supervisor(gate,auth,args,expected):
     lease = auth.TestLedger(args.ledger).consume(auth.read(args.test_record),expected)
     # Claim is irreversible, including an adapter load or process-launch failure.
     results=[]
+    output_created=False
     started=time.perf_counter()
     try:
         auth.need(not args.output.exists(),'OUTPUT_ALREADY_EXISTS_NO_RETRY')
         p1 = load_frozen_supervisor(gate)
         args.output.mkdir()
+        output_created=True
         for index,cell_id in enumerate(expected['cell_order']):
             p1.campaign_wall_guard(started,{'budget':expected['budget']})
             cell_started=time.perf_counter()
@@ -70,12 +72,15 @@ def offline_supervisor(gate,auth,args,expected):
                     child.kill()
                     child.wait(timeout=10)
                     raise
-            p1.subprocess=SimpleNamespace(Popen=popen,TimeoutExpired=subprocess.TimeoutExpired)
+            p1.subprocess=SimpleNamespace(Popen=popen,TimeoutExpired=subprocess.TimeoutExpired,STDOUT=subprocess.STDOUT)
             command=[sys.executable,str(HERE/'acquire.py'),'offline-worker','--execution-head',args.execution_head,
                      '--readiness-sha256',args.readiness_sha256,'--output',str(args.output),
                      '--ledger',str(args.ledger),'--cell-index',str(index)]
             # Preserve the original external watchdog and retained failure receipt.
-            p1.supervise(command,run_dir,expected['budget']['max_wall_s_per_cell'])
+            remaining=expected['budget']['maximum_wall_s_total']-(time.perf_counter()-started)
+            if remaining<=0:
+                raise p1.BudgetFailure('CAMPAIGN_WALL_BUDGET_EXHAUSTED')
+            p1.supervise(command,run_dir,min(expected['budget']['max_wall_s_per_cell'],remaining))
             p1.campaign_wall_guard(started,{'budget':expected['budget']})
             result=auth.read(run_dir/'substitute_result.json')
             auth.need(result['kind']==auth.TEST and result['binding_sha256']==auth.digest(expected)
@@ -90,11 +95,18 @@ def offline_supervisor(gate,auth,args,expected):
         auth.write_once(args.output/'authorization_flow.json',receipt)
         return receipt
     except BaseException as exc:
-        lease.close(type(exc).__name__+': '+str(exc))
-        if args.output.exists():
-            auth.write_once(args.output/'authorization_flow_failed.json',{'kind':auth.TEST,'reason':type(exc).__name__+': '+str(exc),
-                'classification':'AUTHORIZATION_DENIED_NONPHYSICAL' if isinstance(exc,auth.AuthorizationError) else 'TECHNICAL_INTERRUPTION_NONPHYSICAL',
-                'completed_workers':len(results),'no_retry':True})
+        if not (lease.campaign/'closed.json').exists():
+            try:
+                lease.close(type(exc).__name__+': '+str(exc))
+            except BaseException as cleanup_exc:
+                exc.add_note('Ledger close failure: '+type(cleanup_exc).__name__+': '+str(cleanup_exc))
+        if output_created:
+            try:
+                auth.write_once(args.output/'authorization_flow_failed.json',{'kind':auth.TEST,'reason':type(exc).__name__+': '+str(exc),
+                    'classification':'AUTHORIZATION_DENIED_NONPHYSICAL' if isinstance(exc,auth.AuthorizationError) else 'TECHNICAL_INTERRUPTION_NONPHYSICAL',
+                    'completed_workers':len(results),'no_retry':True})
+            except BaseException as report_exc:
+                exc.add_note('Failure receipt write failure: '+type(report_exc).__name__+': '+str(report_exc))
         raise
 
 def offline_worker(gate,auth,args,expected):

@@ -70,6 +70,7 @@ def source_paths():
     paths.update(p for p in g.helpers()['git_tree'](ROOT,BASE) if p.startswith(PARENT + '/'))
     paths.update(p.relative_to(ROOT).as_posix() for p in HERE.rglob('*') if p.is_file() and p.suffix in ('.py','.ps1','.cmd','.bat','.sh'))
     paths.update(g.NAMESPACE + '/' + p for p in ('.gitattributes','dependencies.json','binding.json','owner_trust.json','contract.json'))
+    paths.update(p.relative_to(ROOT).as_posix() for p in (HERE/'blocked_candidate_001').rglob('*') if p.is_file())
     return paths
 
 def expected_binding():
@@ -81,6 +82,7 @@ def expected_binding():
 def check_target(*, expected_sha, execution_head):
     g = inherited()
     g.require(expected_sha != PARENT_READY_SHA, 'Old PR25 Readiness cannot bind Owner entry')
+    g.require(expected_sha != 'ccbb692d43843a806c8a0c3da573399ad833da2f00a91a461b22bfeddc4fcbe7', 'Blocked Owner binding candidate cannot authorize entry')
     g.require(g.digest(ROOT / PARENT / 'readiness_manifest.json') == PARENT_READY_SHA, 'Parent Readiness drift')
     g.require(g.load(HERE / 'owner_trust.json') == {'schema_version':1,'owner_records':{},'physical_dispatch_enabled':False,
               'scope':'TRUSTED_SERIAL_REVIEWED_RECORD_PIN_NOT_PRODUCTION_IDENTITY'}, 'Owner trust/physical enablement drift')

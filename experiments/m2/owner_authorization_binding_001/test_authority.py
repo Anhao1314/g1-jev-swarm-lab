@@ -22,7 +22,8 @@ G=module('owner_gate_test',HERE/'readiness.py')
 def pair(tmp_path):
     binding={'execution_head':'a'*40,'readiness_sha256':'b'*64,'source_manifest_sha256':'c'*64,
              'protocol_sha256':'d'*64,'source_root':'fixed worktree','cell_order':['one','two'],
-             'canonical_cells_sha256':'e'*64,'budget':{'attempts_per_cell':1,'maximum_cells':2},
+             'canonical_cells_sha256':'e'*64,'budget':{'attempts_per_cell':1,'maximum_cells':2,
+                 'max_wall_s_per_cell':120,'maximum_wall_s_total':720},
              'hold_window_s':2.0,'hold_native_steps':1000,'output':str(tmp_path/'output'),'ledger':str(tmp_path/'ledger')}
     store=A.TestLedger(tmp_path/'ledger')
     record=store.issue_test(binding)
@@ -151,6 +152,64 @@ def test_expiry_rejected(pair,monkeypatch):
     monkeypatch.setattr(A.time,'time',lambda:record['expires_at'])
     with pytest.raises(A.AuthorizationError,match='EXPIRED'):
         store.consume(record,binding)
+
+def test_expiry_between_worker_claim_and_backend_is_rejected(pair,monkeypatch):
+    binding,store,lease,packet=delegate(pair,monkeypatch)
+    worker=store.claim_worker(packet,binding)
+    deadline=A.read(lease.claim)['record']['expires_at']
+    monkeypatch.setattr(A.time,'time',lambda:deadline)
+    with pytest.raises(A.AuthorizationError,match='EXPIRED'):
+        worker.enter_substitute(binding)
+    assert not (lease.campaign/'0-backend.json').exists()
+
+def test_existing_output_not_modified_even_on_authorization_failure(pair,tmp_path):
+    expected,record,store=pair
+    output=Path(expected['output'])
+    output.mkdir()
+    (output/'retained.txt').write_bytes(b'prior data stays intact')
+    record_path=tmp_path/'test-record.json'
+    A.write_once(record_path,record)
+    args=SimpleNamespace(test_record=record_path,output=output,ledger=store.root)
+    with pytest.raises(A.AuthorizationError,match='OUTPUT_ALREADY_EXISTS'):
+        E.offline_supervisor(object(),A,args,expected)
+    assert [p.name for p in output.iterdir()]==['retained.txt']
+    assert (output/'retained.txt').read_bytes()==b'prior data stays intact'
+    assert (store.root/'claims'/(record['record_id']+'.json')).is_file()
+
+def test_result_write_failure_preserves_original_and_remaining_watchdog(pair,tmp_path,monkeypatch):
+    expected,record,store=pair
+    record_path=tmp_path/'test-record.json'
+    A.write_once(record_path,record)
+    args=SimpleNamespace(test_record=record_path,output=Path(expected['output']),ledger=store.root,
+                         execution_head=expected['execution_head'],readiness_sha256=expected['readiness_sha256'])
+    seen=[]
+    p1=SimpleNamespace(campaign_wall_guard=lambda *a:None,cell_wall_guard=lambda *a:None,
+                       BudgetFailure=RuntimeError)
+    def supervise(command,run_dir,timeout):
+        assert p1.subprocess.STDOUT==E.subprocess.STDOUT
+        assert p1.subprocess.TimeoutExpired is E.subprocess.TimeoutExpired
+        seen.append(timeout)
+        index=expected['cell_order'].index(run_dir.name)
+        # Explicit unit-only reporting fault fixture, no Worker acceptance claim.
+        A.write_once(store.root/'claims'/(record['record_id']+'-workers')/f'{index}-backend.json',{'unit_double':True})
+        A.write_once(run_dir/'substitute_result.json',{'kind':A.TEST,'cell_id':run_dir.name,'binding_sha256':A.digest(expected)})
+    p1.supervise=supervise
+    monkeypatch.setattr(E,'load_frozen_supervisor',lambda gate:p1)
+    monkeypatch.setattr(E,'binding',lambda gate,args:deepcopy(expected))
+    times=iter([0,0,719,0,719])
+    monkeypatch.setattr(E,'time',SimpleNamespace(perf_counter=lambda:next(times)))
+    original=A.write_once
+    def write(path,value):
+        if path.name=='authorization_flow.json':
+            raise OSError('injected final result write failure')
+        return original(path,value)
+    monkeypatch.setattr(A,'write_once',write)
+    with pytest.raises(OSError,match='injected final result'):
+        E.offline_supervisor(object(),A,args,expected)
+    assert seen==[1,1]
+    failure=A.read(args.output/'authorization_flow_failed.json')
+    assert failure['reason'].startswith('OSError:') and failure['completed_workers']==2
+    assert failure['classification']=='TECHNICAL_INTERRUPTION_NONPHYSICAL'
 
 def test_supervisor_launch_failure_keeps_claim_and_no_retry(pair,tmp_path,monkeypatch):
     expected,record,store=pair

@@ -140,6 +140,9 @@ class WorkerLease:
         self.campaign,self.index,self.binding,self.packet = campaign,index,binding,packet
 
     def enter_substitute(self,binding):
+        claim=read(self.packet['claim'])
+        verify_record(claim['record'],binding,kind=TEST)
+        need(claim['record_sha256']==digest(claim['record']),'BACKEND_RECORD_DRIFT')
         need(canonical(binding) == canonical(self.binding) and os.getpid() == self.packet['worker_pid']
              and os.getppid() == self.packet['supervisor_pid'], 'BACKEND_BINDING_OR_PROCESS_MISMATCH')
         need(not (self.campaign/'closed.json').exists(), 'CAMPAIGN_CLOSED')
