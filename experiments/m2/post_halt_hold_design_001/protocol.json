@@ -1,0 +1,115 @@
+{
+  "experiment_id": "post_halt_hold_design_001",
+  "phase": "M2.5A",
+  "status": "CANDIDATE_FROZEN_FOR_INDEPENDENT_REVIEW",
+  "physics_authorized": false,
+  "baseline_main_commit": "0eff13a5cb523690cde31a742cc985e9ee0eaf03",
+  "historical_scientific_verdict": "M2.4_INCONCLUSIVE",
+  "question": "After the first existing HALT_SUCCEEDED crossing, does uninterrupted zero-velocity control hold a bounded physical state for two further simulated seconds?",
+  "scope": "Study-only MuJoCo qualification of StopSkill continuation; no mission restart, production safety, or reliability-generalization claim.",
+  "historical_inputs": {
+    "m24_protocol": "experiments/m2/cross_state_reliability_001/protocol.json",
+    "m24_raw_seal": "experiments/m2/cross_state_reliability_analysis_001/raw_evidence_manifest.json",
+    "m24_result": "experiments/m2/cross_state_reliability_analysis_001/audit.json",
+    "first_crossing_analysis": "experiments/m2/failure_coverage_mechanism_001/halt_analysis.json"
+  },
+  "fixed_config": {
+    "seed": 0,
+    "runtime_protocol": "configs/experiments/oracle_mission_runtime_001.yaml",
+    "robot_config": "configs/robot/g1_locomotion_12dof.yaml",
+    "native_timestep_s": 0.002,
+    "stop_skill_parameters": {"max_duration_s": 4.0, "window_s": 1.0, "speed_threshold_mps": 0.1},
+    "controller_policy_evaluator_thresholds": "unchanged from published M2.4",
+    "state_construction": "unchanged published M2.4 missions, seed and initial-session setup; no teleport or extra reset"
+  },
+  "cells_in_order": [
+    {
+      "id": "seen_failure_halt_hold",
+      "m24_state": "seen_reference_walk6",
+      "historical_arm": "authorization_refusals",
+      "role": "failure_halt_qualification",
+      "hold_entry": "parent strict failure AND independent HALT_SUCCEEDED at the first StopSkill crossing",
+      "historical_pre_hold_native_steps": 7139,
+      "max_native_steps": 10000,
+      "max_wall_s": 120
+    },
+    {
+      "id": "turn45_failure_halt_hold",
+      "m24_state": "transition_turn45_walk6",
+      "historical_arm": "authorization_refusals",
+      "role": "failure_halt_qualification",
+      "hold_entry": "parent strict failure AND independent HALT_SUCCEEDED at the first StopSkill crossing",
+      "historical_pre_hold_native_steps": 8266,
+      "max_native_steps": 12000,
+      "max_wall_s": 120
+    },
+    {
+      "id": "normal_stop_hold_control",
+      "m24_state": "normal_control",
+      "historical_arm": "unchanged_safe_mission",
+      "role": "ordinary_stop_measurement_control_not_matched_failure_state",
+      "hold_entry": "normal mission all nodes strict/physical PASS AND terminal ordinary StopSkill SUCCESS",
+      "historical_pre_hold_native_steps": 5991,
+      "max_native_steps": 8000,
+      "max_wall_s": 120
+    }
+  ],
+  "hold": {
+    "start": "first eligible terminal Stop/Halt state, before any task, stale-state tick or new-mission step",
+    "duration_s": 2.0,
+    "native_steps": 1000,
+    "command_xyz_mps_radps": [0.0, 0.0, 0.0],
+    "implementation_seam": "Continue the existing LiveMissionSession simulation and controller with the same StopSkill torque helper and zero command; no StopSkill re-dispatch or Task Graph node.",
+    "rolling_window_steps": 500,
+    "rolling_window_initialization": "exact 500 post-step speeds from the first qualifying StopSkill window; append each hold post-step speed and evaluate all 1000 ensuing windows",
+    "acceptance": {
+      "all_1000_rolling_means_at_most_mps": 0.1,
+      "final_instantaneous_speed_at_most_mps": 0.1,
+      "hold_xy_path_length_at_most_m": 0.2,
+      "all_steps_finite": true,
+      "all_steps_standing": true,
+      "all_steps_no_fall": true
+    },
+    "displacement_bound_basis": "New study-specific 0.2m hold path bound is motivated by 0.1m/s times 2s. Discrete XY path length and sampled speed integration need not be identical; this is a separately frozen criterion, not a mathematical consequence or a replacement of the historical 0.5m post-block Halt displacement gate.",
+    "descriptive_only": ["both disjoint hold-only one-second mean speeds", "maximum and trajectory of instantaneous planar speed", "rolling-mean threshold crossings and margins", "net and maximum XY displacement from hold entry", "base height, roll, pitch and tilt", "controller phase/counter/action/target and policy refresh", "joint/body state", "MuJoCo warnings and contacts where available"],
+    "unsafe_early_termination": "Fall, nonfinite state, non-standing state or simulation fault stops this cell immediately; retain partial trace and mark HOLD_FAILED or TECHNICAL_PARTIAL distinctly. A speed or path criterion breach is recorded and the fixed window continues unless an independent unsafe condition occurs."
+  },
+  "continuity_and_integrity": {
+    "same_simulator_controller_and_policy_objects": true,
+    "exact_halt_terminal_equals_hold_pre_first_step": ["simulation time", "qpos", "qvel", "ctrl", "applied force", "controller action", "controller target", "controller counter"],
+    "post_initialization_simulator_resets": 0,
+    "controller_reset_calls_from_qualifying_step_through_hold": 0,
+    "policy_reset_memory_calls_from_qualifying_step_through_hold": 0,
+    "task_node_or_new_mission_dispatch_during_hold": 0,
+    "all_hold_commands_exactly_zero": true,
+    "all_hold_steps_journaled": true,
+    "observer_noninterference": "offline fake-backend equivalence before physics; target preflight must verify identity/command/reset witnesses and read-only recording before acquisition",
+    "hidden_recurrent_state_limit": "same policy object and no reset calls are observable; hidden LSTM bytes are not directly snapshotted, so do not claim byte equality"
+  },
+  "budget": {
+    "maximum_cells": 3,
+    "attempts_per_cell": 1,
+    "maximum_native_steps_total": 30000,
+    "maximum_wall_s_per_cell": 120,
+    "maximum_wall_s_total": 360,
+    "no_result_driven_retries_or_state_replacement": true
+  },
+  "outcomes": {
+    "eligible_and_all_hold_checks_pass": "HOLD_SUCCEEDED_BOUNDED_IN_THIS_STATE",
+    "eligible_and_any_hold_check_fails": "HOLD_FAILED",
+    "parent_strict_pass_no_halt_trigger": "PARENT_PASS_NO_HALT_NO_HOLD; preserve original task outcome",
+    "parent_strict_failure_without_halt_request": "HALT_NOT_REQUESTED_NO_HOLD; preserve original task outcome and flag coverage or integrity issue",
+    "halt_failed": "HALT_FAILED_NO_HOLD; preserve original task and Halt outcomes",
+    "normal_mission_or_stop_failed": "CONTROL_FAILED_NO_HOLD; no forced Stop or hold",
+    "missing_required_trace_or_state": "INCONCLUSIVE_MISSING_EVIDENCE; never impute a hold PASS",
+    "integrity_or_budget_violation": "PARTIAL_STOPPED; abort campaign and retain partial raw evidence"
+  },
+  "decision_rule": "The two failure-Halt cells must each be individually classified. Both bounded passes support only two seen seed-0 states; any scientific failure is retained as a negative for that state. Missing/technical cells give INCONCLUSIVE, never a fabricated pass. Normal Stop is a non-matched measurement control. No production or cross-state reliability claim follows from three cells.",
+  "future_acquisition_prerequisites": [
+    "Independent review of this candidate and explicit separate user authorization for real physics",
+    "Experiment-only adapter and exact execution code/dependency/official asset freeze, with source hashes and target-environment preflight",
+    "Offline fake-session branch/zero-command/reset/budget/observer-equivalence checks",
+    "Write-once original parent and hold traces with source/config/policy identities; independent postrun audit"
+  ],
+  "prohibited_this_round": ["new physics", "policy or provider calls", "training", "mission restart", "Jev", "PPO", "Multi-Swarm", "Language Runtime/D011", "M2.4 evidence or Research Ops pointer edits"]
+}
