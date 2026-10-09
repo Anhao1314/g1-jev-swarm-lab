@@ -1,0 +1,55 @@
+{
+  "experiment_id": "ros_observation_bridge_001",
+  "version": "ROS-R0/R1-v0.1",
+  "status": "FROZEN_HISTORICAL_INPUTS_NO_LIVE_ROBOT",
+  "baseline_main_commit": "0eff13a5cb523690cde31a742cc985e9ee0eaf03",
+  "historical_scientific_verdict": "M2.4_INCONCLUSIVE",
+  "authority": "READ_ONLY_OFFLINE_REPLAY_ONLY",
+  "cases": [
+    {
+      "id": "trusted_authorized",
+      "root": "experiments/m2/trusted_handoff_qualification_001/artifacts/trusted_authorized",
+      "receipt_sha256": "cda9a983f897a3f913289fce3539d6c1d89c4d6fd29e59ebaccb7ad3e6a1a562",
+      "pose_sha256": "3812ff591c0fa61183a6c9e8cebf46518eba7d404b4b7fdfa505a7c50747029d",
+      "parent_result_sha256": "f268c93f58599d04ee6cb14f4add60d361cb80f5f84691826c3c8eb9bf94b3b7",
+      "new_result_sha256": "1cffada8583dba6fea8ecfc3c17c98b13a78486c62c6982979fa7bbaab1d3788",
+      "continuity_sha256": "a596341baadbe6ac02cdcd630cfab3cf5ab59da3953561eb0c79388613a15044",
+      "lifecycle_events_sha256": "5caefa5c0490f6cd7bd62e70a5849b910b254e6f020421c17e1e37da91462895",
+      "expected_samples": 528,
+      "expected_parent_state": "FAILED",
+      "expected_halt_state": "HALT_SUCCEEDED",
+      "expected_new_mission_state": "SUCCESS"
+    }
+  ],
+  "source_manifest_sha256": "0a60a24d442af9023e51aa540f24e974e959035ba9f7213cab7fd44a61b02cfd",
+  "joint_map_sha256": "c4ab6c3bfe81399715ff63b4f5008d95cd31a9ae859547ed17141fd9ced1e56a",
+  "time": {
+    "source": "frozen poses.npz time_s",
+    "clock": "simulation time from zero, one case per process",
+    "interpolation": false,
+    "ordering": "strictly increasing source time; ROS DDS cross-topic arrival order is not assumed"
+  },
+  "ros_topics": {
+    "clock": "/clock",
+    "joint_states": "/g1/offline/joint_states",
+    "base_pose": "/g1/offline/base_pose",
+    "provenance": "/g1/offline/provenance",
+    "mission_events": "/g1/offline/mission_events"
+  },
+  "frames": {
+    "base_pose_parent": "mujoco_world",
+    "base_body": "pelvis",
+    "not_claimed": ["map", "odom", "ENU", "hardware localization"]
+  },
+  "forbidden": [
+    "motor command publication",
+    "task or Mission dispatch",
+    "human authorization",
+    "live MuJoCo, policy, training or provider call",
+    "modification of historical evidence, M2.5A PR #14 or Research Ops pointer"
+  ],
+  "acceptance": {
+    "r0": "hash-bound offline replay conversion and tamper/order/joint/frame/time tests",
+    "r1": "actual ROS 2 publisher/subscriber round trip with exact counts and correlated stamps; mock does not qualify"
+  }
+}

@@ -1,0 +1,46 @@
+name: ROS Observation R1 real DDS replay
+
+on:
+  pull_request:
+    types: [synchronize]
+    branches:
+      - main
+    paths:
+      - .github/workflows/ros-observation-r1.yml
+      - experiments/ros_observation_bridge_001/**
+      - src/g1swarm/ros_observation/**
+      - experiments/m2/trusted_handoff_qualification_001/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-ros2-roundtrip:
+    if: github.event.pull_request.head.ref == 'ros/observation-bridge-v0.1' && github.event.pull_request.head.repo.full_name == 'Anhao1314/g1-jev-swarm-lab'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    container:
+      image: ros:jazzy-ros-base-noble
+    env:
+      ROS_DOMAIN_ID: "77"
+      ROS_AUTOMATIC_DISCOVERY_RANGE: LOCALHOST
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Real ROS 2 publisher and independent subscriber
+        shell: bash
+        run: bash experiments/ros_observation_bridge_001/run_r1_acceptance.sh "$RUNNER_TEMP/ros-observation-r1"
+      - name: Preserve raw receipts, environment and failure logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ros-observation-r1-${{ github.run_id }}
+          path: ${{ runner.temp }}/ros-observation-r1/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce real communication gate
+        shell: bash
+        run: test "$(cat "$RUNNER_TEMP/ros-observation-r1/verdict.txt")" = "ROS_R1_PASS"
