@@ -1,19 +1,57 @@
 """T2a pure scoring helpers; no simulator/Torch/policy imports."""
 import math
+from collections.abc import Mapping
 from types import SimpleNamespace
 
+GROUPS=('B0','C0','C256')
+GATES=('physical_success','task_success','strict_success')
+
+def _outcome_vector(outcome):
+    # Fail closed: only a mapping carrying three genuine booleans plus an absent-or-boolean
+    # technical_invalid flag is trusted gate evidence; strings/numbers/None/NaN/objects are not.
+    if not isinstance(outcome,Mapping): return None
+    flag=outcome.get('technical_invalid',False)
+    if type(flag) is not bool: return None
+    if any(type(outcome.get(k)) is not bool for k in GATES): return None
+    return tuple(outcome[k] for k in GATES),flag
+
+def _usable_vectors(outcomes):
+    if not isinstance(outcomes,Mapping): return {}
+    vectors={}
+    for n in GROUPS:
+        parsed=_outcome_vector(outcomes.get(n))
+        if parsed is not None and not parsed[1]: vectors[n]=parsed[0]
+    return vectors
+
+def _partial_physical(outcome):
+    # A technically interrupted run may keep a genuine boolean physical outcome while its
+    # nominal/strict gates are absent; that requires an explicitly recorded boolean True
+    # technical flag, and malformed flags or non-boolean physical values are never witness.
+    if not isinstance(outcome,Mapping): return None
+    if outcome.get('technical_invalid',False) is not True: return None
+    value=outcome.get('physical_success')
+    return value if type(value) is bool else None
+
 def classify(outcomes):
-    names=('B0','C0','C256')
-    if any(n not in outcomes for n in names): return 'INCONCLUSIVE'
-    if any(outcomes[n].get('technical_invalid',False) for n in names): return 'INCONCLUSIVE'
-    keys=('physical_success','task_success','strict_success')
-    vectors={n:tuple(bool(outcomes[n][k]) for k in keys) for n in names}
-    trained=vectors['C256']
-    if any(any(ref[i] and not trained[i] for i in range(3)) for ref in (vectors['B0'],vectors['C0'])):
-        return 'REGRESSION'
-    if all(all(trained[i]>=ref[i] for i in range(3)) and trained!=ref for ref in (vectors['B0'],vectors['C0'])):
-        return 'IMPROVED_SEEN_CASE'
-    if len(set(vectors.values()))==1: return 'NO_MEANINGFUL_GAIN'
+    vectors=_usable_vectors(outcomes)
+    if len(vectors)==3:
+        trained=vectors['C256']
+        if any(any(ref[i] and not trained[i] for i in range(3)) for ref in (vectors['B0'],vectors['C0'])):
+            return 'REGRESSION'
+        if all(all(trained[i]>=ref[i] for i in range(3)) and trained!=ref for ref in (vectors['B0'],vectors['C0'])):
+            return 'IMPROVED_SEEN_CASE'
+        if len(set(vectors.values()))==1: return 'NO_MEANINGFUL_GAIN'
+        return 'INCONCLUSIVE'
+    # An established physical failure of the trained group is retained after a technical
+    # interruption dropped its nominal/strict gates: the interruption must not erase an
+    # observed fall. Both references must still record a genuine boolean physical pass, and
+    # partial evidence can only ever yield REGRESSION, never an improvement verdict.
+    def physical(name):
+        parsed=_outcome_vector(outcomes.get(name)) if isinstance(outcomes,Mapping) else None
+        if parsed is not None: return parsed[0][0]
+        return _partial_physical(outcomes.get(name) if isinstance(outcomes,Mapping) else None)
+    trained=physical('C256'); refs=(physical('B0'),physical('C0'))
+    if trained is False and all(r is True for r in refs): return 'REGRESSION'
     return 'INCONCLUSIVE'
 
 
