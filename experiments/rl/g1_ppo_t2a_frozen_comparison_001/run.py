@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
 SUPERVISOR_CUTOFF_S=595.
+SUPERVISOR_TOTAL_S=600.
 sys.path.insert(0,str(HERE))
 from comparison import classify,curves,matched_delta,lock_actor,frozen_action
 import supervision
@@ -118,14 +119,21 @@ def main(argv=None,*,verifier=verify,worker_argv=None):
     args=p.parse_args(argv)
     if not args.execute_owner_approved:raise SystemExit('OWNER_CONFIRMATION_REQUIRED_BEFORE_PHYSICS')
     # Flag only prevents accidental launch; trusted operator must separately hold the real Owner message.
-    started=time.monotonic() # outer cutoff starts at supervisor entry; preflight time is not added to the Worker budget
-    m=verifier(args.manifest,args.sha256) # HEAD/Readiness/source preflight before any run side effect
+    started=time.monotonic() # one entry-anchored clock: 595 s cutoff and 600 s total cover the whole lifecycle
+    deadline=started+SUPERVISOR_CUTOFF_S;total_deadline=started+SUPERVISOR_TOTAL_S
+    try: # synchronous preflight is bounded by the same deadline, not only checked after it returns
+        with supervision.lifecycle_deadline(deadline):
+            m=verifier(args.manifest,args.sha256) # HEAD/Readiness/source preflight before any run side effect
+    except supervision.DeadlineInterrupt:
+        raise RuntimeError('supervisor_cutoff_exhausted')
+    if time.monotonic()>=deadline:raise RuntimeError('supervisor_cutoff_exhausted') # exhausted preflight leaves no campaign side effect
     root=Path(args.root);root.mkdir(exist_ok=False);(root/'once.claim').write_text('one separately Owner-confirmed T2a campaign; no retry\n')
-    remaining=SUPERVISOR_CUTOFF_S-(time.monotonic()-started)
+    remaining=deadline-time.monotonic()
     if remaining<=0:raise RuntimeError('supervisor_cutoff_exhausted')
     command=list(worker_argv) if worker_argv is not None else [sys.executable,str(Path(__file__)),str(root),args.manifest,args.sha256,'--worker-owner-approved']
     result=supervision.supervise(command,root,remaining,run_identity=root,readiness_sha256=args.sha256,
-                                 execution_head=m['execution_head'],protocol_sha256=m['protocol_sha256'],manifest=args.manifest)
+                                 execution_head=m['execution_head'],protocol_sha256=m['protocol_sha256'],manifest=args.manifest,
+                                 deadline_s=deadline,total_deadline_s=total_deadline)
     raise SystemExit(0 if result['native_exitcode']==0 and not result['interrupted'] else 1)
 
 def worker(argv=None):
