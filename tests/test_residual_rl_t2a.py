@@ -8,12 +8,87 @@ spec=importlib.util.spec_from_file_location('t2_comparison',HERE/'comparison.py'
 
 def gates(a,b,d):return {'physical_success':a,'task_success':b,'strict_success':d}
 @pytest.mark.parametrize('outcomes,expected',[
- ({'B0':gates(1,1,1),'C0':gates(1,1,1),'C256':gates(1,1,1)},'NO_MEANINGFUL_GAIN'),
- ({'B0':gates(1,1,0),'C0':gates(1,1,0),'C256':gates(1,1,1)},'IMPROVED_SEEN_CASE'),
- ({'B0':gates(1,1,1),'C0':gates(1,1,1),'C256':gates(0,0,0)},'REGRESSION'),
- ({'B0':gates(1,1,1)},'INCONCLUSIVE'),
- ({'B0':gates(1,1,1),'C0':gates(1,1,1),'C256':{**gates(1,1,1),'technical_invalid':True}},'INCONCLUSIVE')])
+ ({'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':gates(True,True,True)},'NO_MEANINGFUL_GAIN'),
+ ({'B0':gates(True,True,False),'C0':gates(True,True,False),'C256':gates(True,True,True)},'IMPROVED_SEEN_CASE'),
+ ({'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':gates(False,False,False)},'REGRESSION'),
+ ({'B0':gates(True,True,True)},'INCONCLUSIVE'),
+ ({'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':{**gates(True,True,True),'technical_invalid':True}},'INCONCLUSIVE')])
 def test_frozen_gate_classification(outcomes,expected):assert c.classify(outcomes)==expected
+
+
+VALID={'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':gates(True,True,True)}
+
+
+@pytest.mark.parametrize('value',[0,1,2,-1,.0,1.0,'true','True','',None,float('nan'),[],{},object(),(True,)])
+def test_nonboolean_gate_values_fail_closed(value):
+    for group in c.GROUPS:
+        for key in c.GATES:
+            assert c.classify({**VALID,group:{**VALID[group],key:value}})=='INCONCLUSIVE'
+
+
+@pytest.mark.parametrize('value',[0,1])
+def test_numeric_success_gates_are_not_booleans(value):
+    assert c.classify({n:gates(value,value,value) for n in c.GROUPS})=='INCONCLUSIVE'
+
+
+@pytest.mark.parametrize('flag',[0,1,'false','False','',None,float('nan'),[],object()])
+def test_malformed_technical_invalid_flag_fails_closed(flag):
+    for group in c.GROUPS:
+        assert c.classify({**VALID,group:{**VALID[group],'technical_invalid':flag}})=='INCONCLUSIVE'
+
+
+@pytest.mark.parametrize('outcomes',[
+ {},
+ {'B0':gates(True,True,True),'C0':gates(True,True,True)},
+ {'B0':gates(True,True,True),'C256':gates(True,True,True)},
+ {'C0':gates(True,True,True),'C256':gates(True,True,True)},
+ {'B0':{'physical_success':True,'task_success':True},'C0':gates(True,True,True),'C256':gates(True,True,True)},
+ {'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':{'physical_success':False,'strict_success':False}}])
+def test_missing_group_or_gate_key_fails_closed(outcomes):assert c.classify(outcomes)=='INCONCLUSIVE'
+
+
+@pytest.mark.parametrize('outcomes',[None,[],('B0',),'B0',{'B0':None,'C0':None,'C256':None},
+ {'B0':True,'C0':True,'C256':True},{'B0':[1,1,1],'C0':'x','C256':0}])
+def test_malformed_outcome_structures_fail_closed(outcomes):assert c.classify(outcomes)=='INCONCLUSIVE'
+
+
+def test_observed_physical_failure_survives_technical_interruption():
+    assert c.classify({**VALID,'C256':{**gates(False,False,False),'technical_invalid':True}})=='REGRESSION'
+    assert c.classify({'B0':gates(True,True,True),'C0':{**gates(True,True,True),'technical_invalid':True},
+                       'C256':gates(False,False,False)})=='REGRESSION'
+
+
+@pytest.mark.parametrize('trained',[{'physical_success':False,'technical_invalid':True},
+                                    {'physical_success':False,'task_success':False,'technical_invalid':True}])
+def test_observed_physical_failure_survives_missing_nominal_outcomes(trained):
+    # C256 recorded a boolean physical FAIL; its nominal/strict gates were lost to the
+    # technical interruption, so they are absent rather than false.
+    assert c.classify({'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':trained})=='REGRESSION'
+
+
+@pytest.mark.parametrize('trained',[{'physical_success':False}, {'physical_success':False,'technical_invalid':False},
+                                    {'physical_success':False,'technical_invalid':1},
+                                    {'physical_success':False,'technical_invalid':'true'},
+                                    {'physical_success':0,'technical_invalid':True},
+                                    {'physical_success':None,'technical_invalid':True}])
+def test_partial_physical_witness_requires_genuine_boolean_fields(trained):
+    assert c.classify({'B0':gates(True,True,True),'C0':gates(True,True,True),'C256':trained})=='INCONCLUSIVE'
+
+
+@pytest.mark.parametrize('trained',[{'physical_success':True,'technical_invalid':True},
+                                    {'physical_success':True,'task_success':True,'technical_invalid':True},
+                                    {'physical_success':True,'task_success':True,'strict_success':True,'technical_invalid':True}])
+def test_partial_physical_evidence_never_improves(trained):
+    assert c.classify({**VALID,'C256':trained})=='INCONCLUSIVE'
+
+
+def test_physical_failure_without_recorded_reference_pass_stays_inconclusive():
+    # A trained fall is not promoted to REGRESSION when the references did not record a pass.
+    assert c.classify({'B0':{**gates(False,False,False),'technical_invalid':True},
+                       'C0':{**gates(True,True,True),'technical_invalid':True},
+                       'C256':{**gates(False,False,False),'technical_invalid':True}})!='REGRESSION'
+    assert c.classify({'B0':gates(True,True,True),'C256':{**gates(False,False,False),'technical_invalid':True}})!='REGRESSION'
+    assert c.classify({**VALID,'C256':{**gates(True,True,False),'technical_invalid':True}})!='REGRESSION'
 
 
 def test_continuous_delta_is_common_clock_not_extrapolation():
