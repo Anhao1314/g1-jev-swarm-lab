@@ -17,7 +17,7 @@ Trust boundary (trusted same-machine serial one-shot research; not multi-user au
   protocol plus current worker/parent lifetimes and expiry, and spends it exactly once
   before any runtime import.
 """
-import hashlib,hmac,json,os,select,signal,stat,sys,time
+import hashlib,hmac,json,os,select,signal,stat,subprocess,sys,threading,time
 from pathlib import Path
 from types import MappingProxyType
 
@@ -33,6 +33,7 @@ MAX_TRANSFER_S = 30.0
 GROUP_GRACE_S = .25
 GROUP_KILL_WAIT_S = 2.0
 GROUP_POLL_S = .02
+CLEANUP_ALLOWANCE_S = 5.0
 _EXE_FLAGS = ('-B', '-u')
 
 
@@ -45,6 +46,47 @@ def _refuse(reason):
 
 
 _SEAL = object()
+
+
+class DeadlineInterrupt(Exception):
+    """Main-thread SIGALRM interrupt bounding one supervisor lifecycle."""
+
+
+def _deadline_signal(signum, frame):
+    raise DeadlineInterrupt('supervisor_deadline')
+
+
+class lifecycle_deadline:
+    """Bound a synchronous lifecycle by one absolute monotonic deadline.
+
+    Arms ITIMER_REAL/SIGALRM in the main thread only, so a stalled synchronous
+    verifier, exec hand-off, identity probe or delegation write is interrupted at the
+    cutoff instead of running past it; the previous handler and interval timer are
+    restored on exit. This is a bounded-interruption mechanism, not authentication.
+    """
+
+    __slots__ = ('deadline_s', '_saved')
+
+    def __init__(self, deadline_s):
+        self.deadline_s = deadline_s
+        self._saved = None
+
+    def __enter__(self):
+        if threading.current_thread() is threading.main_thread():
+            self._saved = (signal.getsignal(signal.SIGALRM), signal.getitimer(signal.ITIMER_REAL))
+            signal.signal(signal.SIGALRM, _deadline_signal)
+            signal.setitimer(signal.ITIMER_REAL, max(1e-6, self.deadline_s - time.monotonic()))
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        if self._saved is not None:
+            signal.setitimer(signal.ITIMER_REAL, 0.)
+            signal.signal(signal.SIGALRM, self._saved[0])
+            delay, interval = self._saved[1]
+            if delay > 0 or interval > 0:
+                signal.setitimer(signal.ITIMER_REAL, delay, interval)
+            self._saved = None
+        return False
 
 
 class EntryTrust:
@@ -355,86 +397,208 @@ def _group_alive(pgid):
         return True
 
 
-def _reap_group(worker, grace_s=GROUP_GRACE_S):
-    # Terminate and reap the whole supervised process group on every exit path, not only
-    # on timeout: a normal or technical Worker exit must not leave living descendants.
-    # The initial SIGTERM tolerates the process-race failure and still preserves receipt.
-    pgid = worker.pid
-    try:
-        os.killpg(pgid, signal.SIGTERM)
-    except ProcessLookupError:
-        pass
-    try:
-        worker.wait(timeout=grace_s)
-    except Exception:
-        pass
-    deadline = time.monotonic() + grace_s
-    while _group_alive(pgid) and time.monotonic() < deadline:
-        time.sleep(GROUP_POLL_S)
-    if _group_alive(pgid):
+_POPEN = subprocess.Popen
+
+
+def _write_pid_preexec(write_fd):
+    # Runs in the forked child before exec: the parent can own and kill the child even
+    # when Popen itself never returned, so a preempted spawn cannot leak a descendant.
+    def _preexec():
         try:
-            os.killpg(pgid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        deadline = time.monotonic() + GROUP_KILL_WAIT_S
-        while _group_alive(pgid) and time.monotonic() < deadline:
-            time.sleep(GROUP_POLL_S)
+            os.write(write_fd, f'{os.getpid()}\n'.encode())
+        finally:
+            os.close(write_fd)
+    return _preexec
+
+
+def _read_owned_pid(read_fd, total_deadline_s):
+    timeout = min(2.0, max(.05, total_deadline_s - time.monotonic()))
     try:
-        worker.wait(timeout=GROUP_KILL_WAIT_S)
-    except Exception:
-        pass
+        ready, _, _ = select.select([read_fd], [], [], timeout)
+    except (OSError, ValueError):
+        return None
+    if not ready:
+        return None
+    try:
+        data = os.read(read_fd, 64)
+    except OSError:
+        return None
+    try:
+        return int(data.split(b'\n', 1)[0])
+    except (ValueError, IndexError):
+        return None
+
+
+def _spawn_worker(worker_argv, fd, out, err, total_deadline_s, owned):
+    read_fd, write_fd = os.pipe()
+    os.set_inheritable(write_fd, True)
+    try:
+        proc = _POPEN(list(worker_argv) + [FD_FLAG, str(fd)], stdout=out, stderr=err,
+                      start_new_session=True, pass_fds=(fd, write_fd), preexec_fn=_write_pid_preexec(write_fd))
+    finally:
+        os.close(write_fd)
+        owned[0] = _read_owned_pid(read_fd, total_deadline_s)
+        os.close(read_fd)
+    return proc
+
+
+def _cleanup_lifecycle(worker, owned_pid, total_deadline_s):
+    # One bounded group cleanup for every exit path: a single 250 ms SIGTERM grace for
+    # the whole group, then capped SIGKILL/wait plus child reap, all inside the total
+    # budget. An unconfirmed termination is reported as incomplete, never as success.
+    info = {'cleanup_complete': False, 'cleanup_detail': 'cleanup_not_run'}
+    pgid = worker.pid if worker is not None else owned_pid
+    if pgid is None:
+        info['cleanup_complete'] = True
+        info['cleanup_detail'] = None
+        return info
+
+    def remaining():
+        return total_deadline_s - time.monotonic()
+
+    def pid_alive():
+        if owned_pid is None:
+            return False
+        try:
+            os.kill(owned_pid, 0)
+            return True
+        except OSError:
+            return False
+
+    try:
+        if remaining() <= 0:
+            info['cleanup_detail'] = 'cleanup_deadline_exhausted'
+            return info
+        if owned_pid is not None and worker is None:
+            try:
+                os.kill(owned_pid, signal.SIGTERM)
+            except OSError:
+                pass
+        try:
+            os.killpg(pgid, signal.SIGTERM)
+        except OSError:
+            pass
+        grace_end = min(time.monotonic() + GROUP_GRACE_S, total_deadline_s)
+        while (_group_alive(pgid) or pid_alive()) and time.monotonic() < grace_end:
+            time.sleep(GROUP_POLL_S)
+        if (_group_alive(pgid) or pid_alive()) and remaining() > 0:
+            if owned_pid is not None and worker is None:
+                try:
+                    os.kill(owned_pid, signal.SIGKILL)
+                except OSError:
+                    pass
+            try:
+                os.killpg(pgid, signal.SIGKILL)
+            except OSError:
+                pass
+            kill_end = min(time.monotonic() + GROUP_KILL_WAIT_S, total_deadline_s)
+            while (_group_alive(pgid) or pid_alive()) and time.monotonic() < kill_end:
+                time.sleep(GROUP_POLL_S)
+        if worker is not None:
+            try:
+                worker.wait(timeout=max(0., min(GROUP_KILL_WAIT_S, remaining())))
+            except Exception:
+                pass
+            if worker.returncode is None:
+                info['cleanup_detail'] = 'worker_unreaped'
+                return info
+        elif owned_pid is not None:
+            reaped = False
+            while remaining() > 0:
+                try:
+                    pid, _ = os.waitpid(owned_pid, os.WNOHANG)
+                except ChildProcessError:
+                    reaped = True
+                    break
+                except OSError:
+                    break
+                if pid == owned_pid:
+                    reaped = True
+                    break
+                time.sleep(GROUP_POLL_S)
+            if not reaped:
+                info['cleanup_detail'] = 'owned_child_unreaped'
+                return info
+        if _group_alive(pgid) or pid_alive():
+            info['cleanup_detail'] = 'descendants_persist'
+            return info
+        info['cleanup_complete'] = True
+        info['cleanup_detail'] = None
+    except Exception as exc:
+        info['cleanup_detail'] = f'{type(exc).__name__}:{exc}'
+    return info
 
 
 def supervise(worker_argv, root, limit_s, *, run_identity, readiness_sha256, execution_head, protocol_sha256,
-              manifest=None, poll_s=.05):
-    """Run one directly supervised Worker with a private one-shot delegation.
+              manifest=None, poll_s=.05, deadline_s=None, total_deadline_s=None):
+    """Run one directly supervised Worker under one bounded lifecycle.
 
-    The outer cutoff covers the complete lifecycle, transfer included, and is measured
-    from `started`; launch/identity/write failures close the pipe, terminate and reap the
-    process group, and write a raw failure receipt without touching Worker
-    physical-failure evidence. `root` is resolved before the token is generated.
+    Setup, spawn, identity, delegation transfer and the supervise loop (which covers
+    Worker validation, verification and execution) share the caller's absolute
+    `deadline_s` (595 s from supervisor entry in production) through a scoped SIGALRM
+    deadline, so blocking waits are interrupted at the cutoff. An interrupted spawn is
+    still owned through the pre-exec pid pipe and is killed and reaped even when Popen
+    never returned. Every exit path runs one bounded group cleanup (single 250 ms TERM
+    grace, capped KILL/wait, child reap) inside `total_deadline_s` (600 s total) and then
+    writes an honest receipt: unconfirmed cleanup is recorded as incomplete, and Worker
+    physical-failure files are never touched. `root` is resolved before token creation.
     """
+    started = time.monotonic()
+    if deadline_s is None:
+        deadline_s = started + max(0., limit_s)
+    if total_deadline_s is None:
+        total_deadline_s = deadline_s + CLEANUP_ALLOWANCE_S
     root = Path(root).resolve()
     run_dir = Path(run_identity).resolve()
     nonce = os.urandom(32).hex()
     token_path = root / TOKEN_NAME
-    handle = os.open(token_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    try:
-        os.write(handle, nonce.encode())
-    finally:
-        os.close(handle)
-    read_fd, write_fd = os.pipe()
-    os.set_inheritable(read_fd, True)
-    started = time.monotonic()
     interrupted = None
     failure = None
-    phase = 'spawn'
+    phase = 'setup'
     worker = None
+    owned = [None]
+    read_fd = write_fd = None
     try:
-        with (root / 'worker.stdout.raw').open('xb') as out, (root / 'worker.stderr.raw').open('xb') as err:
-            worker = subprocess.Popen(list(worker_argv) + [FD_FLAG, str(read_fd)], stdout=out, stderr=err,
-                                      start_new_session=True, pass_fds=(read_fd,))
-            os.close(read_fd)
-            read_fd = None
-            phase = 'identity'
-            payload = {'protocol': VERSION, 'run_id': str(run_dir),
-                       'manifest': None if manifest is None else str(Path(manifest).resolve()),
-                       'readiness_sha256': readiness_sha256, 'execution_head': execution_head,
-                       'protocol_sha256': protocol_sha256, 'nonce': nonce, 'token': str(token_path),
-                       'issued_unix': time.time(), 'supervisor': proc_identity(), 'worker': _identity(worker.pid)}
-            phase = 'delegation_write'
-            _send_payload(write_fd, json.dumps(payload).encode(),
-                          transfer_timeout_s=max(0., limit_s - (time.monotonic() - started)))
-            os.close(write_fd)
-            write_fd = None
-            phase = 'supervise'
-            while worker.poll() is None:
-                if time.monotonic() - started >= limit_s:
+        with lifecycle_deadline(deadline_s):
+            try:
+                handle = os.open(token_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                try:
+                    os.write(handle, nonce.encode())
+                finally:
+                    os.close(handle)
+                read_fd, write_fd = os.pipe()
+                os.set_inheritable(read_fd, True)
+                phase = 'spawn'
+                if time.monotonic() >= deadline_s:
                     interrupted = 'wall_clock_watchdog'
-                    break
-                time.sleep(poll_s)
-    except BaseException as exc:
-        failure = exc
+                else:
+                    with (root / 'worker.stdout.raw').open('xb') as out, (root / 'worker.stderr.raw').open('xb') as err:
+                        worker = _spawn_worker(worker_argv, read_fd, out, err, total_deadline_s, owned)
+                        os.close(read_fd)
+                        read_fd = None
+                        phase = 'identity'
+                        payload = {'protocol': VERSION, 'run_id': str(run_dir),
+                                   'manifest': None if manifest is None else str(Path(manifest).resolve()),
+                                   'readiness_sha256': readiness_sha256, 'execution_head': execution_head,
+                                   'protocol_sha256': protocol_sha256, 'nonce': nonce, 'token': str(token_path),
+                                   'issued_unix': time.time(), 'supervisor': proc_identity(), 'worker': _identity(worker.pid)}
+                        phase = 'delegation_write'
+                        _send_payload(write_fd, json.dumps(payload).encode(),
+                                      transfer_timeout_s=min(MAX_TRANSFER_S, max(0., deadline_s - time.monotonic())))
+                        os.close(write_fd)
+                        write_fd = None
+                        phase = 'supervise'
+                        while worker.poll() is None:
+                            if time.monotonic() >= deadline_s:
+                                interrupted = 'wall_clock_watchdog'
+                                break
+                            time.sleep(poll_s)
+            except DeadlineInterrupt:
+                interrupted = 'wall_clock_watchdog'
+            except BaseException as exc:
+                failure = exc
+    except DeadlineInterrupt:
+        interrupted = interrupted or 'wall_clock_watchdog'
     finally:
         for fd in (read_fd, write_fd):
             if fd is not None:
@@ -442,17 +606,23 @@ def supervise(worker_argv, root, limit_s, *, run_identity, readiness_sha256, exe
                     os.close(fd)
                 except OSError:
                     pass
-        if worker is not None:
-            _reap_group(worker)
+        cleanup = _cleanup_lifecycle(worker, owned[0], total_deadline_s)
     result = {'pid': None if worker is None else worker.pid,
+              'spawned_owned_pid': owned[0],
               'native_exitcode': None if worker is None else worker.returncode,
               'interrupted': interrupted,
+              'interrupted_phase': phase if interrupted else None,
               'failure_phase': phase if failure is not None else None,
               'failure': None if failure is None else f'{type(failure).__name__}:{failure}',
               'elapsed_s': time.monotonic() - started, 'limit_s': limit_s,
+              'deadline_from_entry_s': deadline_s - started,
+              'total_from_entry_s': total_deadline_s - started,
+              'cleanup_allowance_s': total_deadline_s - deadline_s,
+              'cleanup_complete': cleanup['cleanup_complete'],
+              'cleanup_detail': cleanup['cleanup_detail'],
               'delegation_consumed': (root / (TOKEN_NAME + CONSUMED_SUFFIX)).exists()}
     receipt = root / 'process-receipt.json'
-    if not receipt.exists():
+    if root.is_dir() and not receipt.exists():
         receipt.write_text(json.dumps(result, indent=2))
     if failure is not None:
         raise failure
