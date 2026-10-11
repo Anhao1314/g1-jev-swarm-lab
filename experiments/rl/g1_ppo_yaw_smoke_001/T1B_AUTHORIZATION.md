@@ -1,0 +1,9 @@
+# T1b First PPO Optimization Smoke — separate single-attempt authority
+
+Owner task: G1-RL T1b First PPO Optimization Smoke,2026-10-11. Parent PR27 exact HEAD a076523eec7244c9d72cb48644e5e31a58e5145d. Its failed T1 campaign and frozen source history remain unchanged.
+
+Only runtime change: public Gymnasium info key episode -> case_episode. Native physical log episode and reset event episode are unchanged. No controller,reward,PPO parameter,actor distribution,scenario,threshold,model,dependency or watcher change. Reuse existing T1 PROTOCOL.md,T0 config,CPUvenv,official assets and verified Linux process-group killproof. No reinstall/download or retrospective parameter selection.
+
+This task separately authorizes ONE new exclusive campaign: exact B0/B1 -> required check_env -> single256-decision PPO. Historical seen nominal4m,no disturbance,seed7;Walk-only yaw residual±0.12rad/s,totalyaw±0.6. OneCPUenv,Torch intra/inter-op threads1. Maximum60000 native steps,1800s overall physical wall,600s training wall;unchanged margin1795/595s supervisor guards. Any equivalence failure,fall,nonfinite value,bound breach,identity drift,technical exception or safety block stops;no automatic retry.
+
+New execution HEAD/source/Readiness/config hashes must be recorded and independently reviewed before physics. The existing freeze schema/runner are reused unchanged;new manifest authorization and experiment_id identify T1b. Old T1 directory is not executed or modified. The unchanged runner's successful raw verdict T1_PPO_SMOKE_PIPELINE_PASS will be reported as T1b PIPELINE_PASS only if256 interactions,actualoptimizer_steps>0,checkpoint128/256,finite values,reload equality and raw audit all pass. LEARNING_GAIN_NOT_PROVEN always. No unseen/M2.6A,GPUtraining,ROS,hardware,extraoptimizerrounds or merge.
