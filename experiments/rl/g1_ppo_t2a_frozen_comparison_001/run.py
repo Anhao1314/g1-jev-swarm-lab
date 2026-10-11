@@ -1,10 +1,17 @@
-"""Candidate T2a evaluator. Operator flag is a guard, not evidence of Owner authority."""
+"""Candidate T2a evaluator. Operator flag is a guard, not evidence of Owner authority.
+
+A Worker runs only when it is spawned by this file's supervisor and consumes that
+supervisor's private one-time delegation; a bare --worker-owner-approved argv flag,
+environment self-report or caller-authored JSON never authorizes execution.
+"""
 import argparse,hashlib,importlib.metadata,importlib.util,json,os,subprocess,sys,time,traceback
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
+SUPERVISOR_CUTOFF_S=595.
 sys.path.insert(0,str(HERE))
 from comparison import classify,curves,matched_delta,lock_actor,frozen_action
+import supervision
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def verify(path,expected):
@@ -30,7 +37,10 @@ def verify(path,expected):
         if sha(row['path'])!=row['sha256'] or row['sha256']!=protocol['checkpoints'][group]['sha256']:raise RuntimeError('checkpoint_drift:'+group)
     return m
 
-def execute(root,manifest,expected):
+def execute(root,manifest,expected,delegation=None):
+    supervision.claim_execute(delegation,run_identity=root,manifest=manifest,readiness_sha256=expected,
+        execution_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        protocol_sha256=sha(HERE/'protocol.json')) # one-shot, argument-bound permit before runtime imports
     m=verify(manifest,expected) # before Torch/MuJoCo or real policy imports
     import numpy as np
     import torch
@@ -103,16 +113,36 @@ def execute(root,manifest,expected):
         (root/'failure.json').write_text(json.dumps(failure,indent=2));raise
     finally:ledger.close()
 
-def main():
+def main(argv=None,*,verifier=verify,worker_argv=None):
     p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('manifest');p.add_argument('sha256');p.add_argument('--execute-owner-approved',action='store_true')
-    args=p.parse_args()
+    args=p.parse_args(argv)
     if not args.execute_owner_approved:raise SystemExit('OWNER_CONFIRMATION_REQUIRED_BEFORE_PHYSICS')
     # Flag only prevents accidental launch; trusted operator must separately hold the real Owner message.
+    started=time.monotonic() # outer cutoff starts at supervisor entry; preflight time is not added to the Worker budget
+    m=verifier(args.manifest,args.sha256) # HEAD/Readiness/source preflight before any run side effect
     root=Path(args.root);root.mkdir(exist_ok=False);(root/'once.claim').write_text('one separately Owner-confirmed T2a campaign; no retry\n')
-    spec=importlib.util.spec_from_file_location('t1_watchdog',ROOT/'experiments/rl/g1_ppo_yaw_smoke_001/watchdog.py');watch=importlib.util.module_from_spec(spec);spec.loader.exec_module(watch)
-    result=watch.bounded([sys.executable,str(Path(__file__)),str(root),args.manifest,args.sha256,'--worker-owner-approved'],root,595)
+    remaining=SUPERVISOR_CUTOFF_S-(time.monotonic()-started)
+    if remaining<=0:raise RuntimeError('supervisor_cutoff_exhausted')
+    command=list(worker_argv) if worker_argv is not None else [sys.executable,str(Path(__file__)),str(root),args.manifest,args.sha256,'--worker-owner-approved']
+    result=supervision.supervise(command,root,remaining,run_identity=root,readiness_sha256=args.sha256,
+                                 execution_head=m['execution_head'],protocol_sha256=m['protocol_sha256'],manifest=args.manifest)
     raise SystemExit(0 if result['native_exitcode']==0 and not result['interrupted'] else 1)
+
+def worker(argv=None):
+    p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('manifest');p.add_argument('sha256')
+    p.add_argument('--worker-owner-approved',action='store_true');p.add_argument(supervision.FD_FLAG,dest='supervisor_fd',type=int)
+    args=p.parse_args(argv)
+    if not args.worker_owner_approved:raise SystemExit('worker_flag_required')
+    if args.supervisor_fd is None:raise supervision.DelegationRefused('supervisor_delegation_required')
+    trust=supervision.entry_trust(Path(__file__).resolve(),sys.argv) # pinned to this real file; CLI/env/JSON cannot override
+    delegation=supervision.consume_delegation(args.supervisor_fd,trust,
+        execution_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        protocol_sha256=sha(HERE/'protocol.json'))
+    execute(Path(args.root),Path(args.manifest),args.sha256,delegation)
+
 if __name__=='__main__':
     if '--worker-owner-approved' in sys.argv:
-        execute(Path(sys.argv[1]),Path(sys.argv[2]),sys.argv[3])
+        try:worker(sys.argv[1:])
+        except supervision.DelegationRefused as exc:
+            print('WORKER_REFUSED:'+str(exc),file=sys.stderr);raise SystemExit(76)
     else:main()
