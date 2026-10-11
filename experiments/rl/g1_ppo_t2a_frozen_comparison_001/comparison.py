@@ -1,5 +1,6 @@
 """T2a pure scoring helpers; no simulator/Torch/policy imports."""
 import math
+from types import SimpleNamespace
 
 def classify(outcomes):
     names=('B0','C0','C256')
@@ -20,10 +21,9 @@ def curves(rows, frame):
     values=[]
     for row in rows:
         t=float(row['sim_time']); q=row['qpos']; f,l=frame.project(q[:3])
-        w,x,y,z=q[3:7];yaw=math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))
-        h=math.atan2(math.sin(yaw-frame.initial_yaw_rad),math.cos(yaw-frame.initial_yaw_rad))
+        heading=frame.heading_error_deg(SimpleNamespace(base_orientation=tuple(q[3:7])))
         det=float(row['deterministic_command'][2]); applied=float(row['applied_command'][2])
-        v={'t':t,'forward_m':f,'lateral_m':l,'heading_deg':math.degrees(h),
+        v={'t':t,'forward_m':f,'lateral_m':l,'heading_deg':heading,
            'deterministic_yaw':det,'applied_yaw':applied,'residual_yaw':applied-det}
         if not all(math.isfinite(x) for x in v.values()): raise ValueError('nonfinite_curve')
         values.append(v)

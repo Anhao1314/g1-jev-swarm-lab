@@ -58,3 +58,16 @@ def test_invalid_fake_actor_action_refused(bad):
     from types import SimpleNamespace
     fake=SimpleNamespace(predict=lambda obs,deterministic:(bad,None))
     with pytest.raises(ValueError,match='invalid'):c.frozen_action(fake,None)
+
+
+def test_native_heading_uses_original_normalized_frame_metric():
+    import math
+    from types import SimpleNamespace
+    from g1swarm.segmentation.mission import MissionFrame
+    frame=MissionFrame((0.,0.,.8),.2)
+    quaternion=[2*math.cos(.3),0.,0.,2*math.sin(.3)]
+    row={'sim_time':.002,'qpos':[1.,.1,.8]+quaternion,'deterministic_command':[.5,0.,0.],
+         'applied_command':[.5,0.,0.]}
+    value=c.curves([row],frame)['values'][0]
+    expected=frame.heading_error_deg(SimpleNamespace(base_orientation=quaternion))
+    assert value['heading_deg']==expected and expected==pytest.approx(math.degrees(.4))
