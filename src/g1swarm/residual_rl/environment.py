@@ -154,7 +154,7 @@ class G1YawResidualEnv(gym.Env):
                       self.previous,float(self.saturated),float(s.standing)],dtype=np.float64)
         if not np.isfinite(raw).all(): raise ResidualContractError("nonfinite_observation")
         info={"raw_observation":raw.tolist(),"clipped":(np.abs(raw)>1).tolist(),"scales":SCALES,
-              "case":"historical_seen_nominal4m","seed":7,"episode":self.sim.episode,
+              "case":"historical_seen_nominal4m","seed":7,"case_episode":self.sim.episode,
               "controller_resets":self.low.resets,"simulator_resets":self.sim.resets}
         return np.clip(raw,-1,1).astype(np.float32),info
     def step(self, action):
