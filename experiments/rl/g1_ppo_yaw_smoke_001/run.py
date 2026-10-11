@@ -4,7 +4,9 @@ from pathlib import Path
 
 REPO=Path(__file__).resolve().parents[3]
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def verify(manifest):
+def verify(manifest, expected_sha=None):
+    if expected_sha is not None and sha(manifest)!=expected_sha:
+        raise RuntimeError("frozen_manifest_sha256_mismatch")
     m=json.loads(Path(manifest).read_text())
     head=subprocess.check_output(["git","rev-parse","HEAD"],cwd=REPO,text=True).strip()
     if head!=m["execution_head"]: raise RuntimeError("execution_head_drift")
@@ -29,8 +31,8 @@ def verify(manifest):
         raise RuntimeError("budget_drift")
     return m
 
-def main(root,manifest):
-    freeze=verify(manifest)  # before Torch, MuJoCo, or real policy modules load
+def main(root,manifest,expected_sha):
+    freeze=verify(manifest,expected_sha)  # before Torch, MuJoCo, or real policy modules load
     import numpy as np
     import torch
     torch.set_num_threads(1); torch.set_num_interop_threads(1)
@@ -109,4 +111,4 @@ def main(root,manifest):
         raise
     finally: ledger.close()
 
-if __name__=="__main__": main(Path(sys.argv[1]),Path(sys.argv[2]))
+if __name__=="__main__": main(Path(sys.argv[1]),Path(sys.argv[2]),sys.argv[3])

@@ -1,5 +1,5 @@
 """Linux process-group watchdog, also exercised with nonphysical descendants."""
-import json, os, signal, subprocess, sys, time
+import hashlib, json, os, signal, subprocess, sys, time
 from pathlib import Path
 
 def bounded(command, root, limit_s, *, training_marker=None):
@@ -27,10 +27,12 @@ def bounded(command, root, limit_s, *, training_marker=None):
     return result
 
 if __name__=="__main__":
-    root=Path(sys.argv[1]); manifest=Path(sys.argv[2])
+    root=Path(sys.argv[1]); manifest=Path(sys.argv[2]); expected_sha=sys.argv[3]
+    if hashlib.sha256(manifest.read_bytes()).hexdigest()!=expected_sha:
+        raise SystemExit("frozen_manifest_sha256_mismatch")
     # Exclusive campaign directory/claim prevents any rerun in this evidence location.
     root.mkdir(exist_ok=False)
     (root/"once.claim").write_text("one authorized campaign; no retry\n")
-    result=bounded([sys.executable,str(Path(__file__).with_name("run.py")),str(root),str(manifest)],
+    result=bounded([sys.executable,str(Path(__file__).with_name("run.py")),str(root),str(manifest),expected_sha],
                    root,1795,training_marker=root/"training-start.json")
     raise SystemExit(0 if result["native_exitcode"]==0 and not result["interrupted"] else 1)
