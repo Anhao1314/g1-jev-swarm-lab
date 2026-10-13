@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Language-to-G1 · Research Console</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="/" aria-label="Language-to-G1 首页"><span class="brand-mark">G1</span><span>Research Console<span class="brand-sub">LANGUAGE-TO-G1 / v0.1</span></span></a>
+    <span class="environment"><span class="dot"></span>离线任务预览</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div class="eyebrow">ONE MISSION. ADAPTIVE EXECUTION. VERIFIABLE EVIDENCE.</div>
+      <h1>一句指令，<br class="mobile-break">一份可核验的任务。</h1>
+      <p>用受控中文描述任务。查看 G1 理解了什么、能力依据是什么，以及执行前还缺少哪些条件。</p>
+    </section>
+    <div class="workspace">
+      <section class="composer panel" aria-labelledby="input-title">
+        <div class="section-heading"><span class="step-number">01</span><div><h2 id="input-title">告诉 G1 你的任务</h2><p>明确动作、数值与顺序</p></div></div>
+        <form id="request-form">
+          <label for="instruction">中文指令</label>
+          <textarea id="instruction" name="text" rows="5" maxlength="512" placeholder="站立2秒，然后前进4米，最后停止" required></textarea>
+          <div class="input-meta"><span>受控表达 · 不调用语言模型</span><span id="character-count">0 / 512</span></div>
+          <div class="examples" aria-label="试用指令">
+            <button type="button" data-example="站立2秒，然后前进4米，最后停止">站立 → 前进 → 停止</button>
+            <button type="button" data-example="前进3米">前进3米</button>
+            <button type="button" data-example="往前走一点">模糊指令</button>
+            <button type="button" data-example="拿起杯子">能力范围外</button>
+          </div>
+          <button class="primary" id="submit-request" type="submit">生成任务契约 <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="scope-note">此入口只生成并核验任务契约，不派发任务、不运行仿真，也不授予执行权限。</p>
+        <div id="error" class="error" role="alert" hidden></div>
+      </section>
+
+      <section class="result panel" aria-labelledby="result-title" aria-live="polite" aria-busy="false">
+        <div class="section-heading"><span class="step-number">02</span><div><h2 id="result-title">任务契约</h2><p id="result-subtitle">等待一条新指令</p></div><span id="result-tag" class="tag neutral">未生成</span></div>
+        <div id="empty-state" class="empty-state"><div class="empty-mark" aria-hidden="true">→</div><h3>先理解，再决定能否执行。</h3><p>提交后，这里会展示任务步骤、能力检查、来源绑定与授权判断。</p><div class="empty-flow">指令 <span>→</span> 理解 <span>→</span> 检查 <span>→</span> 契约</div></div>
+        <div id="contract-content" hidden>
+          <blockquote id="submitted-text"></blockquote>
+          <ol id="pipeline" class="pipeline" aria-label="请求检查流程"></ol>
+          <div id="compiler-message" class="notice" hidden></div>
+          <section class="mission-section"><div class="mini-heading"><h3>计划步骤</h3><span>Mission IR / Task Graph</span></div><div id="mission-steps" class="mission-steps"></div><p class="muted small">能力检查中的历史依据不构成该完整 Mission 的成功保证。</p></section>
+          <section class="authority-section"><h3>执行授权判断</h3><p id="authorization-summary"></p><ul id="authorization-reasons"></ul><div id="gate-labels" class="gate-labels"></div></section>
+          <div class="contract-actions"><button id="check-binding" class="secondary" type="button">重新核验契约绑定</button><a id="download-contract" class="download" download>下载完整 JSON ↗</a></div>
+          <p id="binding-check-result" class="small" role="status"></p>
+          <details class="provenance"><summary>查看来源与完整任务契约</summary><dl id="identity"></dl><pre id="contract-json"></pre></details>
+        </div>
+      </section>
+    </div>
+    <section class="execution-panel" aria-labelledby="execution-title"><div><div class="eyebrow">EXECUTION & EVIDENCE</div><h2 id="execution-title">当前没有新指令的执行画面</h2><p>只有独立授权后的真实执行，才能生成这条请求对应的运动画面与结果。历史回放不会被当作本次执行。</p></div><div class="execution-counters"><div><strong id="physics-count">0</strong><span>物理步数</span></div><div><strong id="policy-count">0</strong><span>策略调用</span></div><div><strong class="not-run" id="execution-status">NOT_EXECUTED</strong><span>当前执行状态</span></div></div></section>
+    <footer><span>编译成功 ≠ 获准执行</span><span>Language Runtime / D011 保持 BLOCKED</span></footer>
+  </main>
+</body>
+</html>
