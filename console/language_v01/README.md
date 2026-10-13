@@ -42,6 +42,10 @@ decision. Returned dictionaries cannot mutate stored records. The complete JSON
 except its outer `contract_sha256` field is hashed with UTF-8, sorted keys,
 compact separators, ensure_ascii=False and allow_nan=False. This is integrity
 binding in a trusted local process, **not a signature or execution credential**.
+The browser Inspector is a formatted semantic preview: JavaScript may render
+`2.0` as `2`. Use the downloaded original JSON for Python hash recomputation,
+not copied Inspector text. The download and sealed record preserve numeric
+serialization; this slice does not claim cross-language canonical JSON support.
 
 All authorization results remain DENY: Language Runtime and D011 BLOCKED,
 Owner authorization absent, live state not observed. Client fields claiming
