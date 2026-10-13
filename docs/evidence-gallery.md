@@ -50,6 +50,16 @@ This is the **publicly inspectable visual index** for [G1 Jev Swarm Lab](../READ
 
 The following were analyzed and sealed **locally** on 2026-10-13; this GitHub documentation change does **not** pretend their full raw bundles or fresh rendered G1 clips are already online.
 
+### Stand5 · actual recorded world paths (derived figure, not new physics)
+
+![Stand5 16 m recorded-world-pose overlay: selected alpha 0.5 versus fixed alpha 0.25; NO JOINT SUPPORT](evidence-media/stand5-world-route-20261013.svg)
+
+[Open full route figure](evidence-media/stand5-world-route-20261013.svg) · [Exact pose / result hash provenance](evidence-media/stand5-world-route-20261013.provenance.json)
+
+This figure projects the **977 stored MuJoCo qpos samples per arm** into the original mission world XY frame, plotting every 12th sample plus the endpoint. It does **not** generate, rerun, infer, or modify robot motion. The underlying complete pose archives are still locally sealed, **not publicly downloadable from this PR**. It illustrates the existing trade-off, not a new accepted result: endpoint norm improves 11.47 cm, but final absolute X error worsens 8.28 cm, so **`NO_JOINT_SUPPORT` remains unchanged**.
+
+
+
 | Study | Retained conclusion | Public-evidence status |
 | --- | --- | --- |
 | T2a: frozen B0 / C0 / C256 seen-case PPO comparison | **`NO_MEANINGFUL_GAIN`**; all three physical/task/strict gates pass, but no added gate-level learning gain | Local evidence archive; not accepted-main/public visual publication. [Draft PR #33](https://github.com/Anhao1314/g1-jev-swarm-lab/pull/33) is *engineering readiness*, not an experiment result. |
