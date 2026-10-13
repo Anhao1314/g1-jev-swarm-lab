@@ -1,8 +1,9 @@
 """Candidate T2a evaluator. Operator flag is a guard, not evidence of Owner authority.
 
-A Worker runs only when it is spawned by this file's supervisor and consumes that
-supervisor's private one-time delegation; a bare --worker-owner-approved argv flag,
-environment self-report or caller-authored JSON never authorizes execution.
+Execution runs only inside the one Worker forked by this file's supervisor, which
+holds the supervisor's inherited in-memory launch context. A bare --worker-owner-
+approved argv flag, environment self-report or caller-authored JSON never authorizes
+execution, and the historical external Worker CLI entry has been removed.
 """
 import argparse,hashlib,importlib.metadata,importlib.util,json,os,subprocess,sys,time,traceback
 from pathlib import Path
@@ -38,11 +39,12 @@ def verify(path,expected):
         if sha(row['path'])!=row['sha256'] or row['sha256']!=protocol['checkpoints'][group]['sha256']:raise RuntimeError('checkpoint_drift:'+group)
     return m
 
-def execute(root,manifest,expected,delegation=None):
-    supervision.claim_execute(delegation,run_identity=root,manifest=manifest,readiness_sha256=expected,
+def execute(root,manifest,expected,context=None,postguard=None):
+    supervision.require_launch_context(context,run_identity=root,manifest=manifest,readiness_sha256=expected,
         execution_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-        protocol_sha256=sha(HERE/'protocol.json')) # one-shot, argument-bound permit before runtime imports
+        protocol_sha256=sha(HERE/'protocol.json')) # inherited-context guard before runtime imports
     m=verify(manifest,expected) # before Torch/MuJoCo or real policy imports
+    if postguard is not None:return postguard(root,m,context) # test-only post-guard seam; production passes None
     import numpy as np
     import torch
     torch.set_num_threads(1);torch.set_num_interop_threads(1);torch.use_deterministic_algorithms(True)
@@ -114,43 +116,36 @@ def execute(root,manifest,expected,delegation=None):
         (root/'failure.json').write_text(json.dumps(failure,indent=2));raise
     finally:ledger.close()
 
-def main(argv=None,*,verifier=verify,worker_argv=None):
+def main(argv=None,*,verifier=verify,executor=None,cutoff_s=SUPERVISOR_CUTOFF_S,total_s=SUPERVISOR_TOTAL_S):
     p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('manifest');p.add_argument('sha256');p.add_argument('--execute-owner-approved',action='store_true')
     args=p.parse_args(argv)
     if not args.execute_owner_approved:raise SystemExit('OWNER_CONFIRMATION_REQUIRED_BEFORE_PHYSICS')
     # Flag only prevents accidental launch; trusted operator must separately hold the real Owner message.
-    started=time.monotonic() # one entry-anchored clock: 595 s cutoff and 600 s total cover the whole lifecycle
-    deadline=started+SUPERVISOR_CUTOFF_S;total_deadline=started+SUPERVISOR_TOTAL_S
+    started=time.monotonic() # one entry-anchored clock: cutoff and total cover the whole lifecycle
+    deadline=started+cutoff_s;total_deadline=started+total_s
     try: # synchronous preflight is bounded by the same deadline, not only checked after it returns
         with supervision.lifecycle_deadline(deadline):
             m=verifier(args.manifest,args.sha256) # HEAD/Readiness/source preflight before any run side effect
     except supervision.DeadlineInterrupt:
         raise RuntimeError('supervisor_cutoff_exhausted')
     if time.monotonic()>=deadline:raise RuntimeError('supervisor_cutoff_exhausted') # exhausted preflight leaves no campaign side effect
-    root=Path(args.root);root.mkdir(exist_ok=False);(root/'once.claim').write_text('one separately Owner-confirmed T2a campaign; no retry\n')
-    remaining=deadline-time.monotonic()
-    if remaining<=0:raise RuntimeError('supervisor_cutoff_exhausted')
-    command=list(worker_argv) if worker_argv is not None else [sys.executable,str(Path(__file__)),str(root),args.manifest,args.sha256,'--worker-owner-approved']
-    result=supervision.supervise(command,root,remaining,run_identity=root,readiness_sha256=args.sha256,
-                                 execution_head=m['execution_head'],protocol_sha256=m['protocol_sha256'],manifest=args.manifest,
-                                 deadline_s=deadline,total_deadline_s=total_deadline)
-    raise SystemExit(0 if result['native_exitcode']==0 and not result['interrupted'] else 1)
+    root=Path(args.root)
+    try:
+        result=supervision.supervise(lambda context:worker(context,executor),root,deadline-started,
+            run_identity=root,manifest=args.manifest,readiness_sha256=args.sha256,
+            execution_head=m['execution_head'],protocol_sha256=m['protocol_sha256'],
+            run_inputs={'root':str(root),'manifest':str(args.manifest),'readiness_sha256':args.sha256,'execute_owner_approved':True},
+            deadline_s=deadline,total_deadline_s=total_deadline,started_s=started)
+    except supervision.LaunchRefused as exc:
+        print('SUPERVISOR_REFUSED:'+str(exc),file=sys.stderr);raise SystemExit(76)
+    ok=(result['native_exitcode']==0 and result['interrupted'] is None and result['failure_phase'] is None
+        and result['cleanup_complete'] and result.get('receipt_error') is None)
+    raise SystemExit(0 if ok else 1)
 
-def worker(argv=None):
-    p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('manifest');p.add_argument('sha256')
-    p.add_argument('--worker-owner-approved',action='store_true');p.add_argument(supervision.FD_FLAG,dest='supervisor_fd',type=int)
-    args=p.parse_args(argv)
-    if not args.worker_owner_approved:raise SystemExit('worker_flag_required')
-    if args.supervisor_fd is None:raise supervision.DelegationRefused('supervisor_delegation_required')
-    trust=supervision.entry_trust(Path(__file__).resolve(),sys.argv) # pinned to this real file; CLI/env/JSON cannot override
-    delegation=supervision.consume_delegation(args.supervisor_fd,trust,
-        execution_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-        protocol_sha256=sha(HERE/'protocol.json'))
-    execute(Path(args.root),Path(args.manifest),args.sha256,delegation)
+def worker(context,executor=None):
+    return execute(Path(context.run_id),Path(context.readiness_path),context.readiness_sha256,context=context,postguard=executor)
 
 if __name__=='__main__':
-    if '--worker-owner-approved' in sys.argv:
-        try:worker(sys.argv[1:])
-        except supervision.DelegationRefused as exc:
-            print('WORKER_REFUSED:'+str(exc),file=sys.stderr);raise SystemExit(76)
-    else:main()
+    if any(flag in sys.argv[1:] for flag in supervision.REMOVED_WORKER_FLAGS):
+        print('WORKER_REFUSED:external_worker_entry_removed',file=sys.stderr);raise SystemExit(76)
+    main()

@@ -1,629 +1,582 @@
-"""T2a supervisor-only Worker delegation primitives. Stdlib only: no NumPy/Torch/
-MuJoCo/backend import and no simulator, policy or checkpoint access.
+"""T2a launch-boundary primitives: one forked Worker under one bounded lifecycle.
 
-Trust boundary (trusted same-machine serial one-shot research; not multi-user auth):
-- Only this canonical `run.py` supervisor entry runs Readiness/source preflight, creates
-  the campaign directory, the one-shot token file and the private pipe, then spawns its
-  directly supervised Worker with start_new_session=True.
-- The Worker anchors on itself: its executing source (`__file__`), its own kernel argv
-  and the kernel facts of its parent. The parent must run the same interpreter and its
-  argv must be the canonical supervisor entry built from the Worker's own positional
-  arguments (`python [flags] run.py <root> <manifest> <sha> --execute-owner-approved`).
-  A custom launcher that fabricates a real pipe, token and caller-authored JSON with
-  true PID/session/start/cmdline facts is still refused, because its own argv is not the
-  canonical supervisor entry. This is an accidental-launch/ancestry guard, not
-  production authentication.
-- `claim_execute` re-binds the consumed permit to the exact root/manifest/hash/HEAD/
-  protocol plus current worker/parent lifetimes and expiry, and spends it exactly once
-  before any runtime import.
+Stdlib only: no NumPy/Torch/MuJoCo/backend import, no simulator, policy or checkpoint
+access. Trust boundary (trusted same-machine serial one-shot research; not multi-user
+authentication): only the canonical `run.py` supervisor entry runs Readiness/source
+preflight before any side effect, creates one new campaign directory exclusively,
+holds an exclusive lock, writes an immutable execution manifest and POSIX-forks one
+Worker with start_new_session semantics. The Worker receives the launcher context in
+inherited memory; CLI flags, environment self-reports or caller-authored JSON cannot
+obtain or fabricate it. Context fields, actual kernel parent facts and the manifest
+bytes bind the Worker to its creating supervisor. No delegation pipe, token, permit
+or other authentication object exists.
 """
-import hashlib,hmac,json,os,select,signal,stat,subprocess,sys,threading,time
+import ctypes,hashlib,json,os,signal,sys,threading,time,traceback
 from pathlib import Path
-from types import MappingProxyType
 
-VERSION = 'g1.t2a.supervisor.v2'
-FD_FLAG = '--supervisor-fd'
-WORKER_FLAG = '--worker-owner-approved'
-SUPERVISOR_FLAG = '--execute-owner-approved'
-TOKEN_NAME = 'delegation.token'
-CONSUMED_SUFFIX = '.consumed'
-MAX_DELEGATION_AGE_S = 600.0
-MAX_DELEGATION_BYTES = 1 << 20
-MAX_TRANSFER_S = 30.0
-GROUP_GRACE_S = .25
-GROUP_KILL_WAIT_S = 2.0
-GROUP_POLL_S = .02
-CLEANUP_ALLOWANCE_S = 5.0
-_EXE_FLAGS = ('-B', '-u')
+VERSION='g1.t2a.launch.v1'
+MANIFEST_NAME='execution-manifest.json'
+RECEIPT_NAME='process-receipt.json'
+LOCK_NAME='run.lock'
+STDOUT_NAME='worker.stdout.raw'
+STDERR_NAME='worker.stderr.raw'
+REMOVED_WORKER_FLAGS=('--worker-owner-approved','--supervisor-fd','--worker')
+GROUP_GRACE_S=.25
+GROUP_KILL_WAIT_S=2.0
+GROUP_POLL_S=.02
+CLEANUP_ALLOWANCE_S=5.0
+CHILD_EXIT_REFUSED=76
+_CHILD_BOOT_EXIT=70
 
 
-class DelegationRefused(RuntimeError):
-    """A Worker invocation that does not present a live supervisor delegation."""
+class LaunchRefused(RuntimeError):
+    """A launch that does not present a genuine inherited supervisor context."""
 
 
 def _refuse(reason):
-    raise DelegationRefused(reason)
-
-
-_SEAL = object()
+    raise LaunchRefused(reason)
 
 
 class DeadlineInterrupt(Exception):
     """Main-thread SIGALRM interrupt bounding one supervisor lifecycle."""
 
 
-def _deadline_signal(signum, frame):
+def _deadline_signal(signum,frame):
     raise DeadlineInterrupt('supervisor_deadline')
 
 
 class lifecycle_deadline:
-    """Bound a synchronous lifecycle by one absolute monotonic deadline.
+    """Bound a synchronous lifecycle step by one absolute monotonic deadline.
 
     Arms ITIMER_REAL/SIGALRM in the main thread only, so a stalled synchronous
-    verifier, exec hand-off, identity probe or delegation write is interrupted at the
-    cutoff instead of running past it; the previous handler and interval timer are
-    restored on exit. This is a bounded-interruption mechanism, not authentication.
+    verifier, manifest write or fork hand-off is interrupted at the cutoff instead of
+    running past it; the previous handler and interval timer are restored on exit.
+    This is a bounded-interruption mechanism, not authentication.
     """
-
-    __slots__ = ('deadline_s', '_saved')
-
-    def __init__(self, deadline_s):
-        self.deadline_s = deadline_s
-        self._saved = None
-
+    __slots__=('deadline_s','_saved')
+    def __init__(self,deadline_s):
+        self.deadline_s=deadline_s
+        self._saved=None
     def __enter__(self):
+        if threading.current_thread() is not threading.main_thread():
+            _refuse('main_thread_required')
         if threading.current_thread() is threading.main_thread():
-            self._saved = (signal.getsignal(signal.SIGALRM), signal.getitimer(signal.ITIMER_REAL))
-            signal.signal(signal.SIGALRM, _deadline_signal)
-            signal.setitimer(signal.ITIMER_REAL, max(1e-6, self.deadline_s - time.monotonic()))
+            self._saved=(signal.getsignal(signal.SIGALRM),signal.getitimer(signal.ITIMER_REAL))
+            signal.signal(signal.SIGALRM,_deadline_signal)
+            signal.setitimer(signal.ITIMER_REAL,max(1e-6,self.deadline_s-time.monotonic()))
         return self
-
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(self,exc_type,exc,tb):
         if self._saved is not None:
-            signal.setitimer(signal.ITIMER_REAL, 0.)
-            signal.signal(signal.SIGALRM, self._saved[0])
-            delay, interval = self._saved[1]
-            if delay > 0 or interval > 0:
-                signal.setitimer(signal.ITIMER_REAL, delay, interval)
-            self._saved = None
+            signal.setitimer(signal.ITIMER_REAL,0.)
+            signal.signal(signal.SIGALRM,self._saved[0])
+            delay,interval=self._saved[1]
+            if delay>0 or interval>0:
+                signal.setitimer(signal.ITIMER_REAL,delay,interval)
+            self._saved=None
         return False
-
-
-class EntryTrust:
-    """Worker-side anchor built from the Worker's own source file and kernel argv."""
-    __slots__ = ('entry_path', 'python_path', 'root', 'manifest', 'sha256', 'fd', 'expected_parent_argv', '_seal')
-
-    def __init__(self, entry_path, python_path, root, manifest, sha256, fd, expected_parent_argv, seal):
-        if seal is not _SEAL:
-            _refuse('entry_trust_construction_forbidden')
-        self.entry_path = entry_path
-        self.python_path = python_path
-        self.root = root
-        self.manifest = manifest
-        self.sha256 = sha256
-        self.fd = fd
-        self.expected_parent_argv = expected_parent_argv
-        self._seal = _SEAL
-
-
-def entry_trust(entry_file, argv, *, python_path=None, expected_parent_argv=None):
-    """Pin the Worker trust anchor from its own executing file and true kernel argv.
-
-    `expected_parent_argv` is a synthetic test-only seam for exercising the positive
-    path from a test harness; the real Worker entry never derives its anchor from
-    CLI/env/JSON and run.py never passes this override.
-    """
-    entry = Path(entry_file).resolve()
-    python = Path(sys.executable if python_path is None else python_path).resolve()
-    argv = list(argv)
-    if len(argv) != 7 or argv[4] != WORKER_FLAG or argv[5] != FD_FLAG:
-        _refuse('worker_entry_argv_mismatch')
-    if Path(argv[0]).resolve() != entry:
-        _refuse('worker_entry_argv_mismatch')
-    try:
-        fd = int(argv[6])
-    except ValueError:
-        _refuse('worker_entry_argv_mismatch')
-    return EntryTrust(entry, python, argv[1], argv[2], argv[3], fd,
-                      None if expected_parent_argv is None else tuple(expected_parent_argv), _SEAL)
-
-
-class Delegation:
-    """Worker-side proof that the canonical supervising entry issued this run."""
-
-    __slots__ = ('payload', '_seal', '_spent')
-
-    def __init__(self, payload, seal):
-        if seal is not _SEAL:
-            _refuse('delegation_construction_forbidden')
-        self._seal = _SEAL
-        self.payload = MappingProxyType(dict(payload))
-        self._spent = False
-
-
-def is_live_delegation(obj):
-    return isinstance(obj, Delegation) and obj._seal is _SEAL and obj.payload.get('protocol') == VERSION
 
 
 def proc_identity(pid=None):
-    # Straight from /proc: avoids getsid() cross-session permission errors and binds
-    # exact pid, parent, session, process start ticks and cmdline bytes.
-    pid = os.getpid() if pid is None else int(pid)
-    text = Path(f'/proc/{pid}/stat').read_text()
-    fields = text[text.rindex(')') + 2:].split()
-    return {'pid': pid, 'ppid': int(fields[1]), 'sid': int(fields[3]), 'start_ticks': int(fields[19]),
-            'cmdline_sha256': hashlib.sha256(Path(f'/proc/{pid}/cmdline').read_bytes()).hexdigest()}
+    # Straight from /proc: binds exact pid, state, parent, process group, session,
+    # process start ticks and cmdline bytes without cross-session getsid() calls.
+    pid=os.getpid() if pid is None else int(pid)
+    text=Path(f'/proc/{pid}/stat').read_text()
+    fields=text[text.rindex(')')+2:].split()
+    return {'pid':pid,'state':fields[0],'ppid':int(fields[1]),'pgrp':int(fields[2]),'sid':int(fields[3]),
+            'start_ticks':int(fields[19]),
+            'cmdline_sha256':hashlib.sha256(Path(f'/proc/{pid}/cmdline').read_bytes()).hexdigest()}
 
 
-def proc_argv(pid=None):
-    pid = os.getpid() if pid is None else int(pid)
-    return [part.decode('utf-8', 'surrogateescape')
-            for part in Path(f'/proc/{pid}/cmdline').read_bytes().split(b'\0') if part]
+_CTX_SEAL=object()
 
 
-def _exe_path(pid=None):
-    pid = os.getpid() if pid is None else int(pid)
-    return Path(os.readlink(f'/proc/{pid}/exe')).resolve()
+class LauncherContext:
+    """Inherited in-memory launch context; only the supervising process creates it."""
+    __slots__=('run_id','readiness_path','manifest_path','manifest_sha256','readiness_sha256','execution_head','protocol_sha256',
+               'supervisor_pid','supervisor_start_ticks','worker_pid','started_unix','deadline_monotonic','run_inputs','_seal')
+    def __init__(self,*,run_id,manifest_path,manifest_sha256,readiness_sha256,execution_head,protocol_sha256,
+                 supervisor_pid,supervisor_start_ticks,started_unix,deadline_monotonic,run_inputs,seal,readiness_path=None):
+        if seal is not _CTX_SEAL:_refuse('launch_context_construction_forbidden')
+        self.run_id=run_id
+        self.readiness_path=readiness_path
+        self.manifest_path=manifest_path
+        self.manifest_sha256=manifest_sha256
+        self.readiness_sha256=readiness_sha256
+        self.execution_head=execution_head
+        self.protocol_sha256=protocol_sha256
+        self.supervisor_pid=supervisor_pid
+        self.supervisor_start_ticks=supervisor_start_ticks
+        self.worker_pid=None
+        self.started_unix=started_unix
+        self.deadline_monotonic=deadline_monotonic
+        self.run_inputs=run_inputs
+        self._seal=_CTX_SEAL
 
 
-def _identity(pid, tries=200):
-    for _ in range(tries):
-        try:
-            return proc_identity(pid)
-        except (FileNotFoundError, ProcessLookupError, ValueError, IndexError):
-            time.sleep(.005)
-    _refuse('worker_identity_unavailable')
+def is_genuine_context(context):
+    return isinstance(context,LauncherContext) and context._seal is _CTX_SEAL
 
 
-def _require_pipe(fd):
-    try:
-        mode = os.fstat(fd).st_mode
-    except OSError:
-        _refuse('delegation_fd_unavailable')
-    if not stat.S_ISFIFO(mode):
-        _refuse('delegation_fd_not_a_pipe')
+def require_launch_context(context,*,run_identity,manifest,readiness_sha256,execution_head,protocol_sha256):
+    """Re-check the inherited launch context, manifest bytes and bindings in the Worker.
 
-
-def _read_payload(fd, timeout_s=MAX_TRANSFER_S):
-    deadline = time.monotonic() + max(0., timeout_s)
-    chunks = []
-    total = 0
-    while True:
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            _refuse('delegation_transfer_timeout')
-        try:
-            ready, _, _ = select.select([fd], [], [], remaining)
-        except OSError:
-            _refuse('delegation_fd_unavailable')
-        if not ready:
-            _refuse('delegation_transfer_timeout')
-        try:
-            data = os.read(fd, 65536)
-        except BlockingIOError:
-            continue
-        except OSError:
-            _refuse('delegation_fd_unavailable')
-        if not data:
-            break
-        total += len(data)
-        if total > MAX_DELEGATION_BYTES:
-            _refuse('delegation_too_large')
-        chunks.append(data)
-    try:
-        payload = json.loads(b''.join(chunks).decode())
-    except (ValueError, UnicodeDecodeError):
-        _refuse('malformed_delegation')
-    if not isinstance(payload, dict):
-        _refuse('malformed_delegation')
-    return payload
-
-
-def _consume_token(token, nonce, run_dir):
-    path = Path(token) if isinstance(token, str) else None
-    if path is None or path.parent != run_dir or path.name != TOKEN_NAME:
-        _refuse('delegation_token_path_mismatch')
-    try:
-        recorded = path.read_text().strip()
-    except OSError:
-        _refuse('delegation_replayed_or_absent')
-    if not isinstance(nonce, str) or not hmac.compare_digest(recorded, nonce):
-        _refuse('delegation_token_mismatch')
-    try:
-        os.rename(path, str(path) + CONSUMED_SUFFIX)
-    except OSError:
-        _refuse('delegation_already_consumed')
-
-
-def _parent_entry_ok(parent_argv, trust):
-    if trust.expected_parent_argv is not None:
-        return tuple(parent_argv) == trust.expected_parent_argv
-    index = 1
-    while index < len(parent_argv) and parent_argv[index] in _EXE_FLAGS:
-        index += 1
-    if index >= len(parent_argv) or Path(parent_argv[index]).resolve() != trust.entry_path:
-        return False
-    tail = parent_argv[index + 1:]
-    if len(tail) != 4 or tail[3] != SUPERVISOR_FLAG:
-        return False
-    return (Path(tail[0]).resolve() == Path(trust.root).resolve()
-            and Path(tail[1]).resolve() == Path(trust.manifest).resolve()
-            and tail[2] == trust.sha256)
-
-
-def consume_delegation(fd, trust, *, execution_head, protocol_sha256, max_age_s=MAX_DELEGATION_AGE_S,
-                       transfer_timeout_s=MAX_TRANSFER_S):
-    """Validate and one-shot-consume the supervisor payload read from the inherited fd.
-
-    The parent is authenticated from kernel facts against the Worker's own pinned entry:
-    same interpreter executable, canonical supervisor argv, session-leader Worker and a
-    genuine inherited pipe. JSON claims alone never qualify.
+    Runs before the real frozen verification and before any heavy import; `execute`
+    calls it again, so a direct caller can never reach NumPy/Torch. Only the forked
+    Worker instance of the creating supervisor qualifies.
     """
+    if not is_genuine_context(context):
+        _refuse('inherited_launch_context_required')
+    if os.getpid()!=context.worker_pid:
+        _refuse('worker_identity_mismatch')
     try:
-        return _consume_delegation(fd, trust, execution_head, protocol_sha256, max_age_s, transfer_timeout_s)
-    finally:
-        try:
-            os.close(fd)
-        except OSError:
-            pass
-
-
-def _consume_delegation(fd, trust, execution_head, protocol_sha256, max_age_s, transfer_timeout_s):
-    if not isinstance(trust, EntryTrust) or trust._seal is not _SEAL:
-        _refuse('entry_trust_required')
-    if trust.fd != fd:
-        _refuse('supervisor_fd_context_mismatch')
-    _require_pipe(fd)
-    payload = _read_payload(fd, transfer_timeout_s)
-    if payload.get('protocol') != VERSION:
-        _refuse('unsupported_delegation')
-    run_dir = Path(trust.root).resolve()
-    if payload.get('run_id') != str(run_dir):
+        if os.getsid(0)!=os.getpid():
+            _refuse('worker_not_own_session')
+    except OSError:
+        _refuse('worker_not_own_session')
+    ppid=os.getppid()
+    if ppid!=context.supervisor_pid:
+        _refuse('supervisor_parent_mismatch')
+    try:
+        parent=proc_identity(ppid)
+    except (OSError,ValueError,IndexError):
+        _refuse('supervisor_identity_unavailable')
+    if parent['start_ticks']!=context.supervisor_start_ticks:
+        _refuse('supervisor_lifetime_changed')
+    if context.deadline_monotonic is not None and time.monotonic()>context.deadline_monotonic:
+        _refuse('launch_context_expired')
+    if Path(run_identity).resolve()!=Path(context.run_id):
         _refuse('run_identity_binding_mismatch')
-    if payload.get('manifest') != str(Path(trust.manifest).resolve()):
+    if Path(manifest).resolve()!=Path(context.readiness_path):
         _refuse('manifest_binding_mismatch')
-    if payload.get('readiness_sha256') != trust.sha256:
+    if readiness_sha256!=context.readiness_sha256:
         _refuse('readiness_binding_mismatch')
-    if payload.get('protocol_sha256') != protocol_sha256:
-        _refuse('protocol_binding_mismatch')
-    if payload.get('execution_head') != execution_head:
+    if execution_head!=context.execution_head:
         _refuse('execution_head_binding_mismatch')
-    issued = payload.get('issued_unix')
-    if type(issued) is not float or not 0. <= time.time() - issued <= max_age_s:
-        _refuse('stale_delegation')
-    claimed_supervisor = payload.get('supervisor')
-    claimed_worker = payload.get('worker')
-    if not isinstance(claimed_supervisor, dict) or not isinstance(claimed_worker, dict):
-        _refuse('malformed_delegation_identity')
-    me = proc_identity()
-    if me['sid'] != me['pid']:
-        _refuse('worker_not_supervised_session')
-    for key in ('pid', 'sid', 'start_ticks', 'cmdline_sha256'):
-        if me[key] != claimed_worker.get(key):
-            _refuse('worker_lifetime_mismatch')
-    ppid = os.getppid()
-    if ppid != claimed_supervisor.get('pid'):
-        _refuse('parent_identity_mismatch')
-    parent = proc_identity(ppid)
-    for key in ('sid', 'start_ticks', 'cmdline_sha256'):
-        if parent[key] != claimed_supervisor.get(key):
-            _refuse('parent_lifetime_mismatch')
-    if parent['ppid'] == me['pid']:
-        _refuse('cyclic_process_ancestry')
+    if protocol_sha256!=context.protocol_sha256:
+        _refuse('protocol_binding_mismatch')
     try:
-        self_exe = _exe_path()
-        parent_exe = _exe_path(ppid)
+        raw=Path(context.manifest_path).read_bytes()
     except OSError:
-        _refuse('supervisor_executable_unavailable')
-    if self_exe != trust.python_path:
-        _refuse('python_executable_mismatch')
-    if parent_exe != trust.python_path:
-        _refuse('supervisor_executable_mismatch')
+        _refuse('manifest_unavailable')
+    if hashlib.sha256(raw).hexdigest()!=context.manifest_sha256:
+        _refuse('manifest_bytes_changed')
     try:
-        parent_argv = proc_argv(ppid)
-    except OSError:
-        _refuse('supervisor_entry_unavailable')
-    if not _parent_entry_ok(parent_argv, trust):
-        _refuse('supervisor_entry_mismatch')
-    _consume_token(payload.get('token'), payload.get('nonce'), run_dir)
-    return Delegation(payload, _SEAL)
+        document=json.loads(raw.decode())
+    except (ValueError,UnicodeDecodeError):
+        _refuse('manifest_unreadable')
+    if not isinstance(document,dict):
+        _refuse('manifest_unreadable')
+    if document.get('run_id')!=context.run_id:_refuse('manifest_run_identity_mismatch')
+    if document.get('execution_head')!=context.execution_head:_refuse('manifest_execution_head_mismatch')
+    if document.get('protocol_sha256')!=context.protocol_sha256:_refuse('manifest_protocol_mismatch')
+    if document.get('readiness_sha256')!=context.readiness_sha256:_refuse('manifest_readiness_mismatch')
+    if document.get('supervisor_pid')!=context.supervisor_pid:_refuse('manifest_supervisor_mismatch')
+    if document.get('supervisor_start_ticks')!=context.supervisor_start_ticks:_refuse('manifest_supervisor_mismatch')
+    if document.get('run_inputs')!=context.run_inputs:_refuse('manifest_run_inputs_mismatch')
+    return document
 
 
-def claim_execute(delegation, *, run_identity, manifest, readiness_sha256, execution_head, protocol_sha256,
-                  max_age_s=MAX_DELEGATION_AGE_S):
-    """Spend the one-shot permit, bound to the exact announcement, before runtime imports."""
-    if not is_live_delegation(delegation):
-        _refuse('supervisor_delegation_required')
-    if delegation._spent:
-        _refuse('delegation_already_spent')
-    payload = delegation.payload
-    if payload.get('run_id') != str(Path(run_identity).resolve()):
-        _refuse('delegation_run_identity_mismatch')
-    if payload.get('manifest') != str(Path(manifest).resolve()):
-        _refuse('delegation_manifest_mismatch')
-    if payload.get('readiness_sha256') != readiness_sha256:
-        _refuse('delegation_readiness_mismatch')
-    if payload.get('execution_head') != execution_head:
-        _refuse('delegation_execution_head_mismatch')
-    if payload.get('protocol_sha256') != protocol_sha256:
-        _refuse('delegation_protocol_mismatch')
-    issued = payload.get('issued_unix')
-    if type(issued) is not float or not 0. <= time.time() - issued <= max_age_s:
-        _refuse('delegation_expired')
-    me = proc_identity()
-    claimed_worker = payload.get('worker') or {}
-    for key in ('pid', 'sid', 'start_ticks', 'cmdline_sha256'):
-        if me[key] != claimed_worker.get(key):
-            _refuse('delegation_worker_lifetime_changed')
-    claimed_supervisor = payload.get('supervisor') or {}
-    if os.getppid() != claimed_supervisor.get('pid'):
-        _refuse('delegation_parent_lifetime_changed')
-    parent = proc_identity(os.getppid())
-    for key in ('sid', 'start_ticks', 'cmdline_sha256'):
-        if parent[key] != claimed_supervisor.get(key):
-            _refuse('delegation_parent_lifetime_changed')
-    delegation._spent = True
-    return True
+def _proc_table():
+    table={}
+    for name in os.listdir('/proc'):
+        if not name.isdigit():
+            continue
+        try:
+            table[int(name)]=proc_identity(int(name))
+        except (OSError,ValueError,IndexError):
+            pass
+    return table
 
 
-def _send_payload(fd, data, transfer_timeout_s=MAX_TRANSFER_S):
+def _descendants(table,pid):
+    children={}
+    for child,info in table.items():
+        children.setdefault(info['ppid'],[]).append(child)
+    found=[];stack=[pid]
+    while stack:
+        for child in children.get(stack.pop(),[]):
+            if child not in found:
+                found.append(child);stack.append(child)
+    return found
+
+
+def _live_targets(owned_pid):
+    # Everything the supervisor owns: the forked worker, its process-group/session
+    # members including session-escaping descendants that re-parented to this process
+    # as the minimal Linux subreaper. Zombies must also be reaped.
+    table=_proc_table()
+    me=os.getpid()
+    targets=set(_descendants(table,me))
+    for pid,info in table.items():
+        if pid==me:
+            continue
+        if info['pgrp']==owned_pid or info['sid']==owned_pid:
+            targets.add(pid)
+    return targets  # A zombie still requires waitpid; dead is not yet reaped.
+
+
+def _targets_alive(owned_pid):
     try:
-        os.set_blocking(fd, False)
+        return bool(_live_targets(owned_pid))
+    except Exception:
+        return True  # unreadable /proc means unconfirmed, never "clean"
+
+
+def _set_child_subreaper():
+    if ctypes.CDLL(None,use_errno=True).prctl(36,1,0,0,0)!=0:
+        raise OSError(ctypes.get_errno(),'subreaper_setup_failed')
+
+
+def _signal_tree(owned_pid,signum):
+    try:
+        os.killpg(owned_pid,signum)
     except OSError:
         pass
-    deadline = time.monotonic() + max(0., transfer_timeout_s)
-    view = memoryview(data)
-    sent = 0
-    while sent < len(view):
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            raise TimeoutError('delegation_transfer_timeout')
-        ready, _, _ = select.select([], [fd], [], remaining)
-        if not ready:
-            raise TimeoutError('delegation_transfer_timeout')
+    try:
+        targets=_live_targets(owned_pid)
+    except Exception:
+        targets=set()
+    for pid in (owned_pid,)+tuple(sorted(targets)):
         try:
-            sent += os.write(fd, view[sent:])
-        except BlockingIOError:
-            continue
-
-
-def _group_alive(pgid):
-    try:
-        os.killpg(pgid, 0)
-        return True
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-
-
-_POPEN = subprocess.Popen
-
-
-def _write_pid_preexec(write_fd):
-    # Runs in the forked child before exec: the parent can own and kill the child even
-    # when Popen itself never returned, so a preempted spawn cannot leak a descendant.
-    def _preexec():
-        try:
-            os.write(write_fd, f'{os.getpid()}\n'.encode())
-        finally:
-            os.close(write_fd)
-    return _preexec
-
-
-def _read_owned_pid(read_fd, total_deadline_s):
-    timeout = min(2.0, max(.05, total_deadline_s - time.monotonic()))
-    try:
-        ready, _, _ = select.select([read_fd], [], [], timeout)
-    except (OSError, ValueError):
-        return None
-    if not ready:
-        return None
-    try:
-        data = os.read(read_fd, 64)
-    except OSError:
-        return None
-    try:
-        return int(data.split(b'\n', 1)[0])
-    except (ValueError, IndexError):
-        return None
-
-
-def _spawn_worker(worker_argv, fd, out, err, total_deadline_s, owned):
-    read_fd, write_fd = os.pipe()
-    os.set_inheritable(write_fd, True)
-    try:
-        proc = _POPEN(list(worker_argv) + [FD_FLAG, str(fd)], stdout=out, stderr=err,
-                      start_new_session=True, pass_fds=(fd, write_fd), preexec_fn=_write_pid_preexec(write_fd))
-    finally:
-        os.close(write_fd)
-        owned[0] = _read_owned_pid(read_fd, total_deadline_s)
-        os.close(read_fd)
-    return proc
-
-
-def _cleanup_lifecycle(worker, owned_pid, total_deadline_s):
-    # One bounded group cleanup for every exit path: a single 250 ms SIGTERM grace for
-    # the whole group, then capped SIGKILL/wait plus child reap, all inside the total
-    # budget. An unconfirmed termination is reported as incomplete, never as success.
-    info = {'cleanup_complete': False, 'cleanup_detail': 'cleanup_not_run'}
-    pgid = worker.pid if worker is not None else owned_pid
-    if pgid is None:
-        info['cleanup_complete'] = True
-        info['cleanup_detail'] = None
-        return info
-
-    def remaining():
-        return total_deadline_s - time.monotonic()
-
-    def pid_alive():
-        if owned_pid is None:
-            return False
-        try:
-            os.kill(owned_pid, 0)
-            return True
-        except OSError:
-            return False
-
-    try:
-        if remaining() <= 0:
-            info['cleanup_detail'] = 'cleanup_deadline_exhausted'
-            return info
-        if owned_pid is not None and worker is None:
-            try:
-                os.kill(owned_pid, signal.SIGTERM)
-            except OSError:
-                pass
-        try:
-            os.killpg(pgid, signal.SIGTERM)
+            os.kill(pid,signum)
         except OSError:
             pass
-        grace_end = min(time.monotonic() + GROUP_GRACE_S, total_deadline_s)
-        while (_group_alive(pgid) or pid_alive()) and time.monotonic() < grace_end:
+
+
+def _reap_children():
+    reaped={}
+    while True:
+        try:
+            pid,status=os.waitpid(-1,os.WNOHANG)
+        except (ChildProcessError,OSError):
+            return reaped
+        if pid==0:
+            return reaped
+        reaped[pid]=status
+
+
+def _cleanup_lifecycle(owned_pid,total_deadline_s,terminator=None):
+    # One bounded group cleanup for every exit path: a single 250 ms SIGTERM grace for
+    # the whole owned tree, then capped SIGKILL plus reaping, all inside the total
+    # budget. Unconfirmed termination is reported incomplete, never as success.
+    info={'cleanup_complete':False,'cleanup_detail':'cleanup_not_run','worker_status':None}
+    if owned_pid is None:
+        info['cleanup_complete']=True
+        info['cleanup_detail']=None
+        return info
+    terminate=terminator if terminator is not None else _signal_tree
+    def settle(until):
+        while True:
+            for pid,status in _reap_children().items():
+                if pid==owned_pid:
+                    info['worker_status']=status
+            if not _targets_alive(owned_pid):
+                return True
+            if time.monotonic()>=until:
+                return False
             time.sleep(GROUP_POLL_S)
-        if (_group_alive(pgid) or pid_alive()) and remaining() > 0:
-            if owned_pid is not None and worker is None:
-                try:
-                    os.kill(owned_pid, signal.SIGKILL)
-                except OSError:
-                    pass
-            try:
-                os.killpg(pgid, signal.SIGKILL)
-            except OSError:
-                pass
-            kill_end = min(time.monotonic() + GROUP_KILL_WAIT_S, total_deadline_s)
-            while (_group_alive(pgid) or pid_alive()) and time.monotonic() < kill_end:
-                time.sleep(GROUP_POLL_S)
-        if worker is not None:
-            try:
-                worker.wait(timeout=max(0., min(GROUP_KILL_WAIT_S, remaining())))
-            except Exception:
-                pass
-            if worker.returncode is None:
-                info['cleanup_detail'] = 'worker_unreaped'
-                return info
-        elif owned_pid is not None:
-            reaped = False
-            while remaining() > 0:
-                try:
-                    pid, _ = os.waitpid(owned_pid, os.WNOHANG)
-                except ChildProcessError:
-                    reaped = True
-                    break
-                except OSError:
-                    break
-                if pid == owned_pid:
-                    reaped = True
-                    break
-                time.sleep(GROUP_POLL_S)
-            if not reaped:
-                info['cleanup_detail'] = 'owned_child_unreaped'
-                return info
-        if _group_alive(pgid) or pid_alive():
-            info['cleanup_detail'] = 'descendants_persist'
-            return info
-        info['cleanup_complete'] = True
-        info['cleanup_detail'] = None
-    except Exception as exc:
-        info['cleanup_detail'] = f'{type(exc).__name__}:{exc}'
-    return info
-
-
-def supervise(worker_argv, root, limit_s, *, run_identity, readiness_sha256, execution_head, protocol_sha256,
-              manifest=None, poll_s=.05, deadline_s=None, total_deadline_s=None):
-    """Run one directly supervised Worker under one bounded lifecycle.
-
-    Setup, spawn, identity, delegation transfer and the supervise loop (which covers
-    Worker validation, verification and execution) share the caller's absolute
-    `deadline_s` (595 s from supervisor entry in production) through a scoped SIGALRM
-    deadline, so blocking waits are interrupted at the cutoff. An interrupted spawn is
-    still owned through the pre-exec pid pipe and is killed and reaped even when Popen
-    never returned. Every exit path runs one bounded group cleanup (single 250 ms TERM
-    grace, capped KILL/wait, child reap) inside `total_deadline_s` (600 s total) and then
-    writes an honest receipt: unconfirmed cleanup is recorded as incomplete, and Worker
-    physical-failure files are never touched. `root` is resolved before token creation.
-    """
-    started = time.monotonic()
-    if deadline_s is None:
-        deadline_s = started + max(0., limit_s)
-    if total_deadline_s is None:
-        total_deadline_s = deadline_s + CLEANUP_ALLOWANCE_S
-    root = Path(root).resolve()
-    run_dir = Path(run_identity).resolve()
-    nonce = os.urandom(32).hex()
-    token_path = root / TOKEN_NAME
-    interrupted = None
-    failure = None
-    phase = 'setup'
-    worker = None
-    owned = [None]
-    read_fd = write_fd = None
     try:
-        with lifecycle_deadline(deadline_s):
-            try:
-                handle = os.open(token_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-                try:
-                    os.write(handle, nonce.encode())
-                finally:
-                    os.close(handle)
-                read_fd, write_fd = os.pipe()
-                os.set_inheritable(read_fd, True)
-                phase = 'spawn'
-                if time.monotonic() >= deadline_s:
-                    interrupted = 'wall_clock_watchdog'
-                else:
-                    with (root / 'worker.stdout.raw').open('xb') as out, (root / 'worker.stderr.raw').open('xb') as err:
-                        worker = _spawn_worker(worker_argv, read_fd, out, err, total_deadline_s, owned)
-                        os.close(read_fd)
-                        read_fd = None
-                        phase = 'identity'
-                        payload = {'protocol': VERSION, 'run_id': str(run_dir),
-                                   'manifest': None if manifest is None else str(Path(manifest).resolve()),
-                                   'readiness_sha256': readiness_sha256, 'execution_head': execution_head,
-                                   'protocol_sha256': protocol_sha256, 'nonce': nonce, 'token': str(token_path),
-                                   'issued_unix': time.time(), 'supervisor': proc_identity(), 'worker': _identity(worker.pid)}
-                        phase = 'delegation_write'
-                        _send_payload(write_fd, json.dumps(payload).encode(),
-                                      transfer_timeout_s=min(MAX_TRANSFER_S, max(0., deadline_s - time.monotonic())))
-                        os.close(write_fd)
-                        write_fd = None
-                        phase = 'supervise'
-                        while worker.poll() is None:
-                            if time.monotonic() >= deadline_s:
-                                interrupted = 'wall_clock_watchdog'
-                                break
-                            time.sleep(poll_s)
-            except DeadlineInterrupt:
-                interrupted = 'wall_clock_watchdog'
-            except BaseException as exc:
-                failure = exc
-    except DeadlineInterrupt:
-        interrupted = interrupted or 'wall_clock_watchdog'
+        if total_deadline_s-time.monotonic()<=0:
+            info['cleanup_detail']='cleanup_deadline_exhausted'
+            return info
+        terminate(owned_pid,signal.SIGTERM)
+        if settle(min(time.monotonic()+GROUP_GRACE_S,total_deadline_s)):
+            info['cleanup_complete']=True
+            info['cleanup_detail']=None
+            return info
+        if total_deadline_s-time.monotonic()>0:
+            terminate(owned_pid,signal.SIGKILL)
+            if settle(min(time.monotonic()+GROUP_KILL_WAIT_S,total_deadline_s)):
+                info['cleanup_complete']=True
+                info['cleanup_detail']=None
+                return info
+        for pid,status in _reap_children().items():
+            if pid==owned_pid:
+                info['worker_status']=status
+        info['cleanup_detail']='descendants_persist' if _targets_alive(owned_pid) else 'worker_unreaped'
+        return info
+    except Exception as exc:
+        info['cleanup_detail']=f'{type(exc).__name__}:{exc}'
+        return info
+
+
+def _acquire_lock(run_dir):
+    path=run_dir/LOCK_NAME
+    fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+    try:
+        import fcntl
+        fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    except ImportError:
+        pass
+    except OSError:
+        os.close(fd)
+        _refuse('run_lock_unavailable')
+    return fd
+
+
+def _manifest_doc(run_dir,readiness_sha256,execution_head,protocol_sha256,run_inputs,supervisor_start_ticks,started_unix):
+    return {'schema':'g1-t2a-execution-manifest-v1','run_id':str(run_dir),'execution_head':execution_head,
+            'protocol_sha256':protocol_sha256,'readiness_sha256':readiness_sha256,'started_unix':started_unix,
+            'run_inputs':dict(run_inputs),'supervisor_pid':os.getpid(),'supervisor_start_ticks':supervisor_start_ticks}
+
+
+def _status_exitcode(status):
+    if os.WIFEXITED(status):
+        return os.WEXITSTATUS(status)
+    if os.WIFSIGNALED(status):
+        return -os.WTERMSIG(status)
+    return None
+
+
+def _signal_reason(state):
+    if state.get('signal') is None:
+        return None
+    try:
+        return 'signal:'+signal.Signals(state['signal']).name
+    except ValueError:
+        return 'signal:%d'%state['signal']
+
+
+def _wait_worker(owned_pid,deadline_s,poll_s,state):
+    while True:
+        try:
+            done,status=os.waitpid(owned_pid,os.WNOHANG)
+        except ChildProcessError:
+            return {'status':None,'reason':'reaped'}
+        if done==owned_pid:
+            return {'status':status,'reason':None}
+        reason=_signal_reason(state)
+        if reason is not None:
+            return {'status':None,'reason':reason}
+        if time.monotonic()>=deadline_s:
+            return {'status':None,'reason':'wall_clock_watchdog'}
+        time.sleep(poll_s)
+
+
+def _child_main(worker_main,context,out_fd,err_fd,previous_mask):
+    # Runs in the forked child only; never returns. Resets inherited signal state and
+    # owns one session/process group so the supervisor can clean up the whole tree.
+    code=_CHILD_BOOT_EXIT
+    try:
+        signal.signal(signal.SIGTERM,signal.SIG_DFL)
+        signal.signal(signal.SIGINT,signal.SIG_DFL)
+        signal.signal(signal.SIGALRM,signal.SIG_DFL)
+        signal.setitimer(signal.ITIMER_REAL,0.)
+        try:
+            os.setsid()
+        except OSError:
+            pass
+        os.dup2(out_fd,1);os.dup2(err_fd,2)
+        sys.stdout=os.fdopen(os.dup(1),'w',buffering=1)
+        sys.stderr=os.fdopen(os.dup(2),'w',buffering=1)
+        null_fd=os.open(os.devnull,os.O_RDONLY)
+        os.dup2(null_fd,0);os.close(null_fd)
+        signal.pthread_sigmask(signal.SIG_SETMASK,previous_mask)
+        context.worker_pid=os.getpid()
+        code=0
+        try:
+            outcome=worker_main(context)
+            if isinstance(outcome,int) and outcome:
+                code=outcome
+        except LaunchRefused as exc:
+            print('WORKER_REFUSED:'+str(exc),file=sys.stderr,flush=True)
+            code=CHILD_EXIT_REFUSED
+        except SystemExit as exc:
+            if isinstance(exc.code,int):
+                code=exc.code
+            elif exc.code is None:
+                code=0
+            else:
+                print(str(exc.code),file=sys.stderr,flush=True)
+                code=1
+        except BaseException:
+            traceback.print_exc()
+            code=1
+    except BaseException:
+        try:
+            traceback.print_exc()
+        except Exception:
+            pass
     finally:
-        for fd in (read_fd, write_fd):
-            if fd is not None:
-                try:
-                    os.close(fd)
-                except OSError:
-                    pass
-        cleanup = _cleanup_lifecycle(worker, owned[0], total_deadline_s)
-    result = {'pid': None if worker is None else worker.pid,
-              'spawned_owned_pid': owned[0],
-              'native_exitcode': None if worker is None else worker.returncode,
-              'interrupted': interrupted,
-              'interrupted_phase': phase if interrupted else None,
-              'failure_phase': phase if failure is not None else None,
-              'failure': None if failure is None else f'{type(failure).__name__}:{failure}',
-              'elapsed_s': time.monotonic() - started, 'limit_s': limit_s,
-              'deadline_from_entry_s': deadline_s - started,
-              'total_from_entry_s': total_deadline_s - started,
-              'cleanup_allowance_s': total_deadline_s - deadline_s,
-              'cleanup_complete': cleanup['cleanup_complete'],
-              'cleanup_detail': cleanup['cleanup_detail'],
-              'delegation_consumed': (root / (TOKEN_NAME + CONSUMED_SUFFIX)).exists()}
-    receipt = root / 'process-receipt.json'
-    if root.is_dir() and not receipt.exists():
-        receipt.write_text(json.dumps(result, indent=2))
+        try:
+            sys.stdout.flush()
+        except Exception:
+            pass
+        try:
+            sys.stderr.flush()
+        except Exception:
+            pass
+        os._exit(code)
+
+
+def _write_receipt(run_dir,result,created):
+    if not created or not run_dir.is_dir():
+        return 'run_directory_unavailable'
+    try:
+        (run_dir/RECEIPT_NAME).write_text(json.dumps(result,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+        return None
+    except Exception as exc:
+        try:
+            print(f'T2A_RECEIPT_WRITE_FAILED:{type(exc).__name__}:{exc}',file=sys.stderr)
+        except Exception:
+            pass
+        return f'{type(exc).__name__}:{exc}'
+
+
+def supervise(worker_main,root,limit_s=None,*,run_identity=None,manifest,readiness_sha256,execution_head,
+              protocol_sha256,run_inputs=None,poll_s=.05,deadline_s=None,total_deadline_s=None,
+              terminator=None,subreaper=True,started_s=None):
+    """Run one forked Worker under one bounded lifecycle.
+
+    Preflight, exclusive directory/lock/immutable-manifest creation, fork, Worker
+    verification/execution, cleanup and receipt share the caller's absolute
+    `deadline_s` (595 s from supervisor entry in production). At the cutoff the whole
+    owned tree receives one 250 ms SIGTERM grace, then SIGKILL/reap inside
+    `total_deadline_s` (600 s total). SIGTERM/SIGINT also enter cleanup. Cleanup
+    uncertainty is recorded honestly and never masks Worker failure evidence; Worker
+    physical-failure files are never touched. Only this supervisor creates the run.
+    """
+    started=time.monotonic() if started_s is None else started_s
+    if threading.current_thread() is not threading.main_thread():
+        _refuse('main_thread_required')
+    # This launcher owns a dedicated serial process, not a shared application host.
+    if _descendants(_proc_table(),os.getpid()):
+        _refuse('dedicated_supervisor_required')
+    if len(os.listdir('/proc/self/task'))!=1:
+        _refuse('single_thread_supervisor_required')
+    if deadline_s is None:
+        deadline_s=started+max(0.,limit_s if limit_s is not None else 0.)
+    if total_deadline_s is None:
+        total_deadline_s=deadline_s+CLEANUP_ALLOWANCE_S
+    if limit_s is None:
+        limit_s=deadline_s-started
+    run_dir=Path(run_identity if run_identity is not None else root).resolve()
+    manifest_path=Path(manifest).resolve()
+    if run_inputs is None:
+        run_inputs={'root':str(Path(root).resolve()),'manifest':str(manifest_path),'readiness_sha256':readiness_sha256}
+    state={'signal':None}
+    previous_handlers={}
+    installed=False
+    def _on_signal(signum,frame):
+        if state['signal'] is None:
+            state['signal']=signum
+    if threading.current_thread() is threading.main_thread():
+        for signum in (signal.SIGTERM,signal.SIGINT):
+            previous_handlers[signum]=signal.getsignal(signum)
+            signal.signal(signum,_on_signal)
+        installed=True
+    interrupted=None;failure=None;phase='setup';owned_pid=None;native_exitcode=None
+    manifest_sha256=None;lock_fd=None;created=False
+    try:
+        try:
+            reason=_signal_reason(state)
+            if reason is not None:
+                interrupted=reason
+            elif time.monotonic()>=deadline_s:
+                interrupted='wall_clock_watchdog'
+            else:
+                with lifecycle_deadline(deadline_s):
+                    if not subreaper:_refuse('subreaper_required')
+                    _set_child_subreaper()
+                    try:
+                        run_dir.mkdir(mode=0o700,exist_ok=False)
+                    except FileExistsError:
+                        raise LaunchRefused('run_replay_refused')
+                    created=True
+                    phase='manifest'
+                    lock_fd=_acquire_lock(run_dir)
+                    document=_manifest_doc(run_dir,readiness_sha256,execution_head,protocol_sha256,run_inputs,
+                                           proc_identity()['start_ticks'],time.time())
+                    execution_manifest=run_dir/MANIFEST_NAME
+                    raw=json.dumps(document,sort_keys=True,separators=(',',':')).encode()
+                    execution_manifest.write_bytes(raw)
+                    os.chmod(execution_manifest,0o444)
+                    manifest_sha256=hashlib.sha256(raw).hexdigest()
+                    phase='spawn'
+                    reason=_signal_reason(state)
+                    if reason is not None:
+                        interrupted=reason
+                    elif time.monotonic()>=deadline_s:
+                        interrupted='wall_clock_watchdog'
+                    else:
+                        context=LauncherContext(run_id=str(run_dir),readiness_path=str(manifest_path),manifest_path=str(run_dir/MANIFEST_NAME),
+                            manifest_sha256=manifest_sha256,readiness_sha256=readiness_sha256,
+                            execution_head=execution_head,protocol_sha256=protocol_sha256,
+                            supervisor_pid=os.getpid(),supervisor_start_ticks=document['supervisor_start_ticks'],
+                            started_unix=document['started_unix'],deadline_monotonic=deadline_s,
+                            run_inputs=document['run_inputs'],seal=_CTX_SEAL)
+                        out_fd=os.open(run_dir/STDOUT_NAME,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+                        err_fd=os.open(run_dir/STDERR_NAME,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+                        try:
+                            blocked={signal.SIGTERM,signal.SIGINT,signal.SIGALRM}
+                            previous_mask=signal.pthread_sigmask(signal.SIG_BLOCK,blocked)
+                            try:
+                                pid=os.fork()
+                                if pid==0:
+                                    _child_main(worker_main,context,out_fd,err_fd,previous_mask)
+                                owned_pid=pid
+                            finally:
+                                signal.pthread_sigmask(signal.SIG_SETMASK,previous_mask)
+                        finally:
+                            os.close(out_fd);os.close(err_fd)
+                        phase='supervise'
+                        outcome=_wait_worker(owned_pid,deadline_s,poll_s,state)
+                        if outcome['status'] is not None:
+                            native_exitcode=_status_exitcode(outcome['status'])
+                        elif outcome['reason'] not in (None,'reaped'):
+                            interrupted=outcome['reason']
+        except DeadlineInterrupt:
+            interrupted=interrupted or 'wall_clock_watchdog'
+        except BaseException as exc:
+            failure=exc
+    finally:
+        # Reserve the last second for emergency reap and the receipt. Both cleanup
+        # and receipt are interruptible, using the original entry-anchored budget.
+        try:
+            with lifecycle_deadline(total_deadline_s-1.):
+                cleanup=_cleanup_lifecycle(owned_pid,total_deadline_s-1.,terminator)
+        except BaseException as exc:
+            cleanup={'cleanup_complete':False,'cleanup_detail':f'{type(exc).__name__}:{exc}',
+                     'worker_status':None}
+        if owned_pid is not None and not cleanup['cleanup_complete']:
+            try:
+                with lifecycle_deadline(total_deadline_s-.5):
+                    _signal_tree(owned_pid,signal.SIGKILL)
+                    while True:
+                        statuses=_reap_children()
+                        if owned_pid in statuses:cleanup['worker_status']=statuses[owned_pid]
+                        if not _targets_alive(owned_pid):break
+                        time.sleep(GROUP_POLL_S)
+            except Exception as exc:
+                cleanup['cleanup_detail']+=';emergency:'+type(exc).__name__
+            # Even successful emergency reap does not erase the initial failure.
+        if owned_pid is not None and native_exitcode is None and cleanup['worker_status'] is not None:
+            native_exitcode=_status_exitcode(cleanup['worker_status'])
+        result={'pid':owned_pid,'native_exitcode':native_exitcode,'interrupted':interrupted,
+                'interrupted_phase':phase if interrupted else None,
+                'failure_phase':phase if failure is not None else None,
+                'failure':None if failure is None else f'{type(failure).__name__}:{failure}',
+                'elapsed_s':time.monotonic()-started,'limit_s':limit_s,
+                'deadline_from_entry_s':deadline_s-started,'total_from_entry_s':total_deadline_s-started,
+                'cleanup_allowance_s':total_deadline_s-deadline_s,
+                'cleanup_complete':cleanup['cleanup_complete'],'cleanup_detail':cleanup['cleanup_detail'],
+                'manifest_sha256':manifest_sha256,'run_id':str(run_dir),'supervisor_pid':os.getpid(),
+                'signal':state['signal'],'receipt_error':None}
+        try:
+            with lifecycle_deadline(total_deadline_s):
+                result['receipt_error']=_write_receipt(run_dir,result,created)
+        except BaseException as exc:
+            result['receipt_error']=f'{type(exc).__name__}:{exc}'
+        finally:
+            if lock_fd is not None:
+                try:os.close(lock_fd)
+                except OSError:pass
+            if installed:
+                for signum,handler in previous_handlers.items():
+                    signal.signal(signum,handler)
+        if result['receipt_error'] is not None:
+            # External invocation captures stderr if the filesystem cannot retain a receipt.
+            print('T2A_PROCESS_RECEIPT_FAILURE:'+json.dumps(result,sort_keys=True),file=sys.stderr,flush=True)
     if failure is not None:
         raise failure
     return result
