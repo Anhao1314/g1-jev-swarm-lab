@@ -55,7 +55,7 @@
             <button id="prepare-request" class="secondary" type="button">准备单次仿真审查</button>
             <p id="preparation-status" class="small" role="status"></p>
             <div id="preparation-content" hidden>
-              <p class="notice">仍需独立 Release 审查、Owner 单次物理授权和实时状态检查。当前请求尚未执行。</p>
+              <p class="notice">执行前需独立 Release 审查、Owner 单次物理授权和实时状态检查。本清单不授予执行权限；实际运行情况以下方本次执行回执为准。</p>
               <dl id="preparation-identity"></dl>
               <p id="preparation-budget" class="small"></p>
               <div id="preparation-gates" class="gate-labels"></div>
@@ -67,7 +67,14 @@
         </div>
       </section>
     </div>
-    <section class="execution-panel" aria-labelledby="execution-title"><div><div class="eyebrow">EXECUTION & EVIDENCE</div><h2 id="execution-title">当前没有新指令的执行画面</h2><p>只有独立授权后的真实执行，才能生成这条请求对应的运动画面与结果。历史回放不会被当作本次执行。</p></div><div class="execution-counters"><div><strong id="physics-count">0</strong><span>物理步数</span></div><div><strong id="policy-count">0</strong><span>策略调用</span></div><div><strong class="not-run" id="execution-status">NOT_EXECUTED</strong><span>当前执行状态</span></div></div></section>
+    <section class="execution-panel" aria-labelledby="execution-title">
+      <div class="execution-overview"><div><div class="eyebrow">EXECUTION & EVIDENCE</div><h2 id="execution-title">当前没有新指令的执行画面</h2><p>只有独立授权后的真实执行，才能生成这条请求对应的运动画面与结果。历史回放不会被当作本次执行。</p></div><div class="execution-counters"><div><strong id="physics-count">0</strong><span>物理步数</span></div><div><strong id="policy-count">0</strong><span>策略调用</span></div><div><strong class="not-run" id="execution-status">NOT_EXECUTED</strong><span>当前执行状态</span></div></div></div>
+      <button id="observe-execution" class="secondary" type="button" disabled>查看本次执行状态</button>
+      <p class="small muted">只读取回执，不启动仿真、不确认授权。采集结束不等于任务成功；未知物理计数保留为 UNKNOWN。</p>
+      <p id="execution-observation" class="small mono" role="status"></p>
+      <pre id="execution-result" aria-label="本次原始任务结果" hidden></pre>
+      <figure id="execution-media" hidden><video id="execution-video" controls preload="none" aria-label="本次真实采集的状态回放"></video><figcaption id="execution-media-caption"></figcaption><p id="execution-media-provenance" class="small mono"></p></figure>
+    </section>
     <footer><span>编译成功 ≠ 获准执行</span><span>Language Runtime / D011 保持 BLOCKED</span></footer>
   </main>
 </body>

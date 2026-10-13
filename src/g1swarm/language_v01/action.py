@@ -1,8 +1,9 @@
 """Single-demo preparation and immutable Runtime handoff components.
 
-No issuer or physical launch is enabled. Source/plan hashes are not permission.
-The independent narrow-release gate is frozen BLOCKED; an Owner statement cannot
-override it. Components are qualified offline using explicitly synthetic sessions.
+These retained preparation/component APIs do not issue authority or launch physics.
+Source/plan hashes are not permission. Their original language gate stays BLOCKED.
+The separate host requires independent review and an actual Owner's new complete-
+plan instruction; it does not turn the original proposal into authorization.
 """
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -61,6 +62,7 @@ class PreparationService:
             'evidence_root':str(self.contracts._evidence.resolve()) if self.contracts._evidence else None,
             'protocol_sha256':identity.sha(PROTOCOL),'budget':protocol['budget'],
             'state_contract':protocol['state_contract'],
+            'render_contract':protocol.get('render_only'),
             'gates':{'narrow_language_release':protocol['narrow_language_release'],'owner':'NOT_PRESENT',
                      'live_state':'NOT_OBSERVED','language_runtime':'BLOCKED','d011':'BLOCKED'},
             'execution':{'status':'AWAITING_INDEPENDENT_RELEASE_AND_OWNER','physics_steps':0,
@@ -68,6 +70,7 @@ class PreparationService:
             'owner_approval_template':{'decision':protocol['owner_source']['decision'],
                                      'authority_origin':protocol['owner_source']['authority_origin'],
                                      'request_id':request_id,'mission':deepcopy(record['mission']),
+                                     'accepted_independent_review_sha256':'REPLACE_WITH_REVIEW_SHA256',
                                      'preparation_sha256':'REPLACE_WITH_EXACT_PREPARATION_SHA256',
                                      'expires_at':'REPLACE_WITH_OWNER_CHOSEN_UTC_EXPIRY'},
             'authority_scope':'Preparation only; no signature, grant or dispatch. TEST_ONLY and UI cannot authorize.'}
@@ -93,9 +96,11 @@ def validate_preparation(preparation):
         preparation['budget']!=identity.read(PROTOCOL)['budget'] or
         preparation['state_contract']!=identity.read(PROTOCOL)['state_contract']):
         raise ContractError('PREPARATION_PROTOCOL_DRIFT')
+    if preparation.get('render_contract')!=identity.read(PROTOCOL).get('render_only'):
+        raise ContractError('PREPARATION_RENDER_CONTRACT_DRIFT')
     return canonical(preparation['mission'])
 
-def check_owner_comment(comment, preparation, *, now=None):
+def check_owner_comment(comment, preparation, *, now=None, accepted_review_sha256=None):
     """Check *fresh GitHub API data*, not a client JSON claim. Not a grant issuer.
 
     Pure check is unit-testable; real evidence must come from fetch_owner_comment.
@@ -114,12 +119,16 @@ def check_owner_comment(comment, preparation, *, now=None):
     if not comment.get('created_at') or comment.get('created_at')!=comment.get('updated_at'):
         raise PermissionError('EDITED_OR_UNDATED_OWNER_APPROVAL')
     decision=json.loads(comment['body'])
-    if set(decision)!={'decision','authority_origin','request_id','mission','preparation_sha256','expires_at'}:
+    fields={'decision','authority_origin','request_id','mission','preparation_sha256','expires_at'}
+    if accepted_review_sha256 is not None: fields.add('accepted_independent_review_sha256')
+    if set(decision)!=fields:
         raise PermissionError('OWNER_SCOPE_FIELDS_INVALID')
     if (decision['decision']!=expected['decision'] or decision['preparation_sha256']!=preparation['preparation_sha256']
         or decision['authority_origin']!=expected['authority_origin'] or decision['request_id']!=preparation['request_id']
         or canonical(decision['mission'])!=canonical(preparation['mission'])):
         raise PermissionError('OWNER_APPROVAL_SCOPE_MISMATCH')
+    if accepted_review_sha256 is not None and decision['accepted_independent_review_sha256']!=accepted_review_sha256:
+        raise PermissionError('OWNER_HAS_NOT_ACCEPTED_EXACT_INDEPENDENT_REVIEW')
     expiry=datetime.fromisoformat(decision['expires_at'].replace('Z','+00:00'))
     created=datetime.fromisoformat(comment['created_at'].replace('Z','+00:00'))
     current=now or datetime.now(timezone.utc)

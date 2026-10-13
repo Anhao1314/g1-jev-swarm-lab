@@ -27,12 +27,50 @@ function stepTitle(step) {
 function reasonText(code) { return REASONS[code] ? `${REASONS[code]} (${code})` : text(code); }
 function requestPath(id) { return `/api/requests/${encodeURIComponent(id)}`; }
 function preparationPayload(contract) { return {contract_sha256: contract.contract_sha256}; }
+function executionView(snapshot, contract, preparation) {
+  if (!snapshot || snapshot.request_id !== contract?.request_id ||
+      !preparation?.preparation_sha256 || snapshot.preparation_sha256 !== preparation.preparation_sha256) {
+    throw new Error("执行响应与当前请求或准备清单不匹配。");
+  }
+  const labels = {
+    AWAITING_OWNER: "等待本次 Owner 授权 · 尚无执行画面",
+    RUNNING: "本次采集正在运行 · 尚未得到最终任务结果",
+    REFUSED_FAILED_OR_PARTIAL: "本次入口拒绝、失败或未完成 · 请查看原始结果",
+    CAPTURE_FINISHED: "本次采集已结束 · 任务是否成功以原始结果为准",
+    SYNTHETIC_TEST_ONLY: "非物理测试替身回执 · 没有机器人运动画面"
+  };
+  if (!Object.hasOwn(labels, snapshot.status)) throw new Error("未知执行状态，无法确认本次执行。");
+  if (![null, "NEW_MUJOCO_CAPTURE", "SYNTHETIC_NONPHYSICAL_BACKEND"].includes(snapshot.kind)) {
+    throw new Error("未知采集来源，无法确认本次执行。");
+  }
+  if (snapshot.status === "AWAITING_OWNER" && (snapshot.run_id !== null || snapshot.kind !== null || snapshot.media !== null)) {
+    throw new Error("等待授权的响应含有不一致的执行信息。");
+  }
+  const count = (value) => Number.isSafeInteger(value) && value >= 0 ? String(value) : "UNKNOWN";
+  let media = null;
+  if (snapshot.media !== null && snapshot.media !== undefined) {
+    if (snapshot.kind !== "NEW_MUJOCO_CAPTURE" || !snapshot.run_id ||
+        snapshot.media.kind !== "NEW_RUN_STATE_PLAYBACK" ||
+        snapshot.media.url !== `${requestPath(contract.request_id)}/media` ||
+        !/^[a-f0-9]{64}$/.test(snapshot.media.sha256 || "") ||
+        !/^[a-f0-9]{64}$/.test(snapshot.media.source_pose_sha256 || "")) {
+      throw new Error("运动画面缺少本次真实采集绑定，拒绝展示。");
+    }
+    media = snapshot.media;
+  }
+  const synthetic = snapshot.kind === "SYNTHETIC_NONPHYSICAL_BACKEND";
+  return {
+    status: snapshot.status, title: synthetic ? "非物理测试替身回执 · 没有机器人运动画面" : labels[snapshot.status],
+    physics: count(snapshot.physics_steps), policy: count(snapshot.policy_calls), media,
+    runId: snapshot.run_id || "尚未创建", result: snapshot.result ?? null
+  };
+}
 
 function createState() {
   return {
-    revision: 0, contract: null, preparation: null,
-    edit() { this.revision += 1; this.contract = null; this.preparation = null; },
-    begin() { this.revision += 1; this.contract = null; this.preparation = null; return this.revision; },
+    revision: 0, contract: null, preparation: null, execution: null,
+    edit() { this.revision += 1; this.contract = null; this.preparation = null; this.execution = null; },
+    begin() { this.revision += 1; this.contract = null; this.preparation = null; this.execution = null; return this.revision; },
     accept(revision, contract) {
       if (revision !== this.revision) return false;
       this.contract = contract;
@@ -41,7 +79,14 @@ function createState() {
     acceptPreparation(revision, contractHash, preparation) {
       if (revision !== this.revision || !this.contract || this.contract.contract_sha256 !== contractHash) return false;
       this.preparation = preparation;
+      this.execution = null;
       return true;
+    },
+    acceptExecution(revision, snapshot) {
+      if (revision !== this.revision || !this.contract || !this.preparation) return false;
+      const view = executionView(snapshot, this.contract, this.preparation);
+      this.execution = snapshot;
+      return view;
     }
   };
 }
@@ -78,6 +123,21 @@ function boot(doc = document, fetcher = fetch) {
     $("physics-count").textContent = "0";
     $("policy-count").textContent = "0";
     $("execution-status").textContent = "NOT_EXECUTED";
+    clearExecution();
+    $("observe-execution").disabled = true;
+  }
+  function clearExecution() {
+    $("execution-title").textContent = "当前没有新指令的执行画面";
+    $("execution-observation").textContent = "";
+    $("execution-result").hidden = true;
+    $("execution-result").textContent = "";
+    $("execution-media").hidden = true;
+    const video = $("execution-video");
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+    $("execution-media-caption").textContent = "";
+    $("execution-media-provenance").textContent = "";
   }
   function edited() {
     state.edit();
@@ -104,6 +164,13 @@ function boot(doc = document, fetcher = fetch) {
     let body;
     try { body = await response.json(); } catch (_) { throw new Error(`服务未返回有效 JSON（HTTP ${response.status}）。`); }
     if (!response.ok) throw new Error(`请求被拒绝（HTTP ${response.status}）：${text(body.error_message || body.error_code || body.error || body.reason || "请检查输入或来源绑定")}`);
+    return body;
+  }
+  async function executionRequest(id) {
+    const response = await fetcher(`${requestPath(id)}/execution`, {method: "GET", cache: "no-store"});
+    let body;
+    try { body = await response.json(); } catch (_) { throw new Error(`执行状态不是有效 JSON（HTTP ${response.status}）。`); }
+    if (!response.ok) throw new Error(`执行状态读取失败（HTTP ${response.status}）：${text(body.error_message || body.error_code || body.error || "UNKNOWN")}`);
     return body;
   }
   function render(contract) {
@@ -198,6 +265,8 @@ function boot(doc = document, fetcher = fetch) {
     if (!contract || $("prepare-request").disabled) return;
     const revision = state.revision;
     $("prepare-request").disabled = true;
+    $("observe-execution").disabled = true;
+    clearExecution();
     $("preparation-content").hidden = true;
     $("download-preparation").removeAttribute("href");
     state.preparation = null;
@@ -214,21 +283,55 @@ function boot(doc = document, fetcher = fetch) {
         ["协议 SHA256", preparation.protocol_sha256]
       ].flatMap(([key, value]) => [node("dt", key), node("dd", value)]));
       const budget = preparation.budget || {};
-      $("preparation-budget").textContent = `冻结预算：最多 ${text(budget.native_steps)} 物理步 · ${text(budget.wall_s)} 秒 · 外部截止 ${text(budget.outer_cutoff_s)} 秒 · seed ${text(budget.seed)} · ${text(budget.attempts)} 次执行。当前均未消耗。`;
+      $("preparation-budget").textContent = `冻结预算：最多 ${text(budget.native_steps)} 物理步 · ${text(budget.wall_s)} 秒 · 外部截止 ${text(budget.outer_cutoff_s)} 秒 · seed ${text(budget.seed)} · ${text(budget.attempts)} 次执行。准备清单不启动采集；实际消耗请查看本次执行状态。`;
       const gates = preparation.gates || {};
       $("preparation-gates").replaceChildren(...[
         ["独立 Release", gates.narrow_language_release], ["Owner", gates.owner],
         ["实时状态", gates.live_state], ["Language Runtime", gates.language_runtime], ["D011", gates.d011]
       ].map(([label, value]) => node("span", `${label}: ${text(value)}`)));
       const execution = preparation.execution || {};
-      $("preparation-execution").textContent = `${text(execution.status)} · 物理步 ${text(execution.physics_steps)} · 策略调用 ${text(execution.policy_calls)} · 无本次执行画面`;
+      $("preparation-execution").textContent = `准备时记录：${text(execution.status)} · 物理步 ${text(execution.physics_steps)} · 策略调用 ${text(execution.policy_calls)}`;
       $("download-preparation").href = `${requestPath(contract.request_id)}/preparation`;
+      $("observe-execution").disabled = false;
     } catch (error) {
       if (state.revision === revision) $("preparation-status").textContent = `准备被拒绝：${error.message}`;
     } finally { if (state.revision === revision) $("prepare-request").disabled = false; }
   });
+  $("observe-execution").addEventListener("click", async () => {
+    const contract = state.contract;
+    if (!contract || !state.preparation) return;
+    const revision = state.revision;
+    $("observe-execution").disabled = true;
+    clearExecution();
+    $("physics-count").textContent = "UNKNOWN";
+    $("policy-count").textContent = "UNKNOWN";
+    $("execution-status").textContent = "UNKNOWN";
+    $("execution-observation").textContent = "正在读取本次执行回执；此操作不会发起执行…";
+    try {
+      const snapshot = await executionRequest(contract.request_id);
+      const view = state.acceptExecution(revision, snapshot);
+      if (!view) return;
+      $("execution-title").textContent = view.title;
+      $("execution-status").textContent = view.status;
+      $("physics-count").textContent = view.physics;
+      $("policy-count").textContent = view.policy;
+      $("execution-observation").textContent = `运行 ID：${view.runId}`;
+      if (view.result !== null) {
+        $("execution-result").hidden = false;
+        $("execution-result").textContent = JSON.stringify(view.result, null, 2);
+      }
+      if (view.media) {
+        $("execution-media").hidden = false;
+        $("execution-video").src = view.media.url;
+        $("execution-media-caption").textContent = "本次真实采集的状态回放；不是实时机器人画面。";
+        $("execution-media-provenance").textContent = `视频 SHA256 ${view.media.sha256} · 原始位姿 SHA256 ${view.media.source_pose_sha256}`;
+      }
+    } catch (error) {
+      if (state.revision === revision) $("execution-observation").textContent = `本次执行状态无法确认：${error.message}`;
+    } finally { if (state.revision === revision) $("observe-execution").disabled = false; }
+  });
   return state;
 }
 
-if (typeof module !== "undefined" && module.exports) module.exports = {createState, stepTitle, requestPath, preparationPayload, reasonText, boot};
+if (typeof module !== "undefined" && module.exports) module.exports = {createState, stepTitle, requestPath, preparationPayload, reasonText, executionView, boot};
 if (typeof document !== "undefined") boot();

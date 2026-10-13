@@ -10,6 +10,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'src'))
 from g1swarm.language_v01.service import ContractService,ContractError
 from g1swarm.language_v01.action import PreparationService
+from g1swarm.language_v01.observations import execution_for,media_file
 
 WEB=Path(__file__).with_name('web')
 
@@ -40,6 +41,27 @@ class Handler(BaseHTTPRequestHandler):
                 name='index.html' if path=='/' else path[1:]
                 mime={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[name]
                 self.send(200,(WEB/name).read_bytes(),mime)
+            elif path.startswith('/api/requests/') and path.endswith('/execution') and len(path.split('/'))==5:
+                if self.server.preparations is None: raise KeyError('EXECUTION_IDENTITY_NOT_CONFIGURED')
+                self.send(200,execution_for(self.server.preparations,path.split('/')[3]))
+            elif path.startswith('/api/requests/') and path.endswith('/media') and len(path.split('/'))==5:
+                if self.server.preparations is None: raise KeyError('EXECUTION_IDENTITY_NOT_CONFIGURED')
+                file=media_file(self.server.preparations,path.split('/')[3])
+                total=file.stat().st_size; first=0; last=total-1
+                range_header=self.headers.get('Range')
+                if range_header:
+                    import re
+                    match=re.fullmatch(r'bytes=(\d+)-(\d*)',range_header)
+                    if not match: raise ValueError('SINGLE_BYTE_RANGE_REQUIRED')
+                    first=int(match[1]); last=min(total-1,int(match[2])) if match[2] else total-1
+                    if first>last or first>=total: raise ValueError('MEDIA_RANGE_OUTSIDE_FILE')
+                self.send_response(206 if range_header else 200)
+                self.send_header('Content-Type','video/mp4'); self.send_header('Content-Length',str(last-first+1))
+                self.send_header('Accept-Ranges','bytes'); self.send_header('Cache-Control','no-store')
+                if range_header: self.send_header('Content-Range',f'bytes {first}-{last}/{total}')
+                self.end_headers()
+                with file.open('rb') as stream:
+                    stream.seek(first); self.wfile.write(stream.read(last-first+1))
             elif path.startswith('/api/requests/') and path.endswith('/preparation') and len(path.split('/'))==5:
                 if self.server.preparations is None: raise KeyError('EXECUTION_IDENTITY_NOT_CONFIGURED')
                 self.send(200,self.server.preparations.get(path.split('/')[3]))
@@ -49,6 +71,7 @@ class Handler(BaseHTTPRequestHandler):
             else: self.send(404,{'error':'NOT_FOUND_NO_EXECUTION_ENDPOINT'})
         except PermissionError as e: self.send(403,{'error':str(e)})
         except KeyError as e: self.send(404,{'error':str(e)})
+        except (ValueError,OSError) as e: self.send(409,{'error':str(e)})
 
     def do_POST(self):
         try:

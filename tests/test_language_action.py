@@ -170,7 +170,7 @@ sys.meta_path.insert(0,Deny())
 sys.argv=sys.argv[1:]
 runpy.run_path(sys.argv[0],run_name='__main__')
 ''')
-    command=[sys.executable,'-B',str(script),str(ROOT/'console/language_v01/demo_entry.py'),
+    command=[sys.executable,'-B',str(script),str(ROOT/'console/language_v01/demo_entry.py'),'launch',
              '--preparation',str(preparation),'--readiness',str(tmp_path/'missing.json'),'--readiness-sha256','0'*64]
     p=subprocess.run(command,capture_output=True,text=True,timeout=15)
     assert p.returncode==2 and 'REFUSED_BEFORE_MODEL_OR_SIMULATOR_CONSTRUCTION' in p.stdout,p.stderr

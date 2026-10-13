@@ -13,6 +13,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 RETAINED = ROOT / 'experiments/mission_constrained/stand5_pair_001'
+REUSE = {'experiments/mission_constrained/skill_handoff_acquisition_001/lifecycle.py',
+         'experiments/m2/closed_loop_mission_001/acquire.py','scripts/run_oracle_missions.py',
+         'console/build_m2_replay.py','pyproject.toml'}
 
 def read(path): return json.loads(Path(path).read_text(encoding='utf-8'))
 def sha(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -26,7 +29,7 @@ def sources():
     names = subprocess.check_output(['git','ls-files'],cwd=ROOT,text=True).splitlines()
     return {name:sha(ROOT/name) for name in names if name.startswith(('src/','configs/','console/language_v01/'))
             or name in read(HERE/'sources.json')['files']
-            or name=='experiments/mission_constrained/skill_handoff_acquisition_001/lifecycle.py'}
+            or name in REUSE}
 def environment():
     return {'python':platform.python_version(),'platform':platform.platform(),'executable':sys.executable,
             'base_executable':sys._base_executable,'base_sha256':sha(sys._base_executable),
@@ -40,19 +43,24 @@ def asset_check(root):
             raise ValueError('MODEL_ASSET_DRIFT:'+name)
     return expected
 
+def renderer(root):
+    exe=Path(root)/'console/.tools/ffmpeg.exe'
+    return {'exe':str(exe.resolve()),'sha256':sha(exe)}
+
 def freeze(destination, asset_root):
     if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip():
         raise ValueError('CLEAN_COMMITTED_SOURCE_REQUIRED')
     assets=asset_check(asset_root)
     Path(destination).mkdir(parents=True,exist_ok=False)
     source={'C_exec':head(),'root':str(ROOT),'files':sources(),'environment':environment(),
-            'asset_root':str(Path(asset_root).resolve()),'assets':assets,
+            'asset_root':str(Path(asset_root).resolve()),'assets':assets,'renderer':renderer(asset_root),
             'asset_receipt_sha256':sha(RETAINED/'asset_restore.json')}
     write(Path(destination)/'source.json',source)
     identity={'schema':'language-g1-demo-readiness/0.1','C_exec':head(),
               'source_sha256':sha(Path(destination)/'source.json'),'protocol_sha256':sha(HERE/'demo_protocol.json'),
               'budget':read(HERE/'demo_protocol.json')['budget'],
-              'status':'ENGINEERING_FROZEN_PENDING_LANGUAGE_RELEASE_AND_OWNER',
+              'render_only':read(HERE/'demo_protocol.json')['render_only'],
+              'status':'FROZEN_CANDIDATE_PENDING_INDEPENDENT_REVIEW_AND_OWNER',
               'physics_authorized':False,'language_runtime':'BLOCKED','d011':'BLOCKED'}
     write(Path(destination)/'readiness.json',identity)
     return identity
@@ -71,6 +79,7 @@ def verify(path, expected_sha):
     if environment()!=source['environment']: raise ValueError('ENVIRONMENT_DRIFT')
     if asset_check(source['asset_root'])!=source['assets'] or sha(RETAINED/'asset_restore.json')!=source['asset_receipt_sha256']:
         raise ValueError('ASSET_RECEIPT_DRIFT')
+    if renderer(source['asset_root'])!=source['renderer']: raise ValueError('RENDERER_TOOL_DRIFT')
     if os.environ.get('G1SWARM_ROOT') or os.environ.get('G1SWARM_ARTIFACTS_DIR'):
         raise ValueError('EXTERNAL_SOURCE_OVERRIDE')
     spec=PathFinder.find_spec('g1swarm',[str(ROOT/'src')])

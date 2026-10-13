@@ -2,6 +2,9 @@
 
 North Star: **One Mission. Adaptive Execution. Verifiable Evidence.**
 
+This document records baseline `37b567c` preparation-only qualification. For the
+separately reviewed, Owner-gated execution candidate, see [FIRST_ACTION.md](FIRST_ACTION.md).
+
 This delivery qualifies the nonphysical preparation and canonical-to-Runtime
 components. **It does not qualify a physical acquisition entry.** The actual CLI
 fails closed before model loading or simulator construction. Broad Language
