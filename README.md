@@ -15,6 +15,8 @@ This repository is a **Unitree G1 MuJoCo research testbed**. Its current single-
 | [16 m α=0 vs α=0.5 · two MP4s and source-linked report](docs/evidence-gallery.md#03--better-global-route-strict-fail-phase-3a-visual-replay) | Global endpoint improves while the α=0.5 run **fails local strict**. |
 | [M2.5A post-Halt Hold · chart](experiments/m2/post_halt_hold_qualification_001/derived/hold_contract.png) | Bounded hold in tested states, not general hardware safety. |
 
+**New derived result visualization:** [Stand5 16 m recorded XY comparison](docs/evidence-media/stand5-world-route-20261013.svg) ([input SHA256 provenance](docs/evidence-media/stand5-world-route-20261013.provenance.json)). The figure is generated from locally sealed MuJoCo poses, **not** a new physical run or a publicly reproducible raw-data bundle.
+
 **Important:** videos above are *simulation/state-derived visualizations*, not real-world G1 recordings or new evaluations. [The gallery](docs/evidence-gallery.md#recent-results-awaiting-evidence-publication) separately identifies more recent T2a / Stand5 findings whose original evidence is still local and **not yet published to main**. Never infer scientific PASS from a nice video.
 
 ## Latest accepted bounded qualification
