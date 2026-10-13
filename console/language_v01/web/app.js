@@ -26,15 +26,21 @@ function stepTitle(step) {
 }
 function reasonText(code) { return REASONS[code] ? `${REASONS[code]} (${code})` : text(code); }
 function requestPath(id) { return `/api/requests/${encodeURIComponent(id)}`; }
+function preparationPayload(contract) { return {contract_sha256: contract.contract_sha256}; }
 
 function createState() {
   return {
-    revision: 0, contract: null,
-    edit() { this.revision += 1; this.contract = null; },
-    begin() { this.revision += 1; return this.revision; },
+    revision: 0, contract: null, preparation: null,
+    edit() { this.revision += 1; this.contract = null; this.preparation = null; },
+    begin() { this.revision += 1; this.contract = null; this.preparation = null; return this.revision; },
     accept(revision, contract) {
       if (revision !== this.revision) return false;
       this.contract = contract;
+      return true;
+    },
+    acceptPreparation(revision, contractHash, preparation) {
+      if (revision !== this.revision || !this.contract || this.contract.contract_sha256 !== contractHash) return false;
+      this.preparation = preparation;
       return true;
     }
   };
@@ -65,6 +71,10 @@ function boot(doc = document, fetcher = fetch) {
     $("binding-check-result").textContent = "";
     $("error").hidden = true;
     $("download-contract").removeAttribute("href");
+    $("preparation-content").hidden = true;
+    $("preparation-status").textContent = "";
+    $("download-preparation").removeAttribute("href");
+    $("prepare-request").disabled = true;
     $("physics-count").textContent = "0";
     $("policy-count").textContent = "0";
     $("execution-status").textContent = "NOT_EXECUTED";
@@ -93,7 +103,7 @@ function boot(doc = document, fetcher = fetch) {
     });
     let body;
     try { body = await response.json(); } catch (_) { throw new Error(`服务未返回有效 JSON（HTTP ${response.status}）。`); }
-    if (!response.ok) throw new Error(`请求被拒绝（HTTP ${response.status}）：${text(body.error_message || body.error || body.reason || "请检查输入或来源绑定")}`);
+    if (!response.ok) throw new Error(`请求被拒绝（HTTP ${response.status}）：${text(body.error_message || body.error_code || body.error || body.reason || "请检查输入或来源绑定")}`);
     return body;
   }
   function render(contract) {
@@ -147,6 +157,7 @@ function boot(doc = document, fetcher = fetch) {
     $("execution-status").textContent = text(execution.status);
     $("download-contract").href = requestPath(contract.request_id);
     $("check-binding").disabled = false;
+    $("prepare-request").disabled = compiler.status !== "SUCCESS" || !contract.mission;
     $("binding-check-result").textContent = "";
     $("identity").replaceChildren(...[
       ["请求 ID", contract.request_id], ["创建时间", contract.created_at],
@@ -182,8 +193,42 @@ function boot(doc = document, fetcher = fetch) {
       if (state.revision === revision) $("binding-check-result").textContent = `绑定核验失败：${error.message}`;
     } finally { if (state.revision === revision) $("check-binding").disabled = false; }
   });
+  $("prepare-request").addEventListener("click", async () => {
+    const contract = state.contract;
+    if (!contract || $("prepare-request").disabled) return;
+    const revision = state.revision;
+    $("prepare-request").disabled = true;
+    $("preparation-content").hidden = true;
+    $("download-preparation").removeAttribute("href");
+    state.preparation = null;
+    $("preparation-status").textContent = "正在生成独立审查清单；不会启动仿真…";
+    try {
+      const response = await jsonRequest(`${requestPath(contract.request_id)}/prepare`, preparationPayload(contract));
+      const preparation = response.preparation || response;
+      if (!state.acceptPreparation(revision, contract.contract_sha256, preparation)) return;
+      $("preparation-content").hidden = false;
+      $("preparation-status").textContent = "准备清单已生成 · 等待独立审查与 Owner 授权";
+      $("preparation-identity").replaceChildren(...[
+        ["准备 ID", preparation.preparation_id], ["准备 SHA256", preparation.preparation_sha256],
+        ["执行源码", preparation.C_exec], ["Readiness SHA256", preparation.readiness_sha256],
+        ["协议 SHA256", preparation.protocol_sha256]
+      ].flatMap(([key, value]) => [node("dt", key), node("dd", value)]));
+      const budget = preparation.budget || {};
+      $("preparation-budget").textContent = `冻结预算：最多 ${text(budget.native_steps)} 物理步 · ${text(budget.wall_s)} 秒 · 外部截止 ${text(budget.outer_cutoff_s)} 秒 · seed ${text(budget.seed)} · ${text(budget.attempts)} 次执行。当前均未消耗。`;
+      const gates = preparation.gates || {};
+      $("preparation-gates").replaceChildren(...[
+        ["独立 Release", gates.narrow_language_release], ["Owner", gates.owner],
+        ["实时状态", gates.live_state], ["Language Runtime", gates.language_runtime], ["D011", gates.d011]
+      ].map(([label, value]) => node("span", `${label}: ${text(value)}`)));
+      const execution = preparation.execution || {};
+      $("preparation-execution").textContent = `${text(execution.status)} · 物理步 ${text(execution.physics_steps)} · 策略调用 ${text(execution.policy_calls)} · 无本次执行画面`;
+      $("download-preparation").href = `${requestPath(contract.request_id)}/preparation`;
+    } catch (error) {
+      if (state.revision === revision) $("preparation-status").textContent = `准备被拒绝：${error.message}`;
+    } finally { if (state.revision === revision) $("prepare-request").disabled = false; }
+  });
   return state;
 }
 
-if (typeof module !== "undefined" && module.exports) module.exports = {createState, stepTitle, requestPath, reasonText, boot};
+if (typeof module !== "undefined" && module.exports) module.exports = {createState, stepTitle, requestPath, preparationPayload, reasonText, boot};
 if (typeof document !== "undefined") boot();

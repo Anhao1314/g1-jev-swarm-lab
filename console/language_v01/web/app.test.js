@@ -3,7 +3,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const {createState, stepTitle, requestPath, reasonText} = require("./app.js");
+const {createState, stepTitle, requestPath, preparationPayload, reasonText} = require("./app.js");
 
 test("only the current request can populate the displayed contract", () => {
   const state = createState();
@@ -50,4 +50,25 @@ test("input limit and displayed counter match the 512-character server contract"
   assert.match(html, /id="character-count">0 \/ 512</);
   assert.match(js, /input\.value\.length\} \/ 512/);
   assert.doesNotMatch(js + html, /2000/);
+});
+test("preparation belongs to the exact current contract and expires when input changes", () => {
+  const state = createState();
+  const revision = state.begin();
+  state.accept(revision, {contract_sha256: "current"});
+  assert.equal(state.acceptPreparation(revision, "wrong", {preparation_id: "wrong"}), false);
+  assert.equal(state.acceptPreparation(revision, "current", {preparation_id: "accepted"}), true);
+  state.edit();
+  assert.equal(state.preparation, null);
+  assert.equal(state.acceptPreparation(revision, "current", {preparation_id: "late"}), false);
+  const next = state.begin();
+  state.accept(next, {contract_sha256: "next"});
+  assert.equal(state.acceptPreparation(revision, "current", {preparation_id: "stale"}), false);
+  assert.equal(state.preparation, null);
+});
+test("preparation sends only the bound hash and provides no authorization controls", () => {
+  assert.deepEqual(preparationPayload({contract_sha256: "abc", owner: true, mission: {}, source: {}}), {contract_sha256: "abc"});
+  const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  assert.match(html, /准备单次仿真审查/);
+  assert.match(html, /准备清单不是执行授权/);
+  assert.doesNotMatch(html, /id="(?:execute|approve|authorize)[^"]*"/);
 });

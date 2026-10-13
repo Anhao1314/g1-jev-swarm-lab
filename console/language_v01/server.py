@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'src'))
 from g1swarm.language_v01.service import ContractService,ContractError
+from g1swarm.language_v01.action import PreparationService
 
 WEB=Path(__file__).with_name('web')
 
@@ -39,6 +40,9 @@ class Handler(BaseHTTPRequestHandler):
                 name='index.html' if path=='/' else path[1:]
                 mime={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[name]
                 self.send(200,(WEB/name).read_bytes(),mime)
+            elif path.startswith('/api/requests/') and path.endswith('/preparation') and len(path.split('/'))==5:
+                if self.server.preparations is None: raise KeyError('EXECUTION_IDENTITY_NOT_CONFIGURED')
+                self.send(200,self.server.preparations.get(path.split('/')[3]))
             elif path.startswith('/api/requests/') and len(path.split('/'))==4:
                 self.send(200,self.server.service.get(path.split('/')[-1]))
             elif path=='/api/health': self.send(200,{'mode':'OFFLINE_CONTRACT_ONLY','execution':'BLOCKED'})
@@ -66,20 +70,26 @@ class Handler(BaseHTTPRequestHandler):
             elif path.startswith('/api/requests/') and path.endswith('/check') and len(path.split('/'))==5:
                 if set(document)!={'contract_sha256'}: raise ContractError('ONLY_BINDING_HASH_ACCEPTED')
                 self.send(200,self.server.service.check(path.split('/')[3],document['contract_sha256']))
+            elif path.startswith('/api/requests/') and path.endswith('/prepare') and len(path.split('/'))==5:
+                if set(document)!={'contract_sha256'}: raise ContractError('ONLY_BINDING_HASH_ACCEPTED_NO_AUTHORITY_FIELDS')
+                if self.server.preparations is None: raise ContractError('EXECUTION_IDENTITY_NOT_CONFIGURED')
+                self.send(200,self.server.preparations.prepare(path.split('/')[3],document['contract_sha256']))
             else: self.send(404,{'error':'NOT_FOUND_NO_EXECUTION_ENDPOINT'})
         except PermissionError as e: self.send(403,{'error':str(e)})
         except KeyError as e: self.send(404,{'error':str(e)})
         except (ValueError,OSError) as e: self.send(409,{'error':str(e)})
 
-def build_server(port=8780,evidence_dir=None):
+def build_server(port=8780,evidence_dir=None,readiness=None,readiness_sha256=None):
     server=HTTPServer(('127.0.0.1',port),Handler)
     server.service=ContractService(evidence_dir)
+    server.preparations=PreparationService(server.service,readiness,readiness_sha256) if readiness else None
     return server
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(); p.add_argument('--port',type=int,default=8780)
     p.add_argument('--evidence-dir',type=Path,required=True)
-    a=p.parse_args(); server=build_server(a.port,a.evidence_dir)
+    p.add_argument('--readiness',type=Path); p.add_argument('--readiness-sha256')
+    a=p.parse_args(); server=build_server(a.port,a.evidence_dir,a.readiness,a.readiness_sha256)
     print(f'Offline Language-to-G1: http://127.0.0.1:{server.server_port} | NO EXECUTION',flush=True)
     try: server.serve_forever()
     finally: server.server_close()
