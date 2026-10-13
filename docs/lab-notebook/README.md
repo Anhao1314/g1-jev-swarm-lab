@@ -36,6 +36,8 @@ Therefore, the entries in this notebook are a **faithful reconstruction from the
 
 Once those experiment branches are pushed, this notebook should link directly to the relevant code, reports, and artifacts.
 
+> **Publication update (2026-10-13):** The 2026-10-06 provenance note above describes the situation **at that time**, not today's GitHub main. The remote now contains M2.3b accepted-main evidence and tracked MuJoCo replay MP4/PNG media. Newer T2a, Stand5 and skill-handoff research is not automatically accepted-main or publicly backed by complete raw bundles. The current [Evidence Gallery](../evidence-gallery.md) explicitly separates published demonstrations from locally sealed candidate results.
+
 ## Visual entry point
 
 - [Visual research summary](visual-summary.md) — timeline, experiment comparisons, integrity flow and architecture.
