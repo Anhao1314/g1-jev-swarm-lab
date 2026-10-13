@@ -137,6 +137,20 @@ def sentinel_source():
             "sys.meta_path.insert(0,BlockHeavy())\n")
 
 
+def test_freeze_nested_historical_paths_are_portable(prepared, monkeypatch):
+    f=prepared
+    history=f.root/'history'
+    (history/'fixed').mkdir()
+    (history/'fixed/result.json').write_text('{"synthetic":true}')
+    pin={'path':'fixed/result.json','sha256':f.entry.sha(history/'fixed/result.json')}
+    (f.entry.DESIGN/'inputs.json').write_text(json.dumps({'raw':[pin]}))
+    monkeypatch.setattr(f.entry.subprocess,'check_output',lambda *a,**kw:b'')
+    destination=f.tmp/'new-freeze'
+    f.entry.freeze(destination,history)
+    source=f.entry.preflight(destination/'readiness.json',f.entry.sha(destination/'readiness.json'))
+    assert source['history']['fixed/result.json']==pin['sha256']
+
+
 def test_direct_worker_rejected_before_heavy_imports(prepared):
     f = prepared
     directory = context(f, -1)

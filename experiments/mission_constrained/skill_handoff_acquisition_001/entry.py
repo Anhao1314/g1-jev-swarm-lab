@@ -42,7 +42,7 @@ def freeze(destination,history):
         if sha(ROOT/n)!=h: raise RuntimeError('ASSET_MISMATCH:'+n)
     destination.mkdir(parents=True,exist_ok=False)
     source={'C_exec':head(),'root':str(ROOT),'files':files(),'assets':assets,'environment':environment(),
-            'history_root':str(history.resolve()),'history':{str(p.relative_to(history)):sha(p) for p in sorted(history.rglob('*')) if p.is_file()}}
+            'history_root':str(history.resolve()),'history':{p.relative_to(history).as_posix():sha(p) for p in sorted(history.rglob('*')) if p.is_file()}}
     write(destination/'source.json',source)
     r={'C_exec':head(),'source_sha256':sha(destination/'source.json'),'protocol_sha256':sha(DESIGN/'protocol.json'),
        'arm_order':list(ARMS),'max_native_per_arm':32000,'max_native_total':64000,
