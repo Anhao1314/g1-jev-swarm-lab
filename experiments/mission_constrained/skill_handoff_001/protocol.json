@@ -1,0 +1,75 @@
+{
+  "study": "skill_handoff_terminal_speed_001",
+  "status": "DESIGN_AND_OFFLINE_COMPONENT_FREEZE_NOT_ACQUISITION_READY",
+  "base_head": "ed3596a94e3c91eb55545c11e31c89b8e51585c5",
+  "hypothesis": "One terminal-distance speed schedule improves the complete original Walk-to-Turn handoff while preserving original local gates. Speed alone is not an isolated causal mediator.",
+  "population": "One already-seen Stand5 seed-0 state; not held-out or cross-state qualification",
+  "arms_in_order": ["constant", "terminal_schedule"],
+  "attempts_per_arm": 1,
+  "case": {
+    "historical_id": "phase3b0a-stand5-16m",
+    "seed": 0,
+    "alpha": 0.25,
+    "nodes": ["Stand5", "Walk8", "Turn-90 including original 0.5s settle"],
+    "world_waypoint_xy_m": [8.0, 0.0],
+    "turn_world_heading_rad": -1.5707963267948966,
+    "scope": "Original Mission prefix, not a new completed Mission or full-route success",
+    "parameters_source": "First 3 node parameters from sealed Stand5 fixed/result.json",
+    "reset": "one normal simulator construction per arm; original per-skill controller resets; no injected/rebound state after construction",
+    "fixed": ["official policy", "PD", "gains", "alpha", "actual node-start frame", "8m termination", "original evaluators and envelopes", "Turn angle/rate/settle", "seed", "physics timestep", "residual off"]
+  },
+  "schedule": {
+    "baseline_mps": 0.5,
+    "terminal_mps": 0.25,
+    "begin_progress_m": 7.0,
+    "end_progress_m": 8.0,
+    "formula": "vx=0.25+0.25*clamp(8-original_entry_forward_progress,0,1); all earlier progress gives 0.5",
+    "progress_source": "Existing original Walk MissionFrame.project(current base_position), never a control-reference or reanchored frame",
+    "timing": "compute at every existing correction callback before delegate; only vx changes; original yaw feedback remains computed from the same current state",
+    "rationale": "0.25m/s has historical Phase1.1 approach/Stop evidence. 1m is a prospective lead distance larger than the observed approximately 0.38m Turn footprint, not an optimized braking distance.",
+    "not_proven": "This varying command profile is not physically qualified. Ideal kinematics adds 4*ln(2)-2 seconds; actual timing and gait response are unknown."
+  },
+  "measurement": {
+    "speed_window_s": 0.5,
+    "max_native_gap_s": 0.002,
+    "timestamp_tolerance_s": 1e-9,
+    "window": "time-weighted trapezoidal mean planar speed during final 0.5s of Walk, bracketed by native state timestamps including exact endpoint; no future Turn samples",
+    "native_fields": ["simulation time", "node index", "original node frame", "world xyz and quaternion", "world vxyz and angular velocity", "original nominal command", "scheduled command", "corrected/applied command", "qpos/qvel/ctrl or hash-bound full native state archive", "controller counter/reset events", "policy state digest at Walk entry/exit and Turn exit"],
+    "endpoints": ["Walk entry", "schedule trigger", "Walk exit before Turn reset", "Turn entry after original reset", "Turn end after settle"],
+    "metrics": ["Walk exit instantaneous planar speed", "Walk exit final-0.5s mean planar speed", "Walk world waypoint norm and signed X/Y", "Turn end world waypoint norm and signed X/Y", "Turn end world heading", "Turn displacement in incoming frame", "complete prefix duration", "original strict/nominal/physical", "tilt/height/fall/nonfinite"],
+    "joint_state_missing": "Do not silently substitute RobotState null joint fields for a native full-state archive"
+  },
+  "comparison": {
+    "arithmetic_tolerance": 1e-9,
+    "minimum_mean_speed_reduction_mps": 0.1,
+    "minimum_turn_world_error_improvement_m": 0.01,
+    "maximum_added_prefix_sim_time_s": 2.0,
+    "support": "Both complete arms original strict/physical pass; final-0.5s speed reduction >=0.1; instantaneous exit speed no worse; Walk waypoint norm no worse; Turn waypoint norm improves >=0.01; Turn absolute X/Y/heading no worse; additional full-prefix simulation time <=2.0",
+    "meaning": "New prospective mechanism thresholds, not historical scoring changes, significance tests, or production safety criteria",
+    "outcomes": ["MANIPULATION_NOT_ESTABLISHED", "SPEED_CHANGED_NO_POSITION_GAIN", "TRADEOFF_NO_JOINT_SUPPORT", "BOUNDED_HANDOFF_MECHANISM_SUPPORT", "INCONCLUSIVE"],
+    "failure_axes": "Always retain physical failure, strict failure, technical interruption and missing coverage separately, even when comparison is INCONCLUSIVE",
+    "limitations": "Two arms cannot establish superiority over uniform slow speed, isolate inertia/reset/gait mediators, or prove full Mission or generalized adaptation"
+  },
+  "replay_and_pairing": {
+    "control_replay_source": "sealed Stand5 fixed alpha0.25 first three nodes",
+    "before_treatment": "new constant arm must match historical first-three-node scientific fields and available state/command samples at zero tolerance; wall time excluded; missing fields are missing coverage, not invented equality",
+    "between_arms": "before first nonbaseline command, original Stand/Walk native state, policy/reset identity and command history must match under prospective replay contract; no physical state injection to force a match",
+    "unavailable_historical_native_stream": "Existing historical 20Hz poses and 10Hz command traces do not prove every native state matches; new between-arm native streams must provide the denser comparison"
+  },
+  "budget_candidate": {
+    "max_native_attempts_per_arm": 32000,
+    "max_native_attempts_total": 64000,
+    "max_wall_seconds_per_arm": 120,
+    "max_wall_seconds_total": 240,
+    "outer_cutoff_s": 235,
+    "basis": "5s Stand + 48s Walk cap + 10s Turn cap + 0.5s settle = 31750 steps at historical 0.002s; 32000 cap includes settle; limits are ceilings, not allocations to exhaust",
+    "lifecycle": "deadline begins before physical backend import/initialization, includes cleanup; native attempts/completions/unknown kept separately",
+    "stop": "Any physical failure, technical/integrity mismatch, unexpected reset or budget event stops campaign. Ordinary strict failure is retained; no parameter changes or retries. Missing second arm remains missing coverage. No keep-running or safe-halt claim on process exit."
+  },
+  "authorization": {
+    "physical_authorized": false,
+    "this_package_has_physical_entry": false,
+    "remaining_before_request": ["bind component to real serial collector and all-worker source/Owner gates", "new complete execution Source/Readiness with model/environment hashes", "observer and replay contracts validated in real entry using nonphysical backend", "raw audit and failure retention plus bounded process cleanup tested"],
+    "forbidden": ["physics", "policy inference", "training", "extra arms/profiles", "historical relabeling", "main merge"]
+  }
+}
